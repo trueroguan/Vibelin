@@ -1,0 +1,12 @@
+{
+	"map_name": "Wretch Coast",
+	"map_path": "map_files/otherz",
+	"map_file": "wretch_coast_new.dmm",
+	"traits": [
+		{"Name": "wretch_coast", "Up": true},
+		{"Up": true, "Down": true},
+		{"Down": true}
+	],
+	"space_empty_levels": 0,
+	"space_ruin_levels": 0
+}

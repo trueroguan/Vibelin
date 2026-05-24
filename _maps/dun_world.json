@@ -1,0 +1,23 @@
+{
+	"map_name": "Dun World",
+	"map_path": "map_files/dun_world",
+	"map_file": [
+		"dun_world_new.dmm"
+	],
+	"immigrant_origin": "Kingsfield",
+	"monarch_title": "King",
+	"monarch_title_f": "Queen",
+	"traits": [
+		{"Name": "Dun World", "Up": true},
+		{"Up": true, "Down": true},
+		{"Up": true, "Down": true},
+		{"Down": true}
+	],
+	"other_z": [
+		"map_files/otherz/wretch_coast"
+	],
+	"minetype": null,
+	"space_empty_levels": 0,
+	"space_ruin_levels": 0,
+	"exclude_from_ci": true
+}
