@@ -138,60 +138,139 @@
 /turf/closed/wall/mineral/roofwall/innercorner/dir8
 	dir = WEST
 
-/obj/machinery/light/fueled/wallfire/candle/proc/dun_world_force_map_light()
+/obj/machinery/light/fueled/proc/dun_world_force_map_light()
 	status = LIGHT_OK
+	on = TRUE
 	seton(TRUE)
+	var/map_light_color = bulb_colour
+	if(color)
+		map_light_color = color
+	set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
+	update()
 	update_appearance(UPDATE_ICON_STATE)
+
+/obj/machinery/light/fueled/proc/dun_world_init_map_light(mapload)
+	if(!mapload)
+		return
+	dun_world_force_map_light()
+	addtimer(CALLBACK(src, PROC_REF(dun_world_force_map_light)), 1)
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/blue/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/weak/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
 
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/Initialize(mapload, ...)
 	. = ..()
-	if(mapload)
-		dun_world_force_map_light()
+	dun_world_init_map_light(mapload)
+
+/obj/machinery/light/fueled/firebowl/dun_world
+	brightness = 12
+
+/obj/machinery/light/fueled/firebowl/dun_world/Initialize(mapload, ...)
+	. = ..()
+	dun_world_init_map_light(mapload)
+
+/obj/machinery/light/fueled/firebowl/church/dun_world
+	brightness = 12
+
+/obj/machinery/light/fueled/firebowl/church/dun_world/Initialize(mapload, ...)
+	. = ..()
+	dun_world_init_map_light(mapload)
+
+/obj/machinery/light/fueled/firebowl/stump/dun_world
+	brightness = 12
+
+/obj/machinery/light/fueled/firebowl/stump/dun_world/Initialize(mapload, ...)
+	. = ..()
+	dun_world_init_map_light(mapload)
+
+/obj/machinery/light/fueled/firebowl/standing/dun_world
+	brightness = 12
+
+/obj/machinery/light/fueled/firebowl/standing/dun_world/Initialize(mapload, ...)
+	. = ..()
+	dun_world_init_map_light(mapload)
+
+/obj/machinery/light/fueled/firebowl/standing/blue/dun_world
+	brightness = 12
+
+/obj/machinery/light/fueled/firebowl/standing/blue/dun_world/Initialize(mapload, ...)
+	. = ..()
+	dun_world_init_map_light(mapload)
+
+/obj/structure/stairs/dun_world
+	density = FALSE
+	obj_flags = CAN_BE_HIT | IGNORE_SINK
+	terminator_mode = 1
+
+/obj/structure/stairs/stone/dun_world
+	density = FALSE
+	obj_flags = CAN_BE_HIT | IGNORE_SINK
+	terminator_mode = 1
+
+/obj/structure/stairs/fancy/dun_world
+	density = FALSE
+	obj_flags = CAN_BE_HIT | IGNORE_SINK
+	terminator_mode = 1
+
+/obj/structure/stairs/fancy/c/dun_world
+	density = FALSE
+	obj_flags = CAN_BE_HIT | IGNORE_SINK
+	terminator_mode = 1
+
+/obj/structure/stairs/fancy/r/dun_world
+	density = FALSE
+	obj_flags = CAN_BE_HIT | IGNORE_SINK
+	terminator_mode = 1
+
+/obj/structure/stairs/fancy/l/dun_world
+	density = FALSE
+	obj_flags = CAN_BE_HIT | IGNORE_SINK
+	terminator_mode = 1
+
+/turf/open/water/river/dun_world
+	dir = SOUTH
+
+/turf/open/water/river/dun_world/north
+	dir = NORTH
+
+/turf/open/water/river/dun_world/east
+	dir = EAST
+
+/turf/open/water/river/dun_world/west
+	dir = WEST
 
 /mob/dead/observer
 	hud_type = /datum/hud/ghost/dun_world

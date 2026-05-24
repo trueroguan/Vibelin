@@ -48,7 +48,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "af" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -136,7 +136,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "ay" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -203,7 +203,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "aO" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border{
@@ -312,7 +312,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "bj" = (
-/obj/machinery/light/fueled/firebowl/church,
+/obj/machinery/light/fueled/firebowl/church/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "bk" = (
@@ -465,7 +465,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "bL" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -517,7 +517,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/tile/masonic,
 /area/rogue/indoors/vampire_manor)
 "bV" = (
@@ -666,7 +666,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "cE" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
@@ -711,7 +711,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "cP" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/woods)
 "cS" = (
@@ -863,7 +863,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "dy" = (
@@ -923,7 +923,7 @@
 /turf/open/floor/ruinedwood,
 /area/rogue/indoors/banditcamp)
 "dK" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /turf/open/floor/blocks,
@@ -979,7 +979,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "ea" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
@@ -1068,7 +1068,7 @@
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "er" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -1141,7 +1141,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "eH" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "eJ" = (
@@ -1178,7 +1178,7 @@
 /turf/closed/mineral/bedrock,
 /area/rogue)
 "eT" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -1241,10 +1241,10 @@
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/vampire_manor)
 "ff" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/snow/patchy,
 /area/rogue/outdoors/banditcamp)
 "fj" = (
@@ -1339,7 +1339,7 @@
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 5
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /obj/structure/fluff/railing/corner,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
@@ -1371,7 +1371,7 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/ritual_rune/divine,
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "fF" = (
@@ -1420,7 +1420,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "fP" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/blocks,
@@ -1533,11 +1533,11 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "gj" = (
-/obj/structure/stairs/stone,
+/obj/structure/stairs/stone/dun_world,
 /turf/open/floor/blocks,
 /area/rogue/outdoors/woods/wretch_lair)
 "gk" = (
-/turf/open/water/ocean,
+/turf/open/water/ocean/abyss,
 /area/rogue/outdoors/woods/wretch_lair)
 "gl" = (
 /obj/structure/fluff/railing/wood{
@@ -1615,7 +1615,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "gA" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
@@ -1687,7 +1687,7 @@
 /area/rogue/outdoors/woods/wretch_lair)
 "gO" = (
 /obj/structure/curtain/dun_world/black,
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/churchbrick,
@@ -1709,8 +1709,8 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "gS" = (
-/obj/structure/fluff/railing,
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade,
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/dirt/road,
@@ -1770,7 +1770,7 @@
 	dir = 10;
 	pixel_y = 7
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "hl" = (
@@ -1781,7 +1781,7 @@
 /turf/open/floor/sand,
 /area/rogue/outdoors/woods/wretch_lair)
 "ho" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
@@ -1906,7 +1906,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "hS" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "hV" = (
@@ -1998,7 +1998,7 @@
 /area/rogue/under/cave/inhumen)
 "is" = (
 /obj/structure/curtain/dun_world/red,
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -2011,7 +2011,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "iu" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/corner,
@@ -2240,7 +2240,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/under/cave/inhumen)
 "ju" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /turf/open/floor/cobble/dun_world,
@@ -2254,14 +2254,14 @@
 /turf/open/floor/carpet/lord/center,
 /area/rogue/indoors/vampire_manor)
 "jx" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "jA" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -2433,7 +2433,7 @@
 /turf/open/floor/grass/yel,
 /area/rogue/outdoors/woods/vampire_lair)
 "kf" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -2475,7 +2475,7 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/eventarea/multiz)
 "km" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/corner,
@@ -2562,7 +2562,7 @@
 	dir = 4
 	},
 /obj/structure/fluff/walldeco/church/line,
-/obj/machinery/light/fueled/firebowl,
+/obj/machinery/light/fueled/firebowl/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "kA" = (
@@ -2677,7 +2677,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "kR" = (
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/indoors/banditcamp)
 "kS" = (
 /obj/structure/flora/newtree,
@@ -2690,7 +2690,7 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "kU" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/woods)
 "kV" = (
@@ -2702,7 +2702,7 @@
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "kY" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/corner,
@@ -2749,7 +2749,7 @@
 /turf/open/floor/rooftop/green,
 /area/rogue/outdoors/mountains)
 "li" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -2808,7 +2808,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "ln" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border{
@@ -2867,7 +2867,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "lz" = (
@@ -2906,7 +2906,7 @@
 /turf/open/openspace,
 /area/rogue/outdoors/woods/wretch_lair)
 "lG" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -2926,7 +2926,7 @@
 /turf/open/floor/tile/bath,
 /area/rogue/indoors/vampire_manor)
 "lK" = (
-/obj/structure/flora{
+/obj/structure/flora/grass{
 	pixel_y = -7
 	},
 /turf/open/floor/dirt/road,
@@ -3026,7 +3026,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "mh" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -3052,7 +3052,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/outdoors/mountains)
 "mn" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/machinery/light/fueled/wallfire/candle/dun_world,
@@ -3081,7 +3081,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "mt" = (
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/wretch_lair)
 "mv" = (
@@ -3191,7 +3191,7 @@
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/woods)
 "mT" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/naturalstone,
@@ -3265,7 +3265,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "np" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -3329,7 +3329,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "nG" = (
-/turf/open/water/river,
+/turf/open/water/river/dun_world,
 /area/rogue/outdoors/woods)
 "nI" = (
 /obj/item/fishingrod,
@@ -3465,7 +3465,7 @@
 /turf/closed/mineral/bedrock,
 /area/rogue/indoors/cave)
 "op" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
@@ -3483,7 +3483,7 @@
 	dir = 1
 	},
 /obj/structure/fluff/railing/border,
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/dirt/road,
@@ -3534,7 +3534,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "oA" = (
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/outdoors/woods/vampire_lair)
 "oB" = (
 /obj/structure/fluff/statue/gargoyle/moss/candles,
@@ -3583,7 +3583,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "oK" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border{
@@ -3602,7 +3602,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
-/obj/machinery/light/fueled/firebowl,
+/obj/machinery/light/fueled/firebowl/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 1
 	},
@@ -3616,7 +3616,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "oP" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/twig,
@@ -3754,7 +3754,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "ps" = (
-/obj/structure/flora,
+/obj/structure/flora/tree,
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "pt" = (
@@ -3830,7 +3830,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "pC" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/dirt,
@@ -3947,7 +3947,7 @@
 	dir = 10;
 	icon_state = "cobbleedge-w"
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "pY" = (
@@ -3986,7 +3986,7 @@
 /area/rogue/indoors/vampire_manor)
 "qf" = (
 /obj/structure/fluff/psycross/astrata,
-/obj/machinery/light/fueled/firebowl/church,
+/obj/machinery/light/fueled/firebowl/church/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "qg" = (
@@ -4044,7 +4044,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "qs" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -4053,7 +4053,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "qt" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
 /turf/open/floor/dirt/road,
@@ -4099,10 +4099,10 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "qD" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/grass/cold,
@@ -4136,11 +4136,11 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "qI" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /obj/effect/decal/cleanable/dirt/cobweb,
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
@@ -4345,7 +4345,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/tile/masonic{
 	dir = 4
 	},
@@ -4414,7 +4414,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "rQ" = (
-/obj/machinery/light/fueled/firebowl,
+/obj/machinery/light/fueled/firebowl/dun_world,
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/wretch_lair)
 "rR" = (
@@ -4453,7 +4453,7 @@
 /turf/closed/wall/mineral/wooddark/end,
 /area/rogue/indoors/banditcamp)
 "rY" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /turf/open/floor/dirt/road,
@@ -4488,10 +4488,10 @@
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "sf" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/grass/cold,
@@ -4509,7 +4509,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "sj" = (
-/obj/structure/flora,
+/obj/structure/flora/tree,
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "sk" = (
@@ -4944,11 +4944,11 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "tC" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/dirt,
 /area/rogue/indoors/banditcamp)
 "tD" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -5065,7 +5065,7 @@
 	dir = 8
 	},
 /obj/structure/fluff/walldeco/church/line,
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 9
 	},
@@ -5098,7 +5098,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "uk" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/dirt/road,
@@ -5147,7 +5147,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "uB" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -5260,13 +5260,13 @@
 /turf/open/floor/ruinedwood/turned,
 /area/rogue/indoors/banditcamp)
 "uZ" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "vd" = (
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 10;
 	icon_state = "cobbleedge-n";
@@ -5296,7 +5296,7 @@
 /turf/open/water/sewer,
 /area/rogue/indoors/vampire_manor)
 "vi" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/grass/cold,
@@ -5316,7 +5316,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "vo" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/banditcamp)
 "vp" = (
@@ -5409,7 +5409,7 @@
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "vN" = (
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/under/cave/inhumen)
 "vO" = (
 /obj/item/clothing/neck/psycross,
@@ -5461,7 +5461,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "vU" = (
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/outdoors/woods)
 "vX" = (
 /turf/closed/wall/mineral/stone/moss,
@@ -5596,7 +5596,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "wy" = (
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "wA" = (
@@ -5607,13 +5607,13 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "wB" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "wC" = (
@@ -5753,7 +5753,7 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "wY" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "xb" = (
@@ -5773,7 +5773,7 @@
 /turf/open/floor/carpet/purple,
 /area/rogue/indoors/vampire_manor)
 "xg" = (
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "xi" = (
@@ -5807,7 +5807,7 @@
 /area/rogue/indoors/vampire_manor)
 "xo" = (
 /obj/structure/flora/grass/water/reeds,
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/outdoors/woods/vampire_lair)
 "xp" = (
 /obj/structure/closet/crate/crafted_closet/dark,
@@ -5866,7 +5866,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "xF" = (
-/obj/structure/flora,
+/obj/structure/flora/tree,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/mountains)
 "xG" = (
@@ -5944,7 +5944,7 @@
 /area/rogue/under/cave/inhumen)
 "ya" = (
 /obj/structure/curtain/dun_world/black,
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/ruinedwood/spiral,
@@ -5988,7 +5988,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "yj" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -6063,7 +6063,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "yI" = (
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
 "yJ" = (
@@ -6202,10 +6202,10 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "zh" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/dirt/road,
@@ -6236,7 +6236,7 @@
 /area/rogue/indoors/vampire_manor)
 "zo" = (
 /obj/item/clothing/neck/psycross/silver/divine/noc,
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/outdoors/woods/vampire_lair)
 "zq" = (
 /obj/structure/vine,
@@ -6250,7 +6250,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "zs" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/twig,
@@ -6348,13 +6348,13 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "zQ" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
 "zS" = (
-/obj/structure/flora,
+/obj/structure/flora/tree,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/woods/vampire_lair)
 "zT" = (
@@ -6365,7 +6365,7 @@
 /turf/closed/wall/mineral/wooddark/vertical,
 /area/rogue/under/cave/inhumen)
 "zV" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/twig,
@@ -6424,14 +6424,14 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Af" = (
-/obj/machinery/light/fueled/firebowl/standing/blue,
+/obj/machinery/light/fueled/firebowl/standing/blue/dun_world,
 /obj/structure/fluff/walldeco/painting/seraphina{
 	pixel_x = -32
 	},
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "Ag" = (
-/obj/machinery/light/fueled/firebowl/standing/blue,
+/obj/machinery/light/fueled/firebowl/standing/blue/dun_world,
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "Ah" = (
@@ -6468,11 +6468,11 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/mountains)
 "An" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "Ao" = (
-/obj/structure/flora{
+/obj/structure/flora/grass{
 	pixel_y = -7
 	},
 /turf/open/floor/grass,
@@ -6543,7 +6543,7 @@
 	pixel_x = 1;
 	pixel_y = -1
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Ay" = (
@@ -6717,7 +6717,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "AY" = (
-/obj/structure/stairs/fancy/l{
+/obj/structure/stairs/fancy/l/dun_world{
 	dir = 1
 	},
 /turf/open/floor/carpet/lord/left,
@@ -6882,7 +6882,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "BE" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/cobble/dun_world,
@@ -6932,7 +6932,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "BO" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -6950,7 +6950,7 @@
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "BT" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border{
@@ -6980,7 +6980,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "Ca" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
@@ -7008,7 +7008,7 @@
 	dir = 4
 	},
 /obj/structure/flora/hotspring_rocks/small/two,
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Cg" = (
@@ -7053,7 +7053,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Cn" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
 /turf/open/floor/grass,
@@ -7068,7 +7068,7 @@
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 6
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Cr" = (
@@ -7095,7 +7095,7 @@
 	dir = 10;
 	icon_state = "cobbleedge-e"
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "Cy" = (
@@ -7207,7 +7207,7 @@
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "CZ" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
 /turf/open/floor/grass/cold,
@@ -7322,7 +7322,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Dv" = (
-/obj/structure/stairs/fancy/c{
+/obj/structure/stairs/fancy/c/dun_world{
 	dir = 1
 	},
 /turf/open/floor/carpet/lord/center,
@@ -7368,7 +7368,7 @@
 /turf/open/floor/dirt,
 /area/rogue/indoors/banditcamp)
 "DF" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/snow,
@@ -7402,7 +7402,7 @@
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "DO" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
@@ -7424,7 +7424,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "DU" = (
-/obj/effect/landmark/mapGenerator/forest{
+/obj/effect/landmark/mapGenerator/dun_world/forest{
 	endTurfX = 144;
 	endTurfY = 145
 	},
@@ -7503,7 +7503,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Ek" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -7605,7 +7605,7 @@
 	pixel_x = 12;
 	pixel_y = -1
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "EK" = (
@@ -7645,7 +7645,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "EU" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/openspace,
@@ -7658,7 +7658,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "EZ" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Fb" = (
@@ -7682,7 +7682,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Fe" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/grass,
@@ -7700,13 +7700,13 @@
 /turf/closed/wall/mineral/craftstone,
 /area/rogue/under/cave/inhumen)
 "Fh" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "Fi" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -7723,7 +7723,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "Fm" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -7743,7 +7743,7 @@
 /area/rogue/under/cave/inhumen)
 "Fq" = (
 /obj/structure/curtain/dun_world/red,
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -7756,16 +7756,16 @@
 /turf/open/floor/naturalstone,
 /area/rogue/indoors/vampire_manor)
 "Fs" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "Ft" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "Fu" = (
@@ -7809,7 +7809,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "FG" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
@@ -7830,7 +7830,7 @@
 /turf/open/floor/grass/red,
 /area/rogue/outdoors/woods/vampire_lair)
 "FK" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /turf/open/floor/blocks,
@@ -7894,7 +7894,7 @@
 /turf/open/openspace,
 /area/rogue/outdoors/woods/wretch_lair)
 "Gd" = (
-/obj/machinery/light/fueled/firebowl/church,
+/obj/machinery/light/fueled/firebowl/church/dun_world,
 /obj/structure/fluff/walldeco/maidendrape,
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
@@ -8004,7 +8004,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
-/obj/machinery/light/fueled/firebowl,
+/obj/machinery/light/fueled/firebowl/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 1
 	},
@@ -8050,7 +8050,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "GK" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 8
 	},
 /turf/open/floor/naturalstone,
@@ -8145,7 +8145,7 @@
 /turf/open/floor/grass/cold,
 /area/rogue/indoors/banditcamp)
 "Hk" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/dirt/road,
@@ -8184,7 +8184,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Hr" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Hs" = (
@@ -8255,7 +8255,7 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "HJ" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
 "HK" = (
@@ -8278,7 +8278,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "HS" = (
-/obj/machinery/light/fueled/firebowl/church,
+/obj/machinery/light/fueled/firebowl/church/dun_world,
 /turf/open/floor/blocks,
 /area/rogue/outdoors/woods/wretch_lair)
 "HT" = (
@@ -8310,7 +8310,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "Ia" = (
-/obj/machinery/light/fueled/firebowl/standing/blue,
+/obj/machinery/light/fueled/firebowl/standing/blue/dun_world,
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "Ib" = (
@@ -8343,7 +8343,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Ij" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/woods)
 "Ik" = (
@@ -8366,7 +8366,7 @@
 /turf/open/floor/cobblerock/dun_world,
 /area/rogue/under/cave/inhumen)
 "Iq" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
@@ -8384,7 +8384,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "It" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Iu" = (
@@ -8396,7 +8396,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/banditcamp)
 "Iw" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /turf/open/floor/naturalstone,
@@ -8484,7 +8484,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/under/cave/inhumen)
 "IP" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -8513,7 +8513,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/under/cave/inhumen)
 "IX" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 8
 	},
 /turf/open/floor/blocks,
@@ -8556,7 +8556,7 @@
 /turf/open/floor/cobblerock/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Jf" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -8586,10 +8586,10 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "Jl" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
 "Jm" = (
@@ -8617,7 +8617,7 @@
 	dir = 8
 	},
 /obj/structure/fluff/walldeco/church/line,
-/obj/machinery/light/fueled/firebowl,
+/obj/machinery/light/fueled/firebowl/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Jr" = (
@@ -8661,7 +8661,7 @@
 /turf/open/floor/grass/cold,
 /area/rogue/indoors/banditcamp)
 "JA" = (
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 9;
 	pixel_x = 1;
@@ -8677,7 +8677,7 @@
 /turf/open/floor/rooftop/green,
 /area/rogue/outdoors/mountains)
 "JC" = (
-/obj/structure/flora{
+/obj/structure/flora/grass{
 	pixel_y = -7
 	},
 /turf/open/floor/dirt/ambush,
@@ -8909,7 +8909,7 @@
 /turf/open/openspace,
 /area/rogue/indoors/vampire_manor)
 "Ki" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -8965,7 +8965,7 @@
 /turf/closed/wall/mineral/pipe,
 /area/rogue/indoors/vampire_manor)
 "KB" = (
-/turf/open/water,
+/turf/open/water/clean,
 /area/rogue/outdoors/banditcamp)
 "KC" = (
 /obj/machinery/light/fueled/wallfire/candle/dun_world,
@@ -8981,7 +8981,7 @@
 /turf/open/openspace,
 /area/rogue/indoors/vampire_manor)
 "KG" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/tile/bfloorz,
@@ -8991,7 +8991,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "KI" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -9014,7 +9014,7 @@
 /turf/open/water/bath,
 /area/rogue/indoors/vampire_manor)
 "KM" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
@@ -9040,14 +9040,14 @@
 /turf/closed/wall/mineral/stone,
 /area/rogue/indoors/vampire_manor)
 "KQ" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "KR" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/dirt/road,
@@ -9117,13 +9117,13 @@
 /turf/open/floor/snow/patchy,
 /area/rogue/outdoors/banditcamp)
 "Lf" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/dirt/road,
@@ -9311,10 +9311,10 @@
 /turf/open/floor/ruinedwood/turned,
 /area/rogue/indoors/banditcamp)
 "LD" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/dirt,
@@ -9370,7 +9370,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "LO" = (
-/obj/effect/landmark/mapGenerator/forest{
+/obj/effect/landmark/mapGenerator/dun_world/forest{
 	endTurfX = 144;
 	endTurfY = 145
 	},
@@ -9392,7 +9392,7 @@
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/vampire_manor)
 "LT" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -9401,7 +9401,7 @@
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "LU" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/tile/masonic{
@@ -9466,13 +9466,13 @@
 /turf/closed/wall/mineral/craftstone,
 /area/rogue/under/cave/inhumen)
 "Mk" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "Ml" = (
@@ -9487,14 +9487,14 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "Mn" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "Mp" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/snow,
 /area/rogue/outdoors/banditcamp)
 "Mq" = (
@@ -9579,7 +9579,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "MN" = (
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /obj/structure/fluff/psycross/zizocross,
 /turf/open/floor/blocks,
 /area/rogue/indoors/banditcamp)
@@ -9599,7 +9599,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "MS" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
@@ -9626,7 +9626,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "MW" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/twig,
@@ -9661,14 +9661,14 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "Nd" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "Nf" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/ruinedwood/spiral,
@@ -9714,7 +9714,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Np" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -9739,7 +9739,7 @@
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 5
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "Nv" = (
@@ -9762,7 +9762,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "NA" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
@@ -9791,7 +9791,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "NF" = (
-/obj/structure/stairs/fancy/r{
+/obj/structure/stairs/fancy/r/dun_world{
 	dir = 1
 	},
 /turf/open/floor/carpet/lord/right,
@@ -9899,7 +9899,7 @@
 	dir = 10;
 	icon_state = "cobbleedge-w"
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "Oh" = (
@@ -10027,10 +10027,10 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "OF" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/snow/patchy,
@@ -10076,7 +10076,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "OP" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/tile/masonic{
@@ -10093,7 +10093,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/obj/machinery/light/fueled/firebowl/standing,
+/obj/machinery/light/fueled/firebowl/standing/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "OS" = (
@@ -10138,7 +10138,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/banditcamp)
 "Pd" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -10158,8 +10158,8 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/woods/wretch_lair)
 "Ph" = (
-/obj/structure/fluff/railing,
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade,
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/dirt/road,
@@ -10211,7 +10211,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
-/obj/machinery/light/fueled/firebowl,
+/obj/machinery/light/fueled/firebowl/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -10238,11 +10238,11 @@
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 10
 	},
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "Pz" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -10283,7 +10283,7 @@
 /turf/open/floor/blocks/stonered,
 /area/rogue/indoors/vampire_manor)
 "PN" = (
-/obj/machinery/light/fueled/firebowl/standing/blue,
+/obj/machinery/light/fueled/firebowl/standing/blue/dun_world,
 /obj/structure/fluff/walldeco/painting/queen{
 	pixel_x = 32
 	},
@@ -10415,7 +10415,7 @@
 /turf/open/floor/greenstone,
 /area/rogue/indoors/vampire_manor)
 "Qx" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border{
@@ -10454,7 +10454,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "QI" = (
-/turf/open/water/river,
+/turf/open/water/river/dun_world/east,
 /area/rogue/outdoors/woods)
 "QJ" = (
 /obj/structure/fluff/railing/corner,
@@ -10583,7 +10583,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/eventarea/multiz)
 "Rq" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
@@ -10729,7 +10729,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "Sd" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border{
@@ -10831,7 +10831,7 @@
 /area/rogue/indoors/vampire_manor)
 "Sy" = (
 /obj/structure/fluff/psycross/crafted/shrine,
-/obj/structure/flora,
+/obj/structure/flora/grass,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "SA" = (
@@ -10889,7 +10889,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "SO" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -10931,7 +10931,7 @@
 /turf/open/floor/ruinedwood/turned,
 /area/rogue/under/cave/inhumen)
 "SX" = (
-/obj/structure/fluff/railing,
+/obj/structure/fluff/railing/tall/palisade,
 /turf/open/floor/snow/patchy,
 /area/rogue/outdoors/banditcamp)
 "SY" = (
@@ -10994,7 +10994,7 @@
 /turf/open/floor/blocks,
 /area/rogue/indoors/banditcamp)
 "Tl" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/corner,
@@ -11171,7 +11171,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/vampire_manor)
 "TY" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 1
 	},
 /turf/open/floor/dirt/road,
@@ -11279,7 +11279,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "Uw" = (
-/obj/machinery/light/fueled/firebowl/church,
+/obj/machinery/light/fueled/firebowl/church/dun_world,
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "Ux" = (
@@ -11304,7 +11304,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "UC" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/dirt,
@@ -11332,7 +11332,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "UI" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "UK" = (
@@ -11457,7 +11457,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "Vl" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "Vm" = (
@@ -11506,10 +11506,10 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "Vu" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/dirt,
@@ -11603,7 +11603,7 @@
 /turf/open/openspace,
 /area/rogue/under/cave/inhumen)
 "VQ" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 4
 	},
 /obj/structure/fluff/railing/border,
@@ -11727,7 +11727,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Wp" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/dirt,
@@ -11742,7 +11742,7 @@
 /turf/open/floor/carpet/red,
 /area/rogue/under/cave/inhumen)
 "Wt" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
@@ -11775,7 +11775,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/tile,
@@ -11917,7 +11917,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/tile,
@@ -11969,7 +11969,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/vampire_manor)
 "Xj" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 8
 	},
 /turf/open/floor/dirt,
@@ -12024,7 +12024,7 @@
 /turf/open/lava/acid,
 /area/rogue/outdoors/woods/wretch_lair)
 "Xv" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/naturalstone,
@@ -12105,7 +12105,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "XM" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 8
 	},
 /turf/open/floor/snow/patchy,
@@ -12177,7 +12177,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "XT" = (
-/obj/machinery/light/fueled/firebowl/stump{
+/obj/machinery/light/fueled/firebowl/stump/dun_world{
 	pixel_x = -6;
 	pixel_y = 2
 	},
@@ -12318,10 +12318,10 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "Yu" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 4
 	},
 /turf/open/floor/grass/cold,
@@ -12335,7 +12335,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "Yx" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border{
@@ -12351,7 +12351,7 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "YA" = (
-/obj/structure/stairs/stone{
+/obj/structure/stairs/stone/dun_world{
 	dir = 8
 	},
 /obj/structure/fluff/railing/border,
@@ -12493,7 +12493,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Za" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/tile/masonic,
@@ -12528,7 +12528,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "Zk" = (
-/obj/structure/stairs,
+/obj/structure/stairs/dun_world,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -12576,7 +12576,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "Zx" = (
-/obj/machinery/light/fueled/firebowl/stump,
+/obj/machinery/light/fueled/firebowl/stump/dun_world,
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "Zy" = (
@@ -12609,13 +12609,13 @@
 /turf/closed/mineral/random/high,
 /area/rogue/under/cave/inhumen)
 "ZC" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "ZD" = (
-/obj/structure/fluff/railing{
+/obj/structure/fluff/railing/tall/palisade{
 	dir = 1
 	},
 /turf/open/floor/grass,
@@ -12666,7 +12666,7 @@
 /turf/open/openspace,
 /area/rogue/under/cave/inhumen)
 "ZR" = (
-/obj/structure/stairs{
+/obj/structure/stairs/dun_world{
 	dir = 1
 	},
 /turf/open/floor/tile/masonic{
