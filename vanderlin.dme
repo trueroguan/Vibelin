@@ -4209,4 +4209,5 @@
 #include "interface\fonts\datums\vaticanus.dm"
 #include "interface\fonts\datums\wernicke.dm"
 #include "interface\fonts\datums\yataghan.dm"
+#include "modular_abel\_module.dm"
 // END_INCLUDE
