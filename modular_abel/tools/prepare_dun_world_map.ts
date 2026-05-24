@@ -251,8 +251,6 @@ function applyDmmVarAdjustments(sourceText: string): string {
     /^\s*(?:lockdifficulty|lock_strength|mammonsiphoned|obj_integrity|order)\s*=\s*-?\d+(?:\.\d+)?;?\s*$/;
   const removedFlagVarPattern =
     /^\s*(?:keylock|masterkey|smooth)\s*=\s*[01];?\s*$/;
-  const removedCoordinateVarPattern =
-    /^\s*(?:startTurfX|startTurfY|endTurfX|endTurfY)\s*=\s*-?\d+;?\s*$/;
 
   return sourceText
     .split(/\r?\n/)
@@ -269,8 +267,7 @@ function applyDmmVarAdjustments(sourceText: string): string {
         line === '' ||
         removedVarPattern.test(line) ||
         removedNumberVarPattern.test(line) ||
-        removedFlagVarPattern.test(line) ||
-        removedCoordinateVarPattern.test(line)
+        removedFlagVarPattern.test(line)
       ) {
         return [];
       }

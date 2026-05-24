@@ -13,6 +13,14 @@ const MODULAR_RSC = 'vanderlin.modular_abel.rsc';
 const FINAL_DMB = 'vanderlin.dmb';
 const FINAL_RSC = 'vanderlin.rsc';
 const END_INCLUDE = '// END_INCLUDE';
+const BEGIN_INCLUDE = '// BEGIN_INCLUDE';
+const FORCE_DUN_WORLD_DEFINES = [
+  '#ifndef FORCE_MAP',
+  '#define FORCE_MAP "dun_world" // modular_abel temporary force',
+  '#define FORCE_MAP_DIRECTORY "_maps" // modular_abel temporary force',
+  '#endif',
+  '',
+].join('\n');
 
 type BuildOptions = {
   target: string;
@@ -170,7 +178,9 @@ function writeModularDme() {
     throw new Error(`${UPSTREAM_DME} does not contain ${END_INCLUDE}`);
   }
 
-  const modularDme = dme.replace(END_INCLUDE, getModularIncludeBlock());
+  const modularDme = withForcedDunWorld(
+    dme.replace(END_INCLUDE, getModularIncludeBlock()),
+  );
 
   fs.writeFileSync(MODULAR_DME, modularDme);
 }
@@ -193,6 +203,7 @@ async function prepareTgsBuild(options: BuildOptions) {
 function writeModularDmeInPlace() {
   const dme = fs.readFileSync(UPSTREAM_DME, 'utf-8');
   if (dme.includes('#include "modular_abel\\_module.dm"')) {
+    fs.writeFileSync(UPSTREAM_DME, withForcedDunWorld(dme));
     return;
   }
 
@@ -202,7 +213,22 @@ function writeModularDmeInPlace() {
 
   fs.writeFileSync(
     UPSTREAM_DME,
-    dme.replace(END_INCLUDE, getModularIncludeBlock()),
+    withForcedDunWorld(dme.replace(END_INCLUDE, getModularIncludeBlock())),
+  );
+}
+
+function withForcedDunWorld(dme: string) {
+  if (dme.includes('#define FORCE_MAP "dun_world"')) {
+    return dme;
+  }
+
+  if (!dme.includes(BEGIN_INCLUDE)) {
+    throw new Error(`${UPSTREAM_DME} does not contain ${BEGIN_INCLUDE}`);
+  }
+
+  return dme.replace(
+    BEGIN_INCLUDE,
+    `${FORCE_DUN_WORLD_DEFINES}${BEGIN_INCLUDE}`,
   );
 }
 

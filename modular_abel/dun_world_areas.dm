@@ -10,12 +10,15 @@
 	name = "Dun World - Druidsgrove"
 
 /area/rogue/indoors
+	parent_type = /area/indoors
 	name = "Dun World - Indoors"
 
 /area/rogue/outdoors
+	parent_type = /area/outdoors
 	name = "Dun World - Outdoors"
 
 /area/rogue/under
+	parent_type = /area/under
 	name = "Dun World - Under"
 
 /area/rogue/indoors/abandonedhotsprings
@@ -25,6 +28,7 @@
 	name = "Dun World - Indoors / Bandit Camp"
 
 /area/rogue/indoors/cave
+	parent_type = /area/indoors/cave
 	name = "Dun World - Indoors / Cave"
 
 /area/rogue/indoors/eventarea
@@ -37,45 +41,58 @@
 	name = "Dun World - Indoors / Shelter"
 
 /area/rogue/indoors/town
+	parent_type = /area/indoors/town
 	name = "Dun World - Indoors / Town"
 
 /area/rogue/indoors/vampire_manor
+	parent_type = /area/indoors/vampire_manor
 	name = "Dun World - Indoors / Vampire Manor"
 
 /area/rogue/outdoors/banditcamp
 	name = "Dun World - Outdoors / Bandit Camp"
 
 /area/rogue/outdoors/beach
+	parent_type = /area/outdoors/beach
 	name = "Dun World - Outdoors / Beach"
 
 /area/rogue/outdoors/bog
+	parent_type = /area/outdoors/bog
 	name = "Dun World - Outdoors / Bog"
 
 /area/rogue/outdoors/exposed
+	parent_type = /area/outdoors/exposed
 	name = "Dun World - Outdoors / Exposed"
 
 /area/rogue/outdoors/mountains
+	parent_type = /area/outdoors/mountains
 	name = "Dun World - Outdoors / Mountains"
 
 /area/rogue/outdoors/rtfield
+	parent_type = /area/outdoors/basin
 	name = "Dun World - Outdoors / Rogue Territory Field"
 
 /area/rogue/outdoors/town
+	parent_type = /area/outdoors/town
 	name = "Dun World - Outdoors / Town"
 
 /area/rogue/outdoors/woods
+	parent_type = /area/outdoors/wilderness
 	name = "Dun World - Outdoors / Woods"
 
 /area/rogue/under/cave
+	parent_type = /area/under/cave
 	name = "Dun World - Under / Cave"
 
 /area/rogue/under/cavewet
+	parent_type = /area/under/cavewet
 	name = "Dun World - Under / Wet Cave"
 
 /area/rogue/under/town
+	parent_type = /area/under/town
 	name = "Dun World - Under / Town"
 
 /area/rogue/under/underdark
+	parent_type = /area/under/cave
 	name = "Dun World - Under / Underdark"
 
 /area/rogue/indoors/cave/central
@@ -163,6 +180,7 @@
 	name = "Dun World - Outdoors / Beach / Central"
 
 /area/rogue/outdoors/beach/forest
+	parent_type = /area/outdoors/wilderness
 	name = "Dun World - Outdoors / Beach / Forest"
 
 /area/rogue/outdoors/beach/north
@@ -190,6 +208,7 @@
 	name = "Dun World - Outdoors / Exposed / Town"
 
 /area/rogue/outdoors/mountains/decap
+	parent_type = /area/outdoors/mountains/decap
 	name = "Dun World - Outdoors / Mountains / Decapitation Grounds"
 
 /area/rogue/outdoors/rtfield/abandonedhotsprings
@@ -274,6 +293,7 @@
 	name = "Dun World - Under / Town / Basement"
 
 /area/rogue/under/town/sewer
+	parent_type = /area/under/town/sewer
 	name = "Dun World - Under / Town / Sewer"
 
 /area/rogue/under/underdark/north
