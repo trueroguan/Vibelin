@@ -96,7 +96,7 @@ async function generateMap(options: {
   fs.renameSync(temporaryOutputPath, options.outputPath);
 
   if (configuredReplacementCount === 0) {
-    console.warn(
+    console.log(
       `modular_abel: no ${options.name} path replacements configured yet; generated map is currently a raw copy.`,
     );
     return;
@@ -126,7 +126,7 @@ async function downloadText(url: string): Promise<string> {
     }
     return await response.text();
   } catch (error) {
-    console.warn(
+    console.log(
       `modular_abel: Bun download failed (${String(error)}); retrying the same URL with curl.`,
     );
     return downloadTextWithCurl(url);

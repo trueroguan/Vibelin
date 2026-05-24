@@ -32,16 +32,19 @@ async function main() {
     case 'dm':
       await compileModularDme(options);
       prepareRuntimeConfig();
+      logCompleted(options.target);
       return;
     case 'build':
       await runUpstreamTarget('tgui', options.parameterArgs);
       await compileModularDme(options);
       prepareRuntimeConfig();
+      logCompleted(options.target);
       return;
     case 'server':
       await runUpstreamTarget('tgui', options.parameterArgs);
       await compileModularDme(options);
       prepareRuntimeConfig();
+      console.log('modular_abel: build completed successfully; starting DreamDaemon.');
       await DreamDaemon(
         {
           dmbFile: FINAL_DMB,
@@ -52,22 +55,30 @@ async function main() {
         '-params',
         `config-directory=${MODULAR_RUNTIME_CONFIG_DIR}`,
       );
+      logCompleted(options.target);
       return;
     case 'tgs':
       await prepareTgsBuild(options);
+      logCompleted(options.target);
       return;
     case 'clean':
     case 'clean-all':
       cleanupModularArtifacts();
       await runUpstreamTarget(options.target);
+      logCompleted(options.target);
       return;
     default:
       console.warn(
         `modular_abel: target "${options.target}" is passed through to upstream build without modular DME injection.`,
       );
       await runUpstreamBuild(options.rawArgs);
+      logCompleted(options.target);
       return;
   }
+}
+
+function logCompleted(target: string) {
+  console.log(`modular_abel: target "${target}" completed successfully.`);
 }
 
 function parseArgs(args: string[]): BuildOptions {
