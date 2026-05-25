@@ -1343,7 +1343,7 @@
 		"/obj/structure/fluff/railing/corner/north_east": "/obj/structure/fluff/railing/corner",
 		"/obj/structure/fluff/railing/corner/south_east": "/obj/structure/fluff/railing/corner",
 		"/obj/structure/fluff/railing/corner/south_west": "/obj/structure/fluff/railing/corner",
-		"/obj/structure/fluff/railing/fence": "/obj/structure/fluff/railing/tall/palisade",
+		"/obj/structure/fluff/railing/fence": "/obj/structure/fluff/railing/tall/palisade/dun_world",
 		"/obj/structure/fluff/railing/wood/east": "/obj/structure/fluff/railing/wood",
 		"/obj/structure/fluff/railing/wood/north": "/obj/structure/fluff/railing/wood",
 		"/obj/structure/fluff/railing/wood/west": "/obj/structure/fluff/railing/wood",

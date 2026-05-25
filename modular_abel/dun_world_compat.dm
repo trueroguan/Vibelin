@@ -57,6 +57,60 @@
 /obj/structure/curtain/dun_world/black
 	color = "#414143"
 
+/obj/structure/fluff/railing/tall/palisade/dun_world
+	desc = "A rudimentary barrier that might keep the monsters at bay."
+	max_integrity = 400
+	climbable = FALSE
+	pass_crawl = FALSE
+	pass_throwing = FALSE
+	pass_projectile = FALSE
+	opacity = TRUE
+
+/obj/structure/fluff/railing/tall/palisade/dun_world/Initialize(mapload, ...)
+	. = ..()
+	smooth_dun_world_palisades()
+
+/obj/structure/fluff/railing/tall/palisade/dun_world/Destroy()
+	var/turf/old_loc = loc
+	. = ..()
+	if(!old_loc)
+		return
+	for(var/check_dir in GLOB.cardinals)
+		var/turf/neighbor_turf = get_step(old_loc, check_dir)
+		if(!neighbor_turf)
+			continue
+		for(var/obj/structure/fluff/railing/tall/palisade/dun_world/neighbor in neighbor_turf)
+			neighbor.smooth_dun_world_palisades(TRUE)
+
+/obj/structure/fluff/railing/tall/palisade/dun_world/OnCrafted(dirin, mob/user)
+	. = ..()
+	smooth_dun_world_palisades()
+
+/obj/structure/fluff/railing/tall/palisade/dun_world/proc/smooth_dun_world_palisades(neighbors = FALSE)
+	cut_overlays()
+	if(!(dir in list(EAST, WEST)))
+		return
+	var/turf/north_turf = get_step(src, NORTH)
+	if(north_turf)
+		for(var/obj/structure/fluff/railing/tall/palisade/dun_world/fence in north_turf)
+			if(fence.dir != dir)
+				continue
+			if(!neighbors)
+				fence.smooth_dun_world_palisades(TRUE)
+			var/mutable_appearance/smooth_above = mutable_appearance(icon, "fence_smooth_above")
+			smooth_above.dir = dir
+			add_overlay(smooth_above)
+	var/turf/south_turf = get_step(src, SOUTH)
+	if(south_turf)
+		for(var/obj/structure/fluff/railing/tall/palisade/dun_world/fence in south_turf)
+			if(fence.dir != dir)
+				continue
+			if(!neighbors)
+				fence.smooth_dun_world_palisades(TRUE)
+			var/mutable_appearance/smooth_below = mutable_appearance(icon, "fence_smooth_below")
+			smooth_below.dir = dir
+			add_overlay(smooth_below)
+
 /obj/structure/table/wood/counter/dun_world
 	dir = SOUTH
 
@@ -138,6 +192,16 @@
 /turf/closed/wall/mineral/roofwall/innercorner/dir8
 	dir = WEST
 
+/obj/effect/dun_world_map_light_proxy
+	icon = null
+	alpha = 0
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/machinery/light/fueled
+	var/tmp/obj/effect/dun_world_map_light_proxy/dun_world_light_proxy
+	var/tmp/dun_world_uses_light_proxy = FALSE
+
 /obj/machinery/light/fueled/proc/dun_world_force_map_light()
 	status = LIGHT_OK
 	on = TRUE
@@ -146,6 +210,8 @@
 	if(color)
 		map_light_color = color
 	set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
+	if(dun_world_uses_light_proxy)
+		dun_world_update_light_proxy(map_light_color)
 	update()
 	update_appearance(UPDATE_ICON_STATE)
 
@@ -154,6 +220,44 @@
 		return
 	dun_world_force_map_light()
 	addtimer(CALLBACK(src, PROC_REF(dun_world_force_map_light)), 1)
+
+/obj/machinery/light/fueled/proc/dun_world_update_light_proxy(map_light_color)
+	var/turf/light_turf = dun_world_get_light_proxy_turf()
+	if(!light_turf)
+		return
+	if(QDELETED(dun_world_light_proxy))
+		dun_world_light_proxy = null
+	if(!dun_world_light_proxy)
+		dun_world_light_proxy = new(light_turf)
+	else if(dun_world_light_proxy.loc != light_turf)
+		dun_world_light_proxy.forceMove(light_turf)
+	dun_world_light_proxy.set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
+
+/obj/machinery/light/fueled/proc/dun_world_get_light_proxy_turf()
+	var/turf/source_turf = get_turf(src)
+	if(!source_turf)
+		return null
+
+	var/list/candidates = list()
+	var/preferred_direction = NONE
+	if(abs(pixel_y) >= abs(pixel_x) && pixel_y)
+		preferred_direction = pixel_y > 0 ? NORTH : SOUTH
+	else if(pixel_x)
+		preferred_direction = pixel_x > 0 ? EAST : WEST
+
+	if(preferred_direction)
+		candidates += get_step(source_turf, preferred_direction)
+	candidates += source_turf
+	for(var/direction in GLOB.cardinals)
+		candidates += get_step(source_turf, direction)
+
+	for(var/turf/candidate as anything in candidates)
+		if(!candidate)
+			continue
+		if(candidate.density || candidate.opacity)
+			continue
+		return candidate
+	return source_turf
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/Initialize(mapload, ...)
 	. = ..()
@@ -194,6 +298,36 @@
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/Initialize(mapload, ...)
 	. = ..()
 	dun_world_init_map_light(mapload)
+
+/obj/machinery/light/fueled/wallfire/candle/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/r/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/l/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/blue/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/weak/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world
+	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world
+	dun_world_uses_light_proxy = TRUE
 
 /obj/machinery/light/fueled/firebowl/dun_world
 	brightness = 12
