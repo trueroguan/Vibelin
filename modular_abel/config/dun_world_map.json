@@ -296,7 +296,7 @@
 		"/obj/item/candle/candlestick/silver/single": "/obj/item/candle/scandelabrasingle",
 		"/obj/item/candle/candlestick/silver/single/lit": "/obj/item/candle/scandelabrasingle/lit",
 		"/obj/item/candle/gold/lit": "/obj/item/candle/gcandle/lit",
-		"/obj/item/candle/silver": "/obj/item/candle",
+		"/obj/item/candle/silver": "/obj/item/candle/scandle",
 		"/obj/item/candle/silver/lit": "/obj/item/candle/scandle/lit",
 		"/obj/item/chair/rogue": "/obj/item/chair",
 		"/obj/item/chair/rogue/fancy": "/obj/item/chair/fancy",

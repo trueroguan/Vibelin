@@ -210,8 +210,7 @@
 	if(color)
 		map_light_color = color
 	set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
-	if(dun_world_uses_light_proxy)
-		dun_world_update_light_proxy(map_light_color)
+	dun_world_sync_light_proxy(map_light_color)
 	update()
 	update_appearance(UPDATE_ICON_STATE)
 
@@ -232,6 +231,27 @@
 	else if(dun_world_light_proxy.loc != light_turf)
 		dun_world_light_proxy.forceMove(light_turf)
 	dun_world_light_proxy.set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
+
+/obj/machinery/light/fueled/proc/dun_world_clear_light_proxy()
+	if(QDELETED(dun_world_light_proxy))
+		dun_world_light_proxy = null
+		return
+	if(!dun_world_light_proxy)
+		return
+	dun_world_light_proxy.set_light(0, 0, 0, l_on = FALSE)
+	QDEL_NULL(dun_world_light_proxy)
+
+/obj/machinery/light/fueled/proc/dun_world_sync_light_proxy(map_light_color)
+	if(!dun_world_uses_light_proxy)
+		return
+	if(!on)
+		dun_world_clear_light_proxy()
+		return
+	if(isnull(map_light_color))
+		map_light_color = bulb_colour
+		if(color)
+			map_light_color = color
+	dun_world_update_light_proxy(map_light_color)
 
 /obj/machinery/light/fueled/proc/dun_world_get_light_proxy_turf()
 	var/turf/source_turf = get_turf(src)
@@ -299,6 +319,46 @@
 	. = ..()
 	dun_world_init_map_light(mapload)
 
+/obj/machinery/light/fueled/wallfire/candle/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/r/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/l/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/blue/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/weak/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/update(trigger = TRUE)
+	. = ..()
+	dun_world_sync_light_proxy()
+
 /obj/machinery/light/fueled/wallfire/candle/dun_world
 	dun_world_uses_light_proxy = TRUE
 
@@ -328,6 +388,161 @@
 
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world
 	dun_world_uses_light_proxy = TRUE
+
+/obj/item/candle/proc/dun_world_sync_item_candle_light()
+	if(lit)
+		var/outer_range = max(light_outer_range, 3)
+		var/inner_range = light_inner_range
+		if(!inner_range)
+			inner_range = outer_range / 4
+		var/power = max(light_power, 1)
+		set_light(outer_range, inner_range, power, l_color = light_color, l_on = TRUE)
+	else
+		set_light(0, 0, 0, l_on = FALSE)
+
+/obj/item/candle/yellow/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/yellow/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/yellow/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/yellow/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/skull/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/skull/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/skull/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/skull/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/eora/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/eora/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/eora/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/eora/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandle/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandle/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandle/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandle/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandle/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandle/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandle/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandle/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabra/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabra/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabra/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabra/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabrasingle/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabrasingle/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabrasingle/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/scandelabrasingle/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabra/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabra/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabra/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabra/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabrasingle/Initialize(mapload, ...)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabrasingle/fire_act(added, maxstacks)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabrasingle/attack_self(mob/user, list/modifiers)
+	. = ..()
+	dun_world_sync_item_candle_light()
+
+/obj/item/candle/gcandelabrasingle/extinguish()
+	. = ..()
+	dun_world_sync_item_candle_light()
 
 /obj/machinery/light/fueled/firebowl/dun_world
 	brightness = 12
