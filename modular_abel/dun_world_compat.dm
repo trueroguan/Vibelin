@@ -257,6 +257,8 @@
 	var/turf/source_turf = get_turf(src)
 	if(!source_turf)
 		return null
+	if(!source_turf.density && !source_turf.opacity)
+		return source_turf
 
 	var/list/candidates = list()
 	var/preferred_direction = NONE
@@ -579,35 +581,39 @@
 	. = ..()
 	dun_world_init_map_light(mapload)
 
+#define DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC 0
+
 /obj/structure/stairs/dun_world
 	density = FALSE
-	obj_flags = CAN_BE_HIT | IGNORE_SINK
-	terminator_mode = 1
+	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/stone/dun_world
 	density = FALSE
-	obj_flags = CAN_BE_HIT | IGNORE_SINK
-	terminator_mode = 1
+	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/dun_world
 	density = FALSE
-	obj_flags = CAN_BE_HIT | IGNORE_SINK
-	terminator_mode = 1
+	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/c/dun_world
 	density = FALSE
-	obj_flags = CAN_BE_HIT | IGNORE_SINK
-	terminator_mode = 1
+	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/r/dun_world
 	density = FALSE
-	obj_flags = CAN_BE_HIT | IGNORE_SINK
-	terminator_mode = 1
+	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/l/dun_world
 	density = FALSE
-	obj_flags = CAN_BE_HIT | IGNORE_SINK
-	terminator_mode = 1
+	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
+
+#undef DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /turf/open/water/river/dun_world
 	dir = SOUTH
