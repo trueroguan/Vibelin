@@ -309,7 +309,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "bh" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "bi" = (
@@ -432,7 +432,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "bD" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink{
 	pixel_y = -11
 	},
 /turf/open/floor/naturalstone,
@@ -607,7 +607,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "cl" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt{
 	pixel_y = -14
 	},
 /turf/open/floor/churchbrick,
@@ -896,7 +896,7 @@
 /turf/closed/wall/mineral/pipe,
 /area/rogue/indoors/vampire_manor)
 "dA" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink{
 	pixel_x = -3;
 	pixel_y = -12
 	},
@@ -1118,7 +1118,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "ez" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink,
 /obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
@@ -2900,7 +2900,7 @@
 /turf/closed/wall/mineral/stone,
 /area/rogue/under/cave/inhumen)
 "lu" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink{
 	pixel_x = -3;
 	pixel_y = -12
 	},
@@ -2986,7 +2986,7 @@
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "lJ" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink{
 	pixel_x = -1
 	},
 /turf/open/floor/tile/bath,
@@ -3202,7 +3202,7 @@
 /turf/open/water/sewer,
 /area/rogue/indoors/vampire_manor)
 "mF" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/churchbrick,
 /area/rogue/outdoors/banditcamp)
 "mG" = (
@@ -3278,7 +3278,7 @@
 /turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "mX" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt{
 	pixel_y = -9
 	},
 /turf/open/floor/churchbrick,
@@ -4204,7 +4204,7 @@
 /obj/structure/fluff/railing/corner{
 	dir = 6
 	},
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt{
 	pixel_y = -9
 	},
 /turf/open/floor/cobble/mossy/dun_world,
@@ -4980,7 +4980,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "tv" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink{
 	pixel_y = -11
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world,
@@ -5508,7 +5508,7 @@
 "vO" = (
 /obj/item/clothing/neck/psycross,
 /obj/structure/table/vtable,
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "vQ" = (
@@ -5686,7 +5686,7 @@
 /obj/structure/table/church{
 	icon_state = "churchtable_end"
 	},
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "wy" = (
@@ -5694,7 +5694,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "wA" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 10
 	},
@@ -5997,7 +5997,7 @@
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "xN" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt{
 	pixel_y = -17
 	},
 /turf/open/floor/naturalstone,
@@ -6078,7 +6078,7 @@
 	dir = 9;
 	pixel_x = 15
 	},
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle{
 	pixel_y = -9
 	},
 /turf/open/floor/cobble/mossy/dun_world,
@@ -6150,7 +6150,7 @@
 /turf/open/water/sewer,
 /area/rogue/indoors/vampire_manor)
 "yC" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/woods/wretch_lair)
 "yF" = (
@@ -7146,7 +7146,7 @@
 /area/rogue/under/cave/inhumen)
 "Ck" = (
 /obj/effect/decal/cleanable/blood,
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Cm" = (
@@ -7406,7 +7406,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "Dp" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Dq" = (
@@ -7697,7 +7697,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/outdoors/banditcamp)
 "EE" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle{
 	pixel_y = -9
 	},
 /turf/open/floor/cobble/dun_world,
@@ -8512,7 +8512,7 @@
 /obj/structure/fluff/railing/corner{
 	dir = 5
 	},
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt{
 	pixel_y = -9
 	},
 /turf/open/floor/cobble/dun_world,
@@ -8680,12 +8680,12 @@
 /area/rogue/indoors/vampire_manor)
 "Jc" = (
 /obj/structure/table/church,
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "Jd" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world,
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Je" = (
@@ -11275,7 +11275,7 @@
 /area/rogue/indoors/vampire_manor)
 "TG" = (
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /obj/effect/decal/cleanable/dirt/cobweb,
 /obj/item/weapon,
 /turf/open/floor/naturalstone,
@@ -11822,7 +11822,7 @@
 /turf/open/floor/grass/cold,
 /area/rogue/indoors/banditcamp)
 "VS" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world{
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink{
 	pixel_y = -11
 	},
 /turf/open/floor/tile/bath,
@@ -12465,7 +12465,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "Yg" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "Yh" = (
@@ -12514,7 +12514,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Yq" = (
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world,
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "Yr" = (
@@ -12738,7 +12738,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "Zj" = (
-/obj/structure/desert_window,
+/obj/structure/window,
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "Zk" = (

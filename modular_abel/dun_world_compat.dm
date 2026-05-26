@@ -378,6 +378,29 @@
 	. = ..()
 	dun_world_sync_light_proxy()
 
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle
+	name = "candles"
+	icon = 'icons/roguetown/items/lighting.dmi'
+	icon_state = "floorcandle1"
+	base_state = "floorcandle"
+	layer = TABLE_LAYER
+	SET_BASE_PIXEL(0, 0)
+	dun_world_uses_light_proxy = FALSE
+
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt
+	icon_state = "floorcandlee1"
+	base_state = "floorcandlee"
+
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink
+	color = "#f858b5ff"
+	bulb_colour = "#ff13d8ff"
+
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt/pink
+	icon_state = "floorcandlee1"
+	base_state = "floorcandlee"
+	color = "#f858b5ff"
+	bulb_colour = "#ff13d8ff"
+
 /obj/machinery/light/fueled/wallfire/candle/dun_world
 	dun_world_uses_light_proxy = TRUE
 
@@ -407,6 +430,9 @@
 
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world
 	dun_world_uses_light_proxy = TRUE
+
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle
+	dun_world_uses_light_proxy = FALSE
 
 /obj/item/candle/proc/dun_world_sync_item_candle_light()
 	if(lit)
