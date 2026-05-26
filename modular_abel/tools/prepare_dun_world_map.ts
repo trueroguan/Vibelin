@@ -198,6 +198,22 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
       basePath: '/obj/structure/fluff/railing/border',
       dir: 8,
     },
+    '/obj/structure/fluff/railing/corner': {
+      basePath: '/obj/structure/fluff/railing/corner',
+      dir: 9,
+    },
+    '/obj/structure/fluff/railing/corner/north_east': {
+      basePath: '/obj/structure/fluff/railing/corner',
+      dir: 5,
+    },
+    '/obj/structure/fluff/railing/corner/south_east': {
+      basePath: '/obj/structure/fluff/railing/corner',
+      dir: 6,
+    },
+    '/obj/structure/fluff/railing/corner/south_west': {
+      basePath: '/obj/structure/fluff/railing/corner',
+      dir: 10,
+    },
     '/obj/structure/fluff/railing/wood/north': {
       basePath: '/obj/structure/fluff/railing/wood',
       dir: 1,
@@ -216,7 +232,7 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
     .split(/\r?\n/)
     .flatMap((line) => {
       const match = line.match(
-        /^(\s*)(\/obj\/structure\/fluff\/railing\/(?:border|wood)\/(?:north|east|west))([,{])$/,
+        /^(\s*)(\/obj\/structure\/fluff\/railing\/(?:(?:border|wood)\/(?:north|east|west)|corner(?:\/(?:north_east|south_east|south_west))?))([,{])$/,
       );
       if (!match) {
         return line;

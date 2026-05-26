@@ -202,6 +202,18 @@
 	var/tmp/obj/effect/dun_world_map_light_proxy/dun_world_light_proxy
 	var/tmp/dun_world_uses_light_proxy = FALSE
 
+/obj/machinery/light/fueled/proc/dun_world_map_light_outer_range()
+	return max(brightness, light_outer_range)
+
+/obj/machinery/light/fueled/proc/dun_world_map_light_inner_range(outer_range)
+	var/inner_range = light_inner_range
+	if(!inner_range)
+		inner_range = outer_range / 4
+	return inner_range
+
+/obj/machinery/light/fueled/proc/dun_world_map_light_power()
+	return max(max(bulb_power, light_power), 1)
+
 /obj/machinery/light/fueled/proc/dun_world_force_map_light()
 	status = LIGHT_OK
 	on = TRUE
@@ -209,7 +221,9 @@
 	var/map_light_color = bulb_colour
 	if(color)
 		map_light_color = color
-	set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
+	var/outer_range = dun_world_map_light_outer_range()
+	set_light(outer_range, dun_world_map_light_inner_range(outer_range), dun_world_map_light_power(), l_falloff_curve = light_falloff_curve, l_color = map_light_color, l_on = TRUE)
+	update_light()
 	dun_world_sync_light_proxy(map_light_color)
 	update()
 	update_appearance(UPDATE_ICON_STATE)
@@ -230,7 +244,10 @@
 		dun_world_light_proxy = new(light_turf)
 	else if(dun_world_light_proxy.loc != light_turf)
 		dun_world_light_proxy.forceMove(light_turf)
-	dun_world_light_proxy.set_light(brightness, light_inner_range, bulb_power, l_color = map_light_color, l_on = TRUE)
+	var/outer_range = dun_world_map_light_outer_range()
+	dun_world_light_proxy.light_height = light_height
+	dun_world_light_proxy.set_light(outer_range, dun_world_map_light_inner_range(outer_range), dun_world_map_light_power(), l_falloff_curve = light_falloff_curve, l_color = map_light_color, l_on = TRUE)
+	dun_world_light_proxy.update_light()
 
 /obj/machinery/light/fueled/proc/dun_world_clear_light_proxy()
 	if(QDELETED(dun_world_light_proxy))
