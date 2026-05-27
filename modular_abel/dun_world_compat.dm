@@ -222,33 +222,71 @@
 	invisibility = INVISIBILITY_LIGHTING
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	light_system = MOVABLE_LIGHT
+	// These three are populated via Initialize args BEFORE /atom/movable/Initialize runs
+	// AddComponent(/datum/component/overlay_lighting). The component reads the current
+	// vars during its own Initialize and uses them to size the visible_mask; if we left
+	// them at 0/null and tried to call set_light_range/set_light_color afterwards, the
+	// component's COMSIG_ATOM_SET_LIGHT_RANGE handler reads source.light_outer_range BEFORE
+	// the assignment in /atom/proc/set_light_range, so it would never see the new value.
+	light_outer_range = 0
+	light_power = 1
+	light_color = "#ffa35c"
 	light_on = FALSE
+
+/obj/effect/dun_world_movable_light_proxy/Initialize(mapload, _outer = 8, _power = 1, _color = "#ffa35c", _on = TRUE)
+	if(_outer > 0)
+		light_outer_range = _outer
+	light_inner_range = 0
+	if(!isnull(_power))
+		light_power = _power
+	if(_color)
+		light_color = _color
+	light_on = !!_on
+	. = ..()
 
 /obj/machinery/light/fueled/wallfire/candle
 	var/dun_world_compat = FALSE
 	var/tmp/obj/effect/dun_world_movable_light_proxy/dun_world_proxy
 
+/obj/machinery/light/fueled/wallfire/candle/Initialize(mapload, ...)
+	. = ..()
+	if(dun_world_compat)
+		dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/update(trigger = TRUE)
+	. = ..()
+	if(dun_world_compat)
+		dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/wallfire/candle/Destroy()
+	if(dun_world_proxy)
+		QDEL_NULL(dun_world_proxy)
+	return ..()
+
 /obj/machinery/light/fueled/wallfire/candle/proc/dun_world_sync_light_proxy()
 	if(!dun_world_compat)
+		return
+	var/turf/anchor = get_turf(src)
+	if(!anchor)
 		return
 	var/proxy_outer = dun_world_compat_outer_range()
 	var/proxy_power = dun_world_compat_power()
 	var/proxy_color = dun_world_compat_color()
 	var/should_be_on = on && status == LIGHT_OK && proxy_outer > 0 && proxy_power > 0
-	if(!should_be_on)
-		if(dun_world_proxy)
-			dun_world_proxy.set_light_on(FALSE)
-		return
+
 	if(QDELETED(dun_world_proxy))
 		dun_world_proxy = null
+
 	if(!dun_world_proxy)
-		dun_world_proxy = new(get_turf(src))
-	else if(dun_world_proxy.loc != get_turf(src))
-		dun_world_proxy.forceMove(get_turf(src))
-	dun_world_proxy.set_light_range(0, proxy_outer)
-	dun_world_proxy.set_light_power(proxy_power)
-	dun_world_proxy.set_light_color(proxy_color)
-	dun_world_proxy.set_light_on(TRUE)
+		// First-time spawn: hand the configured range/power/colour to the proxy
+		// BEFORE overlay_lighting reads them during its component init.
+		dun_world_proxy = new(anchor, proxy_outer, proxy_power, proxy_color, should_be_on)
+		return
+
+	if(dun_world_proxy.loc != anchor)
+		dun_world_proxy.forceMove(anchor)
+	// Range/power/colour rarely change at runtime; the only thing that toggles is on/off.
+	dun_world_proxy.set_light_on(should_be_on)
 
 /obj/machinery/light/fueled/wallfire/candle/proc/dun_world_compat_outer_range()
 	return 8
@@ -265,97 +303,25 @@
 	dun_world_compat = TRUE
 	brightness = 0
 
-/obj/machinery/light/fueled/wallfire/candle/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
-
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/r/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/r/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/r/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
 
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
 
-/obj/machinery/light/fueled/wallfire/candle/l/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/l/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/l/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
-
 /obj/machinery/light/fueled/wallfire/candle/blue/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/blue/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/blue/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/blue/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
 
 /obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
 
-/obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
-
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
 
 /obj/machinery/light/fueled/wallfire/candle/weak/dun_world
 	dun_world_compat = TRUE
@@ -367,18 +333,6 @@
 /obj/machinery/light/fueled/wallfire/candle/weak/dun_world/dun_world_compat_power()
 	return 0.9
 
-/obj/machinery/light/fueled/wallfire/candle/weak/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/weak/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/weak/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
-
 /obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
@@ -388,18 +342,6 @@
 
 /obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/dun_world_compat_power()
 	return 0.9
-
-/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
 
 /obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world
 	dun_world_compat = TRUE
@@ -411,18 +353,6 @@
 /obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/dun_world_compat_power()
 	return 0.9
 
-/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
-
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world
 	dun_world_compat = TRUE
 	brightness = 0
@@ -432,18 +362,6 @@
 
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/dun_world_compat_power()
 	return 0.9
-
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/Initialize(mapload, ...)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/update(trigger = TRUE)
-	. = ..()
-	dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/Destroy()
-	QDEL_NULL(dun_world_proxy)
-	return ..()
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle
 	name = "candles"
