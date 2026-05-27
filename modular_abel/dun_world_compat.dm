@@ -222,17 +222,17 @@
 	invisibility = INVISIBILITY_LIGHTING
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	light_system = MOVABLE_LIGHT
-	// These three are populated via Initialize args BEFORE /atom/movable/Initialize runs
-	// AddComponent(/datum/component/overlay_lighting). The component reads the current
-	// vars during its own Initialize and uses them to size the visible_mask; if we left
-	// them at 0/null and tried to call set_light_range/set_light_color afterwards, the
-	// component's COMSIG_ATOM_SET_LIGHT_RANGE handler reads source.light_outer_range BEFORE
-	// the assignment in /atom/proc/set_light_range, so it would never see the new value.
 	light_outer_range = 0
 	light_power = 1
 	light_color = "#ffa35c"
 	light_on = FALSE
 
+// These vars must be populated BEFORE /atom/movable/Initialize runs
+// AddComponent(/datum/component/overlay_lighting). The component reads them during
+// its own Initialize to size the visible_mask. If we left them at 0/null and tried
+// set_light_range/set_light_color post-init, the component's signal handler
+// (set_range via COMSIG_ATOM_SET_LIGHT_RANGE) reads source.light_outer_range BEFORE
+// /atom/proc/set_light_range assigns it, so the update never lands.
 /obj/effect/dun_world_movable_light_proxy/Initialize(mapload, _outer = 8, _power = 1, _color = "#ffa35c", _on = TRUE)
 	if(_outer > 0)
 		light_outer_range = _outer
@@ -244,26 +244,50 @@
 	light_on = !!_on
 	. = ..()
 
-/obj/machinery/light/fueled/wallfire/candle
+// Dun World static-light shim, applied to every /obj/machinery/light/fueled instance
+// inside a /area/rogue/* (which is dun_world / wretch_coast only — Vanderlin's own
+// maps use /area/indoors, /area/outdoors, /area/under, etc.). On these z-levels the
+// STATIC_LIGHT (corner-based) lighting layer never renders visually — turfs end up
+// with `dynamic_lighting = 1`, populated `corners`, populated `affecting_lights`, yet
+// `lighting_object = null`, so static light datums are computed but invisible. Torches
+// and other MOVABLE_LIGHT sources work because their overlay_lighting component bakes
+// the light into `vis_contents` / `dynamic_lumcount` and skips the static lighting_object
+// entirely. We mirror that path: zero out the fueled atom's own brightness so the broken
+// static datum never gets created, and spawn an invisible movable proxy that emits via
+// overlay_lighting.
+
+/obj/machinery/light/fueled
 	var/dun_world_compat = FALSE
 	var/tmp/obj/effect/dun_world_movable_light_proxy/dun_world_proxy
 
-/obj/machinery/light/fueled/wallfire/candle/Initialize(mapload, ...)
+/obj/machinery/light/fueled/Initialize()
+	dun_world_apply_compat()
 	. = ..()
 	if(dun_world_compat)
 		dun_world_sync_light_proxy()
 
-/obj/machinery/light/fueled/wallfire/candle/update(trigger = TRUE)
-	. = ..()
-	if(dun_world_compat)
-		dun_world_sync_light_proxy()
-
-/obj/machinery/light/fueled/wallfire/candle/Destroy()
+/obj/machinery/light/fueled/Destroy()
 	if(dun_world_proxy)
 		QDEL_NULL(dun_world_proxy)
 	return ..()
 
-/obj/machinery/light/fueled/wallfire/candle/proc/dun_world_sync_light_proxy()
+/obj/machinery/light/fueled/update(trigger = TRUE)
+	. = ..()
+	if(dun_world_compat)
+		dun_world_sync_light_proxy()
+
+/obj/machinery/light/fueled/proc/dun_world_apply_compat()
+	if(!dun_world_compat)
+		var/area/A = get_area(src)
+		if(istype(A, /area/rogue))
+			dun_world_compat = TRUE
+	if(dun_world_compat)
+		// Capture the intended brightness via initial() inside the proxy procs,
+		// then zero brightness so the parent /obj/machinery/light/proc/update can't
+		// (re)create the broken static light_source.
+		brightness = 0
+
+/obj/machinery/light/fueled/proc/dun_world_sync_light_proxy()
 	if(!dun_world_compat)
 		return
 	var/turf/anchor = get_turf(src)
@@ -278,90 +302,62 @@
 		dun_world_proxy = null
 
 	if(!dun_world_proxy)
-		// First-time spawn: hand the configured range/power/colour to the proxy
-		// BEFORE overlay_lighting reads them during its component init.
+		// Hand the configured range/power/colour to the proxy BEFORE overlay_lighting
+		// reads them during its component init (see proxy Initialize comment above).
 		dun_world_proxy = new(anchor, proxy_outer, proxy_power, proxy_color, should_be_on)
 		return
 
 	if(dun_world_proxy.loc != anchor)
 		dun_world_proxy.forceMove(anchor)
-	// Range/power/colour rarely change at runtime; the only thing that toggles is on/off.
+	// Range/power/colour don't change at runtime; only on/off toggles via burn_out/fire_act.
 	dun_world_proxy.set_light_on(should_be_on)
 
-/obj/machinery/light/fueled/wallfire/candle/proc/dun_world_compat_outer_range()
-	return 8
+/obj/machinery/light/fueled/proc/dun_world_compat_outer_range()
+	return initial(brightness)
 
-/obj/machinery/light/fueled/wallfire/candle/proc/dun_world_compat_power()
-	return 1
+/obj/machinery/light/fueled/proc/dun_world_compat_power()
+	return initial(bulb_power)
 
-/obj/machinery/light/fueled/wallfire/candle/proc/dun_world_compat_color()
+/obj/machinery/light/fueled/proc/dun_world_compat_color()
 	if(color)
 		return color
 	return bulb_colour
 
+// Subtype declarations — dun_world_compat = TRUE both gives the type a body so DM
+// compiles it AND keeps the proxy live if an admin spawns one outside /area/rogue.
+// We deliberately DO NOT override brightness here so initial(brightness) inside
+// dun_world_compat_outer_range() still reads the upstream type's intended value
+// (8 for normal candles, 12 for braziers, etc.).
+
 /obj/machinery/light/fueled/wallfire/candle/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
 
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
 
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
 
 /obj/machinery/light/fueled/wallfire/candle/blue/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
 
 /obj/machinery/light/fueled/wallfire/candle/blue/r/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
 
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
 
 /obj/machinery/light/fueled/wallfire/candle/weak/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/weak/dun_world/dun_world_compat_outer_range()
-	return 6
-
-/obj/machinery/light/fueled/wallfire/candle/weak/dun_world/dun_world_compat_power()
-	return 0.9
 
 /obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/dun_world_compat_outer_range()
-	return 6
-
-/obj/machinery/light/fueled/wallfire/candle/weak/r/dun_world/dun_world_compat_power()
-	return 0.9
 
 /obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/dun_world_compat_outer_range()
-	return 6
-
-/obj/machinery/light/fueled/wallfire/candle/weak/l/dun_world/dun_world_compat_power()
-	return 0.9
 
 /obj/machinery/light/fueled/wallfire/candle/lamp/dun_world
 	dun_world_compat = TRUE
-	brightness = 0
-
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/dun_world_compat_outer_range()
-	return 6
-
-/obj/machinery/light/fueled/wallfire/candle/lamp/dun_world/dun_world_compat_power()
-	return 0.9
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle
 	name = "candles"
