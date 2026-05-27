@@ -7533,7 +7533,7 @@
 	dir = 10;
 	icon_state = "cobbleedge-w"
 	},
-/obj/structure/fake_machine,
+/obj/structure/fake_machine/atm,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "DR" = (
