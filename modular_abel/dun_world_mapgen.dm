@@ -1,9 +1,3 @@
-/*
- * Azure Peak's Dun World uses old /mapGenerator/rogue generators.
- * Keep their denser area-specific behavior here instead of falling back to
- * Vanderlin's generic generators, whose area filters do not match rogue areas.
- */
-
 /obj/effect/landmark/mapGenerator/dun_world/forest
 	mapGeneratorType = /datum/mapGenerator/dun_world/forest
 	endTurfX = 255

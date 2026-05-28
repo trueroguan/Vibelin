@@ -192,26 +192,6 @@
 /turf/closed/wall/mineral/roofwall/innercorner/dir8
 	dir = WEST
 
-// Dun World wallfire candle compat.
-//
-// Why this is more involved than just "empty subtype":
-// /obj/machinery/light/fueled/wallfire/candle uses STATIC_LIGHT (corner-based) but in
-// the Dun World z-level its corner-based lighting never visibly applies — the light
-// datum is created, light_on/light_outer_range/light_color are all set, yet adjacent
-// turfs stay dark. Other STATIC_LIGHT sources (firebowl, brazier, chand) light up
-// fine on the same map, and MOVABLE_LIGHT sources (torches) also work — so the
-// failure is specific to wallfire/candle's static-light path on this z, not the
-// lighting system as a whole.
-//
-// We sidestep the issue by:
-//   1) Forcing the candle's own brightness to 0 so /obj/machinery/light/proc/update
-//      can't (re)create the broken static light_source.
-//   2) Spawning a stationary MOVABLE_LIGHT proxy at the candle's turf that carries
-//      the actual outer_range / power / colour. MOVABLE_LIGHT uses the overlay
-//      lighting component (same code path as torches), which works here.
-//   3) Re-syncing the proxy on update()/Destroy so burn_out, fire_act, and dir
-//      changes stay in step.
-
 /obj/effect/dun_world_movable_light_proxy
 	name = ""
 	desc = ""
@@ -227,12 +207,6 @@
 	light_color = "#ffa35c"
 	light_on = FALSE
 
-// These vars must be populated BEFORE /atom/movable/Initialize runs
-// AddComponent(/datum/component/overlay_lighting). The component reads them during
-// its own Initialize to size the visible_mask. If we left them at 0/null and tried
-// set_light_range/set_light_color post-init, the component's signal handler
-// (set_range via COMSIG_ATOM_SET_LIGHT_RANGE) reads source.light_outer_range BEFORE
-// /atom/proc/set_light_range assigns it, so the update never lands.
 /obj/effect/dun_world_movable_light_proxy/Initialize(mapload, _outer = 8, _power = 1, _color = "#ffa35c", _on = TRUE)
 	if(_outer > 0)
 		light_outer_range = _outer
@@ -244,37 +218,42 @@
 	light_on = !!_on
 	. = ..()
 
-// Dun World static-light shim, applied to every /obj/machinery/light/fueled instance
-// inside a /area/rogue/* (which is dun_world / wretch_coast only — Vanderlin's own
-// maps use /area/indoors, /area/outdoors, /area/under, etc.). On these z-levels the
-// STATIC_LIGHT (corner-based) lighting layer never renders visually — turfs end up
-// with `dynamic_lighting = 1`, populated `corners`, populated `affecting_lights`, yet
-// `lighting_object = null`, so static light datums are computed but invisible. Torches
-// and other MOVABLE_LIGHT sources work because their overlay_lighting component bakes
-// the light into `vis_contents` / `dynamic_lumcount` and skips the static lighting_object
-// entirely. We mirror that path: zero out the fueled atom's own brightness so the broken
-// static datum never gets created, and spawn an invisible movable proxy that emits via
-// overlay_lighting.
-
 /obj/machinery/light/fueled
 	var/dun_world_compat = FALSE
 	var/tmp/obj/effect/dun_world_movable_light_proxy/dun_world_proxy
 
 /obj/machinery/light/fueled/Initialize()
+	if(soundloop)
+		soundloop = new soundloop(src, FALSE)
+		soundloop.start()
+	GLOB.fires_list += src
+	if(fueluse > 0)
+		fueluse = fueluse - (rand(fueluse*0.1,fueluse*0.3))
+	update_appearance(UPDATE_ICON_STATE)
+	seton(TRUE)
+
 	dun_world_apply_compat()
+	if(dun_world_compat)
+		dun_world_sync_light_proxy()
+
 	. = ..()
+
+/obj/machinery/light/fueled/update()
+	. = ..()
+	if(on)
+		GLOB.fires_list |= src
+	else
+		GLOB.fires_list -= src
+
 	if(dun_world_compat)
 		dun_world_sync_light_proxy()
 
 /obj/machinery/light/fueled/Destroy()
 	if(dun_world_proxy)
 		QDEL_NULL(dun_world_proxy)
-	return ..()
-
-/obj/machinery/light/fueled/update(trigger = TRUE)
+	QDEL_NULL(soundloop)
+	GLOB.fires_list -= src
 	. = ..()
-	if(dun_world_compat)
-		dun_world_sync_light_proxy()
 
 /obj/machinery/light/fueled/proc/dun_world_apply_compat()
 	if(!dun_world_compat)
@@ -282,10 +261,14 @@
 		if(istype(A, /area/rogue))
 			dun_world_compat = TRUE
 	if(dun_world_compat)
-		// Capture the intended brightness via initial() inside the proxy procs,
-		// then zero brightness so the parent /obj/machinery/light/proc/update can't
-		// (re)create the broken static light_source.
 		brightness = 0
+		set_light(0)
+
+/obj/machinery/light/fueled/torchholder/dun_world_apply_compat()
+	return
+
+/obj/machinery/light/fueled/torchholder/dun_world_sync_light_proxy()
+	return
 
 /obj/machinery/light/fueled/proc/dun_world_sync_light_proxy()
 	if(!dun_world_compat)
@@ -302,14 +285,11 @@
 		dun_world_proxy = null
 
 	if(!dun_world_proxy)
-		// Hand the configured range/power/colour to the proxy BEFORE overlay_lighting
-		// reads them during its component init (see proxy Initialize comment above).
 		dun_world_proxy = new(anchor, proxy_outer, proxy_power, proxy_color, should_be_on)
 		return
 
 	if(dun_world_proxy.loc != anchor)
 		dun_world_proxy.forceMove(anchor)
-	// Range/power/colour don't change at runtime; only on/off toggles via burn_out/fire_act.
 	dun_world_proxy.set_light_on(should_be_on)
 
 /obj/machinery/light/fueled/proc/dun_world_compat_outer_range()
@@ -322,12 +302,6 @@
 	if(color)
 		return color
 	return bulb_colour
-
-// Subtype declarations — dun_world_compat = TRUE both gives the type a body so DM
-// compiles it AND keeps the proxy live if an admin spawns one outside /area/rogue.
-// We deliberately DO NOT override brightness here so initial(brightness) inside
-// dun_world_compat_outer_range() still reads the upstream type's intended value
-// (8 for normal candles, 12 for braziers, etc.).
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world
 	dun_world_compat = TRUE
@@ -380,8 +354,6 @@
 	base_state = "floorcandlee"
 	color = "#f858b5ff"
 	bulb_colour = "#ff13d8ff"
-
-// Dun World firebowl compat: match Azure's brightness = 12 (Vanderlin base defaults to 8).
 
 /obj/machinery/light/fueled/firebowl/dun_world
 	brightness = 12

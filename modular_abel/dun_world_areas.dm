@@ -1,8 +1,3 @@
-/*
- * Minimal Azure Peak /area/rogue compatibility for the Dun World map port.
- * Generated from the source DMM area paths; behavior stays intentionally thin.
- */
-
 /area/rogue
 	name = "Dun World"
 
