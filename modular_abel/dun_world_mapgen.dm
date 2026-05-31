@@ -157,11 +157,10 @@
 
 /datum/mapGeneratorModule/dun_world/beachcoast
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS
-	allowed_turfs = list(/turf/open/water/ocean, /turf/open/water/ocean/abyss)
+	allowed_turfs = list(/turf/open/water/ocean)
 	allowed_areas = list(/area/rogue/outdoors/beach)
 	spawnableAtoms = list(
-		/obj/structure/roguerock = 20,
-		/obj/structure/kneestingers = 3,
+		/obj/structure/roguerock = 3,
 	)
 
 /datum/mapGeneratorModule/dun_world/beachsand
@@ -266,7 +265,7 @@
 		/obj/item/natural/artifact = 4,
 		/obj/structure/leyline = 1,
 		/obj/structure/voidstoneobelisk = 1,
-		/obj/structure/flora/grass/herb = 4,
+		/obj/structure/flora/grass/herb/random = 4,
 		/obj/item/grown/log/tree/stick = 16,
 		/obj/structure/flora/tree/stump = 7,
 		/obj/structure/closet/dirthole/closed = 3,
@@ -355,7 +354,8 @@
 	allowed_turfs = list(/turf/open/floor/dirt)
 	allowed_areas = list(/area/rogue/under/cave/spider, /area/rogue/indoors/cave, /area/rogue/under/cavewet, /area/rogue/under/cave)
 	spawnableAtoms = list(
-		/obj/structure/flora/grass/mushroom = 20,
+		/obj/structure/flora/shroom_tree = 20,
+		/obj/structure/flora/grass/mushroom = 6,
 		/obj/structure/roguerock = 20,
 		/obj/structure/flora/grass = 14,
 		/obj/structure/closet/dirthole/closed = 6,
@@ -366,11 +366,10 @@
 
 /datum/mapGeneratorModule/dun_world/cavebeach
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS
-	allowed_turfs = list(/turf/open/water/ocean, /turf/open/water/ocean/abyss)
+	allowed_turfs = list(/turf/open/water/ocean)
 	allowed_areas = list(/area/rogue/outdoors/beach)
 	spawnableAtoms = list(
-		/obj/structure/roguerock = 20,
-		/obj/structure/kneestingers = 3,
+		/obj/structure/roguerock = 3,
 	)
 
 /obj/effect/landmark/mapGenerator/dun_world/underdark

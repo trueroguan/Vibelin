@@ -338,16 +338,12 @@
 	SET_BASE_PIXEL(0, 0)
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt
-	icon_state = "floorcandlee1"
-	base_state = "floorcandlee"
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink
 	color = "#f858b5ff"
 	bulb_colour = "#ff13d8ff"
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt/pink
-	icon_state = "floorcandlee1"
-	base_state = "floorcandlee"
 	color = "#f858b5ff"
 	bulb_colour = "#ff13d8ff"
 
