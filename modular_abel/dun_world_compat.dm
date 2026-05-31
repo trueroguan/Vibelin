@@ -29,12 +29,8 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /obj/structure/curtain/dun_world
-	icon = 'icons/roguetown/misc/structure.dmi'
-	icon_type = "curtain"
-	icon_state = "curtain-open"
 	color = "#ffffff"
 	alpha = 255
-	layer = LARGE_MOB_LAYER
 
 /obj/structure/curtain/dun_world/red
 	color = "#a32121"
@@ -258,7 +254,7 @@
 /obj/machinery/light/fueled/proc/dun_world_apply_compat()
 	if(!dun_world_compat)
 		var/area/A = get_area(src)
-		if(istype(A, /area/rogue))
+		if(A && findtext("[A.type]", "/area/rogue") == 1)
 			dun_world_compat = TRUE
 	if(dun_world_compat)
 		brightness = 0
