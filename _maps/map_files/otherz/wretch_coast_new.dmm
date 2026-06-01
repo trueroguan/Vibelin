@@ -98,7 +98,7 @@
 "aq" = (
 /obj/structure/chair/stool,
 /obj/machinery/light/fueled/wallfire/candle/dun_world,
-/obj/effect/landmark/start,
+/obj/effect/landmark/start/wretch,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "ar" = (
@@ -1862,7 +1862,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "hA" = (
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 1
 	},
 /turf/open/floor/cobble/dun_world,
@@ -1888,7 +1888,7 @@
 /area/rogue/outdoors/woods/vampire_lair)
 "hE" = (
 /obj/structure/bed/shit,
-/obj/effect/landmark/start,
+/obj/effect/landmark/start/bandit,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "hF" = (
@@ -2329,7 +2329,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "jD" = (
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/late/wretch{
 	dir = 4
 	},
 /turf/open/floor/naturalstone,
@@ -3445,7 +3445,7 @@
 /area/rogue/indoors/vampire_manor)
 "nO" = (
 /obj/structure/fluff,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 8
 	},
 /turf/open/floor/carpet/red,
@@ -3604,7 +3604,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "oz" = (
-/obj/effect/landmark/start,
+/obj/effect/landmark/start/bandit,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "oA" = (
@@ -4103,7 +4103,7 @@
 /area/rogue/indoors/banditcamp)
 "ql" = (
 /obj/structure/fluff,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 8
 	},
 /turf/open/floor/carpet/royalblack,
@@ -4530,7 +4530,7 @@
 /area/rogue/under/cave/inhumen)
 "rV" = (
 /obj/structure/chair/bench/church/r,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 1
 	},
 /turf/open/floor/churchbrick,
@@ -4717,7 +4717,7 @@
 /area/rogue/indoors/banditcamp)
 "sv" = (
 /obj/structure/fluff,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 4
 	},
 /turf/open/floor/carpet/royalblack,
@@ -5140,7 +5140,7 @@
 "ud" = (
 /obj/structure/chair/stool,
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 1
 	},
 /turf/open/floor/carpet/red,
@@ -5299,7 +5299,7 @@
 /area/rogue/indoors/vampire_manor)
 "uL" = (
 /obj/structure/chair/stool,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 1
 	},
 /turf/open/floor/carpet/red,
@@ -5634,7 +5634,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/banditcamp)
 "wm" = (
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 4
 	},
 /turf/open/floor/naturalstone,
@@ -6693,7 +6693,7 @@
 /obj/structure/chair/bench/church{
 	dir = 1
 	},
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 1
 	},
 /turf/open/floor/churchbrick,
@@ -6777,7 +6777,7 @@
 /area/rogue/outdoors/woods/wretch_lair)
 "AO" = (
 /obj/structure/chair/bench/church/mid,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 1
 	},
 /turf/open/floor/churchbrick,
@@ -6962,7 +6962,7 @@
 	pixel_y = 7;
 	pixel_x = 9
 	},
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/late/wretch{
 	dir = 4
 	},
 /turf/open/floor/naturalstone,
@@ -7962,7 +7962,7 @@
 /turf/open/floor/blocks,
 /area/rogue/outdoors/woods/wretch_lair)
 "FP" = (
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 4
 	},
 /turf/open/floor/twig,
@@ -8034,7 +8034,7 @@
 /area/rogue/outdoors/woods/vampire_lair)
 "Gg" = (
 /obj/structure/fluff,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 8
 	},
 /turf/open/floor/carpet/red,
@@ -8219,7 +8219,7 @@
 /area/rogue/outdoors/banditcamp)
 "GP" = (
 /obj/structure/chair/stool,
-/obj/effect/landmark/start,
+/obj/effect/landmark/start/wretch,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "GU" = (
@@ -8349,7 +8349,7 @@
 /obj/structure/chair/wood/alt/chair3{
 	dir = 4
 	},
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 4
 	},
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
@@ -9897,7 +9897,7 @@
 /obj/structure/fluff/walldeco/moon{
 	pixel_y = 32
 	},
-/obj/effect/landmark/start,
+/obj/effect/landmark/start/wretch,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "Ns" = (
@@ -10447,7 +10447,7 @@
 /area/rogue/indoors/cave)
 "PJ" = (
 /obj/structure/fluff,
-/obj/effect/landmark/start,
+/obj/effect/landmark/start/wretch,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/under/cave/inhumen)
 "PL" = (
@@ -11944,7 +11944,7 @@
 /obj/structure/chair/wood/alt/chair3{
 	dir = 8
 	},
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 8
 	},
 /turf/open/floor/carpet/red,
@@ -12166,7 +12166,7 @@
 	pixel_x = -10;
 	pixel_y = -11
 	},
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/late/wretch{
 	dir = 4
 	},
 /turf/open/floor/naturalstone,
@@ -12450,7 +12450,7 @@
 /area/rogue/under/cave/inhumen)
 "Ye" = (
 /obj/structure/fluff,
-/obj/effect/landmark/start{
+/obj/effect/landmark/start/wretch{
 	dir = 4
 	},
 /turf/open/floor/carpet/royalblack,
