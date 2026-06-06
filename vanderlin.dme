@@ -2,6 +2,7 @@
 // END_INTERNALS
 // BEGIN_FILE_DIR
 #define FILE_DIR .
+#define FILE_DIR "modular_abel"
 // END_FILE_DIR
 // BEGIN_PREFERENCES
 #define DEBUG
@@ -4300,4 +4301,5 @@
 #include "interface\fonts\datums\vaticanus.dm"
 #include "interface\fonts\datums\wernicke.dm"
 #include "interface\fonts\datums\yataghan.dm"
+#include "modular_abel\__includes.dm"
 // END_INCLUDE
