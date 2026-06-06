@@ -147,7 +147,6 @@
 		return
 	if(!GetComponent(/datum/component/arousal))
 		AddComponent(/datum/component/arousal)
-	erp_ensure_default_organs()
 	if(client?.prefs)
 		client.prefs.apply_erp_kinks_to_mob(src)
 	SSerp.apply_prefs_for_mob(src)

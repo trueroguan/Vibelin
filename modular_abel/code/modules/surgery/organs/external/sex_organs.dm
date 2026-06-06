@@ -19,8 +19,6 @@
 /obj/item/organ/penis
 	name = "penis"
 	desc = "A male reproductive organ."
-	icon = 'icons/obj/surgery.dmi'
-	icon_state = "appendix"
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_PENIS
 	unique_slot = TRUE
@@ -43,11 +41,39 @@
 /obj/item/organ/penis/knotted/big
 	penis_size = MAX_PENIS_SIZE
 
+/obj/item/organ/penis/equine
+	penis_type = PENIS_TYPE_EQUINE
+
+/obj/item/organ/penis/equine_knotted
+	penis_type = PENIS_TYPE_EQUINE_KNOTTED
+
+/obj/item/organ/penis/tapered
+	penis_type = PENIS_TYPE_TAPERED
+
+/obj/item/organ/penis/tapered_mammal
+	penis_type = PENIS_TYPE_TAPERED
+
+/obj/item/organ/penis/tapered_knot
+	penis_type = PENIS_TYPE_TAPERED_KNOTTED
+
+/obj/item/organ/penis/tapered_double
+	penis_type = PENIS_TYPE_TAPERED_DOUBLE
+
+/obj/item/organ/penis/tapered_double_knotted
+	penis_type = PENIS_TYPE_TAPERED_DOUBLE_KNOTTED
+
+/obj/item/organ/penis/barbed
+	penis_type = PENIS_TYPE_BARBED
+
+/obj/item/organ/penis/barbed_knotted
+	penis_type = PENIS_TYPE_BARBED_KNOTTED
+
+/obj/item/organ/penis/tentacle
+	penis_type = PENIS_TYPE_TENTACLE
+
 /obj/item/organ/testicles
 	name = "testicles"
 	desc = "A pair of male reproductive glands."
-	icon = 'icons/obj/surgery.dmi'
-	icon_state = "appendix"
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_TESTICLES
 	unique_slot = TRUE
@@ -55,11 +81,12 @@
 	organ_efficiency = list(ORGAN_SLOT_TESTICLES = 100)
 	var/ball_size = DEFAULT_TESTICLES_SIZE
 
+/obj/item/organ/testicles/internal
+	desc = "A pair of internal reproductive glands."
+
 /obj/item/organ/vagina
 	name = "vagina"
 	desc = "A female reproductive organ."
-	icon = 'icons/obj/surgery.dmi'
-	icon_state = "appendix"
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_VAGINA
 	unique_slot = TRUE
@@ -70,8 +97,6 @@
 /obj/item/organ/breasts
 	name = "breasts"
 	desc = "A pair of mammary glands."
-	icon = 'icons/obj/surgery.dmi'
-	icon_state = "appendix"
 	zone = BODY_ZONE_CHEST
 	slot = ORGAN_SLOT_BREASTS
 	unique_slot = TRUE
@@ -79,26 +104,3 @@
 	organ_efficiency = list(ORGAN_SLOT_BREASTS = 100)
 	var/breast_size = BREAST_SIZE_NORMAL
 	var/lactating = FALSE
-
-/mob/living/carbon/human/proc/erp_ensure_default_organs()
-	if(QDELETED(src))
-		return
-	if(!client?.prefs?.erp_enabled)
-		return
-
-	if(gender == MALE)
-		if(!getorganslot(ORGAN_SLOT_PENIS))
-			var/obj/item/organ/penis/P = new
-			P.Insert(src, special = TRUE, drop_if_replaced = FALSE)
-		if(!getorganslot(ORGAN_SLOT_TESTICLES))
-			var/obj/item/organ/testicles/T = new
-			T.Insert(src, special = TRUE, drop_if_replaced = FALSE)
-	else
-		if(!getorganslot(ORGAN_SLOT_VAGINA))
-			var/obj/item/organ/vagina/V = new
-			V.Insert(src, special = TRUE, drop_if_replaced = FALSE)
-		if(!getorganslot(ORGAN_SLOT_BREASTS))
-			var/obj/item/organ/breasts/B = new
-			B.Insert(src, special = TRUE, drop_if_replaced = FALSE)
-
-	SEND_SIGNAL(src, COMSIG_ERP_ANATOMY_CHANGED)

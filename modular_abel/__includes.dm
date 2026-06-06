@@ -1,25 +1,15 @@
-// ============================================================================
-// modular_abel :: master include list
-// Single bridge include from vanderlin.dme points here. All ERP DM lives under
-// modular_abel/. Twilight-specific content is parked under _parked_twilight/
-// and intentionally NOT included.
-// ============================================================================
-
-// --- defines (must precede everything that uses them) ---
-#include "code\modules\erp_foundation\_sex_defines.dm"
+#include "code\__DEFINES\sex.dm"
 #include "code\modules\erp_system\_defines.dm"
-
-// --- foundation (Vanderlin-native sex layer the ERP engine sits on) ---
-#include "code\modules\erp_foundation\_compat.dm"
-#include "code\modules\erp_foundation\erp_content.dm"
-#include "code\modules\erp_foundation\erp_sex_organs.dm"
-#include "code\modules\erp_foundation\erp_arousal.dm"
-#include "code\modules\erp_foundation\erp_anatomy.dm"
-#include "code\modules\erp_foundation\erp_consent.dm"
-#include "code\modules\erp_foundation\erp_preferences.dm"
-#include "code\modules\erp_foundation\erp_ooc_entry.dm"
-
-// --- ERP engine (ported from Twilight modular_twilight_axis/erp_system) ---
+#include "code\modules\sexcon\_compat.dm"
+#include "code\modules\sexcon\sex_content.dm"
+#include "code\modules\surgery\organs\external\sex_organs.dm"
+#include "code\modules\client\customizer\customizers\organ\genitals.dm"
+#include "code\modules\client\customizer\customizers\organ\genitals_registration.dm"
+#include "code\modules\sexcon\arousal.dm"
+#include "code\modules\mob\living\carbon\human\erp_anatomy.dm"
+#include "code\modules\mob\living\carbon\human\erp_consent.dm"
+#include "code\modules\client\preferences\preferences_erp.dm"
+#include "code\modules\client\preferences\character_menu.dm"
 #include "code\modules\erp_system\actions\erp_action_core.dm"
 #include "code\modules\erp_system\actions\erp_action_editor_schema.dm"
 #include "code\modules\erp_system\actions\erp_action_message_renderer.dm"
@@ -172,4 +162,3 @@
 #include "code\modules\erp_system\ui\erp_sex_ui_kinks.dm"
 #include "code\modules\erp_system\ui\erp_sex_ui_status.dm"
 #include "code\modules\erp_system\ui\erp_sex_ui_tab.dm"
-
