@@ -98,9 +98,15 @@
 
 	dat += "</div></div></body></html>"
 
+	var/menu_size = winget(user, "mapwindow", "size")
+	if(!menu_size || !findtext(menu_size, "x"))
+		menu_size = "816x950"
+
 	winshow(user, "stonekeep_prefwin", TRUE)
+	winset(user, "stonekeep_prefwin", "pos=0,0;size=[menu_size]")
+	winset(user, "stonekeep_prefwin.preferences_browser", "size=[menu_size]")
 	winshow(user, "stonekeep_prefwin.character_preview_map", FALSE)
-	user << browse(dat.Join(), "window=preferences_browser;size=816x950")
+	user << browse(dat.Join(), "window=preferences_browser;size=[menu_size]")
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
 	if(!winexists(user, "preferences_browser"))

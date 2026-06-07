@@ -155,3 +155,4 @@
 	. = ..()
 	erp_on_spawn_setup()
 	erp_resync_after_body_restore()
+	erp_register_clothing_signals()

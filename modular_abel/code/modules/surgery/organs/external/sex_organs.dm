@@ -22,11 +22,14 @@
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_PENIS
 	unique_slot = TRUE
-	visible_organ = FALSE
+	visible_organ = TRUE
+	bodypart_layer = BODY_FRONT_LAYER
+	organ_dna_type = /datum/organ_dna/penis
 	organ_efficiency = list(ORGAN_SLOT_PENIS = 100)
 	var/penis_type = PENIS_TYPE_PLAIN
 	var/penis_size = DEFAULT_PENIS_SIZE
 	var/erect_state = ERECT_STATE_NONE
+	var/sheath_type = SHEATH_TYPE_NONE
 
 /obj/item/organ/penis/proc/update_erect_state(state)
 	if(erect_state == state)
@@ -77,12 +80,15 @@
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_TESTICLES
 	unique_slot = TRUE
-	visible_organ = FALSE
+	visible_organ = TRUE
+	bodypart_layer = BODY_FRONT_LAYER
+	organ_dna_type = /datum/organ_dna/testicles
 	organ_efficiency = list(ORGAN_SLOT_TESTICLES = 100)
 	var/ball_size = DEFAULT_TESTICLES_SIZE
 
 /obj/item/organ/testicles/internal
 	desc = "A pair of internal reproductive glands."
+	visible_organ = FALSE
 
 /obj/item/organ/vagina
 	name = "vagina"
@@ -90,7 +96,9 @@
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_VAGINA
 	unique_slot = TRUE
-	visible_organ = FALSE
+	visible_organ = TRUE
+	bodypart_layer = BODY_FRONT_LAYER
+	organ_dna_type = /datum/organ_dna/vagina
 	organ_efficiency = list(ORGAN_SLOT_VAGINA = 100)
 	var/fertility = FALSE
 
@@ -100,7 +108,9 @@
 	zone = BODY_ZONE_CHEST
 	slot = ORGAN_SLOT_BREASTS
 	unique_slot = TRUE
-	visible_organ = FALSE
+	visible_organ = TRUE
+	bodypart_layer = BODY_ADJ_LAYER
+	organ_dna_type = /datum/organ_dna/breasts
 	organ_efficiency = list(ORGAN_SLOT_BREASTS = 100)
 	var/breast_size = BREAST_SIZE_NORMAL
 	var/lactating = FALSE

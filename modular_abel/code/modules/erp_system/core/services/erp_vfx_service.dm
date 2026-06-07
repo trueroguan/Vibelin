@@ -158,7 +158,7 @@
 	if(!istype(user))
 		return
 
-	var/sound = pick('sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg')
+	var/sound = pick('modular_abel/sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg')
 	playsound(user, sound, 50, TRUE, -2, ignore_walls = FALSE)
 
 /// Returns TRUE if link is mouth->(vagina/breasts/penis/anus).
@@ -186,13 +186,13 @@
 
 	if(user.gender == FEMALE)
 		playsound(user,
-			pick('sound/misc/mat/girlmouth (1).ogg','sound/misc/mat/girlmouth (2).ogg','sound/misc/mat/oral (1).ogg','sound/misc/mat/oral (2).ogg','sound/misc/mat/oral (3).ogg','sound/misc/mat/oral (4).ogg','sound/misc/mat/oral (5).ogg','sound/misc/mat/oral (6).ogg','sound/misc/mat/oral (7).ogg'),
+			pick('modular_abel/sound/misc/mat/girlmouth (1).ogg','modular_abel/sound/misc/mat/girlmouth (2).ogg','modular_abel/sound/misc/mat/oral (1).ogg','modular_abel/sound/misc/mat/oral (2).ogg','modular_abel/sound/misc/mat/oral (3).ogg','modular_abel/sound/misc/mat/oral (4).ogg','modular_abel/sound/misc/mat/oral (5).ogg','modular_abel/sound/misc/mat/oral (6).ogg','modular_abel/sound/misc/mat/oral (7).ogg'),
 			25, TRUE,
 			ignore_walls = FALSE
 		)
 	else
 		playsound(user,
-			pick('sound/misc/mat/guymouth (2).ogg','sound/misc/mat/guymouth (3).ogg','sound/misc/mat/guymouth (4).ogg','sound/misc/mat/guymouth (5).ogg','sound/misc/mat/oral (1).ogg','sound/misc/mat/oral (2).ogg','sound/misc/mat/oral (3).ogg','sound/misc/mat/oral (4).ogg','sound/misc/mat/oral (5).ogg','sound/misc/mat/oral (6).ogg','sound/misc/mat/oral (7).ogg'),
+			pick('modular_abel/sound/misc/mat/guymouth (2).ogg','modular_abel/sound/misc/mat/guymouth (3).ogg','modular_abel/sound/misc/mat/guymouth (4).ogg','modular_abel/sound/misc/mat/guymouth (5).ogg','modular_abel/sound/misc/mat/oral (1).ogg','modular_abel/sound/misc/mat/oral (2).ogg','modular_abel/sound/misc/mat/oral (3).ogg','modular_abel/sound/misc/mat/oral (4).ogg','modular_abel/sound/misc/mat/oral (5).ogg','modular_abel/sound/misc/mat/oral (6).ogg','modular_abel/sound/misc/mat/oral (7).ogg'),
 			35, TRUE,
 			ignore_walls = FALSE
 		)
@@ -207,7 +207,7 @@
 			volume_layer = 16
 
 	playsound(user,
-		pick('sound/misc/mat/saliva (1).ogg','sound/misc/mat/saliva (2).ogg','sound/misc/mat/saliva (3).ogg'),
+		pick('modular_abel/sound/misc/mat/saliva (1).ogg','modular_abel/sound/misc/mat/saliva (2).ogg','modular_abel/sound/misc/mat/saliva (3).ogg'),
 		volume_layer, TRUE, -2,
 		ignore_walls = FALSE
 	)
@@ -347,9 +347,9 @@
 			playsound(
 				furniture,
 				pick(list(
-					'sound/misc/mat/bed squeak (1).ogg',
-					'sound/misc/mat/bed squeak (2).ogg',
-					'sound/misc/mat/bed squeak (3).ogg'
+					'modular_abel/sound/misc/mat/bed squeak (1).ogg',
+					'modular_abel/sound/misc/mat/bed squeak (2).ogg',
+					'modular_abel/sound/misc/mat/bed squeak (3).ogg'
 				)),
 				30,
 				TRUE,

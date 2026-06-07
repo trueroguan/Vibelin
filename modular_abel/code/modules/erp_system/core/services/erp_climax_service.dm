@@ -73,7 +73,7 @@
 	if(who.stat != DEAD)
 		if(!controller?.hidden_mode)
 			who.emote("sexmoanhvy", forced = TRUE)
-		who.playsound_local(who, 'sound/misc/mat/end.ogg', 100)
+		who.playsound_local(who, 'modular_abel/sound/misc/mat/end.ogg', 100)
 
 	A?.spread_chain_orgasm(who)
 	var/mob/living/carbon/human/partner = null

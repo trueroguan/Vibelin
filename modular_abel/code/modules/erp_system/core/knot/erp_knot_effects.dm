@@ -69,7 +69,7 @@
 	if(T)
 		new /obj/effect/decal/cleanable/coom(T)
 
-	playsound(btm, 'sound/misc/mat/pop.ogg', 60, TRUE, -2, ignore_walls = FALSE)
+	playsound(btm, 'modular_abel/sound/misc/mat/pop.ogg', 60, TRUE, -2, ignore_walls = FALSE)
 
 	if(remove_btm_status)
 		btm.remove_status_effect(/datum/status_effect/knot_tied)

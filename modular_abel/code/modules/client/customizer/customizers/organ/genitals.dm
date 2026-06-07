@@ -71,7 +71,6 @@
 	organ_slot = ORGAN_SLOT_PENIS
 	organ_dna_type = /datum/organ_dna/penis
 	customizer_entry_type = /datum/customizer_entry/organ/penis
-	sprite_accessories = null
 
 /datum/customizer_choice/organ/penis/validate_entry(datum/preferences/prefs, datum/customizer_entry/entry)
 	..()
@@ -110,50 +109,62 @@
 /datum/customizer_choice/organ/penis/human
 	name = "Plain Penis"
 	organ_type = /obj/item/organ/penis
+	sprite_accessories = list(/datum/sprite_accessory/penis/human)
 
 /datum/customizer_choice/organ/penis/knotted
 	name = "Knotted Penis"
 	organ_type = /obj/item/organ/penis/knotted
+	sprite_accessories = list(/datum/sprite_accessory/penis/knotted)
 
 /datum/customizer_choice/organ/penis/equine
 	name = "Equine Penis"
 	organ_type = /obj/item/organ/penis/equine
+	sprite_accessories = list(/datum/sprite_accessory/penis/flared)
 
 /datum/customizer_choice/organ/penis/equine_knotted
 	name = "Knotted Equine Penis"
 	organ_type = /obj/item/organ/penis/equine_knotted
+	sprite_accessories = list(/datum/sprite_accessory/penis/flared_knotted)
 
 /datum/customizer_choice/organ/penis/tapered
 	name = "Tapered Penis"
 	organ_type = /obj/item/organ/penis/tapered
+	sprite_accessories = list(/datum/sprite_accessory/penis/tapered)
 
 /datum/customizer_choice/organ/penis/tapered_mammal
 	name = "Tapered Penis (Mammal)"
 	organ_type = /obj/item/organ/penis/tapered_mammal
+	sprite_accessories = list(/datum/sprite_accessory/penis/tapered_mammal)
 
 /datum/customizer_choice/organ/penis/tapered_knot
 	name = "Knotted Tapered Penis"
 	organ_type = /obj/item/organ/penis/tapered_knot
+	sprite_accessories = list(/datum/sprite_accessory/penis/tapered_knot)
 
 /datum/customizer_choice/organ/penis/tapered_double
 	name = "Hemi Tapered Penis"
 	organ_type = /obj/item/organ/penis/tapered_double
+	sprite_accessories = list(/datum/sprite_accessory/penis/hemi)
 
 /datum/customizer_choice/organ/penis/tapered_double_knot
 	name = "Knotted Hemi Tapered Penis"
 	organ_type = /obj/item/organ/penis/tapered_double_knotted
+	sprite_accessories = list(/datum/sprite_accessory/penis/hemiknot)
 
 /datum/customizer_choice/organ/penis/barbed
 	name = "Barbed Penis"
 	organ_type = /obj/item/organ/penis/barbed
+	sprite_accessories = list(/datum/sprite_accessory/penis/barbknot)
 
 /datum/customizer_choice/organ/penis/barbed_knotted
 	name = "Knotted Barbed Penis"
 	organ_type = /obj/item/organ/penis/barbed_knotted
+	sprite_accessories = list(/datum/sprite_accessory/penis/barbknot)
 
 /datum/customizer_choice/organ/penis/tentacle
 	name = "Tentacle Penis"
 	organ_type = /obj/item/organ/penis/tentacle
+	sprite_accessories = list(/datum/sprite_accessory/penis/tentacle)
 
 /datum/customizer/organ/testicles
 	abstract_type = /datum/customizer/organ/testicles
@@ -174,7 +185,6 @@
 	organ_slot = ORGAN_SLOT_TESTICLES
 	organ_dna_type = /datum/organ_dna/testicles
 	customizer_entry_type = /datum/customizer_entry/organ/testicles
-	sprite_accessories = null
 
 /datum/customizer_choice/organ/testicles/validate_entry(datum/preferences/prefs, datum/customizer_entry/entry)
 	..()
@@ -213,10 +223,12 @@
 /datum/customizer_choice/organ/testicles/external
 	name = "External Testicles"
 	organ_type = /obj/item/organ/testicles
+	sprite_accessories = list(/datum/sprite_accessory/testicles/pair)
 
 /datum/customizer_choice/organ/testicles/internal
 	name = "Internal Testicles"
 	organ_type = /obj/item/organ/testicles/internal
+	sprite_accessories = null
 
 /datum/customizer/organ/breasts
 	abstract_type = /datum/customizer/organ/breasts
@@ -234,7 +246,6 @@
 	organ_slot = ORGAN_SLOT_BREASTS
 	organ_dna_type = /datum/organ_dna/breasts
 	customizer_entry_type = /datum/customizer_entry/organ/breasts
-	sprite_accessories = null
 
 /datum/customizer_choice/organ/breasts/validate_entry(datum/preferences/prefs, datum/customizer_entry/entry)
 	..()
@@ -272,6 +283,11 @@
 
 /datum/customizer_choice/organ/breasts/human
 	name = "Breasts"
+	sprite_accessories = list(
+		/datum/sprite_accessory/breasts/pair,
+		/datum/sprite_accessory/breasts/quad,
+		/datum/sprite_accessory/breasts/sextuple,
+	)
 
 /datum/customizer/organ/vagina
 	abstract_type = /datum/customizer/organ/vagina
@@ -289,7 +305,6 @@
 	organ_slot = ORGAN_SLOT_VAGINA
 	organ_dna_type = /datum/organ_dna/vagina
 	customizer_entry_type = /datum/customizer_entry/organ/vagina
-	sprite_accessories = null
 
 /datum/customizer_choice/organ/vagina/imprint_organ_dna(datum/organ_dna/organ_dna, datum/customizer_entry/entry, datum/preferences/prefs)
 	..()
@@ -314,3 +329,11 @@
 
 /datum/customizer_choice/organ/vagina/human
 	name = "Vagina"
+	sprite_accessories = list(
+		/datum/sprite_accessory/vagina/human,
+		/datum/sprite_accessory/vagina/hairy,
+		/datum/sprite_accessory/vagina/spade,
+		/datum/sprite_accessory/vagina/furred,
+		/datum/sprite_accessory/vagina/gaping,
+		/datum/sprite_accessory/vagina/cloaca,
+	)
