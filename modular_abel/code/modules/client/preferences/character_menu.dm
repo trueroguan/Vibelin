@@ -1,117 +1,220 @@
-#define PREF_LINK(pref_task, label) ("<a class='row' href='?_src_=prefs;" + pref_task + "'>" + label + "</a>")
+/datum/preferences/var/abel_preferences_initial_tab = "identity"
+/datum/preferences/var/abel_preferences_open_sequence = 0
+
+/datum/preferences/show_choices(mob/user, tabchoice)
+	if(!user || !user.client)
+		return
+	if(slot_randomized)
+		load_character(default_slot)
+		slot_randomized = FALSE
+
+	abel_preferences_initial_tab = (tabchoice == 1 || current_tab == 1) ? "game" : "identity"
+	abel_preferences_open_sequence++
+	current_tab = (abel_preferences_initial_tab == "game") ? 1 : 0
+	build_and_show_menu(user)
+	current_tab = 0
 
 /datum/preferences/build_and_show_menu(mob/user)
 	if(!user?.client)
 		return
 
 	user.client.acquire_dpi()
+	winshow(user, "stonekeep_prefwin", FALSE)
+	user << browse(null, "window=preferences_browser")
+
+	preload_preferences_tgui_assets(user)
+
+	var/datum/tgui/existing_ui = SStgui.try_update_ui(user, src, null)
+	if(existing_ui)
+		return
+
+	ui_interact(user)
+
+/datum/preferences/update_menu_data(mob/user, list/fields_to_update)
+	SStgui.update_uis(src)
+
+/datum/preferences/proc/preload_preferences_tgui_assets(mob/user)
+	if(!user?.client)
+		return
+
+	var/client/C = user.client
+	get_asset_datum(/datum/asset/simple/tgui).send(C)
+	get_asset_datum(/datum/asset/simple/namespaced/fontawesome).send(C)
+	get_asset_datum(/datum/asset/simple/namespaced/tgfont).send(C)
+	get_asset_datum(/datum/asset/simple/namespaced/fonts).send(C)
+	get_asset_datum(/datum/asset/json/icon_ref_map).send(C)
+	C.browse_queue_flush()
+
+/datum/preferences/ui_state(mob/user)
+	return GLOB.always_state
+
+/datum/preferences/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "PreferencesMenu", "Preferences", 1024, 650)
+		ui.set_autoupdate(FALSE)
+		ui.open()
+
+/datum/preferences/ui_data(mob/user)
+	var/list/data = list()
 
 	var/datum/faith/selected_faith
 	if(selected_patron)
 		selected_faith = GLOB.faith_list[selected_patron.associated_faith]
 
-	var/high_job
+	var/high_job = "None"
 	for(var/job_type in job_preferences)
 		if(job_preferences[job_type] != JP_HIGH)
 			continue
-		high_job = job_type
+		high_job = "[job_type]"
 		break
 
-	var/erp_state = erp_enabled ? "On" : "Off"
+	var/gender_name = "Other"
+	var/gender_short = "X"
+	switch(gender)
+		if(MALE)
+			gender_name = "Masculine"
+			gender_short = "M"
+		if(FEMALE)
+			gender_name = "Feminine"
+			gender_short = "F"
+		if(PLURAL)
+			gender_name = "Plural"
+			gender_short = "P"
 
-	var/list/dat = list()
-	dat += {"<html><head><meta charset="utf-8"><style>
-		* { box-sizing:border-box; }
-		body { background:#10131a; color:#c4ccd6; font-family:'Segoe UI','Trebuchet MS',sans-serif; font-size:13px; margin:0; padding:0; }
-		.bar { position:sticky; top:0; background:linear-gradient(#1c2230,#141925); border-bottom:2px solid #2f6f7a; padding:10px 14px; }
-		.bar .name { font-size:17px; font-weight:bold; color:#7fd1de; letter-spacing:1px; }
-		.bar .sub { font-size:11px; color:#7c8694; margin-top:2px; }
-		.wrap { display:flex; gap:14px; flex-wrap:wrap; padding:12px 14px; }
-		.col { flex:1; min-width:185px; }
-		h3 { color:#8aa0b8; font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin:14px 0 5px; padding-left:6px; border-left:3px solid #2f6f7a; }
-		h3:first-child { margin-top:0; }
-		a.row { display:block; padding:6px 10px; margin:3px 0; background:#181d27; color:#d3dae3; text-decoration:none; border:1px solid #232a36; border-radius:4px; transition:all .12s ease; }
-		a.row:hover { background:#212a39; border-color:#2f6f7a; color:#eaf3fa; transform:translateX(2px); }
-		a.row b { color:#7fd1de; font-weight:600; }
-		a.toggle { border-color:#3a5a4a; }
-		a.toggle b { color:#7fde9a; }
-		a.done { background:#13241a; border-color:#2f6f4a; color:#9fe6b6; text-align:center; font-weight:bold; }
-		a.done:hover { background:#19311f; }
-	</style></head><body>
-	<div class="bar"><div class="name">[real_name]</div><div class="sub">[pref_species.name] &middot; [gender == MALE ? "Masculine" : "Feminine"] &middot; Slot [default_slot]</div></div>
-	<div class="wrap"><div class="col">"}
+	var/patron_name = "None"
+	if(selected_patron)
+		patron_name = selected_patron.display_name ? selected_patron.display_name : selected_patron.name
 
-	dat += "<h3>Identity</h3>"
-	dat += PREF_LINK("preference=name;task=input", "Name: <b>[real_name]</b>")
-	dat += PREF_LINK("preference=species;task=input", "Species: <b>[pref_species.name]</b>")
-	dat += PREF_LINK("preference=patron;task=input", "Patron: <b>[selected_patron.name]</b>")
-	dat += PREF_LINK("preference=faith;task=input", "Faith: <b>[selected_faith?.name || "None"]</b>")
-	dat += PREF_LINK("preference=job;task=menu", "Class: <b>[high_job || "None"]</b>")
+	var/list/age_options = list()
+	var/age_index = 1
+	if(pref_species && length(pref_species.possible_ages))
+		var/current_index = 1
+		for(var/possible_age in pref_species.possible_ages)
+			age_options += "[possible_age]"
+			if(possible_age == age)
+				age_index = current_index
+			current_index++
+	else
+		age_options += "[age || AGE_ADULT]"
 
-	dat += "<h3>Body</h3>"
-	dat += PREF_LINK("preference=age;task=input", "Age: <b>[age]</b>")
-	dat += PREF_LINK("preference=gender", "Body Type: <b>[gender == MALE ? "M" : "F"]</b>")
-	dat += PREF_LINK("preference=pronouns;task=input", "Pronouns: <b>[pronouns]</b>")
-	dat += PREF_LINK("preference=domhand", "Dominant Hand: <b>[domhand == 1 ? "Left" : "Right"]</b>")
-	dat += PREF_LINK("preference=s_tone;task=input", "Ancestry")
-	dat += PREF_LINK("preference=select_quirks", "Select Quirks")
+	var/list/loadout_slots = list()
+	for(var/slot_number in 1 to 3)
+		var/loadout_name = "None"
+		var/loadout_ref = _get_loadout_slot(slot_number)
+		if(loadout_ref)
+			var/loadout_path = istext(loadout_ref) ? text2path(loadout_ref) : loadout_ref
+			var/datum/loadout_item/loadout_item = GLOB.loadout_items[loadout_path]
+			if(loadout_item)
+				loadout_name = loadout_item.name
+		loadout_slots += list(list(
+			"slot" = slot_number,
+			"name" = loadout_name,
+		))
 
-	dat += "<h3>Appearance</h3>"
-	dat += PREF_LINK("preference=customizers;task=menu", "Features <b>(genitals, ears, tail...)</b>")
-	dat += PREF_LINK("preference=randomiseappearanceprefs", "Randomise Appearance")
-	dat += PREF_LINK("preference=headshot;task=input", "Headshot")
-	dat += "<a class='row toggle' href='?_src_=prefs;preference=abel_erp_toggle'>Intimacy opt-in: <b>[erp_state]</b></a>"
-	if(erp_enabled)
-		dat += "<a class='row' href='?_src_=prefs;preference=abel_erp_panel'>Open intimacy panel</a>"
+	data["real_name"] = real_name || "Unnamed"
+	data["initial_tab"] = abel_preferences_initial_tab
+	data["open_sequence"] = abel_preferences_open_sequence
+	data["species_name"] = pref_species ? pref_species.name : "Human"
+	data["gender"] = gender_name
+	data["gender_short"] = gender_short
+	data["default_slot"] = default_slot
 
-	dat += "</div><div class=\"col\">"
+	data["patron_name"] = patron_name
+	data["faith_name"] = selected_faith ? selected_faith.name : "None"
+	data["high_job"] = high_job
+	data["age"] = age
+	data["age_index"] = age_index
+	data["age_min"] = 1
+	data["age_max"] = max(1, length(age_options))
+	data["age_options"] = age_options
+	data["pronouns"] = pronouns || "None"
+	data["domhand"] = (domhand == 1) ? "Left" : "Right"
+	data["ancestry_label"] = pref_species?.skin_tone_wording || "Ancestry"
 
-	dat += "<h3>Flavour</h3>"
-	dat += PREF_LINK("preference=flavortext;task=input", "Flavour Text")
-	dat += PREF_LINK("preference=descriptors;task=menu", "Descriptors")
-	dat += PREF_LINK("preference=culture;task=input", "Culture: <b>[culture ? culture::name : "None"]</b>")
-	dat += PREF_LINK("preference=culinary;task=menu", "Food Preferences")
-	dat += PREF_LINK("preference=ooc_notes;task=input", "OOC Notes")
-	dat += PREF_LINK("preference=ooc_extra;task=input", "OOC Extra")
+	data["erp_enabled"] = !!erp_enabled
+	data["headshot"] = is_valid_headshot_link(null, headshot_link, TRUE) ? headshot_link : null
 
-	dat += "<h3>Voice &amp; Family</h3>"
-	dat += PREF_LINK("preference=voicetype;task=input", "Voice Type: <b>[voice_type]</b>")
-	dat += PREF_LINK("preference=selected_accent;task=input", "Accent: <b>[selected_accent]</b>")
-	dat += PREF_LINK("preference=family", "Family: <b>[family ? family : "None"]</b>")
-	dat += PREF_LINK("preference=setspouse", "Spouse Pref")
+	data["culture_name"] = culture ? culture::name : "None"
+	data["voice_type"] = voice_type || "Default"
+	data["voice_color"] = voice_color ? "#[voice_color]" : "#a0a0a0"
+	data["selected_accent"] = selected_accent || "None"
+	data["family"] = family || "None"
+	data["gender_pref"] = gender_choice || "Any"
+	data["spouse"] = setspouse || "None"
 
-	dat += "<h3>Loadout &amp; Triumphs</h3>"
-	dat += PREF_LINK("preference=loadout_item;loadout_number=1;task=input", "Loadout 1: <b>[loadout1 ? loadout1.name : "None"]</b>")
-	dat += PREF_LINK("preference=loadout_item;loadout_number=2;task=input", "Loadout 2: <b>[loadout2 ? loadout2.name : "None"]</b>")
-	dat += PREF_LINK("preference=loadout_item;loadout_number=3;task=input", "Loadout 3: <b>[loadout3 ? loadout3.name : "None"]</b>")
-	dat += PREF_LINK("preference=triumph_buy_menu", "Triumph Shop")
-	dat += PREF_LINK("preference=antag;task=menu", "Special Roles")
+	data["loadouts"] = loadout_slots
+	data["triumphs"] = triumphs
+	data["special_role"] = next_special_trait ? "[next_special_trait]" : "None"
+	data["player_quality"] = user?.ckey ? get_playerquality(user.ckey, text = TRUE) : "Unknown"
 
-	dat += "<h3>Menu</h3>"
-	dat += PREF_LINK("preference=multi;task=menu", "Character Ready Order")
-	dat += PREF_LINK("preference=changeslot", "Change Character")
-	dat += PREF_LINK("preference=toggles", "Toggles")
-	dat += PREF_LINK("preference=keybinds;task=menu", "Keybinds")
-	dat += PREF_LINK("preference=save", "Save")
-	dat += PREF_LINK("preference=load", "Undo")
-	dat += "<a class='row done' href='?_src_=prefs;preference=finished'>Done</a>"
+	data["game_prefs"] = list(
+		"hotkeys" = !!hotkeys,
+		"buttons_locked" = !!buttons_locked,
+		"see_chat_non_mob" = !!see_chat_non_mob,
+		"tgui_fancy" = !!tgui_fancy,
+		"tgui_lock" = !!tgui_lock,
+		"windowflashing" = !!windowflashing,
+		"lobby_music" = !!(toggles & SOUND_LOBBY),
+		"hear_midis" = !!(toggles & SOUND_MIDI),
+		"ambientocclusion" = !!ambientocclusion,
+		"auto_fit_viewport" = !!auto_fit_viewport,
+		"widescreenpref" = !!widescreenpref,
+		"allow_midround_antag" = !!(toggles & MIDROUND_ANTAG),
+		"pixel_size" = "[pixel_size]",
+		"scaling_method" = "[scaling_method]",
+	)
 
-	dat += "</div></div></body></html>"
+	return data
 
-	var/menu_size = winget(user, "mapwindow", "size")
-	if(!menu_size || !findtext(menu_size, "x"))
-		menu_size = "816x950"
-
-	winshow(user, "stonekeep_prefwin", TRUE)
-	winset(user, "stonekeep_prefwin", "pos=0,0;size=[menu_size]")
-	winset(user, "stonekeep_prefwin.preferences_browser", "size=[menu_size]")
-	winshow(user, "stonekeep_prefwin.character_preview_map", FALSE)
-	user << browse(dat.Join(), "window=preferences_browser;size=[menu_size]")
-
-/datum/preferences/update_menu_data(mob/user, list/fields_to_update)
-	if(!winexists(user, "preferences_browser"))
+/datum/preferences/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
 		return
-	build_and_show_menu(user)
+
+	var/mob/user = ui?.user || usr
+	if(!user)
+		return FALSE
+
+	switch(action)
+		if("pref")
+			if(!islist(params) || !params["preference"])
+				return FALSE
+
+			var/list/href_list = list()
+			for(var/key in params)
+				href_list[key] = params[key]
+
+			if(href_list["preference"] == "tab")
+				current_tab = text2num("[href_list["tab"]]")
+				return TRUE
+
+			var/handled = process_link(user, href_list)
+			if(href_list["preference"] == "finished")
+				ui?.close(FALSE)
+			return handled || TRUE
+
+		if("set_age")
+			if(!islist(params))
+				return FALSE
+
+			var/new_age = params["value"]
+			if(!isnum(new_age))
+				new_age = text2num("[new_age]")
+			if(!isnum(new_age))
+				return FALSE
+
+			if(!pref_species || !length(pref_species.possible_ages))
+				return FALSE
+
+			var/age_index = clamp(round(new_age), 1, length(pref_species.possible_ages))
+			var/selected_age = pref_species.possible_ages[age_index]
+			if(age != selected_age)
+				age = selected_age
+				reset_jobs(user)
+			return TRUE
+
+	return FALSE
 
 /datum/preferences/process_link(mob/user, list/href_list)
 	switch(href_list["preference"])
@@ -122,7 +225,7 @@
 			if(istype(H))
 				H.erp_on_spawn_setup()
 			to_chat(user, span_notice("Intimacy opt-in [erp_enabled ? "enabled" : "disabled"] for this character (saved to slot)."))
-			build_and_show_menu(user)
+			update_menu_data(user)
 			return TRUE
 		if("abel_erp_panel")
 			var/mob/living/carbon/human/H = user
@@ -132,5 +235,3 @@
 			H.start_erp_session(H)
 			return TRUE
 	return ..()
-
-#undef PREF_LINK
