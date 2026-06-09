@@ -1,6 +1,5 @@
 /datum/erp_ui_catalog
 
-/// Returns organ type options for UI dropdowns.
 /datum/erp_ui_catalog/proc/get_organ_type_options_ui()
 	return list(
 		list("value" = SEX_ORGAN_PENIS, "name" = "Член"),

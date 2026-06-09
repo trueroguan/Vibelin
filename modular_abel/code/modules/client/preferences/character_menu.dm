@@ -24,10 +24,6 @@
 
 	preload_preferences_tgui_assets(user)
 
-	var/datum/tgui/existing_ui = SStgui.try_update_ui(user, src, null)
-	if(existing_ui)
-		return
-
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)

@@ -61,7 +61,6 @@
 	target_organ = null
 	. = ..()
 
-/// Marks link as finished and detaches it from organs' link lists.
 /datum/erp_sex_link/proc/finish()
 	if(state == LINK_STATE_FINISHED)
 		return
@@ -73,7 +72,6 @@
 	if(target_organ && !QDELETED(target_organ) && islist(target_organ.links))
 		target_organ.links -= src
 
-/// Requests fluid injection routing via the owning session/controller.
 /datum/erp_sex_link/proc/request_inject(datum/erp_sex_organ/source, target_mode, datum/erp_actor/who = null)
 	if(!source || state != LINK_STATE_ACTIVE)
 		return
@@ -96,74 +94,57 @@
 		return null
 	return who.build_climax_result(src)
 
-/// True if A is the active/giving actor for this link.
 /datum/erp_sex_link/proc/is_giving(datum/erp_actor/A)
 	return actor_active == A
 
-/// Validity gate used by controller cleanup (must not runtimes on deleted organs/hosts/actors).
 /datum/erp_sex_link/proc/is_valid()
 	return SSerp?.link_rules?.is_valid(src)
 
-/// Aggression flag used by template conditionals (aggr).
 /datum/erp_sex_link/proc/is_aggressive()
 	return SSerp?.link_rules?.is_aggressive(src)
 
-/// Template conditional (big).
 /datum/erp_sex_link/proc/has_big_breasts()
 	return SSerp?.link_rules?.has_big_breasts(src)
 
-/// Template conditional (dullahan).
 /datum/erp_sex_link/proc/is_dullahan_scene()
 	return SSerp?.link_rules?.is_dullahan_scene(src)
 
 /datum/erp_sex_link/proc/is_knot_scene()
 	return SSerp?.link_rules?.is_knot_scene(src)
 
-/// Keyword replacement helper for templates: {zone}.
 /datum/erp_sex_link/proc/get_target_zone_text()
 	return SSerp?.link_presenter?.get_target_zone_text(src) || "тело"
 
-/// Legacy compatibility shim (do not use in new code; kept to avoid breaking old callsites).
 /datum/erp_sex_link/proc/get_target_zone(mob/living/user, mob/living/target)
 	return get_target_zone_text()
 
-/// Keyword replacement helper for templates: {force}.
 /datum/erp_sex_link/proc/get_force_text()
 	return SSerp?.link_presenter?.get_force_text(force) || "уверенно"
 
-/// Keyword replacement helper for templates: {speed}.
 /datum/erp_sex_link/proc/get_speed_text()
 	return SSerp?.link_presenter?.get_speed_text(speed) || "ритмично"
 
-/// Minimal UI state used by UI/debug displays.
 /datum/erp_sex_link/proc/get_ui_state()
 	return SSerp?.link_presenter?.get_ui_state(src) || list()
 
-/// Speed multiplier used for timing/message weighting.
 /datum/erp_sex_link/proc/get_speed_mult()
 	return SSerp?.link_math?.get_speed_mult(speed) || 1.0
 
-/// Force multiplier used for timing/message weighting.
 /datum/erp_sex_link/proc/get_force_mult()
 	return SSerp?.link_math?.get_force_mult(force) || 1.0
 
-/// Effective tick interval considering speed.
 /datum/erp_sex_link/proc/get_effective_interval()
 	return SSerp?.link_math?.get_effective_interval(src) || tick_interval
 
-/// Weight for message selection (speed+force influence).
 /datum/erp_sex_link/proc/get_message_weight()
 	return SSerp?.link_math?.get_message_weight(src) || (get_speed_mult() + get_force_mult())
 
-/// Builds a chat/UI color for message emphasis based on force/speed.
 /datum/erp_sex_link/proc/get_message_color()
 	return SSerp?.link_presenter?.get_message_color(src)
 
-/// Wraps text in a styled span (kept because controller calls it).
 /datum/erp_sex_link/proc/spanify_sex(text)
 	return SSerp?.link_presenter?.spanify_sex(src, text)
 
-/// Always returns the first valid matching object.
 /datum/erp_sex_link/proc/get_furniture_for_scene()
 	var/mob/living/active_mob = actor_active?.physical
 	var/mob/living/passive_mob = actor_passive?.physical
@@ -188,7 +169,6 @@
 
 	return null
 
-/// Finds first valid furniture object on turf by scene priority
 /datum/erp_sex_link/proc/find_furniture_on_turf(turf/T)
 	if(!T)
 		return null
@@ -213,7 +193,6 @@
 
 	return null
 
-/// Finds closet on turf.
 /datum/erp_sex_link/proc/find_closet_on_turf(turf/T)
 	if(!T)
 		return null
@@ -225,7 +204,6 @@
 
 	return null
 
-/// Finds rogue bed on turf.
 /datum/erp_sex_link/proc/find_bed_on_turf(turf/T)
 	if(!T)
 		return null
@@ -237,7 +215,6 @@
 
 	return null
 
-/// Finds chair on turf.
 /datum/erp_sex_link/proc/find_chair_on_turf(turf/T)
 	if(!T)
 		return null
@@ -249,7 +226,6 @@
 
 	return null
 
-/// Finds table on turf.
 /datum/erp_sex_link/proc/find_table_on_turf(turf/T)
 	if(!T)
 		return null

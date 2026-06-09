@@ -1,6 +1,5 @@
 /datum/erp_organ_prefs_service
 
-/// Applies prefs to organ if it can resolve a mob client with prefs.
 /datum/erp_organ_prefs_service/proc/apply_prefs_if_possible(datum/erp_sex_organ/O)
 	var/mob/living/M = null
 

@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Marks actor organs dirty and requests UI update.
 /datum/erp_controller_partners/proc/on_anatomy_changed(datum/source)
 	var/mob/living/M = source
 	if(!istype(M))
@@ -20,7 +19,6 @@
 	SSerp.apply_prefs_for_mob(M)
 	controller?.request_ui_update()
 
-/// Builds partners list for UI.
 /datum/erp_controller_partners/proc/get_partners_ui()
 	var/list/L = list()
 
@@ -42,7 +40,6 @@
 
 	return L
 
-/// Adds partner atom to controller actors.
 /datum/erp_controller_partners/proc/add_partner_atom(atom/target_atom, set_active = TRUE)
 	if(!target_atom || QDELETED(target_atom))
 		return
@@ -71,13 +68,11 @@
 		controller.active_partner = NA
 		controller.ui?.request_update()
 
-/// Adds partner convenience wrapper.
 /datum/erp_controller_partners/proc/add_partner(atom/target)
 	if(!istype(target))
 		return
 	add_partner_atom(target)
 
-/// Finds actor by physical or signal mob.
 /datum/erp_controller_partners/proc/get_actor_by_mob(mob/living/M)
 	if(!M)
 		return null
@@ -92,7 +87,6 @@
 
 	return null
 
-/// Sets active partner by ref.
 /datum/erp_controller_partners/proc/set_active_partner_by_ref(ref)
 	if(!ref)
 		return FALSE
@@ -112,7 +106,6 @@
 
 	return FALSE
 
-/// Returns whether partner arousal is hidden.
 /datum/erp_controller_partners/proc/is_partner_arousal_hidden(actor)
 	if(!controller.active_partner)
 		return TRUE

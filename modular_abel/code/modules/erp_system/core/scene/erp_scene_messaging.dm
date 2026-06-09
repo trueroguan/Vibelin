@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Sends message respecting hidden_mode.
 /datum/erp_scene_messaging/proc/send_message(text, datum/erp_sex_link/L = null)
 	if(!text)
 		return
@@ -33,7 +32,6 @@
 	else if(B)
 		B.send_visible_message(text)
 
-/// Wraps scene tick text with force/speed intensity spans.
 /datum/erp_scene_messaging/proc/spanify_scene_text(text, force, speed, intensity = null)
 	if(!text)
 		return null
@@ -58,19 +56,16 @@
 
 	return "<span class='[span_class]'>[text]</span>"
 
-/// Styles start/end messages.
 /datum/erp_scene_messaging/proc/spanify_scene_start_end(text)
 	if(!text)
 		return null
 	return "<span style='color:[ERP_SCENE_START_END_COLOR]; font-size:80%; font-weight:bold;'>[text]</span>"
 
-/// Styles climax messages.
 /datum/erp_scene_messaging/proc/spanify_scene_climax(text)
 	if(!text)
 		return null
 	return "<span style='color:[ERP_SCENE_CLIMAX_COLOR]; font-size:105%; font-weight:bold; letter-spacing:0.2px;'>[text]</span>"
 
-/// Sends link start message.
 /datum/erp_scene_messaging/proc/send_link_start_message(datum/erp_sex_link/L)
 	if(!L || QDELETED(L) || !L.action)
 		return
@@ -84,7 +79,6 @@
 
 	send_message(spanify_scene_start_end(text), L)
 
-/// Sends link finish message.
 /datum/erp_scene_messaging/proc/send_link_finish_message(datum/erp_sex_link/L)
 	if(!L || QDELETED(L) || !L.action)
 		return

@@ -1,6 +1,5 @@
 /datum/erp_organ_spill_policy
 
-/// Returns bodyzone used for accessibility checks, derived from organ type.
 /datum/erp_organ_spill_policy/proc/_organ_type_to_zone(datum/erp_sex_organ/O)
 	switch(O.erp_organ_type)
 		if(SEX_ORGAN_PENIS, SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS)
@@ -11,7 +10,6 @@
 			return BODY_ZONE_PRECISE_MOUTH
 	return null
 
-/// Returns TRUE if spilling to ground is allowed for this organ in current state.
 /datum/erp_organ_spill_policy/proc/can_spill_to_ground(datum/erp_sex_organ/O)
 	var/mob/living/carbon/H = O.get_owner()
 	if(!istype(H))
@@ -23,8 +21,6 @@
 
 	return get_location_accessible(H, zone)
 
-/// Drops reagents to ground, creating or reusing a cleanable decal.
-/// This is SS13-world I/O; swap policy to support "chair/headless" behavior.
 /datum/erp_organ_spill_policy/proc/drop_to_ground(datum/erp_sex_organ/O, datum/reagents/R)
 	if(!R || R.total_volume <= 0)
 		return

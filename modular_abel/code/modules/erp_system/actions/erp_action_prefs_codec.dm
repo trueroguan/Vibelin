@@ -1,6 +1,5 @@
 /datum/erp_action_prefs_codec
 
-/// Applies an editor/prefs field to the action with type coercion and validation.
 /datum/erp_action_prefs_codec/proc/set_field(datum/erp_action/A, field_id, value)
 	switch(field_id)
 		if("name", "display_name", "title")
@@ -82,7 +81,6 @@
 
 	return FALSE
 
-/// Coerces an arbitrary value into a text string or null (empty becomes null).
 /datum/erp_action_prefs_codec/proc/_coerce_text_or_null(v)
 	if(isnull(v))
 		return null
@@ -93,7 +91,6 @@
 
 	return t
 
-/// Coerces a list-like value into a trimmed list of non-empty strings.
 /datum/erp_action_prefs_codec/proc/_coerce_string_list(v)
 	var/list/out = list()
 
@@ -108,7 +105,6 @@
 
 	return out
 
-/// Exports the action's preference fields into a serializable list.
 /datum/erp_action_prefs_codec/proc/export_for_prefs(datum/erp_action/A)
 	var/list/out = list()
 
@@ -128,7 +124,6 @@
 
 	return out
 
-/// Imports preference fields from a serialized list into this action.
 /datum/erp_action_prefs_codec/proc/import_from_prefs(datum/erp_action/A, list/data)
 	if(!islist(data))
 		return FALSE
@@ -149,7 +144,6 @@
 
 	return TRUE
 
-/// Converts seconds to ticks (prefs/editor convenience).
 /datum/erp_action_prefs_codec/proc/_seconds_to_ticks(sec)
 	if(!isnum(sec))
 		return 0

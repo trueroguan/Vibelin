@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Builds kinks UI list with partner known/unknown prefs.
 /datum/erp_controller_kinks/proc/get_kinks_ui(mob/living/M, datum/erp_actor/partner)
 	if(!istype(M))
 		return null
@@ -50,7 +49,6 @@
 
 	return list("entries" = entries)
 
-/// Sets kink pref on mob and saves into preferences.
 /datum/erp_controller_kinks/proc/set_kink_pref(mob/living/M, kink_type, value)
 	if(!istype(M))
 		return FALSE

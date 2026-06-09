@@ -10,7 +10,6 @@ SUBSYSTEM_DEF(erp)
 	var/list/actors_by_owner_ref = list()
 	var/list/actors_refcount = list()
 
-	// Services (created once in Initialize)
 	var/datum/erp_actor_custom_actions_service/actor_custom_actions
 	var/datum/erp_actor_ui_helpers/actor_ui_helpers
 	var/datum/erp_actor_effects_bridge/actor_effects_bridge
@@ -35,7 +34,6 @@ SUBSYSTEM_DEF(erp)
 
 	actions = list()
 
-	// Services init
 	actor_custom_actions = new
 	actor_ui_helpers = new
 	organ_prefs_service = new
@@ -65,12 +63,10 @@ SUBSYSTEM_DEF(erp)
 
 		actions[path] = A
 
-/// Registers an organ for subsystem ticking.
 /datum/controller/subsystem/erp/proc/register_organ(datum/erp_sex_organ/O)
 	if(O && !(O in organs))
 		organs += O
 
-/// Unregisters an organ from ticking.
 /datum/controller/subsystem/erp/proc/unregister_organ(datum/erp_sex_organ/O)
 	organs -= O
 
@@ -97,19 +93,16 @@ SUBSYSTEM_DEF(erp)
 
 		if(world.time >= K.next_decay_at)
 			K.process_decay()
-			if(K && !QDELETED(K) && K.next_decay_at) // если не stop_decay()
+			if(K && !QDELETED(K) && K.next_decay_at)
 				K.next_decay_at = world.time + ERP_KNOT_DECAY_TICK
 
-/// Registers a controller into subsystem list.
 /datum/controller/subsystem/erp/proc/register_controller(datum/erp_controller/C)
 	if(C && !(C in controllers))
 		controllers += C
 
-/// Unregisters a controller.
 /datum/controller/subsystem/erp/proc/unregister_controller(datum/erp_controller/C)
 	controllers -= C
 
-/// Returns the action datum by typepath or text typepath.
 /datum/controller/subsystem/erp/proc/get_action(action_type)
 	if(!action_type)
 		return null
@@ -120,7 +113,6 @@ SUBSYSTEM_DEF(erp)
 
 	return actions[path]
 
-/// Finds controller for initiator atom if any.
 /datum/controller/subsystem/erp/proc/get_controller_for(atom/initiator_atom)
 	if(!initiator_atom)
 		return null
@@ -133,7 +125,6 @@ SUBSYSTEM_DEF(erp)
 
 	return null
 
-/// Creates a controller (client optional: allow headless scenes).
 /datum/controller/subsystem/erp/proc/create_controller(atom/initiator_atom, client/C = null, mob/living/effect_mob = null)
 	if(!initiator_atom || QDELETED(initiator_atom))
 		return null
@@ -141,7 +132,6 @@ SUBSYSTEM_DEF(erp)
 	var/datum/erp_controller/EC = new(initiator_atom, C, effect_mob)
 	return EC
 
-/// Gets existing controller or creates a new one.
 /datum/controller/subsystem/erp/proc/get_or_create_controller(atom/initiator_atom, client/C = null, mob/living/effect_mob = null)
 	var/datum/erp_controller/EC = null
 	if(C)
@@ -157,11 +147,9 @@ SUBSYSTEM_DEF(erp)
 
 	return EC
 
-/// Returns organ-type options list for UI via catalog service.
 /datum/controller/subsystem/erp/proc/get_organ_type_options_ui()
 	return ui_catalog ? ui_catalog.get_organ_type_options_ui() : list()
 
-/// Applies organ prefs for a specific mob via prefs service (no-op if no prefs).
 /datum/controller/subsystem/erp/proc/apply_prefs_for_mob(mob/living/M)
 	if(!M || !M.client?.prefs)
 		return
@@ -172,7 +160,6 @@ SUBSYSTEM_DEF(erp)
 		if(O.get_owner() == M)
 			organ_prefs_service.apply_prefs_if_possible(O)
 
-/// Creates an ERP actor for the given atom via actor factory.
 /datum/controller/subsystem/erp/proc/create_actor(atom/A, client/C = null, mob/living/effect_mob = null)
 	if(!A || QDELETED(A))
 		return null
@@ -199,7 +186,7 @@ SUBSYSTEM_DEF(erp)
 	if(!A || QDELETED(A))
 		return
 
-	var/atom/owner_atom = A.active_actor // у тебя get_controller_for() сравнивает с owner.active_actor
+	var/atom/owner_atom = A.active_actor
 	if(!owner_atom)
 		qdel(A)
 		return
@@ -214,7 +201,6 @@ SUBSYSTEM_DEF(erp)
 	else
 		actors_refcount[key] = n
 
-/// Resolves the mob that should provide consent for a target atom (policy).
 /datum/controller/subsystem/erp/proc/get_consent_mob_for_target(atom/target_atom)
 	return consent_resolver ? consent_resolver.get_consent_mob_for_target(target_atom) : null
 

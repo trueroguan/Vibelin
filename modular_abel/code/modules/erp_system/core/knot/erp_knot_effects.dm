@@ -1,6 +1,5 @@
 /datum/erp_knot_effects
 
-/// Sends failure feedback for knot attempt based on reason.
 /datum/erp_knot_effects/proc/notify_try_knot_failed(mob/living/user, mob/living/target, reason)
 	if(!istype(user))
 		return
@@ -13,7 +12,6 @@
 		if("no_knot")
 			to_chat(user, span_warning("I can't knot."))
 
-/// Applies world-side effects when a knot starts.
 /datum/erp_knot_effects/proc/on_knot_started(datum/component/erp_knotting/C, datum/erp_knot_link/L, force_level)
 	if(!L || !L.is_valid())
 		return
@@ -50,7 +48,6 @@
 			A?.try_do_pain_effect(PAIN_MILD_EFFECT, FALSE)
 		btm.Stun(80)
 
-/// Applies world-side effects when a knot is removed.
 /datum/erp_knot_effects/proc/on_knot_removed(datum/component/erp_knotting/C, datum/erp_knot_link/L, forceful, who_pulled, remove_top_status, remove_btm_status)
 	if(!L || !L.is_valid())
 		return
@@ -77,7 +74,6 @@
 	if(remove_top_status)
 		top.remove_status_effect(/datum/status_effect/knotted)
 
-/// Sends feedback when pull-out fails.
 /datum/erp_knot_effects/proc/notify_pull_failed(datum/erp_knot_link/L, mob/living/actor)
 	if(!L || !L.is_valid() || !istype(actor))
 		return

@@ -1,11 +1,9 @@
 /datum/erp_actor_factory
 
-/// Creates actor subtype for atom; client/effect_mob optional.
 /datum/erp_actor_factory/proc/create_actor(atom/A, client/C = null, mob/living/effect_mob = null)
 	if(!A || QDELETED(A))
 		return null
 
-	// modular_abel: dullahan-head actor path parked (no dullahan bodypart in Vanderlin)
 
 	if(ishuman(A))
 		var/datum/erp_actor/human/HAct = new(A)

@@ -14,7 +14,6 @@
 
 		"show_penis_panel" = FALSE,
 
-		// NEW knot ui
 		"show_knot_toggle" = FALSE,
 		"do_knot_action" = FALSE,
 		"has_knotted_penis" = FALSE,

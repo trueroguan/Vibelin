@@ -1,6 +1,5 @@
 /datum/erp_knot_movement_policy
 
-/// Handles movement consequences for a knot link and returns an action result code.
 /datum/erp_knot_movement_policy/proc/handle_link_movement(datum/erp_knot_link/L, mob/living/mover)
 	if(!L || !L.is_valid())
 		return ERP_KNOT_MOVE_KEEP

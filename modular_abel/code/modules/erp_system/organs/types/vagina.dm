@@ -26,7 +26,6 @@
 	if(!istype(mother))
 		return
 
-	// modular_abel: Twilight fertility/virility checks parked; gate on can_be_pregnant only
 
 	var/chance = VAGINA_BASE_PREGNANCY_CHANCE
 	chance += clamp(knot_bonus, 0, VAGINA_KNOT_PREGNANCY_MAX_BONUS)

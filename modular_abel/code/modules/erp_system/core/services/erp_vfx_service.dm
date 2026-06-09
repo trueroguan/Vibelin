@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Gets current arousal value via COMSIG.
 /datum/erp_vfx_service/proc/get_arousal_value(mob/living/carbon/human/H)
 	if(!istype(H))
 		return null
@@ -17,7 +16,6 @@
 
 	return data["arousal"]
 
-/// Builds VFX bundle for tick.
 /datum/erp_vfx_service/proc/build_tick_effect_bundle(list/active_links, dt)
 	var/list/E = list()
 	E["thrust_link"] = null
@@ -59,7 +57,6 @@
 
 	return E
 
-/// Plays VFX bundle for tick.
 /datum/erp_vfx_service/proc/play_tick_effects(list/active_links, dt)
 	if(controller.hidden_mode)
 		return
@@ -94,7 +91,6 @@
 			if(istype(H))
 				spawn_hearts(H)
 
-/// Performs thrust bump animation.
 /datum/erp_vfx_service/proc/do_thrust_bump(datum/erp_sex_link/best)
 	if(!best || QDELETED(best) || !best.is_valid())
 		return
@@ -116,7 +112,6 @@
 	do_thrust_animate(user, target, null, pixels, time)
 	try_furniture_shake(best, user, target, time)
 
-/// Picks best thrust target from link.
 /datum/erp_vfx_service/proc/get_best_thrust_target(datum/erp_sex_link/best)
 	if(!best)
 		return null
@@ -128,7 +123,6 @@
 
 	return B
 
-/// Shows balloon onomatopoeia based on organ types.
 /datum/erp_vfx_service/proc/do_onomatopoeia(mob/living/carbon/human/user, datum/erp_sex_link/best)
 	if(!istype(user))
 		return
@@ -153,7 +147,6 @@
 
 	user.balloon_alert_to_viewers(msg, x_offset = rand(-15, 15), y_offset = rand(0, 25))
 
-/// Plays slap sound.
 /datum/erp_vfx_service/proc/play_slap(mob/living/carbon/human/user)
 	if(!istype(user))
 		return
@@ -161,7 +154,6 @@
 	var/sound = pick('modular_abel/sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg')
 	playsound(user, sound, 50, TRUE, -2, ignore_walls = FALSE)
 
-/// Returns TRUE if link is mouth->(vagina/breasts/penis/anus).
 /datum/erp_vfx_service/proc/link_is_sucking(datum/erp_sex_link/L)
 	if(!L || QDELETED(L) || !L.is_valid())
 		return FALSE
@@ -179,7 +171,6 @@
 
 	return (tgt.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_BREASTS, SEX_ORGAN_PENIS, SEX_ORGAN_ANUS))
 
-/// Plays sucking sounds.
 /datum/erp_vfx_service/proc/play_suck(mob/living/carbon/human/user, datum/erp_sex_link/best)
 	if(!istype(user) || !best)
 		return
@@ -212,7 +203,6 @@
 		ignore_walls = FALSE
 	)
 
-/// Plays thrust sound based on force.
 /datum/erp_vfx_service/proc/play_thrust_sound(mob/living/carbon/human/user, datum/erp_sex_link/best)
 	if(!istype(user) || !best)
 		return
@@ -229,7 +219,6 @@
 	if(sound)
 		playsound(user, sound, 30, TRUE, -2, ignore_walls = FALSE)
 
-/// Spawns hearts VFX.
 /datum/erp_vfx_service/proc/spawn_hearts(mob/living/carbon/human/user)
 	if(!istype(user))
 		return
@@ -240,7 +229,6 @@
 		else
 			new /obj/effect/temp_visual/heart/sex_effects/red_heart(get_turf(user))
 
-/// Converts zone key to bodyzone const.
 /datum/erp_vfx_service/proc/zone_key_to_bodyzone(zone)
 	switch(zone)
 		if("groin") return BODY_ZONE_PRECISE_GROIN
@@ -248,8 +236,6 @@
 		if("mouth") return BODY_ZONE_PRECISE_MOUTH
 	return null
 
-/// Tries bed break on strong thrust.
-/// Tries to apply furniture VFX for thrusting scene.
 /datum/erp_vfx_service/proc/try_furniture_shake(datum/erp_sex_link/L, mob/living/user, atom/movable/target, time)
 	if(!L || QDELETED(L) || !L.is_valid())
 		return
@@ -266,7 +252,6 @@
 
 	shake_furniture(furniture, force, time)
 
-/// Finds closest bed for thrust animation.
 /datum/erp_vfx_service/proc/shake_furniture(atom/movable/furniture, force, time)
 	if(!furniture || QDELETED(furniture))
 		return
@@ -296,7 +281,6 @@
 
 	apply_furniture_side_effects(furniture, shake_force)
 
-/// Applies object-specific side effects after generic shake.
 /datum/erp_vfx_service/proc/apply_furniture_side_effects(atom/movable/furniture, force)
 	if(!furniture || QDELETED(furniture))
 		return
@@ -310,8 +294,6 @@
 
 	damage_furniture_safely(O, damage_amount, force)
 
-/// Returns max safe brute damage that can be dealt to furniture
-/// without forcing it into broken or destroyed state.
 /datum/erp_vfx_service/proc/get_safe_furniture_damage_cap(obj/O)
 	if(!O || QDELETED(O))
 		return 0
@@ -328,7 +310,6 @@
 	var/safe_damage_cap = O.atom_integrity - min_safe_integrity
 	return max(0, round(safe_damage_cap, DAMAGE_PRECISION))
 
-/// Returns raw intended furniture damage from ERP force.
 /datum/erp_vfx_service/proc/get_furniture_damage_from_force(force)
 	if(force > SEX_FORCE_HIGH)
 		return 2
@@ -336,8 +317,6 @@
 		return 1
 	return 0
 
-/// Plays custom ERP furniture sound overrides.
-/// Returns TRUE if custom sound was played and default take_damage sound should be suppressed.
 /datum/erp_vfx_service/proc/play_furniture_erp_sound(atom/movable/furniture, force)
 	if(!furniture || QDELETED(furniture))
 		return FALSE
@@ -359,8 +338,6 @@
 
 	return FALSE
 
-/// Applies capped brute damage to furniture without allowing it
-/// to cross into broken or destroyed state.
 /datum/erp_vfx_service/proc/damage_furniture_safely(obj/O, damage_amount, force)
 	if(!O || QDELETED(O))
 		return

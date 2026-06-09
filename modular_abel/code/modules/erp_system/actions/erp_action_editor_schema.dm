@@ -1,6 +1,5 @@
 /datum/erp_action_editor_schema
 
-/// Exports editor UI field descriptors for this action (schema + current values + options).
 /datum/erp_action_editor_schema/proc/export_editor_fields(datum/erp_action/A)
 	. = list()
 	. += list(_make_field("action_scope", "Направление действия", "enum", A.action_scope, "ОСНОВНОЕ", null, null, null, _scope_options(), "Это влияет на список доступных действий и фильтрацию.", null))
@@ -25,7 +24,6 @@
 	. += list(_make_field("message_climax_active", "Оргазм: инициатор", "text", A.message_climax_active, "СООБЩЕНИЯ"))
 	. += list(_make_field("message_climax_passive", "Оргазм: цель", "text", A.message_climax_passive, "СООБЩЕНИЯ"))
 
-/// Creates a single editor field descriptor.
 /datum/erp_action_editor_schema/proc/_make_field(id, label, type, value, section, min=null, max=null, step=null, options=null, desc=null, placeholder=null)
 	var/list/F = list(
 		"id" = id,
@@ -50,17 +48,14 @@
 
 	return F
 
-/// Converts ticks to seconds (UI/editor convenience).
 /datum/erp_action_editor_schema/proc/_ticks_to_seconds(ticks)
 	if(!isnum(ticks))
 		return 0
 	return ticks / 10
 
-/// Creates an enum option entry for editor schemas.
 /datum/erp_action_editor_schema/proc/_opt(value, name)
 	return list("value" = value, "name" = name)
 
-/// Builds organ enum options for editor schemas.
 /datum/erp_action_editor_schema/proc/_organ_options()
 	. = list()
 	. += list(_opt(null, "—"))
@@ -74,27 +69,23 @@
 	. += list(_opt(SEX_ORGAN_TAIL, "Хвост"))
 	. += list(_opt(SEX_ORGAN_BODY, "Тело"))
 
-/// Builds inject timing enum options for editor schemas.
 /datum/erp_action_editor_schema/proc/_inject_timing_options()
 	. = list()
 	. += list(_opt(INJECT_NONE, "Нет"))
 	. += list(_opt(INJECT_CONTINUOUS, "В процессе"))
 	. += list(_opt(INJECT_ON_FINISH, "На финише"))
 
-/// Builds inject source enum options for editor schemas.
 /datum/erp_action_editor_schema/proc/_inject_source_options()
 	. = list()
 	. += list(_opt(INJECT_FROM_ACTIVE, "От актёра"))
 	. += list(_opt(INJECT_FROM_PASSIVE, "От цели"))
 
-/// Builds inject target mode enum options for editor schemas.
 /datum/erp_action_editor_schema/proc/_inject_target_mode_options()
 	. = list()
 	. += list(_opt(INJECT_ORGAN, "В выбранный орган"))
 	. += list(_opt(INJECT_CONTAINER, "В контейнер"))
 	. += list(_opt(INJECT_GROUND, "на пол"))
 
-/// Builds action scope enum options for editor schemas.
 /datum/erp_action_editor_schema/proc/_scope_options()
 	. = list()
 	. += list(_opt(ERP_SCOPE_OTHER, "Партнёр"))

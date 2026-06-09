@@ -1,6 +1,5 @@
 /datum/erp_knot_rules
 
-/// Returns a non-null reason string if knot cannot be started; otherwise returns null.
 /datum/erp_knot_rules/proc/can_start_knot(mob/living/user, mob/living/target, datum/erp_sex_organ/penis/penis_org, datum/erp_sex_organ/receiving_org, penis_unit_id = 0, force_level = 0)
 	if(!istype(user) || !istype(target))
 		return "bad_actor"
@@ -19,7 +18,6 @@
 
 	return null
 
-/// Returns pull-out chance for the actor (top/btm), including link bonuses.
 /datum/erp_knot_rules/proc/get_pull_out_chance(datum/erp_knot_link/L, mob/living/actor)
 	if(!L || !L.is_valid() || !istype(actor))
 		return 0
@@ -39,6 +37,5 @@
 
 	return chance
 
-/// Returns TRUE if link should be broken due to missing clients (policy gate).
 /datum/erp_knot_rules/proc/should_break_for_missing_clients(datum/erp_knot_link/L)
 	return FALSE

@@ -14,7 +14,7 @@ type KinkEntry = {
   description?: string;
   category?: string;
   intensity?: number;
-  pref: number; // -1..1
+  pref: number;
   partner_pref?: number | null;
   partner_pref_known?: boolean;
 };
@@ -128,21 +128,18 @@ type EditorField = {
 type EditorTemplateEntry = {
   type: string;
   name: string;
-  // fields здесь больше не обязательны и UI их не читает
   fields?: EditorField[] | any;
 };
 
 type EditorCustomAction = {
   id: string;
   name: string;
-  // fields здесь больше не обязательны и UI их не читает
   fields?: EditorField[] | any;
 };
 
-// ВАЖНО: выбранное действие, которое backend возвращает полностью
 type EditorSelectedPayload = {
   mode: 'template' | 'custom';
-  key: string; // template.type или custom.id
+  key: string;
   name?: string;
   fields?: EditorField[] | any;
 };
@@ -192,7 +189,6 @@ const BaseTuningPanel: React.FC<{
   return (
     <Section title="Базовые настройки новых действий" style={{ paddingTop: 6, paddingBottom: 6 }}>
       <Stack align="center" justify="space-between">
-        {/* LEFT SIDE: label -> control */}
         <Stack.Item grow>
           <Stack align="center">
             <Stack.Item>
@@ -249,7 +245,6 @@ const BaseTuningPanel: React.FC<{
           </Stack>
         </Stack.Item>
 
-        {/* RIGHT SIDE: control -> label */}
         <Stack.Item>
           <Stack align="center" justify="end">
             <Stack.Item>
@@ -392,8 +387,8 @@ const BarRow: React.FC<{
           textShadow: '0 0 3px #000',
         }}
       >
-        <span>{label}</span>
-        <span>{pct}%</span>
+        <Box>{label}</Box>
+        <Box>{pct}%</Box>
       </Box>
     </Box>
   );
@@ -739,9 +734,7 @@ const ActiveLinksPanel: React.FC<{
                 marginBottom: 6,
               }}
             >
-              {/* TOP ROW: speed | name (stop) | force */}
               <Stack align="center" justify="space-between">
-                {/* SPEED */}
                 <Stack.Item basis="34%" style={{ textAlign: 'left' }}>
                   <Stack align="center">
                     <Stack.Item>
@@ -782,7 +775,6 @@ const ActiveLinksPanel: React.FC<{
                   </Stack>
                 </Stack.Item>
 
-                {/* NAME (click = stop) */}
                 <Stack.Item grow>
                   <Box textAlign="center">
                     <Button
@@ -840,7 +832,6 @@ const ActiveLinksPanel: React.FC<{
                 </Stack.Item>
               </Stack>
 
-              {/* BOTTOM ROW: init organ | finish status | target organ */}
               <Box mt={0.5}>
                 <Stack align="center" justify="space-between">
                   <Stack.Item basis="34%">
@@ -1646,14 +1637,11 @@ const EditorTab: React.FC<{
   const [rawMode, setRawMode] = useState(false);
   const [rawText, setRawText] = useState('');
 
-  // Локальная форма — всегда гидрится из backend.selected,
-  // но только если пользователь не "грязный" (не редактит сейчас)
   const [formFields, setFormFields] = useState<EditorField[]>([]);
 
   const selectedMode = selected?.mode ?? null;
   const selectedKey = selected?.key ?? null;
 
-  // "источник" формы — строго selected (полный), не списки
   const source = useMemo(() => {
     if (!selectedMode || !selectedKey) return null;
     return {
@@ -1714,7 +1702,6 @@ const EditorTab: React.FC<{
     setRawText('');
   };
 
-  // При смене выбранного в backend — гидрим форму, но НЕ перетираем локальные правки.
   useEffect(() => {
     if (selectionKey === lastSelectionKey.current) return;
     lastSelectionKey.current = selectionKey;
@@ -1723,11 +1710,9 @@ const EditorTab: React.FC<{
     hydrateFromSelected();
   }, [selectionKey]);
 
-  // Если backend прислал апдейт выбранного, а мы не dirty — тоже гидрим
   useEffect(() => {
     if (!source) return;
     if (isDirty) return;
-    // если не менялся selectionKey — но поля обновились, мы всё равно можем перезалить.
     hydrateFromSelected();
   }, [source?.name, (source as any)?.fields]);
 
@@ -1754,7 +1739,6 @@ const EditorTab: React.FC<{
       try {
         fields = JSON.parse(rawText);
       } catch {
-        // ignore
       }
     }
 
@@ -1765,7 +1749,7 @@ const EditorTab: React.FC<{
 
     setIsDirty(false);
     onCreate({
-      type: selectedKey, // template.type
+      type: selectedKey,
       name: nameVal,
       fields,
     });
@@ -1779,14 +1763,13 @@ const EditorTab: React.FC<{
       try {
         fields = JSON.parse(rawText);
       } catch {
-        // ignore
       }
     }
 
     const nameVal = safeString(getFieldValue('name'));
     setIsDirty(false);
     onUpdate({
-      id: selectedKey, // custom.id
+      id: selectedKey,
       name: nameVal,
       fields,
     });
@@ -1811,7 +1794,6 @@ const EditorTab: React.FC<{
                         selected={isSelected}
                         onClick={() => {
                           setIsDirty(false);
-                          // ✅ просим backend выбрать и вернуть полный payload в selected
                           act('editor_select_action', { mode: 'template', key: t.type });
                         }}
                       >
@@ -1839,7 +1821,6 @@ const EditorTab: React.FC<{
                         selected={isSelected}
                         onClick={() => {
                           setIsDirty(false);
-                          // ✅ просим backend выбрать и вернуть полный payload в selected
                           act('editor_select_action', { mode: 'custom', key: c.id });
                         }}
                       >

@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Processes scene ticking and message emission.
 /datum/erp_scene_runtime/proc/process_scene_tick()
 	var/list/active = list()
 
@@ -69,7 +68,6 @@
 		controller.play_tick_effects(active, best, dt)
 		controller.send_message(best.spanify_sex(msg), best)
 
-/// Calculates average scene interval.
 /datum/erp_scene_runtime/proc/calc_scene_interval(list/active_links)
 	var/total = 0
 	var/n = 0
@@ -86,7 +84,6 @@
 
 	return round(total / n)
 
-/// Picks best link for message emission.
 /datum/erp_scene_runtime/proc/pick_best_message_link(list/active_links)
 	var/list/tied = list()
 	var/best_w = -1
@@ -110,12 +107,10 @@
 
 	return pick(tied)
 
-/// Marks scene started.
 /datum/erp_scene_runtime/proc/on_scene_started(list/active_links, datum/erp_sex_link/best)
 	controller.scene_active = TRUE
 	controller.scene_started_at = world.time
 
-/// Marks scene ended.
 /datum/erp_scene_runtime/proc/on_scene_ended(datum/erp_sex_link/last_best)
 	controller.scene_active = FALSE
 	controller.scene_started_at = 0

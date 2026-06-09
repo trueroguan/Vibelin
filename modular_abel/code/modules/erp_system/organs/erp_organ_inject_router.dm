@@ -1,7 +1,6 @@
 /datum/erp_organ_inject_router
 	var/inject_organ_spill_ratio = 0.20
 
-/// Routes reagents according to injection mode, delegating ground spill to spill policy.
 /datum/erp_organ_inject_router/proc/route_reagents(datum/erp_sex_organ/source, datum/reagents/R, target_mode, target)
 	if(!R || R.total_volume <= 0)
 		return FALSE

@@ -5,13 +5,11 @@
 	. = ..()
 	controller = C
 
-/// Gets knotting component.
 /datum/erp_knot_service/proc/get_knotting_component(mob/living/carbon/human/H)
 	if(!istype(H))
 		return null
 	return H.GetComponent(/datum/component/erp_knotting)
 
-/// Returns penis unit id for link (stub for multi-knot).
 /datum/erp_knot_service/proc/get_penis_unit_id_for_link(datum/erp_sex_link/L)
 	if(!L || QDELETED(L) || !L.is_valid())
 		return 0
@@ -55,7 +53,6 @@
 
 	return null
 
-/// Checks if link is a knot pair link.
 /datum/erp_knot_service/proc/is_knot_pair_link(datum/erp_sex_link/L)
 	if(!L || QDELETED(L) || !L.is_valid())
 		return FALSE
@@ -93,7 +90,6 @@
 
 	return FALSE
 
-/// Notes knot activity for penis/other pair.
 /datum/erp_knot_service/proc/note_knot_activity_from_link(datum/erp_sex_link/L)
 	if(!L || QDELETED(L) || !L.is_valid())
 		return
@@ -130,7 +126,6 @@
 			continue
 		KL.note_activity()
 
-/// Toggles do_knot_action state (owner only).
 /datum/erp_knot_service/proc/set_do_knot_action(mob/living/carbon/human/H, value)
 	if(!H || H.client != controller.owner.client)
 		return FALSE
@@ -156,7 +151,6 @@
 	controller.ui?.request_update()
 	return TRUE
 
-/// Returns penis knot UI state.
 /datum/erp_knot_service/proc/get_penis_knot_ui_state(mob/living/carbon/human/H)
 	var/list/out = list(
 		"has_knotted_penis" = FALSE,
@@ -236,7 +230,6 @@
 	out["can_knot_now"] = FALSE
 	return out
 
-/// Checks if penis panel should be shown.
 /datum/erp_knot_service/proc/should_show_penis_panel(mob/living/carbon/human/H, actor_type_filter)
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
 	if(!P)

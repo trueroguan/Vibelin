@@ -12,7 +12,6 @@
 	. = ..()
 	controller = C
 
-/// Applies tick effects (arousal/pain/inject) for active links.
 /datum/erp_scene_effects/proc/apply_scene_effects(list/active_links, datum/erp_sex_link/best, dt)
 	if(!islist(active_links) || !active_links.len)
 		return
@@ -127,7 +126,6 @@
 
 	apply_training(active_links)
 
-/// Returns average force/speed for active links.
 /datum/erp_scene_effects/proc/get_scene_force_speed_avg(list/active_links)
 	var/n = 0
 	var/sum_force = 0

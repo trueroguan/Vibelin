@@ -9,7 +9,6 @@
 	. = ..()
 	controller = C
 
-/// Handles climax signal: message, schedule effects, stop until_climax links.
 /datum/erp_climax_service/proc/on_arousal_climax(datum/source)
 	var/mob/living/carbon/human/who = source
 	if(!istype(who))
@@ -85,7 +84,6 @@
 	A?.apply_climax_stress(who, partner)
 	return
 
-/// Runs delayed climax effects and updates UI.
 /datum/erp_climax_service/proc/handle_arousal_climax_effects(mob/living/carbon/human/who, list/active_links)
 	if(!istype(who) || who.stat == DEAD)
 		return
@@ -136,8 +134,6 @@
 					best_score = sc
 					best_link = Lp
 
-				// Кнот ищем отдельно от best:
-				// только если член — именно инициатор линка.
 				if(Lp.init_organ != P)
 					continue
 
@@ -187,9 +183,6 @@
 							already_knotted = TRUE
 							break
 
-					// Если уже есть активный кнот на этой паре,
-					// новый не создаём. На этом же оргазме доп. inject
-					// сработает ниже через knot_links.
 					if(already_knotted)
 						continue
 
@@ -297,7 +290,6 @@
 	controller.ui?.request_update()
 	return
 
-/// Picks best link for climax scoring.
 /datum/erp_climax_service/proc/pick_best_climax_link(mob/living/carbon/human/who, list/active_links)
 	if(!who || !active_links || !active_links.len)
 		return null
@@ -315,7 +307,6 @@
 
 	return best
 
-/// Computes orgasm context (organ selection fallback).
 /datum/erp_climax_service/proc/get_orgasm_context(mob/living/carbon/human/who, datum/erp_sex_link/best)
 	if(!istype(who) || !best)
 		return null
@@ -363,7 +354,6 @@
 		"partner" = partner
 	)
 
-/// Applies coating status effect.
 /datum/erp_climax_service/proc/apply_coating(mob/living/carbon/human/target, zone, datum/reagents/R, capacity = 30)
 	if(!istype(target) || !R || R.total_volume <= 0)
 		return FALSE
@@ -390,7 +380,6 @@
 	E.add_from(R, R.total_volume)
 	return TRUE
 
-/// Applies coating and puddle, respecting clothing accessibility.
 /datum/erp_climax_service/proc/apply_coating_and_puddle(datum/erp_sex_organ/source_organ, mob/living/carbon/human/coat_mob, zone, mob/living/carbon/human/feet_mob, amount, capacity = 30)
 	if(!source_organ || QDELETED(source_organ))
 		return FALSE
@@ -440,7 +429,6 @@
 
 	return TRUE
 
-/// Performs climax effects for who on best link.
 /datum/erp_climax_service/proc/do_climax_effects(mob/living/carbon/human/who, datum/erp_sex_link/best)
 	if(!istype(who) || !best)
 		return FALSE

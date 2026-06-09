@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Gets action by type path or id (core+custom).
 /datum/erp_controller_actions/proc/get_action_by_id_or_path(action_type)
 	if(!action_type)
 		return null
@@ -25,7 +24,6 @@
 
 	return null
 
-/// Returns all actions filtered by self/other scope.
 /datum/erp_controller_actions/proc/get_all_actions_for_ui(datum/erp_actor/actor, datum/erp_actor/partner)
 	var/list/out = list()
 	var/is_self = FALSE
@@ -142,7 +140,6 @@
 
 	return null
 
-/// Builds action list UI for current active partner and type filters.
 /datum/erp_controller_actions/proc/get_action_list_ui(actor_type, partner_type)
 	var/list/out = list()
 
@@ -226,11 +223,9 @@
 
 	return out
 
-/// Checks if action can start.
 /datum/erp_controller_actions/proc/can_start_action(datum/erp_action/A, datum/erp_sex_organ/init, datum/erp_sex_organ/target)
 	return isnull(get_action_block_reason(A, init, target))
 
-/// Returns string reason why action cannot start (or null).
 /datum/erp_controller_actions/proc/get_action_block_reason(datum/erp_action/A, datum/erp_sex_organ/init, datum/erp_sex_organ/target)
 	if(!controller)
 		return "Нет контроллера."
@@ -239,7 +234,6 @@
 
 	return validate_action(A, init, target, ctx)
 
-/// Checks if actor holds required tagged items.
 /datum/erp_controller_actions/proc/has_required_item_tags(datum/erp_actor/A, list/required_tags)
 	if(!A || !islist(required_tags) || !required_tags.len)
 		return TRUE
@@ -258,7 +252,6 @@
 
 	return FALSE
 
-/// Checks if item or it's namehas any of required tags.
 /datum/erp_controller_actions/proc/item_has_any_tag(obj/item/I, list/required_tags)
 	if(!istype(I) || !islist(required_tags) || !required_tags.len)
 		return FALSE
@@ -279,7 +272,6 @@
 
 	return FALSE
 
-/// Picks first free organ by type and any.
 /datum/erp_controller_actions/proc/pick_first_by_type(datum/erp_actor/A, require_free = TRUE)
 	var/list/by = list()
 	var/datum/erp_sex_organ/any = null
@@ -297,7 +289,6 @@
 
 	return list("any" = any, "by" = by)
 
-/// Normalizes organ type value (number or trimmed text).
 /datum/erp_controller_actions/proc/normalize_organ_type(v)
 	if(isnull(v))
 		return null

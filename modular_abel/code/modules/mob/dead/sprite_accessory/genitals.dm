@@ -23,6 +23,8 @@
 	var/mob/living/carbon/human/H = owner
 	if(istype(H) && H.underwear && H.underwear != "Nude")
 		return FALSE
+	if(istype(H) && !get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
+		return FALSE
 	return is_human_part_visible(owner, HIDEJUMPSUIT)
 
 /datum/sprite_accessory/penis/human
@@ -102,6 +104,8 @@
 	var/obj/item/organ/penis/pp = owner.getorganslot(ORGAN_SLOT_PENIS)
 	if(pp && pp.sheath_type == SHEATH_TYPE_SLIT)
 		return FALSE
+	if(istype(H) && !get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
+		return FALSE
 	return is_human_part_visible(owner, HIDEJUMPSUIT)
 
 /datum/sprite_accessory/testicles/pair
@@ -150,6 +154,8 @@
 /datum/sprite_accessory/vagina/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
 	if(istype(H) && H.underwear && H.underwear != "Nude")
+		return FALSE
+	if(istype(H) && !get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
 		return FALSE
 	return is_human_part_visible(owner, HIDEJUMPSUIT)
 

@@ -114,3 +114,15 @@
 	organ_efficiency = list(ORGAN_SLOT_BREASTS = 100)
 	var/breast_size = BREAST_SIZE_NORMAL
 	var/lactating = FALSE
+
+/obj/item/organ/penis/get_availability(datum/species/owner_species, mob/living/carbon/owner_mob)
+	return TRUE
+
+/obj/item/organ/testicles/get_availability(datum/species/owner_species, mob/living/carbon/owner_mob)
+	return TRUE
+
+/obj/item/organ/vagina/get_availability(datum/species/owner_species, mob/living/carbon/owner_mob)
+	return TRUE
+
+/obj/item/organ/breasts/get_availability(datum/species/owner_species, mob/living/carbon/owner_mob)
+	return TRUE

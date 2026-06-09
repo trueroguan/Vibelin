@@ -1,5 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Icon } from 'tgui-core/components';
+import { Children, useEffect, useState } from 'react';
+import {
+  Box,
+  Button,
+  Icon,
+  Section,
+  Slider,
+  Stack,
+  Tabs,
+} from 'tgui-core/components';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
@@ -78,488 +86,168 @@ const display = (value: unknown, fallback = 'None') => {
   return text || fallback;
 };
 
-const preferencesMenuStyles = `
-.PreferencesMenu {
-  --prefs-bg: #0d1117;
-  --prefs-panel: #131a23;
-  --prefs-panel-soft: #17212c;
-  --prefs-line: #2d3a48;
-  --prefs-line-hot: #3aa6ad;
-  --prefs-text: #d8e0e8;
-  --prefs-muted: #8d9aaa;
-  --prefs-cyan: #80e3ea;
-  --prefs-gold: #d8b365;
-  --prefs-green: #76d98c;
-  --prefs-blue: #7fa8e6;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(27, 38, 51, 0.96), rgba(9, 12, 17, 0.98)), var(--prefs-bg);
-  color: var(--prefs-text);
-  font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
-}
-.PreferencesMenu button {
-  font: inherit;
-}
-.PreferencesMenu__header {
-  min-height: 78px;
-  display: grid;
-  grid-template-columns: minmax(270px, 36%) minmax(0, 1fr);
-  border-bottom: 1px solid rgba(128, 227, 234, 0.35);
-  background: linear-gradient(90deg, rgba(18, 29, 39, 0.98), rgba(16, 22, 31, 0.92)), #111820;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-}
-.PreferencesMenu__hero {
-  padding: 13px 18px 11px;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-.PreferencesMenu__name {
-  color: var(--prefs-cyan);
-  font-size: 23px;
-  font-weight: 800;
-  line-height: 1.05;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 0 12px rgba(128, 227, 234, 0.24);
-  white-space: nowrap;
-}
-.PreferencesMenu__meta {
-  margin-top: 5px;
-  color: var(--prefs-muted);
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__tabs {
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(8, minmax(70px, 1fr));
-}
-.PreferencesMenu__tab {
-  min-width: 0;
-  padding: 9px 5px 7px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  border: 0;
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.02);
-  color: #aeb8c4;
-  cursor: pointer;
-  font-size: 11px;
-  line-height: 1.05;
-  text-transform: uppercase;
-}
-.PreferencesMenu__tab .Icon {
-  color: #bac6d1;
-  font-size: 18px;
-}
-.PreferencesMenu__tab span {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__tab:hover {
-  background: rgba(128, 227, 234, 0.1);
-  color: #eefcff;
-}
-.PreferencesMenu__tab--active {
-  background: linear-gradient(180deg, rgba(42, 139, 145, 0.72), rgba(25, 76, 86, 0.86)), #16323a;
-  color: #f0feff;
-  box-shadow: inset 0 -3px 0 var(--prefs-cyan);
-}
-.PreferencesMenu__tab--active .Icon {
-  color: var(--prefs-cyan);
-}
-.PreferencesMenu__content {
-  min-height: 0;
-  flex: 1;
-  padding: 14px;
-  overflow-y: auto;
-}
-.PreferencesMenu__grid {
-  display: grid;
-  gap: 14px;
-}
-.PreferencesMenu__grid--two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-.PreferencesMenu__grid--three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.PreferencesMenu__panel {
-  min-width: 0;
-}
-.PreferencesMenu__panelTitle {
-  margin: 0 0 6px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #aab7c8;
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-.PreferencesMenu__panelTitle .Icon {
-  color: var(--prefs-gold);
-}
-.PreferencesMenu__panelBody {
-  padding: 9px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border: 1px solid rgba(101, 122, 143, 0.5);
-  border-radius: 7px;
-  background: linear-gradient(180deg, rgba(21, 30, 40, 0.96), rgba(13, 18, 26, 0.96));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 22px rgba(0, 0, 0, 0.18);
-}
-.PreferencesMenu__panel--intimacy .PreferencesMenu__panelBody {
-  border-color: rgba(103, 217, 199, 0.6);
-  background: linear-gradient(180deg, rgba(23, 88, 85, 0.88), rgba(19, 55, 69, 0.96));
-}
-.PreferencesMenu__row,
-.PreferencesMenu__infoRow,
-.PreferencesMenu__action,
-.PreferencesMenu__loadout {
-  min-height: 30px;
-  width: 100%;
-  display: grid;
-  align-items: center;
-  border: 1px solid rgba(112, 132, 151, 0.65);
-  border-radius: 5px;
-  background: linear-gradient(180deg, rgba(28, 38, 51, 0.95), rgba(14, 20, 29, 0.95));
-  color: var(--prefs-text);
-  text-align: left;
-}
-.PreferencesMenu__row,
-.PreferencesMenu__infoRow {
-  grid-template-columns: 24px minmax(80px, 1fr) minmax(70px, auto);
-  gap: 6px;
-  padding: 4px 8px;
-}
-.PreferencesMenu__row {
-  cursor: pointer;
-}
-.PreferencesMenu__row:hover,
-.PreferencesMenu__action:hover,
-.PreferencesMenu__loadout:hover {
-  border-color: var(--prefs-line-hot);
-  background: linear-gradient(180deg, rgba(35, 52, 67, 0.98), rgba(18, 29, 39, 0.98));
-}
-.PreferencesMenu__row:disabled,
-.PreferencesMenu__action:disabled {
-  cursor: not-allowed;
-  opacity: 0.48;
-}
-.PreferencesMenu__row--selected {
-  border-color: rgba(118, 217, 140, 0.78);
-}
-.PreferencesMenu__rowIcon {
-  color: var(--prefs-gold);
-  text-align: center;
-}
-.PreferencesMenu__rowLabel {
-  min-width: 0;
-  overflow: hidden;
-  color: #dce5ed;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__rowValue {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--prefs-cyan);
-  font-weight: 800;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__swatch {
-  width: 12px;
-  height: 12px;
-  justify-self: end;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-}
-.PreferencesMenu__action {
-  min-height: 34px;
-  grid-template-columns: 28px minmax(0, 1fr);
-  gap: 6px;
-  padding: 5px 10px;
-  justify-items: center;
-  cursor: pointer;
-  text-align: center;
-}
-.PreferencesMenu__action span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__action--blue {
-  border-color: rgba(90, 137, 211, 0.85);
-  background: linear-gradient(180deg, rgba(45, 79, 130, 0.95), rgba(26, 48, 86, 0.95));
-}
-.PreferencesMenu__action--green {
-  border-color: rgba(86, 186, 105, 0.85);
-  background: linear-gradient(180deg, rgba(30, 93, 49, 0.95), rgba(21, 59, 35, 0.95));
-}
-.PreferencesMenu__action--selected {
-  border-color: rgba(116, 232, 185, 0.9);
-  color: #effff8;
-}
-.PreferencesMenu__toggleState {
-  min-height: 42px;
-  padding: 6px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid rgba(126, 225, 210, 0.62);
-  border-radius: 7px;
-  background: rgba(6, 18, 22, 0.38);
-}
-.PreferencesMenu__toggleState span {
-  color: #dbe8e8;
-}
-.PreferencesMenu__toggleState strong {
-  color: var(--prefs-green);
-}
-.PreferencesMenu__portrait {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid rgba(101, 122, 143, 0.6);
-  border-radius: 6px;
-  background: #0a0f15;
-}
-.PreferencesMenu__portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.PreferencesMenu__portraitEmpty {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  color: rgba(128, 227, 234, 0.6);
-  font-size: 54px;
-}
-.PreferencesMenu__ageHead,
-.PreferencesMenu__rangeBounds {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.PreferencesMenu__ageHead strong {
-  color: var(--prefs-cyan);
-}
-.PreferencesMenu__rangeWrap {
-  position: relative;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
-.PreferencesMenu__rangeWrap::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 5px;
-  border-radius: 999px;
-  background: #243242;
-}
-.PreferencesMenu__rangeFill {
-  position: absolute;
-  left: 0;
-  height: 5px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #45d4d8, #8ce1ea);
-}
-.PreferencesMenu__range {
-  position: relative;
-  width: 100%;
-  height: 24px;
-  opacity: 0.92;
-  cursor: pointer;
-}
-.PreferencesMenu__rangeBounds {
-  color: var(--prefs-muted);
-  font-size: 12px;
-}
-.PreferencesMenu__loadout {
-  grid-template-columns: 54px minmax(0, 1fr);
-  gap: 8px;
-  padding: 6px 9px;
-  cursor: pointer;
-}
-.PreferencesMenu__slot {
-  color: #d5ba76;
-  font-weight: 800;
-  white-space: nowrap;
-}
-.PreferencesMenu__loadout strong {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--prefs-cyan);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__footer {
-  min-height: 48px;
-  padding: 7px 10px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  border-top: 1px solid rgba(128, 227, 234, 0.24);
-  background: rgba(7, 10, 15, 0.9);
-}
-.PreferencesMenu__footerStatus {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--prefs-muted);
-}
-.PreferencesMenu__footerStatus span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.PreferencesMenu__footerActions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(92px, 1fr));
-  gap: 8px;
-}
-.PreferencesMenu__footerActions .PreferencesMenu__action {
-  min-height: 34px;
-}
-@media (max-width: 820px) {
-  .PreferencesMenu__header {
-    grid-template-columns: 1fr;
-  }
-  .PreferencesMenu__hero {
-    border-right: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  }
-  .PreferencesMenu__tabs {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .PreferencesMenu__grid--two,
-  .PreferencesMenu__grid--three {
-    grid-template-columns: 1fr;
-  }
-  .PreferencesMenu__footer {
-    grid-template-columns: 1fr;
-  }
-}
-`;
-
-const Panel = (props) => {
-  const { title, icon, children, className = '' } = props;
-  return (
-    <section className={`PreferencesMenu__panel ${className}`}>
-      <div className="PreferencesMenu__panelTitle">
-        {icon && <Icon name={icon} />}
-        <span>{title}</span>
-      </div>
-      <div className="PreferencesMenu__panelBody">{children}</div>
-    </section>
-  );
+type PanelProps = {
+  title: string;
+  icon?: string;
+  children?: React.ReactNode;
 };
 
-const PrefRow = (props) => {
-  const {
-    icon,
-    label,
-    value,
-    onClick,
-    disabled = false,
-    selected = false,
-    title,
-  } = props;
+const Panel = (props: PanelProps) => {
+  const { title, icon, children } = props;
   return (
-    <button
-      type="button"
-      className={`PreferencesMenu__row${selected ? ' PreferencesMenu__row--selected' : ''}`}
-      onClick={onClick}
-      disabled={disabled}
-      title={title || label}
+    <Section
+      title={
+        <Stack align="center">
+          {icon ? (
+            <Stack.Item>
+              <Icon name={icon} />
+            </Stack.Item>
+          ) : null}
+          <Stack.Item>{title}</Stack.Item>
+        </Stack>
+      }
     >
-      <span className="PreferencesMenu__rowIcon">
-        <Icon name={icon} />
-      </span>
-      <span className="PreferencesMenu__rowLabel">{label}</span>
-      <strong className="PreferencesMenu__rowValue">{display(value)}</strong>
-    </button>
+      {children}
+    </Section>
   );
 };
 
-const InfoRow = (props) => {
+const Columns = (props: { children?: React.ReactNode }) => (
+  <Stack>
+    {Children.toArray(props.children).map((child, index) => (
+      <Stack.Item key={index} grow basis={0}>
+        {child}
+      </Stack.Item>
+    ))}
+  </Stack>
+);
+
+type PrefRowProps = {
+  icon: string;
+  label: string;
+  value?: unknown;
+  onClick?: () => void;
+  disabled?: boolean;
+  selected?: boolean;
+  tooltip?: string;
+};
+
+const PrefRow = (props: PrefRowProps) => {
+  const { icon, label, value, onClick, disabled, selected, tooltip } = props;
+  return (
+    <Button
+      fluid
+      mb={0.5}
+      disabled={disabled}
+      selected={selected}
+      tooltip={tooltip || label}
+      onClick={onClick}
+    >
+      <Stack align="center">
+        <Stack.Item>
+          <Icon name={icon} />
+        </Stack.Item>
+        <Stack.Item grow>
+          <Box textAlign="left">{label}</Box>
+        </Stack.Item>
+        <Stack.Item>
+          <Box bold>{display(value)}</Box>
+        </Stack.Item>
+      </Stack>
+    </Button>
+  );
+};
+
+type InfoRowProps = {
+  icon: string;
+  label: string;
+  value?: unknown;
+  swatch?: string;
+};
+
+const InfoRow = (props: InfoRowProps) => {
   const { icon, label, value, swatch } = props;
   return (
-    <div className="PreferencesMenu__infoRow">
-      <span className="PreferencesMenu__rowIcon">
-        <Icon name={icon} />
-      </span>
-      <span className="PreferencesMenu__rowLabel">{label}</span>
-      {swatch && (
-        <span
-          className="PreferencesMenu__swatch"
-          style={{ backgroundColor: swatch }}
-        />
-      )}
-      <strong className="PreferencesMenu__rowValue">{display(value)}</strong>
-    </div>
+    <Box mb={0.5} p={0.5}>
+      <Stack align="center">
+        <Stack.Item>
+          <Icon name={icon} />
+        </Stack.Item>
+        <Stack.Item grow>
+          <Box textAlign="left">{label}</Box>
+        </Stack.Item>
+        {swatch ? (
+          <Stack.Item>
+            <Box width="12px" height="12px" backgroundColor={swatch} />
+          </Stack.Item>
+        ) : null}
+        <Stack.Item>
+          <Box bold>{display(value)}</Box>
+        </Stack.Item>
+      </Stack>
+    </Box>
   );
 };
 
-const ActionButton = (props) => {
-  const { icon, label, onClick, color = '', disabled = false, selected = false } = props;
+type ActionButtonProps = {
+  icon: string;
+  label: string;
+  onClick?: () => void;
+  color?: string;
+  disabled?: boolean;
+  selected?: boolean;
+};
+
+const ActionButton = (props: ActionButtonProps) => {
+  const { icon, label, onClick, color, disabled, selected } = props;
   return (
-    <button
-      type="button"
-      className={`PreferencesMenu__action ${color ? `PreferencesMenu__action--${color}` : ''}${selected ? ' PreferencesMenu__action--selected' : ''}`}
-      onClick={onClick}
+    <Button
+      fluid
+      mb={0.5}
+      textAlign="center"
+      icon={icon}
+      color={color || undefined}
       disabled={disabled}
-      title={label}
+      selected={selected}
+      tooltip={label}
+      onClick={onClick}
     >
-      <Icon name={icon} />
-      <span>{label}</span>
-    </button>
+      {label}
+    </Button>
   );
 };
 
-const LoadoutButton = (props) => {
+type LoadoutButtonProps = {
+  slot: number;
+  name: string;
+  onClick?: () => void;
+};
+
+const LoadoutButton = (props: LoadoutButtonProps) => {
   const { slot, name, onClick } = props;
   return (
-    <button
-      type="button"
-      className="PreferencesMenu__loadout"
+    <Button
+      fluid
+      mb={0.5}
+      tooltip={`Edit loadout slot ${slot}`}
       onClick={onClick}
-      title={`Edit loadout slot ${slot}`}
     >
-      <span className="PreferencesMenu__slot">Slot {slot}</span>
-      <strong>{display(name)}</strong>
-    </button>
+      <Stack align="center">
+        <Stack.Item grow>
+          <Box textAlign="left">Slot {slot}</Box>
+        </Stack.Item>
+        <Stack.Item>
+          <Box bold>{display(name)}</Box>
+        </Stack.Item>
+      </Stack>
+    </Button>
   );
 };
 
 const EmptyPortrait = () => (
-  <div className="PreferencesMenu__portraitEmpty">
-    <Icon name="user" />
-  </div>
+  <Box textAlign="center" py={3}>
+    <Icon name="user" size={4} />
+  </Box>
 );
 
 export const PreferencesMenu = () => {
@@ -570,13 +258,8 @@ export const PreferencesMenu = () => {
   const ageMin = Number(data.age_min ?? 1);
   const ageMax = Number(data.age_max ?? Math.max(1, ageOptions.length));
   const ageValue = Number(data.age_index ?? ageMin);
-  const [ageDraft, setAgeDraft] = useState(ageValue);
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
-
-  useEffect(() => {
-    setAgeDraft(ageValue);
-  }, [ageValue]);
 
   useEffect(() => {
     if (data.initial_tab) {
@@ -584,7 +267,11 @@ export const PreferencesMenu = () => {
     }
   }, [data.initial_tab, data.open_sequence]);
 
-  const doPref = (preference: string, task?: string, extra?: Record<string, unknown>) => {
+  const doPref = (
+    preference: string,
+    task?: string,
+    extra?: Record<string, unknown>,
+  ) => {
     act('pref', {
       preference,
       ...(task ? { task } : {}),
@@ -592,7 +279,7 @@ export const PreferencesMenu = () => {
     });
   };
 
-  const commitAge = (value = ageDraft) => {
+  const commitAge = (value: number) => {
     act('set_age', { value });
   };
 
@@ -600,23 +287,12 @@ export const PreferencesMenu = () => {
     setActiveTab(tabId);
   };
 
-  const progress = useMemo(() => {
-    if (ageMax <= ageMin) {
-      return 0;
-    }
-    return Math.max(0, Math.min(100, ((ageDraft - ageMin) / (ageMax - ageMin)) * 100));
-  }, [ageDraft, ageMin, ageMax]);
-
-  const ageLabel = ageOptions[Math.round(ageDraft) - 1] || data.age;
-
-  const headerMeta = [
-    data.species_name,
-    data.gender,
-    `Slot ${display(data.default_slot, '1')}`,
-  ].filter(Boolean).join(' / ');
+  const headerMeta = [data.species_name, data.gender, `Slot ${display(data.default_slot, '1')}`]
+    .filter(Boolean)
+    .join(' / ');
 
   const renderIdentity = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--three">
+    <Columns>
       <Panel title="Identity" icon="id-card">
         <PrefRow icon="signature" label="Name" value={data.real_name} onClick={() => doPref('name', 'input')} />
         <PrefRow icon="users" label="Species" value={data.species_name} onClick={() => doPref('species', 'input')} />
@@ -632,39 +308,38 @@ export const PreferencesMenu = () => {
       </Panel>
 
       <Panel title="Portrait" icon="image">
-        <div className="PreferencesMenu__portrait">
-          {data.headshot ? <img src={data.headshot} alt="" /> : <EmptyPortrait />}
-        </div>
+        <Box textAlign="center" mb={1}>
+          {data.headshot ? (
+            <img src={data.headshot} alt="" style={{ maxWidth: '100%' }} />
+          ) : (
+            <EmptyPortrait />
+          )}
+        </Box>
         <ActionButton icon="image" label="Headshot" onClick={() => doPref('headshot', 'input')} />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderBody = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--two">
+    <Columns>
       <Panel title="Body" icon="child">
-        <div className="PreferencesMenu__ageHead">
-          <span>Age</span>
-          <strong>{display(ageLabel)}</strong>
-        </div>
-        <div className="PreferencesMenu__rangeWrap">
-          <div className="PreferencesMenu__rangeFill" style={{ width: `${progress}%` }} />
-          <input
-            className="PreferencesMenu__range"
-            type="range"
-            min={ageMin}
-            max={ageMax}
-            value={ageDraft}
-            onChange={(event) => setAgeDraft(Number(event.currentTarget.value))}
-            onMouseUp={() => commitAge()}
-            onTouchEnd={() => commitAge()}
-            onKeyUp={() => commitAge()}
-          />
-        </div>
-        <div className="PreferencesMenu__rangeBounds">
-          <span>{display(ageOptions[0], String(ageMin))}</span>
-          <span>{display(ageOptions[ageOptions.length - 1], String(ageMax))}</span>
-        </div>
+        <Stack align="center" mb={1}>
+          <Stack.Item grow>
+            <Box bold>Age</Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Box>{display(data.age)}</Box>
+          </Stack.Item>
+        </Stack>
+        <Slider
+          mb={1}
+          value={ageValue}
+          minValue={ageMin}
+          maxValue={ageMax}
+          step={1}
+          format={(value) => display(ageOptions[Math.round(value) - 1], data.age)}
+          onChange={(_event, value) => commitAge(value)}
+        />
         <PrefRow icon="hand-paper" label="Dominant Hand" value={data.domhand} onClick={() => doPref('domhand')} />
         <PrefRow icon="leaf" label={display(data.ancestry_label, 'Ancestry')} value="Choose" onClick={() => doPref('s_tone', 'input')} />
         <PrefRow icon="theater-masks" label="Quirks" value="Select" onClick={() => doPref('select_quirks')} />
@@ -675,11 +350,11 @@ export const PreferencesMenu = () => {
         <PrefRow icon="heart" label="Spouse Pref" value={data.spouse} onClick={() => doPref('setspouse')} />
         <PrefRow icon="venus-mars" label="Gender Pref" value={data.gender_pref} onClick={() => doPref('gender_choice')} />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderAppearance = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--three">
+    <Columns>
       <Panel title="Appearance" icon="palette">
         <PrefRow icon="sliders-h" label="Features" value="Customize" onClick={() => doPref('customizers', 'menu')} />
         <PrefRow icon="image" label="Headshot" value={data.headshot ? 'Set' : 'None'} onClick={() => doPref('headshot', 'input')} />
@@ -692,11 +367,15 @@ export const PreferencesMenu = () => {
         <PrefRow icon="tint" label="Voice Color" value={data.voice_color} onClick={() => doPref('voice', 'input')} />
       </Panel>
 
-      <Panel title="Intimacy Settings" icon="heart" className="PreferencesMenu__panel--intimacy">
-        <div className="PreferencesMenu__toggleState">
-          <span>Opt-in</span>
-          <strong>{erpEnabled ? 'ON' : 'OFF'}</strong>
-        </div>
+      <Panel title="Intimacy Settings" icon="heart">
+        <Stack align="center" mb={1}>
+          <Stack.Item grow>
+            <Box bold>Opt-in</Box>
+          </Stack.Item>
+          <Stack.Item>
+            <Box bold>{erpEnabled ? 'ON' : 'OFF'}</Box>
+          </Stack.Item>
+        </Stack>
         <ActionButton
           icon={erpEnabled ? 'toggle-on' : 'toggle-off'}
           label={erpEnabled ? 'Disable Opt-in' : 'Enable Opt-in'}
@@ -710,11 +389,11 @@ export const PreferencesMenu = () => {
           onClick={() => doPref('abel_erp_panel')}
         />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderLore = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--three">
+    <Columns>
       <Panel title="Flavour" icon="book-open">
         <PrefRow icon="scroll" label="Flavour Text" value="Edit" onClick={() => doPref('flavortext', 'input')} />
         <PrefRow icon="tags" label="Descriptors" value="Edit" onClick={() => doPref('descriptors', 'menu')} />
@@ -733,11 +412,11 @@ export const PreferencesMenu = () => {
         <InfoRow icon="home" label="Family" value={data.family} />
         <ActionButton icon="heart" label="Spouse Pref" onClick={() => doPref('setspouse')} />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderGameplay = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--three">
+    <Columns>
       <Panel title="Loadout" icon="shopping-bag">
         {loadouts.map((slot) => (
           <LoadoutButton
@@ -760,15 +439,15 @@ export const PreferencesMenu = () => {
         <ActionButton icon="list-ol" label="Character Ready Order" onClick={() => doPref('multi', 'menu')} />
         <ActionButton icon="briefcase" label="Class Preferences" onClick={() => doPref('job', 'menu')} />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderGamePrefs = () => {
-    const game = data.game_prefs || {};
+    const game = data.game_prefs || ({} as PrefsData['game_prefs']);
     const toggle = (preference: string) => doPref(preference);
 
     return (
-      <div className="PreferencesMenu__grid PreferencesMenu__grid--three">
+      <Columns>
         <Panel title="Interface" icon="desktop">
           <PrefRow icon="keyboard" label="Hotkeys" value={asBool(game.hotkeys) ? 'ON' : 'OFF'} selected={asBool(game.hotkeys)} onClick={() => toggle('hotkeys')} />
           <PrefRow icon="mouse-pointer" label="Action Buttons" value={asBool(game.buttons_locked) ? 'Locked' : 'Unlocked'} selected={asBool(game.buttons_locked)} onClick={() => toggle('action_buttons')} />
@@ -794,12 +473,12 @@ export const PreferencesMenu = () => {
           <ActionButton icon="keyboard" label="Keybinds" onClick={() => doPref('keybinds', 'menu')} />
           <ActionButton icon="save" label="Save Preferences" color="blue" onClick={() => doPref('save')} />
         </Panel>
-      </div>
+      </Columns>
     );
   };
 
   const renderMenu = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--two">
+    <Columns>
       <Panel title="Character Menu" icon="bars">
         <ActionButton icon="list-ol" label="Character Ready Order" onClick={() => doPref('multi', 'menu')} />
         <ActionButton icon="exchange-alt" label="Change Character" onClick={() => doPref('changeslot')} />
@@ -811,11 +490,11 @@ export const PreferencesMenu = () => {
         <ActionButton icon="keyboard" label="Keybinds" onClick={() => doPref('keybinds', 'menu')} />
         <ActionButton icon="star" label="Special Roles" onClick={() => doPref('antag', 'menu')} />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderSystem = () => (
-    <div className="PreferencesMenu__grid PreferencesMenu__grid--two">
+    <Columns>
       <Panel title="Slot" icon="save">
         <InfoRow icon="id-card" label="Current Slot" value={data.default_slot} />
         <ActionButton icon="save" label="Save Character" color="blue" onClick={() => doPref('save')} />
@@ -826,7 +505,7 @@ export const PreferencesMenu = () => {
         <ActionButton icon="check" label="Done" color="green" onClick={() => doPref('finished')} />
         <ActionButton icon="exchange-alt" label="Change Character" onClick={() => doPref('changeslot')} />
       </Panel>
-    </div>
+    </Columns>
   );
 
   const renderActiveTab = () => {
@@ -852,46 +531,65 @@ export const PreferencesMenu = () => {
 
   return (
     <Window title="Preferences" width={1024} height={650}>
-      <Window.Content fitted>
-        <style>{preferencesMenuStyles}</style>
-        <div className="PreferencesMenu">
-          <header className="PreferencesMenu__header">
-            <div className="PreferencesMenu__hero">
-              <div className="PreferencesMenu__name">{display(data.real_name, 'Unnamed')}</div>
-              <div className="PreferencesMenu__meta">{headerMeta}</div>
-            </div>
-            <nav className="PreferencesMenu__tabs">
+      <Window.Content>
+        <Stack vertical fill>
+          <Stack.Item>
+            <Section>
+              <Box bold fontSize="18px">
+                {display(data.real_name, 'Unnamed')}
+              </Box>
+              <Box color="label">{headerMeta}</Box>
+            </Section>
+          </Stack.Item>
+
+          <Stack.Item>
+            <Tabs fluid>
               {tabs.map((tab) => (
-                <button
-                  type="button"
+                <Tabs.Tab
                   key={tab.id}
-                  className={`PreferencesMenu__tab${activeTab === tab.id ? ' PreferencesMenu__tab--active' : ''}`}
+                  icon={tab.icon}
+                  selected={activeTab === tab.id}
                   onClick={() => selectTab(tab.id)}
-                  title={tab.label}
                 >
-                  <Icon name={tab.icon} />
-                  <span>{tab.label}</span>
-                </button>
+                  {tab.label}
+                </Tabs.Tab>
               ))}
-            </nav>
-          </header>
+            </Tabs>
+          </Stack.Item>
 
-          <main className="PreferencesMenu__content">
-            {renderActiveTab()}
-          </main>
+          <Stack.Item grow basis={0}>
+            <Box height="100%" style={{ overflowY: 'auto' }}>
+              {renderActiveTab()}
+            </Box>
+          </Stack.Item>
 
-          <footer className="PreferencesMenu__footer">
-            <div className="PreferencesMenu__footerStatus">
-              <Icon name="id-card" />
-              <span>{display(data.species_name)} / {display(data.high_job)} / Slot {display(data.default_slot, '1')}</span>
-            </div>
-            <div className="PreferencesMenu__footerActions">
-              <ActionButton icon="undo" label="Undo" onClick={() => doPref('load')} />
-              <ActionButton icon="save" label="Save" color="blue" onClick={() => doPref('save')} />
-              <ActionButton icon="check" label="Done" color="green" onClick={() => doPref('finished')} />
-            </div>
-          </footer>
-        </div>
+          <Stack.Item>
+            <Section>
+              <Stack align="center">
+                <Stack.Item grow>
+                  <Icon name="id-card" mr={1} />
+                  {display(data.species_name)} / {display(data.high_job)} / Slot{' '}
+                  {display(data.default_slot, '1')}
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="undo" tooltip="Undo" onClick={() => doPref('load')}>
+                    Undo
+                  </Button>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="save" color="blue" tooltip="Save" onClick={() => doPref('save')}>
+                    Save
+                  </Button>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="check" color="green" tooltip="Done" onClick={() => doPref('finished')}>
+                    Done
+                  </Button>
+                </Stack.Item>
+              </Stack>
+            </Section>
+          </Stack.Item>
+        </Stack>
       </Window.Content>
     </Window>
   );

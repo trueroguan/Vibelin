@@ -21,7 +21,6 @@
 		BODY_ZONE_PRECISE_GROIN     = "пах",
 	)
 
-/// Builds organ type filter entries for UI based on current action slots and free slots.
 /datum/erp_actor_ui_helpers/proc/get_organ_type_filters_ui(datum/erp_actor/A)
 	var/list/out = list()
 
@@ -55,7 +54,6 @@
 
 	return out
 
-/// Returns currently selected zone from the physical mob (or null if not a mob).
 /datum/erp_actor_ui_helpers/proc/get_selected_zone(datum/erp_actor/A)
 	var/atom/P = A.physical
 	if(!P || !ismob(P))
@@ -64,11 +62,9 @@
 	var/mob/M = P
 	return M.zone_selected
 
-/// Returns translated zone text for UI/messages.
 /datum/erp_actor_ui_helpers/proc/get_zone_text(datum/erp_actor/A, zone)
 	return zone_translations[zone] || "тело"
 
-/// Returns target-zone text for current selected zone, normalized for the target actor.
 /datum/erp_actor_ui_helpers/proc/get_target_zone_text_for(datum/erp_actor/A, datum/erp_actor/target_actor)
 	var/zone = get_selected_zone(A)
 	if(!zone)

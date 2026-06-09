@@ -32,7 +32,6 @@
 
 	var/action_scope = ERP_SCOPE_OTHER
 
-/// Calculates per-tick effect numbers for the current link based on organs, coefficients and sensitivity.
 /datum/erp_action/proc/calc_effect(datum/erp_sex_link/L)
 	if(!L || !L.init_organ || !L.target_organ)
 		return null
@@ -61,7 +60,6 @@
 	apply_race_body_bonus(L, out)
 	return out
 
-/// Requests an injection through the link using the action's inject settings.
 /datum/erp_action/proc/handle_inject(datum/erp_sex_link/L, datum/erp_actor/who = null)
 	if(!L)
 		return

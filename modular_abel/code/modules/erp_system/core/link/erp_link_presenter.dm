@@ -1,6 +1,5 @@
 /datum/erp_link_presenter
 
-/// Human-readable force text for templates/UI.
 /datum/erp_link_presenter/proc/get_force_text(force)
 	switch(force)
 		if(SEX_FORCE_LOW)     return pick(list("нежно", "заботливо", "ласково", "мягко", "осторожно"))
@@ -9,7 +8,6 @@
 		if(SEX_FORCE_EXTREME) return pick(list("жестоко", "неистово", "неумолимо", "свирепо", "безжалостно"))
 	return "уверенно"
 
-/// Human-readable speed text for templates/UI.
 /datum/erp_link_presenter/proc/get_speed_text(speed)
 	switch(speed)
 		if(SEX_SPEED_LOW)     return pick(list("медленно", "неторопливо", "бережно", "тягуче", "размеренно"))
@@ -19,11 +17,9 @@
 
 	return "ритмично"
 
-/// Zone text routed via actor API (single source of truth for zone normalization).
 /datum/erp_link_presenter/proc/get_target_zone_text(datum/erp_sex_link/L)
 	return L?.actor_active?.get_target_zone_text_for(L?.actor_passive) || "тело"
 
-/// Minimal UI snapshot (kept fields match existing UI expectations).
 /datum/erp_link_presenter/proc/get_ui_state(datum/erp_sex_link/L)
 	if(!L)
 		return list()
@@ -37,7 +33,6 @@
 		"actor_passive" = L.actor_passive?.get_display_name()
 	)
 
-/// Message color based on force/speed (same algorithm as before).
 /datum/erp_link_presenter/proc/get_message_color(datum/erp_sex_link/L)
 	if(!L)
 		return rgb(234, 200, 222)
@@ -67,11 +62,9 @@
 
 	return rgb(r, g, b)
 
-/// Normalizes enum 1..4 to 0..1.
 /datum/erp_link_presenter/proc/_norm_1_4(v)
 	return clamp(((v || 1) - 1) / 3, 0, 1)
 
-/// Wraps message text in a colored span (controller uses this).
 /datum/erp_link_presenter/proc/spanify_sex(datum/erp_sex_link/L, text)
 	if(!text)
 		return null

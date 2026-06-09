@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Cleanup all links on controller destroy.
 /datum/erp_controller_links/proc/cleanup()
 	if(controller.links)
 		for(var/datum/erp_sex_link/L in controller.links)
@@ -14,7 +13,6 @@
 				qdel(L)
 		controller.links.Cut()
 
-/// Stops link by id without permissions checks.
 /datum/erp_controller_links/proc/handle_stop_link(link_id)
 	var/datum/erp_sex_link/L = find_link(link_id)
 	if(!L)
@@ -23,7 +21,6 @@
 	stop_link_runtime(L)
 	return TRUE
 
-/// Processes link validity and scene ticking.
 /datum/erp_controller_links/proc/process_links()
 	for(var/i = controller.links.len; i >= 1; i--)
 		var/datum/erp_sex_link/L = controller.links[i]
@@ -32,7 +29,6 @@
 
 	controller.process_scene_tick()
 
-/// Stops link by request (owner only).
 /datum/erp_controller_links/proc/stop_link(mob/user, link_id)
 	if(!controller._is_owner_requester(user))
 		return FALSE
@@ -44,7 +40,6 @@
 	stop_link_runtime(L)
 	return TRUE
 
-/// Stops link and sends finish message when appropriate.
 /datum/erp_controller_links/proc/stop_link_runtime(datum/erp_sex_link/L)
 	if(!L)
 		return
@@ -61,7 +56,6 @@
 
 	controller.knot_d?.sync_do_knot_action_state()
 
-/// Finds link datum by UI id.
 /datum/erp_controller_links/proc/find_link(link_id)
 	if(!link_id)
 		return null
@@ -75,7 +69,6 @@
 
 	return null
 
-/// Sets link speed (owner only).
 /datum/erp_controller_links/proc/set_link_speed(mob/user, link_id, value)
 	if(!controller._is_owner_requester(user))
 		return FALSE
@@ -88,7 +81,6 @@
 	controller.ui?.request_update()
 	return TRUE
 
-/// Sets link force (owner only).
 /datum/erp_controller_links/proc/set_link_force(mob/user, link_id, value)
 	if(!controller._is_owner_requester(user))
 		return FALSE
@@ -101,7 +93,6 @@
 	controller.ui?.request_update()
 	return TRUE
 
-/// Sets link finish mode (owner only).
 /datum/erp_controller_links/proc/set_link_finish_mode(mob/user, link_id, mode)
 	if(!controller._is_owner_requester(user))
 		return FALSE
@@ -117,7 +108,6 @@
 	controller.ui?.request_update()
 	return TRUE
 
-/// Builds active links list for UI.
 /datum/erp_controller_links/proc/get_active_links_ui(mob/living/carbon/human/H)
 	var/list/L = list()
 
@@ -141,7 +131,6 @@
 
 	return L
 
-/// Stops all links and requests UI update.
 /datum/erp_controller_links/proc/full_stop()
 	if(!controller.links || !controller.links.len)
 		return 0
@@ -158,7 +147,6 @@
 	controller.ui?.request_update()
 	return stopped
 
-/// Stops pair links (optionally keep allow_sex_on_move).
 /datum/erp_controller_links/proc/stop_pair_links(mob/living/A, mob/living/B, break_only_no_move = TRUE)
 	if(!A || !B)
 		return
@@ -190,7 +178,6 @@
 	for(var/datum/erp_sex_link/L2 in to_stop)
 		stop_link_runtime(L2)
 
-/// Starts action by choosing first free organs (type-aware).
 /datum/erp_controller_links/proc/start_action_by_types(mob/living/carbon/human/H, action_id)
 	if(!H || H.client != controller.owner.client)
 		return FALSE
@@ -262,7 +249,6 @@
 	controller.ui?.request_update()
 	return TRUE
 
-/// Stops links on pair moved based on distance and allow_sex_on_move.
 /datum/erp_controller_links/proc/on_pair_moved(atom/movable/source, atom/oldloc, dir, forced)
 	if(!controller.links || !controller.links.len)
 		return
@@ -305,7 +291,6 @@
 
 	controller.ui?.request_update()
 
-/// Adds links relevant to a mob into out_links list.
 /datum/erp_controller_links/proc/on_get_links(datum/source, list/out_links)
 	if(!islist(out_links) || !controller.links || !controller.links.len)
 		return

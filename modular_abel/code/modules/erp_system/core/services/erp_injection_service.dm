@@ -5,7 +5,6 @@
 	. = ..()
 	controller = C
 
-/// Finds nearby reagent container around center (hands, tile, adjacent).
 /datum/erp_injection_service/proc/find_nearby_container(mob/living/carbon/human/H, turf/center)
 	if(!istype(H) || !center)
 		return null
@@ -35,7 +34,6 @@
 
 	return null
 
-/// Routes extracted reagents based on target mode.
 /datum/erp_injection_service/proc/handle_inject(datum/erp_sex_link/link, datum/erp_sex_organ/source, target_mode, mob/living/carbon/human/who = null)
 	if(!link || !source || QDELETED(source))
 		return
@@ -94,7 +92,6 @@
 	source.on_inject(link, inject_mode, target, R, who)
 	source.route_reagents(R, inject_mode, target)
 
-/// Checks if there is a nearby container for container-inject actions.
 /datum/erp_injection_service/proc/has_nearby_container_for_action()
 	var/mob/living/carbon/human/H1 = controller.owner?.get_effect_mob()
 	var/mob/living/carbon/human/H2 = controller.active_partner?.get_effect_mob()
@@ -117,7 +114,6 @@
 
 	return FALSE
 
-/// Returns relationship multiplier for pair.
 /datum/erp_injection_service/proc/rel_mult_for(mob/living/who, mob/living/partner)
 	if(!who || !partner)
 		return 1

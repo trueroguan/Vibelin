@@ -1,7 +1,6 @@
 /datum/erp_action_message_renderer
 	var/static/regex/ERP_REGEX_CONDITIONAL = regex(@"\{(\w+)\?([^:}]*):([^}]*)\}")
 
-/// Builds a final message from a template by applying conditionals and keyword replacements.
 /datum/erp_action_message_renderer/proc/build_message(template, datum/erp_sex_link/L, allow_knot_suffix = FALSE)
 	if(!template || !L || !L.action)
 		return null
@@ -13,7 +12,6 @@
 		text = replace_knot_scene_keywords(text, L)
 	return text
 
-/// Applies conditional segments like {key?YES:NO} to a text using resolve_condition().
 /datum/erp_action_message_renderer/proc/apply_conditionals(text, datum/erp_sex_link/L)
 	var/result = text
 	var/guard = 0
@@ -32,7 +30,6 @@
 
 	return result
 
-/// Resolves a conditional key for message templates against the current link.
 /datum/erp_action_message_renderer/proc/resolve_condition(key, datum/erp_sex_link/L)
 	switch(key)
 		if("aggr")
@@ -43,7 +40,6 @@
 			return L.is_dullahan_scene()
 	return FALSE
 
-/// Replaces message keywords (actor/partner/force/speed/zone/pose) with runtime values from the link.
 /datum/erp_action_message_renderer/proc/replace_keywords(text, datum/erp_sex_link/L)
 	var/t = text
 	t = replacetext(t, "{actor}", "[L.actor_active?.physical]")

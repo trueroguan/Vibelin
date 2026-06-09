@@ -79,7 +79,8 @@
 	return 0
 
 /mob/living/proc/stamina_add(amount)
-	return
+	adjust_stamina(amount)
+	return stamina < maximum_stamina
 
 /mob/living/carbon/human/proc/set_sex_surrender_to(mob/living/carbon/human/mob_object)
 	if(mob_object)
