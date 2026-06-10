@@ -145,7 +145,7 @@
 			else
 				msg = pick("Mwah!", "Smack!")
 
-	user.balloon_alert_to_viewers(msg, x_offset = rand(-15, 15), y_offset = rand(0, 25))
+	user.balloon_alert_to_viewers(msg)
 
 /datum/erp_vfx_service/proc/play_slap(mob/living/carbon/human/user)
 	if(!istype(user))
@@ -307,7 +307,7 @@
 	else
 		min_safe_integrity = DAMAGE_PRECISION
 
-	var/safe_damage_cap = O.atom_integrity - min_safe_integrity
+	var/safe_damage_cap = O.get_integrity() - min_safe_integrity
 	return max(0, round(safe_damage_cap, DAMAGE_PRECISION))
 
 /datum/erp_vfx_service/proc/get_furniture_damage_from_force(force)

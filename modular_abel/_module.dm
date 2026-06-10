@@ -1,5 +1,7 @@
+#include "__includes.dm"
 #include "dun_world_areas.dm"
 #include "dun_world_compat.dm"
+#include "dun_world_furniture.dm"
 #include "dun_world_jobs.dm"
 #include "dun_world_mapgen.dm"
 #include "map_rotation.dm"

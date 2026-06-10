@@ -35,11 +35,16 @@
 		return
 
 	var/client/C = user.client
-	get_asset_datum(/datum/asset/simple/tgui).send(C)
-	get_asset_datum(/datum/asset/simple/namespaced/fontawesome).send(C)
-	get_asset_datum(/datum/asset/simple/namespaced/tgfont).send(C)
-	get_asset_datum(/datum/asset/simple/namespaced/fonts).send(C)
-	get_asset_datum(/datum/asset/json/icon_ref_map).send(C)
+	var/static/list/preloaded_assets = list(
+		/datum/asset/simple/tgui,
+		/datum/asset/simple/namespaced/fontawesome,
+		/datum/asset/simple/namespaced/tgfont,
+		/datum/asset/simple/namespaced/fonts,
+		/datum/asset/json/icon_ref_map,
+	)
+	for(var/asset_type in preloaded_assets)
+		var/datum/asset/asset = get_asset_datum(asset_type)
+		asset.send(C)
 	C.browse_queue_flush()
 
 /datum/preferences/ui_state(mob/user)

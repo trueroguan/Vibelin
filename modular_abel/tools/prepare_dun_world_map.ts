@@ -32,6 +32,20 @@ export const DUN_WORLD_GENERATED_MAP =
 const CONFIG_PATH = 'modular_abel/config/dun_world_map.json';
 const DOWNLOAD_TIMEOUT_MS = 120000;
 
+const REMOVED_VAR_PATTERNS = [
+  /^(?:broadcaster_tag|gid|keycontrol|location_tag|scom_tag|specific_location)\s*=\s*".*"$/,
+  /^(?:lockdifficulty|lock_strength|mammonsiphoned|obj_integrity|order)\s*=\s*-?\d+(?:\.\d+)?$/,
+  /^(?:keylock|masterkey|smooth)\s*=\s*[01]$/,
+];
+
+const TURF_REMOVED_VAR_PATTERN = /^(?:icon|icon_state)\s*=/;
+
+const CLOSED_TURF_REMOVED_PATHS = [
+  '/obj/structure/door',
+  '/obj/structure/stairs',
+  '/obj/structure/window',
+];
+
 export async function prepareDunWorldMap() {
   const config = readConfig();
   const replacements = config.replacements || {};
@@ -226,14 +240,40 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
       basePath: '/obj/structure/fluff/railing/wood',
       dir: 8,
     },
+    '/turf/closed/wall/mineral/rogue/decostone/end/north': {
+      basePath: '/turf/closed/wall/mineral/rogue/decostone/end',
+      dir: 1,
+    },
+    '/turf/closed/wall/mineral/rogue/decostone/end/east': {
+      basePath: '/turf/closed/wall/mineral/rogue/decostone/end',
+      dir: 4,
+    },
+    '/turf/closed/wall/mineral/rogue/decostone/end/west': {
+      basePath: '/turf/closed/wall/mineral/rogue/decostone/end',
+      dir: 8,
+    },
+    '/turf/closed/wall/mineral/rogue/decostone/long/east_west': {
+      basePath: '/turf/closed/wall/mineral/rogue/decostone/long',
+      dir: 1,
+    },
+    '/turf/closed/wall/mineral/rogue/wooddark/end/north': {
+      basePath: '/turf/closed/wall/mineral/rogue/wooddark/end',
+      dir: 1,
+    },
+    '/turf/closed/wall/mineral/rogue/wooddark/end/east': {
+      basePath: '/turf/closed/wall/mineral/rogue/wooddark/end',
+      dir: 4,
+    },
+    '/turf/closed/wall/mineral/rogue/wooddark/end/west': {
+      basePath: '/turf/closed/wall/mineral/rogue/wooddark/end',
+      dir: 8,
+    },
   };
 
   return sourceText
     .split(/\r?\n/)
     .flatMap((line) => {
-      const match = line.match(
-        /^(\s*)(\/obj\/structure\/fluff\/railing\/(?:(?:border|wood)\/(?:north|east|west)|corner(?:\/(?:north_east|south_east|south_west))?))([,{])$/,
-      );
+      const match = line.match(/^(\s*)(\/[\w/]+)([,{])$/);
       if (!match) {
         return line;
       }
@@ -260,37 +300,160 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
     .join('\n');
 }
 
+type PopEntry = {
+  path: string;
+  vars: string[][];
+};
+
 function applyDmmVarAdjustments(sourceText: string): string {
-  const removedVarPattern =
-    /^\s*(?:broadcaster_tag|gid|keycontrol|location_tag|scom_tag|specific_location)\s*=\s*".*";?\s*$/;
-  const removedNumberVarPattern =
-    /^\s*(?:lockdifficulty|lock_strength|mammonsiphoned|obj_integrity|order)\s*=\s*-?\d+(?:\.\d+)?;?\s*$/;
-  const removedFlagVarPattern =
-    /^\s*(?:keylock|masterkey|smooth)\s*=\s*[01];?\s*$/;
+  const lines = sourceText.split(/\r?\n/);
+  const output: string[] = [];
+  let index = 0;
 
-  return sourceText
-    .split(/\r?\n/)
-    .flatMap((line) => {
-      const lockedMatch = line.match(/^(\s*)locked\s*=\s*([01]);?\s*$/);
-      if (lockedMatch) {
-        if (lockedMatch[2] === '1') {
-          return `${lockedMatch[1]}lock = /datum/lock/key/locked;`;
+  while (index < lines.length) {
+    const line = lines[index];
+    if (!/^"[^"]*" = \($/.test(line)) {
+      output.push(line);
+      index += 1;
+      continue;
+    }
+
+    const [entries, nextIndex] = parsePopEntries(lines, index + 1);
+    index = nextIndex;
+    output.push(line, ...emitPopEntries(adjustPopEntries(entries)));
+  }
+
+  return output.join('\n');
+}
+
+function parsePopEntries(
+  lines: string[],
+  startIndex: number,
+): [PopEntry[], number] {
+  const entries: PopEntry[] = [];
+  let index = startIndex;
+  let popClosed = false;
+
+  while (!popClosed) {
+    const entryLine = lines[index];
+    if (entryLine === undefined) {
+      throw new Error('Unterminated prototype pop in source map.');
+    }
+    index += 1;
+
+    if (entryLine.endsWith('{')) {
+      const entry: PopEntry = { path: entryLine.slice(0, -1), vars: [] };
+      while (true) {
+        const varLine = lines[index];
+        if (varLine === undefined) {
+          throw new Error(`Unterminated var block for ${entry.path}.`);
         }
+        index += 1;
+
+        const blockClose = varLine.match(/^\s*\}([,)])$/);
+        if (blockClose) {
+          popClosed = blockClose[1] === ')';
+          break;
+        }
+
+        const varLines = [varLine];
+        while (isInsideMultilineString(varLines)) {
+          const continuation = lines[index];
+          if (continuation === undefined) {
+            throw new Error(`Unterminated multiline string for ${entry.path}.`);
+          }
+          index += 1;
+          varLines.push(continuation);
+        }
+
+        const lastLine = varLines[varLines.length - 1];
+        varLines[varLines.length - 1] = lastLine.replace(/;$/, '');
+        entry.vars.push(varLines);
+      }
+      entries.push(entry);
+    } else {
+      popClosed = entryLine.endsWith(')');
+      entries.push({ path: entryLine.slice(0, -1), vars: [] });
+    }
+  }
+
+  return [entries, index];
+}
+
+function isInsideMultilineString(varLines: string[]): boolean {
+  const text = varLines.join('\n');
+  const opens = text.split('{"').length - 1;
+  const closes = text.split('"}').length - 1;
+  return opens > closes;
+}
+
+function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
+  const hasClosedTurf = entries.some(
+    (entry) =>
+      entry.path === '/turf/closed' || entry.path.startsWith('/turf/closed/'),
+  );
+
+  const adjusted: PopEntry[] = [];
+  for (const entry of entries) {
+    if (
+      hasClosedTurf &&
+      CLOSED_TURF_REMOVED_PATHS.some(
+        (banned) =>
+          entry.path === banned || entry.path.startsWith(`${banned}/`),
+      )
+    ) {
+      continue;
+    }
+
+    const isTurf = entry.path.startsWith('/turf/');
+    const vars = entry.vars.flatMap((varLines) => {
+      const varText = varLines[0].trim();
+
+      const lockedMatch = varText.match(/^locked\s*=\s*([01])$/);
+      if (lockedMatch) {
+        return lockedMatch[1] === '1' ? [['\tlock = /datum/lock/key/locked']] : [];
+      }
+
+      if (REMOVED_VAR_PATTERNS.some((pattern) => pattern.test(varText))) {
         return [];
       }
 
-      if (
-        line === '' ||
-        removedVarPattern.test(line) ||
-        removedNumberVarPattern.test(line) ||
-        removedFlagVarPattern.test(line)
-      ) {
+      if (isTurf && TURF_REMOVED_VAR_PATTERN.test(varText)) {
         return [];
       }
 
-      return line;
-    })
-    .join('\n');
+      return [varLines];
+    });
+
+    adjusted.push({ path: entry.path, vars });
+  }
+
+  return adjusted;
+}
+
+function emitPopEntries(entries: PopEntry[]): string[] {
+  const lines: string[] = [];
+
+  entries.forEach((entry, entryIndex) => {
+    const terminator = entryIndex === entries.length - 1 ? ')' : ',';
+
+    if (entry.vars.length === 0) {
+      lines.push(`${entry.path}${terminator}`);
+      return;
+    }
+
+    lines.push(`${entry.path}{`);
+    entry.vars.forEach((varLines, varIndex) => {
+      const emitted = [...varLines];
+      if (varIndex < entry.vars.length - 1) {
+        emitted[emitted.length - 1] = `${emitted[emitted.length - 1]};`;
+      }
+      lines.push(...emitted);
+    });
+    lines.push(`\t}${terminator}`);
+  });
+
+  return lines;
 }
 
 function countPatternOccurrences(text: string, pattern: RegExp): number {

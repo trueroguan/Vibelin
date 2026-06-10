@@ -1,6 +1,6 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "aa" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "ab" = (
@@ -10,8 +10,8 @@
 /turf/open/floor/snow,
 /area/rogue/outdoors/mountains)
 "ac" = (
-/obj/structure/fluff/walldeco/psybanner,
-/turf/closed/wall/mineral/decostone,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo,
+/turf/closed/wall/mineral/decostone/dun_world/red/long,
 /area/rogue/under/cave/inhumen)
 "ae" = (
 /obj/structure/flora/hotspring_rocks/small{
@@ -125,7 +125,7 @@
 /turf/open/floor/tile/masonic/single,
 /area/rogue/indoors/vampire_manor)
 "av" = (
-/obj/structure/table/wood,
+/obj/structure/table/map/dun_world/three,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "aw" = (
@@ -185,7 +185,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "aK" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world,
 /obj/effect/decal/cleanable/dirt/cobweb,
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
 /turf/open/floor/ruinedwood/spiral,
@@ -304,7 +304,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom X";
 	lockid = "zurch_bedroom_10";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -455,7 +455,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "bH" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world/r,
 /obj/structure/fluff/railing/corner{
 	dir = 5
 	},
@@ -635,7 +635,7 @@
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "cr" = (
-/obj/structure/bounty_board{
+/obj/structure/notice_board{
 	color = "#F75D59"
 	},
 /turf/open/floor/dirt,
@@ -796,7 +796,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom VII";
 	lockid = "zurch_bedroom_7";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -861,7 +861,7 @@
 /turf/open/floor/tile/bath,
 /area/rogue/indoors/vampire_manor)
 "dr" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world,
 /obj/structure/fluff/walldeco/maidendrape,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
@@ -889,7 +889,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "dy" = (
-/obj/structure/chair/wood/alt/uncomfortable,
+/obj/structure/chair/dun_world/frankenstein,
 /turf/open/floor/concrete,
 /area/rogue/under/cave/inhumen)
 "dz" = (
@@ -908,8 +908,7 @@
 	redstone_id = "bloodthronegate"
 	},
 /turf/open/floor/metal{
-	dir = 1;
-	icon_state = "plating2"
+	dir = 1
 	},
 /area/rogue/indoors/vampire_manor)
 "dC" = (
@@ -1246,7 +1245,7 @@
 "fb" = (
 /obj/structure/door{
 	lockid = "mansionvampire";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
@@ -1305,7 +1304,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom XII";
 	lockid = "zurch_bedroom_12";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -1354,7 +1353,7 @@
 /turf/closed/wall/mineral/wooddark/window,
 /area/rogue/under/cave/inhumen)
 "fx" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/storage/backpack/satchel/surgbag{
 	pixel_y = 10
 	},
@@ -1378,14 +1377,14 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "fA" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/tennite/red,
 /turf/closed/wall/mineral/craftstone,
 /area/rogue/under/cave/inhumen)
 "fB" = (
 /obj/structure/door/stone{
 	name = "Bedroom I";
 	lockid = "zurch_bedroom_1";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -1410,8 +1409,7 @@
 /area/rogue/outdoors/woods/wretch_lair)
 "fF" = (
 /turf/closed/wall/mineral/pipe{
-	dir = 4;
-	icon_state = "iron_corner"
+	dir = 4
 	},
 /area/rogue/indoors/vampire_manor)
 "fG" = (
@@ -1422,7 +1420,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/obj/structure/table/church,
+/obj/structure/table/church/dun_world/alt,
 /obj/item/candle/skull/lit{
 	pixel_y = 4;
 	pixel_x = -1
@@ -1478,7 +1476,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/vampire_manor)
 "fS" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/ravox,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -2225,7 +2223,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/vampire_lair)
 "jh" = (
-/turf/closed/wall/mineral/decostone/cand,
+/turf/closed/wall/mineral/decostone/dun_world/red/cand,
 /area/rogue/under/cave/inhumen)
 "ji" = (
 /obj/structure/table/wood{
@@ -2262,8 +2260,8 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "jn" = (
-/obj/structure/fluff/walldeco/psybanner,
-/turf/closed/wall/mineral/decostone/cand,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo,
+/turf/closed/wall/mineral/decostone/dun_world/red/cand,
 /area/rogue/under/cave/inhumen)
 "jp" = (
 /obj/structure/bed/shit,
@@ -2389,7 +2387,9 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "jO" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 1
+	},
 /area/rogue/under/cave/inhumen)
 "jP" = (
 /obj/machinery/light/fueled/wallfire/candle/dun_world,
@@ -2481,7 +2481,7 @@
 /turf/open/floor/carpet/red,
 /area/rogue/under/cave/inhumen)
 "kd" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo,
 /turf/closed/wall/mineral/decostone/long,
 /area/rogue/under/cave/inhumen)
 "ke" = (
@@ -2726,8 +2726,8 @@
 /turf/open/floor/grass/red,
 /area/rogue/outdoors/woods/vampire_lair)
 "kO" = (
-/obj/structure/fluff/walldeco/psybanner,
-/turf/closed/wall/mineral/decostone/cand,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo/red,
+/turf/closed/wall/mineral/decostone/dun_world/red/cand,
 /area/rogue/under/cave/inhumen)
 "kQ" = (
 /obj/structure/closet/crate/chest,
@@ -2944,7 +2944,7 @@
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "lB" = (
-/turf/closed/wall/mineral/decostone,
+/turf/closed/wall/mineral/decostone/dun_world/red,
 /area/rogue/under/cave/inhumen)
 "lC" = (
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
@@ -3173,7 +3173,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "my" = (
-/obj/structure/table/wood,
+/obj/structure/table/map/dun_world/two,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "mz" = (
@@ -3206,7 +3206,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/outdoors/banditcamp)
 "mG" = (
-/turf/closed/wall/mineral/decostone,
+/turf/closed/wall/mineral/decostone/dun_world/red/long,
 /area/rogue/under/cave/inhumen)
 "mH" = (
 /obj/structure/chair/stool,
@@ -3342,7 +3342,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "nq" = (
-/obj/structure/chair/bench,
+/obj/structure/chair/bench/coucha/dun_world/magenta/r,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "nr" = (
@@ -3406,7 +3406,7 @@
 "nJ" = (
 /obj/structure/door/swing{
 	lockid = "bandit";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/grass/cold,
 /area/rogue/indoors/banditcamp)
@@ -3968,7 +3968,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom IX";
 	lockid = "zurch_bedroom_9";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -4033,7 +4033,9 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "pZ" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 8
+	},
 /area/rogue/under/cave/inhumen)
 "qa" = (
 /mob/living/simple_animal/pet/cat{
@@ -4109,7 +4111,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/under/cave/inhumen)
 "qo" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world,
 /obj/structure/trophy/deer,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
@@ -4174,7 +4176,7 @@
 /turf/open/floor/ruinedwood/turned,
 /area/rogue/outdoors/woods)
 "qA" = (
-/obj/structure/table/wood,
+/obj/structure/table/map/dun_world/six,
 /obj/item/paper/scroll,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
@@ -4354,7 +4356,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/obj/structure/table/church/m,
+/obj/structure/table/church/dun_world/mid_alt,
 /obj/item/book/bibble/psy{
 	pixel_y = 8;
 	pixel_x = -4
@@ -4708,7 +4710,7 @@
 /turf/open/water/ocean,
 /area/rogue/under/cave/inhumen)
 "sr" = (
-/obj/structure/chair/bench,
+/obj/structure/chair/bench/coucha/dun_world/magenta,
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "ss" = (
@@ -4915,7 +4917,7 @@
 /obj/structure/fluff/walldeco/med6{
 	pixel_y = 32
 	},
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/gear/metal{
 	pixel_x = 1;
 	pixel_y = 6
@@ -5078,7 +5080,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/banditcamp)
 "tL" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/recipe_book/alchemy{
 	pixel_x = -3;
 	pixel_y = 5
@@ -5176,7 +5178,7 @@
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "ui" = (
-/obj/structure/table/wood,
+/obj/structure/table/map/dun_world/five,
 /obj/item,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
@@ -5486,7 +5488,9 @@
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "vG" = (
-/turf/closed/wall/mineral/decostone/long,
+/turf/closed/wall/mineral/decostone/long{
+	dir = 1
+	},
 /area/rogue/under/cave/inhumen)
 "vK" = (
 /obj/structure/fluff/psycross/zizocross,
@@ -5526,7 +5530,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "vS" = (
-/obj/structure/table/wood,
+/obj/structure/table/map/dun_world/four,
 /obj/item/storage/keyring,
 /obj/item/storage/keyring,
 /obj/item/storage/keyring,
@@ -5591,7 +5595,7 @@
 	pixel_y = -12;
 	pixel_x = -24;
 	desc = "Headwear commonly worn by Templars in service to Noc. Without the night there can be no day; without Noc there can be no light in the dark hours. This one stinks of blood and sweat..";
-	max_integrity = 200;
+	max_integrity = 200
 	},
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/wretch_lair)
@@ -5623,7 +5627,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom XI";
 	lockid = "zurch_bedroom_11";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -5966,7 +5970,7 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/mountains)
 "xG" = (
-/obj/structure,
+/obj/structure/train,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "xH" = (
@@ -6034,7 +6038,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "xZ" = (
-/turf/closed/wall/mineral/decostone{
+/turf/closed/wall/mineral/decostone/dun_world/long{
 	dir = 1
 	},
 /area/rogue/under/cave/inhumen)
@@ -6221,7 +6225,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom V";
 	lockid = "zurch_bedroom_5";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -6471,7 +6475,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "zX" = (
-/obj/structure/bounty_board{
+/obj/structure/notice_board{
 	color = "#F75D59"
 	},
 /turf/open/floor/concrete,
@@ -6482,8 +6486,7 @@
 /area/rogue/indoors/vampire_manor)
 "zZ" = (
 /turf/open/floor/metal{
-	dir = 1;
-	icon_state = "plating2"
+	dir = 1
 	},
 /area/rogue/indoors/vampire_manor)
 "Aa" = (
@@ -6682,7 +6685,7 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "AC" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/necra,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 6
@@ -6699,7 +6702,9 @@
 /turf/open/floor/churchbrick,
 /area/rogue/under/cave/inhumen)
 "AE" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 8
+	},
 /area/rogue/indoors/vampire_manor)
 "AF" = (
 /obj/structure/closet/crate/crafted_closet,
@@ -6761,7 +6766,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/obj/structure/table/church,
+/obj/structure/table/church/dun_world/end_alt/north,
 /obj/item/candle/skull/lit{
 	pixel_y = 14;
 	pixel_x = -1
@@ -6980,7 +6985,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "BB" = (
-/turf/closed/wall/mineral/decostone,
+/turf/closed/wall/mineral/decostone/dun_world/long,
 /area/rogue/under/cave/inhumen)
 "BC" = (
 /turf/open/floor/naturalstone,
@@ -7016,7 +7021,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom VI";
 	lockid = "zurch_bedroom_6";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -7090,7 +7095,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "BZ" = (
-/obj/structure/chair/wood/alt/uncomfortable,
+/obj/structure/chair/dun_world/frankenstein,
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "Ca" = (
@@ -7103,7 +7108,7 @@
 "Cb" = (
 /obj/structure/door/swing{
 	lockid = "bandit";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/dirt,
 /area/rogue/indoors/banditcamp)
@@ -7262,6 +7267,7 @@
 	pixel_x = 15;
 	pixel_y = 3
 	},
+/obj/item/recipe_book/cooking,
 /obj/item/recipe_book/cooking,
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
@@ -7537,7 +7543,9 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
 "DR" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 4
+	},
 /area/rogue/indoors/banditcamp)
 "DT" = (
 /obj/structure/chair/stool,
@@ -7659,7 +7667,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom II";
 	lockid = "zurch_bedroom_2";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -7675,7 +7683,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Ey" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 10;
 	icon_state = "cobbleedge-n";
@@ -7822,7 +7830,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Fg" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/astrata/red,
 /turf/closed/wall/mineral/craftstone,
 /area/rogue/under/cave/inhumen)
 "Fh" = (
@@ -8047,7 +8055,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "Gi" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world/r,
 /obj/structure/fluff/wallclock/vampire,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
@@ -8088,7 +8096,7 @@
 	},
 /obj/structure/door{
 	lockid = "mansionvampire";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
@@ -8214,7 +8222,7 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "GO" = (
-/obj/structure/chair/wood/alt/chair3,
+/obj/structure/chair/dun_world/freedom,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "GP" = (
@@ -8524,6 +8532,7 @@
 "Iu" = (
 /obj/structure/table/wood/plain,
 /obj/item/recipe_book/cooking,
+/obj/item/recipe_book/cooking,
 /turf/open/floor/carpet/red,
 /area/rogue/under/cave/inhumen)
 "Iv" = (
@@ -8569,8 +8578,7 @@
 /area/rogue/indoors/vampire_manor)
 "IG" = (
 /turf/closed/wall/mineral/pipe{
-	dir = 4;
-	icon_state = "iron_line"
+	dir = 4
 	},
 /area/rogue/indoors/vampire_manor)
 "IH" = (
@@ -8837,7 +8845,7 @@
 /obj/structure/fluff/walldeco/bigpainting{
 	pixel_x = 2
 	},
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world/r,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "JG" = (
@@ -8845,7 +8853,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "JH" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/malum,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -8895,7 +8903,7 @@
 /turf/open/floor/greenstone,
 /area/rogue/indoors/vampire_manor)
 "JM" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo,
 /turf/closed/wall/mineral/decostone,
 /area/rogue/under/cave/inhumen)
 "JN" = (
@@ -9071,7 +9079,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "Kn" = (
-/obj/structure/table/wood,
+/obj/structure/table/map/dun_world,
 /obj/item/natural/feather,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
@@ -9123,7 +9131,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "KD" = (
-/obj/structure,
+/obj/structure/train,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "KE" = (
@@ -9205,7 +9213,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "KS" = (
-/obj/structure/chair/wood/alt/uncomfortable,
+/obj/structure/chair/dun_world/frankenstein,
 /turf/open/floor/concrete,
 /area/rogue/indoors/vampire_manor)
 "KT" = (
@@ -9244,7 +9252,7 @@
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "Lb" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo/red,
 /turf/closed/wall/mineral/stone,
 /area/rogue/under/cave/inhumen)
 "Lc" = (
@@ -9570,7 +9578,9 @@
 /turf/open/floor/ruinedwood/turned,
 /area/rogue/under/cave/inhumen)
 "LY" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 4
+	},
 /area/rogue/under/cave/inhumen)
 "LZ" = (
 /obj/structure/fluff/walldeco/bigpainting{
@@ -9620,7 +9630,6 @@
 /turf/open/floor/churchbrick,
 /area/rogue/under/cave/inhumen)
 "Mj" = (
-/obj/structure/window/stained/zizo,
 /turf/closed/wall/mineral/craftstone,
 /area/rogue/under/cave/inhumen)
 "Mk" = (
@@ -9782,7 +9791,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "MU" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo/red,
 /turf/closed/wall/mineral/decostone,
 /area/rogue/under/cave/inhumen)
 "MV" = (
@@ -9820,7 +9829,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "Nc" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/noc,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -10009,7 +10018,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "NQ" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo/red,
 /turf/closed/wall/mineral/wooddark,
 /area/rogue/under/cave/inhumen)
 "NR" = (
@@ -10048,7 +10057,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Ob" = (
-/obj/structure/chair/bench/couch,
+/obj/structure/chair/bench/coucha/dun_world/r,
 /obj/structure/fluff/walldeco/maidendrape,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
@@ -10241,7 +10250,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "OM" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/eora,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -10296,7 +10305,7 @@
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/woods/vampire_lair)
 "OX" = (
-/turf/closed/wall/mineral/decostone,
+/turf/closed/wall/mineral/decostone/dun_world/cand,
 /area/rogue/under/cave/inhumen)
 "Pb" = (
 /obj/item/coin,
@@ -10357,7 +10366,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "Pq" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/effect/decal/cobbleedge/dun_world{
 	dir = 10;
 	icon_state = "cobbleedge-n";
@@ -10426,7 +10435,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom III";
 	lockid = "zurch_bedroom_3";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -10465,8 +10474,10 @@
 /turf/open/floor/greenstone,
 /area/rogue/indoors/vampire_manor)
 "PP" = (
-/obj/structure/fluff/walldeco/psybanner,
-/turf/closed/wall/mineral/decostone/long,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo,
+/turf/closed/wall/mineral/decostone/long{
+	dir = 1
+	},
 /area/rogue/under/cave/inhumen)
 "PQ" = (
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
@@ -10616,7 +10627,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "QE" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/abyssor,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -10879,8 +10890,8 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "RU" = (
-/obj/structure/fluff/walldeco/psybanner,
-/turf/closed/wall/mineral/decostone,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo/red,
+/turf/closed/wall/mineral/decostone/dun_world/red,
 /area/rogue/under/cave/inhumen)
 "RV" = (
 /obj/structure/bookcase/random,
@@ -10969,9 +10980,7 @@
 /obj/item/weapon/hammer/iron,
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
 /obj/item/needle,
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood,
 /area/rogue/indoors/vampire_manor)
 "So" = (
 /obj/structure/fluff/railing/corner{
@@ -11176,7 +11185,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom VIII";
 	lockid = "zurch_bedroom_8";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -11222,7 +11231,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/woods/wretch_lair)
 "Tv" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/pestra,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -11238,7 +11247,9 @@
 /turf/open/floor/dirt/ambush,
 /area/rogue/outdoors/woods/vampire_lair)
 "TB" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 8
+	},
 /area/rogue/indoors/banditcamp)
 "TC" = (
 /obj/structure/door{
@@ -11314,7 +11325,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "TN" = (
-/obj/structure/bounty_board,
+/obj/structure/notice_board,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "TO" = (
@@ -11501,7 +11512,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom IV";
 	lockid = "zurch_bedroom_4";
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/key/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -11751,7 +11762,9 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "VB" = (
-/turf/closed/wall/mineral/wooddark/end,
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 1
+	},
 /area/rogue/indoors/vampire_manor)
 "VD" = (
 /obj/structure/chair/wood/alt/chair_noble/fancyplush{
@@ -11838,7 +11851,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "VV" = (
-/obj/structure/fluff/walldeco/psybanner,
+/obj/structure/fluff/walldeco/psybanner/dun_world/zizo,
 /turf/closed/wall/mineral/wooddark,
 /area/rogue/under/cave/inhumen)
 "VW" = (
@@ -11912,7 +11925,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Wi" = (
-/obj/structure/chair/wood/alt/chair3,
+/obj/structure/chair/dun_world/freedom,
 /turf/open/floor/concrete,
 /area/rogue/outdoors/woods/vampire_lair)
 "Wk" = (
@@ -12148,7 +12161,7 @@
 /turf/open/openspace,
 /area/rogue/indoors/vampire_manor)
 "Xf" = (
-/obj/structure/table,
+/obj/structure/table/stone_small,
 /obj/item/clothing/neck/psycross/silver/divine/astrata,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -12251,7 +12264,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Xz" = (
-/turf/closed/wall/mineral/decostone,
+/turf/closed/wall/mineral/decostone/dun_world,
 /area/rogue/under/cave/inhumen)
 "XA" = (
 /obj/structure/table/wood/counter/end/dun_world,
@@ -12738,7 +12751,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "Zj" = (
-/obj/structure/window,
+/obj/structure/window/dun_world/harem2,
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "Zk" = (
@@ -12772,7 +12785,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Zq" = (
-/obj/structure,
+/obj/structure/train,
 /turf/open/floor/naturalstone,
 /area/rogue/indoors/cave)
 "Zr" = (
@@ -12857,7 +12870,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "ZK" = (
-/turf/closed/wall/mineral/decostone{
+/turf/closed/wall/mineral/decostone/dun_world/red/long{
 	dir = 1
 	},
 /area/rogue/under/cave/inhumen)
@@ -12914,6 +12927,7 @@
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
 /turf/open/floor/tile/bath,
 /area/rogue/indoors/vampire_manor)
+
 (1,1,1) = {"
 PI
 PI
@@ -30074,6 +30088,7 @@ PI
 PI
 PI
 "}
+
 (1,1,2) = {"
 PI
 PI
@@ -47234,6 +47249,7 @@ St
 St
 St
 "}
+
 (1,1,3) = {"
 PI
 PI

@@ -173,16 +173,7 @@ async function compileModularDme(options: BuildOptions) {
 
 function writeModularDme() {
   const dme = fs.readFileSync(UPSTREAM_DME, 'utf-8');
-
-  if (!dme.includes(END_INCLUDE)) {
-    throw new Error(`${UPSTREAM_DME} does not contain ${END_INCLUDE}`);
-  }
-
-  const modularDme = withForcedDunWorld(
-    dme.replace(END_INCLUDE, getModularIncludeBlock()),
-  );
-
-  fs.writeFileSync(MODULAR_DME, modularDme);
+  fs.writeFileSync(MODULAR_DME, withForcedDunWorld(withModularIncludes(dme)));
 }
 
 async function prepareTgsBuild(options: BuildOptions) {
@@ -202,19 +193,7 @@ async function prepareTgsBuild(options: BuildOptions) {
 
 function writeModularDmeInPlace() {
   const dme = fs.readFileSync(UPSTREAM_DME, 'utf-8');
-  if (dme.includes('#include "modular_abel\\_module.dm"')) {
-    fs.writeFileSync(UPSTREAM_DME, withForcedDunWorld(dme));
-    return;
-  }
-
-  if (!dme.includes(END_INCLUDE)) {
-    throw new Error(`${UPSTREAM_DME} does not contain ${END_INCLUDE}`);
-  }
-
-  fs.writeFileSync(
-    UPSTREAM_DME,
-    withForcedDunWorld(dme.replace(END_INCLUDE, getModularIncludeBlock())),
-  );
+  fs.writeFileSync(UPSTREAM_DME, withForcedDunWorld(withModularIncludes(dme)));
 }
 
 function withForcedDunWorld(dme: string) {
@@ -232,13 +211,22 @@ function withForcedDunWorld(dme: string) {
   );
 }
 
-function getModularIncludeBlock() {
-  return [
+function withModularIncludes(dme: string): string {
+  const includeLines = [
     '#include "modular_abel\\_module.dm"',
     '#include "_maps\\map_files\\dun_world\\dun_world_new.dmm"',
     '#include "_maps\\map_files\\otherz\\wretch_coast_new.dmm"',
-    END_INCLUDE,
-  ].join('\n');
+  ];
+  const missingLines = includeLines.filter((line) => !dme.includes(line));
+  if (missingLines.length === 0) {
+    return dme;
+  }
+
+  if (!dme.includes(END_INCLUDE)) {
+    throw new Error(`${UPSTREAM_DME} does not contain ${END_INCLUDE}`);
+  }
+
+  return dme.replace(END_INCLUDE, [...missingLines, END_INCLUDE].join('\n'));
 }
 
 function writeTemplatesInclude() {

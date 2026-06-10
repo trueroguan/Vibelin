@@ -219,37 +219,20 @@
 	var/tmp/obj/effect/dun_world_movable_light_proxy/dun_world_proxy
 
 /obj/machinery/light/fueled/Initialize()
-	if(soundloop)
-		soundloop = new soundloop(src, FALSE)
-		soundloop.start()
-	GLOB.fires_list += src
-	if(fueluse > 0)
-		fueluse = fueluse - (rand(fueluse*0.1,fueluse*0.3))
-	update_appearance(UPDATE_ICON_STATE)
-	seton(TRUE)
-
+	. = ..()
 	dun_world_apply_compat()
 	if(dun_world_compat)
 		dun_world_sync_light_proxy()
 
-	. = ..()
-
 /obj/machinery/light/fueled/update()
 	. = ..()
-	if(on)
-		GLOB.fires_list |= src
-	else
-		GLOB.fires_list -= src
-
 	if(dun_world_compat)
 		dun_world_sync_light_proxy()
 
 /obj/machinery/light/fueled/Destroy()
 	if(dun_world_proxy)
 		QDEL_NULL(dun_world_proxy)
-	QDEL_NULL(soundloop)
-	GLOB.fires_list -= src
-	. = ..()
+	return ..()
 
 /obj/machinery/light/fueled/proc/dun_world_apply_compat()
 	if(!dun_world_compat)
@@ -362,39 +345,29 @@
 /obj/machinery/light/fueled/firebowl/standing/blue/dun_world
 	brightness = 12
 
-#define DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC 0
-
 /obj/structure/stairs/dun_world
 	density = FALSE
 	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
-	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/stone/dun_world
 	density = FALSE
 	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
-	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/dun_world
 	density = FALSE
 	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
-	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/c/dun_world
 	density = FALSE
 	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
-	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/r/dun_world
 	density = FALSE
 	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
-	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /obj/structure/stairs/fancy/l/dun_world
 	density = FALSE
 	obj_flags = CAN_BE_HIT | IGNORE_SINK | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
-	terminator_mode = DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
-
-#undef DUN_WORLD_STAIR_TERMINATOR_AUTOMATIC
 
 /turf/open/water/river/dun_world
 	dir = SOUTH

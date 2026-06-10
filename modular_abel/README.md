@@ -1,6 +1,9 @@
 # modular_abel
 
-This module owns the Dun World map import pipeline.
+This module owns the Dun World map import pipeline and the ERP/character menu
+content from PR #1. `modular_abel/_module.dm` is the single module entry point
+included from `vanderlin.dme`; it pulls in `__includes.dm` (ERP system) and the
+Dun World support files.
 
 - Source map: `Azure-Peak/Azure-Peak:_maps/map_files/dun_world/dun_world.dmm`
 - Build output: `_maps/map_files/dun_world/dun_world_new.dmm`
@@ -65,14 +68,23 @@ The replacement table is populated with Azure Peak path -> Vanderlin path pairs.
 Some entries still intentionally fall back to broader parent types where no
 local analogue has been confirmed yet.
 
+`modular_abel/dun_world_furniture.dm` carries the Azure Peak furniture, wall,
+window and wall-decor ports (sprites under `modular_abel/icons/dun_world/`),
+so the replacement table can target faithful types instead of broad parents.
+
 TODO:
 - Continue the fidelity pass for broad fallback replacements in
   `modular_abel/config/dun_world_map.json`. Current high-priority leftovers:
   `chimeric_calyx_spawner`, `littlebanners`, `dungeontool/mover`,
   `trimline/yellow`, `roguerune/god/psydon`, pillows, `mudcrab`,
-  `standingbell`/`boatbell`, `flagpole`, `far_travel`, and Azure-only
-  heart canisters. Wretch Coast also has broad fallbacks for vampire/inhumen
-  areas, keys, ritual circles, Azure-only clothing variants, and old rogue
-  tools/weapons.
+  `standingbell`/`boatbell`, `flagpole`, and Azure-only heart canisters.
+  Wretch Coast also has broad fallbacks for vampire/inhumen areas, keys,
+  ritual circles, Azure-only clothing variants, and old rogue tools/weapons.
+- Turf `icon_state` var edits from the Azure maps are stripped during
+  generation (maplint bans them); re-add the intended looks through dedicated
+  dun_world turf subtypes where they matter.
+- Blue/red mossy stone walls currently map to the green
+  `/turf/closed/wall/mineral/stone/moss`; port colored smooth variants if the
+  hue matters in-game.
 - Remove `exclude_from_ci` from `_maps/dun_world.json` after the map survives
   the in-game validation pass.

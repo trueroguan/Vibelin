@@ -39,7 +39,6 @@
 		/turf/closed/wall/mineral/stonebrick/reddish,
 		/turf/closed/wall/mineral/decostone/cand/reddish,
 		/obj/structure/stairs/stone/reddish,
-		/turf/closed/wall/mineral/roofwall,
 		/turf/closed/wall/mineral/abyssal,
 		/turf/closed/wall/mineral/desert_soapstone,
 		/turf/open/floor/cracked_earth,
@@ -63,7 +62,12 @@
 		/turf/open/floor/churchrough/pale,
 		/turf/open/floor/churchrough/gold,
 		/turf/open/floor/churchrough/green,
+		/turf/open/floor/cobble/dun_world,
+		/turf/open/floor/cobble/mossy/dun_world,
+		/turf/open/floor/cobblerock/dun_world,
 	) \
+	+ typesof(/turf/closed/wall/mineral/roofwall) \
+	+ typesof(/turf/closed/wall/mineral/decostone/dun_world) \
 	+ typesof(/turf/open/floor/mushroom) \
 	+ typesof(/turf/open/floor/sandstone_tile) \
 	+ typesof(/turf/open/floor/abyss_sand) \
