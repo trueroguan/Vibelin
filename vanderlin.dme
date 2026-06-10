@@ -4301,4 +4301,5 @@
 #include "interface\fonts\datums\wernicke.dm"
 #include "interface\fonts\datums\yataghan.dm"
 #include "modular_abel\_module.dm"
+#include "modular_abel\__includes.dm"
 // END_INCLUDE
