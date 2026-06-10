@@ -158,13 +158,7 @@
 #define CLOTHING_COLOR_NAMES	list("Ash Grey","Chalk White","Cream","White","Dark Ink","Plum Purple","Salmon","Blood Red", "Maroon","Red Ochre","Russet","Chestnut","Mustard Yellow","Yellow Ochre","Forest Green","Sky Blue","Teal", "Royal Black","Soot Black","Winestain Red","Royal Red","Royal Majenta","Fyritius Orange","Bark Brown","Peasant Brown","Mud Brown","Pear Yellow","Spring Green","Bog Green","Royal Teal","Berry Blue", "Royal Blue", "Royal Purple","Dunked in Water" )
 
 /proc/clothing_color2hex(input)
-	var/static/list/all_colors = GLOB.peasant_dyes + GLOB.noble_dyes + GLOB.royal_dyes + list(
-		"Cream" = CLOTHING_CREAM,
-		"White" = CLOTHING_WHITE,
-		"Teal" = CLOTHING_TEAL,
-		"Royal Blue" = "#1a3a6b",
-		"Dunked in Water" = CLOTHING_DUNKED_WATER,
-	)
+	var/static/list/all_colors = GLOB.peasant_dyes + GLOB.noble_dyes + GLOB.royal_dyes
 	return all_colors[input]
 
 #define CM_COLOR_SAT_MIN 0.6

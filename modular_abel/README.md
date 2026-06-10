@@ -72,6 +72,24 @@ local analogue has been confirmed yet.
 window and wall-decor ports (sprites under `modular_abel/icons/dun_world/`),
 so the replacement table can target faithful types instead of broad parents.
 
+`modular_abel/upstream_fixes.dm` keeps upstream files untouched by overriding
+them from the module: the mercenary stabard color fallback (upstream
+`clothing_color2hex` returns null for several deprecated color names) and the
+`turf_coverage` unit test blacklist extended with the dun_world turfs. The test
+override replaces the upstream `Run()` body, so re-sync it when the upstream
+blacklist changes.
+
+Map QA helpers (run from the repo root with `tools/bootstrap/python`):
+
+- `modular_abel/tools/check_map_paths.py <map.dmm>...` verifies every typepath
+  in the generated maps resolves against `code/` + `modular_abel/` declarations
+  (bad paths compile fine but crash the runtime maploader).
+- `modular_abel/tools/run_maplint.py` runs the `tools/maplint` lints over the
+  generated maps (works around Windows BOM/locale issues in the upstream
+  runner).
+- `modular_abel/tools/dmi_states.py a.dmi [b.dmi]` prints DMI icon states, or
+  with two files shows the states present only in the second one.
+
 TODO:
 - Continue the fidelity pass for broad fallback replacements in
   `modular_abel/config/dun_world_map.json`. Current high-priority leftovers:

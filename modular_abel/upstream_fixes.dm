@@ -1,3 +1,21 @@
+/obj/item/clothing/cloak/stabard/mercenary/Initialize()
+	. = ..()
+	var/static/list/dye_colors = GLOB.peasant_dyes + GLOB.noble_dyes + GLOB.royal_dyes
+	var/recolored = FALSE
+	if(!color)
+		color = dye_colors[pick(dye_colors)]
+		recolored = TRUE
+	if(!detail_color)
+		detail_color = dye_colors[pick(dye_colors)]
+		recolored = TRUE
+	if(!recolored)
+		return
+	update_appearance(UPDATE_ICON)
+	if(ismob(loc))
+		var/mob/L = loc
+		L.update_inv_cloak()
+
+#if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 /datum/unit_test/turf_coverage/Run()
 	var/list/all_turfs = subtypesof(/turf)
 	var/list/all_blueprint_recipes = subtypesof(/datum/blueprint_recipe)
@@ -63,6 +81,9 @@
 		/turf/open/floor/churchrough/pale,
 		/turf/open/floor/churchrough/gold,
 		/turf/open/floor/churchrough/green,
+		/turf/open/floor/cobble/dun_world,
+		/turf/open/floor/cobble/mossy/dun_world,
+		/turf/open/floor/cobblerock/dun_world,
 	) \
 	+ typesof(/turf/open/floor/mushroom) \
 	+ typesof(/turf/open/floor/sandstone_tile) \
@@ -80,10 +101,11 @@
 	+ typesof(/turf/open/water) \
 	+ typesof(/turf/open/lava) \
 	+ typesof(/turf/open/floor/carpet) \
-	+ typesof(/turf/closed/wall/mineral/desert_sandstone)
+	+ typesof(/turf/closed/wall/mineral/desert_sandstone) \
+	+ typesof(/turf/closed/wall/mineral/roofwall) \
+	+ typesof(/turf/closed/wall/mineral/decostone/dun_world)
 	used_turfs |= blacklisted_turfs
 
-	// Find unused turfs
 	var/list/unused_turfs = list()
 	for(var/turf_type in all_turfs)
 		if(!(turf_type in used_turfs))
@@ -95,4 +117,6 @@
 		if(i < unused_turfs.len)
 			unused_list += ", "
 
-	TEST_ASSERT(!length(unused_turfs), "The following turfs are not used by any blueprint recipe or in the blacklist: [unused_list]")
+	if(length(unused_turfs))
+		return Fail("Assertion failed: The following turfs are not used by any blueprint recipe or in the blacklist: [unused_list]", __FILE__, __LINE__)
+#endif

@@ -6,3 +6,4 @@
 #include "dun_world_mapgen.dm"
 #include "map_rotation.dm"
 #include "map_adjustment_dun_world.dm"
+#include "upstream_fixes.dm"
