@@ -2018,7 +2018,7 @@ export const EroticRolePlayPanel: React.FC = () => {
       });
   }, [kinkEntries, q, cat]);
   return (
-    <Window title="Утолить Желания" width={520} height={740}>
+    <Window title="Утолить Желания" width={520} height={740} theme="grim">
       <Window.Content scrollable>
         <Stack vertical fill>
           <Stack.Item>

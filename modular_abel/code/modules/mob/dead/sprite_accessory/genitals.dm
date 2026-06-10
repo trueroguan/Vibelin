@@ -3,6 +3,7 @@
 	color_keys = 2
 	color_key_names = list("Member", "Skin")
 	relevant_layers = list(BODY_BEHIND_LAYER, BODY_FRONT_LAYER)
+	var/has_erect_states = TRUE
 
 /datum/sprite_accessory/penis/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
@@ -15,7 +16,7 @@
 				return (pp.erect_state == ERECT_STATE_NONE) ? "sheath_1" : "sheath_2"
 			if(SHEATH_TYPE_SLIT)
 				return (pp.erect_state == ERECT_STATE_NONE) ? "slit_1" : "slit_2"
-	if(pp.erect_state == ERECT_STATE_HARD)
+	if(pp.erect_state == ERECT_STATE_HARD && has_erect_states)
 		return "[icon_state]_[pp.penis_size]_erect"
 	return "[icon_state]_[pp.penis_size]"
 
@@ -55,9 +56,10 @@
 	default_colors = list("C52828", null)
 
 /datum/sprite_accessory/penis/tapered_knot
-	icon_state = "taperedknot"
+	icon_state = "knotted2"
 	name = "Tapered, Knotted"
 	default_colors = list("C52828", "C52828")
+	has_erect_states = FALSE
 
 /datum/sprite_accessory/penis/tapered
 	icon_state = "tapered"
@@ -88,7 +90,7 @@
 /datum/sprite_accessory/testicles
 	icon = 'modular_abel/icons/mob/sprite_accessory/genitals/gonads.dmi'
 	color_key_name = "Sack"
-	relevant_layers = list(BODY_BEHIND_LAYER, BODY_FRONT_LAYER)
+	relevant_layers = list(BODY_BEHIND_LAYER, BODY_ADJ_LAYER)
 
 /datum/sprite_accessory/testicles/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
@@ -120,6 +122,8 @@
 
 /datum/sprite_accessory/breasts/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/breasts/badonkers = organ
+	if(badonkers.breast_size <= 0)
+		return null
 	return "[icon_state]_[badonkers.breast_size]"
 
 /datum/sprite_accessory/breasts/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)

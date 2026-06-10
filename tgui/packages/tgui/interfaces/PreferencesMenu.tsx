@@ -2,6 +2,7 @@ import { Children, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Dropdown,
   Icon,
   Section,
   Slider,
@@ -16,6 +17,37 @@ type Booleanish = boolean | number;
 type LoadoutSlot = {
   slot: number;
   name: string;
+};
+
+type FeatureOption = {
+  name: string;
+  value: string;
+};
+
+type FeatureColor = {
+  name: string;
+  value: string;
+  index: string;
+};
+
+type FeatureExtra = {
+  task: string;
+  label: string;
+  kind: 'color' | 'text';
+  value: string;
+};
+
+type FeatureEntry = {
+  key: string;
+  name: string;
+  enabled: Booleanish;
+  can_disable: Booleanish;
+  choice_name: string;
+  choice_options?: FeatureOption[];
+  accessory_name?: string;
+  accessory_options?: FeatureOption[];
+  colors?: FeatureColor[];
+  extras?: FeatureExtra[];
 };
 
 type PrefsData = {
@@ -39,6 +71,7 @@ type PrefsData = {
   ancestry_label: string;
   erp_enabled: Booleanish;
   headshot: string | null;
+  features: FeatureEntry[];
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -72,6 +105,7 @@ const tabs = [
   { id: 'identity', label: 'Identity', icon: 'user' },
   { id: 'body', label: 'Body', icon: 'male' },
   { id: 'appearance', label: 'Appearance', icon: 'palette' },
+  { id: 'features', label: 'Features', icon: 'user-edit' },
   { id: 'lore', label: 'Lore', icon: 'book' },
   { id: 'gameplay', label: 'Gameplay', icon: 'gamepad' },
   { id: 'game', label: 'Game Prefs', icon: 'sliders-h' },
@@ -356,7 +390,7 @@ export const PreferencesMenu = () => {
   const renderAppearance = () => (
     <Columns>
       <Panel title="Appearance" icon="palette">
-        <PrefRow icon="sliders-h" label="Features" value="Customize" onClick={() => doPref('customizers', 'menu')} />
+        <PrefRow icon="sliders-h" label="Features" value="Customize" onClick={() => selectTab('features')} />
         <PrefRow icon="image" label="Headshot" value={data.headshot ? 'Set' : 'None'} onClick={() => doPref('headshot', 'input')} />
         <PrefRow icon="dice" label="Randomise" value="Appearance" onClick={() => doPref('randomiseappearanceprefs')} />
       </Panel>
@@ -391,6 +425,165 @@ export const PreferencesMenu = () => {
       </Panel>
     </Columns>
   );
+
+  const customizerAct = (key: string, task: string, extra?: Record<string, unknown>) => {
+    doPref('abel_customizer', undefined, {
+      customizer: key,
+      customizer_task: task,
+      ...(extra || {}),
+    });
+  };
+
+  const swatchColor = (value: string) => {
+    const text = String(value || '').trim();
+    if (!text) {
+      return '#888888';
+    }
+    return text.startsWith('#') ? text : `#${text}`;
+  };
+
+  const renderFeatureRow = (label: string, control: React.ReactNode) => (
+    <Stack align="center" mb={0.5}>
+      <Stack.Item grow>
+        <Box color="label">{label}</Box>
+      </Stack.Item>
+      <Stack.Item>{control}</Stack.Item>
+    </Stack>
+  );
+
+  const renderSwatchButton = (value: string, onClick: () => void) => (
+    <Button onClick={onClick}>
+      <Box
+        inline
+        width="24px"
+        height="11px"
+        verticalAlign="middle"
+        backgroundColor={swatchColor(value)}
+      />
+    </Button>
+  );
+
+  const renderFeature = (feature: FeatureEntry) => {
+    const enabled = asBool(feature.enabled);
+    return (
+      <Section
+        key={feature.key}
+        title={feature.name}
+        buttons={
+          asBool(feature.can_disable) ? (
+            <Button
+              icon={enabled ? 'toggle-on' : 'toggle-off'}
+              selected={enabled}
+              onClick={() => customizerAct(feature.key, 'toggle_missing')}
+            >
+              {enabled ? 'On' : 'Off'}
+            </Button>
+          ) : null
+        }
+      >
+        {enabled && (
+          <>
+            {feature.choice_options ? (
+              renderFeatureRow(
+                'Type',
+                <Dropdown
+                  width="180px"
+                  displayText={feature.choice_name}
+                  selected={null}
+                  options={feature.choice_options.map((option) => ({
+                    displayText: option.name,
+                    value: option.value,
+                  }))}
+                  onSelected={(value) =>
+                    doPref('abel_set_choice', undefined, {
+                      key: feature.key,
+                      choice_type: value,
+                    })
+                  }
+                />,
+              )
+            ) : null}
+            {feature.accessory_name ? (
+              feature.accessory_options ? (
+                renderFeatureRow(
+                  'Style',
+                  <Dropdown
+                    width="180px"
+                    buttons
+                    displayText={feature.accessory_name}
+                    selected={null}
+                    options={feature.accessory_options.map((option) => ({
+                      displayText: option.name,
+                      value: option.value,
+                    }))}
+                    onSelected={(value) =>
+                      customizerAct(feature.key, 'select_acc', { acc_type: value })
+                    }
+                  />,
+                )
+              ) : (
+                renderFeatureRow('Style', <Box>{feature.accessory_name}</Box>)
+              )
+            ) : null}
+            {(feature.colors || []).map((color) =>
+              renderFeatureRow(
+                color.name,
+                renderSwatchButton(color.value, () =>
+                  customizerAct(feature.key, 'acc_color', { color_index: color.index }),
+                ),
+              ),
+            )}
+            {feature.colors?.length ? (
+              <Button
+                icon="undo"
+                mb={0.5}
+                onClick={() => customizerAct(feature.key, 'reset_colors')}
+              >
+                Reset Colors
+              </Button>
+            ) : null}
+            {(feature.extras || []).map((extra) =>
+              renderFeatureRow(
+                extra.label,
+                extra.kind === 'color' ? (
+                  renderSwatchButton(extra.value, () =>
+                    customizerAct(feature.key, extra.task),
+                  )
+                ) : (
+                  <Button onClick={() => customizerAct(feature.key, extra.task)}>
+                    {display(extra.value)}
+                  </Button>
+                ),
+              ),
+            )}
+          </>
+        )}
+      </Section>
+    );
+  };
+
+  const renderFeatures = () => {
+    const features = data.features || [];
+    if (!features.length) {
+      return (
+        <Section>
+          <Box color="label">No customization available for this species.</Box>
+        </Section>
+      );
+    }
+    const left = features.filter((_, index) => index % 2 === 0);
+    const right = features.filter((_, index) => index % 2 === 1);
+    return (
+      <Stack>
+        <Stack.Item grow basis={0}>
+          {left.map(renderFeature)}
+        </Stack.Item>
+        <Stack.Item grow basis={0}>
+          {right.map(renderFeature)}
+        </Stack.Item>
+      </Stack>
+    );
+  };
 
   const renderLore = () => (
     <Columns>
@@ -514,6 +707,8 @@ export const PreferencesMenu = () => {
         return renderBody();
       case 'appearance':
         return renderAppearance();
+      case 'features':
+        return renderFeatures();
       case 'lore':
         return renderLore();
       case 'gameplay':
@@ -530,7 +725,7 @@ export const PreferencesMenu = () => {
   };
 
   return (
-    <Window title="Preferences" width={1024} height={650}>
+    <Window title="Preferences" width={1024} height={650} theme="grim">
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>

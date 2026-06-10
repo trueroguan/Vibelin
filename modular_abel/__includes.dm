@@ -12,6 +12,7 @@
 #include "code\modules\mob\living\carbon\human\erp_clothing.dm"
 #include "code\modules\client\preferences\preferences_erp.dm"
 #include "code\modules\client\preferences\character_menu.dm"
+#include "code\modules\client\preferences\features_tgui.dm"
 #include "code\modules\erp_system\actions\erp_action_core.dm"
 #include "code\modules\erp_system\actions\erp_action_editor_schema.dm"
 #include "code\modules\erp_system\actions\erp_action_message_renderer.dm"

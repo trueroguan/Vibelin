@@ -22,6 +22,7 @@
 	winshow(user, "stonekeep_prefwin", FALSE)
 	user << browse(null, "window=preferences_browser")
 
+	validate_customizer_entries()
 	preload_preferences_tgui_assets(user)
 
 	ui_interact(user)
@@ -130,6 +131,7 @@
 
 	data["erp_enabled"] = !!erp_enabled
 	data["headshot"] = is_valid_headshot_link(null, headshot_link, TRUE) ? headshot_link : null
+	data["features"] = abel_build_features_data()
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -214,6 +216,26 @@
 
 /datum/preferences/process_link(mob/user, list/href_list)
 	switch(href_list["preference"])
+		if("abel_customizer")
+			validate_customizer_entries()
+			handle_customizer_topic(user, href_list)
+			update_menu_data(user)
+			return TRUE
+		if("abel_set_choice")
+			var/customizer_type = text2path(href_list["key"])
+			var/choice_type = text2path(href_list["choice_type"])
+			if(!customizer_type || !choice_type)
+				return TRUE
+			var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
+			var/datum/customizer/customizer = CUSTOMIZER(customizer_type)
+			if(!entry || !customizer)
+				return TRUE
+			if(!(choice_type in customizer.customizer_choices) || choice_type == entry.customizer_choice_type)
+				return TRUE
+			customizer_entries -= entry
+			customizer_entries += customizer.create_customizer_entry(src, choice_type)
+			update_menu_data(user)
+			return TRUE
 		if("abel_erp_toggle")
 			erp_enabled = !erp_enabled
 			save_character()

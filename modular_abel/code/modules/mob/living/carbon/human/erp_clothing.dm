@@ -5,6 +5,7 @@
 		cached_underwear = underwear
 		underwear = "Nude"
 		update_body()
+		update_body_parts(TRUE)
 		return TRUE
 	if(underwear != "Nude")
 		return FALSE
@@ -12,6 +13,7 @@
 		return FALSE
 	underwear = cached_underwear
 	update_body()
+	update_body_parts(TRUE)
 	return TRUE
 
 /mob/living/carbon/human/verb/erp_toggle_underwear()
@@ -34,6 +36,23 @@
 
 /mob/living/carbon/human/proc/erp_register_clothing_signals()
 	RegisterSignal(src, COMSIG_ATOM_ATTACK_HAND, PROC_REF(erp_on_attack_hand), override = TRUE)
+	RegisterSignal(src, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(erp_on_clothing_changed), override = TRUE)
+	RegisterSignal(src, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(erp_on_clothing_changed), override = TRUE)
+
+/mob/living/carbon/human/proc/erp_has_visible_genitals()
+	for(var/slot in list(ORGAN_SLOT_PENIS, ORGAN_SLOT_TESTICLES, ORGAN_SLOT_BREASTS, ORGAN_SLOT_VAGINA))
+		var/obj/item/organ/organ = getorganslot(slot)
+		if(organ?.visible_organ && organ.accessory_type)
+			return TRUE
+	return FALSE
+
+/mob/living/carbon/human/proc/erp_on_clothing_changed(datum/source, obj/item/equipped_item)
+	SIGNAL_HANDLER
+	if(!istype(equipped_item, /obj/item/clothing))
+		return
+	if(!erp_has_visible_genitals())
+		return
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, update_body_parts)), 1, TIMER_UNIQUE | TIMER_OVERRIDE)
 
 /mob/living/carbon/human/proc/erp_on_attack_hand(datum/source, mob/living/user, list/modifiers)
 	SIGNAL_HANDLER
