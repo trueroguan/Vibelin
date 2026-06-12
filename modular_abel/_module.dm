@@ -3,6 +3,7 @@
 #include "dun_world_compat.dm"
 #include "dun_world_furniture.dm"
 #include "dun_world_jobs.dm"
+#include "force_dun_world.dm"
 #include "dun_world_mapgen.dm"
 #include "map_rotation.dm"
 #include "map_adjustment_dun_world.dm"
