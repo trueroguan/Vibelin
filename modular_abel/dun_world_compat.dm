@@ -237,7 +237,7 @@
 /obj/machinery/light/fueled/proc/dun_world_apply_compat()
 	if(!dun_world_compat)
 		var/area/A = get_area(src)
-		if(A && findtext("[A.type]", "/area/rogue") == 1)
+		if(A?.dun_world_lighting_compat)
 			dun_world_compat = TRUE
 	if(dun_world_compat)
 		brightness = 0

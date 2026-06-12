@@ -23,9 +23,6 @@
 	var/scene_started_at = 0
 	var/last_scene_message_link_ref = null
 
-	var/next_ui_update = 0
-	var/ui_update_scheduled = FALSE
-
 	var/datum/erp_controller_partners/partners_d
 	var/datum/erp_controller_ui/ui_d
 	var/datum/erp_controller_links/links_d
@@ -186,9 +183,6 @@
 
 /datum/erp_controller/proc/open_ui(mob/user = null)
 	ui_d?.open_ui(user)
-
-/datum/erp_controller/proc/build_ui_payload()
-	return ui_d ? ui_d.build_ui_payload() : null
 
 /datum/erp_controller/proc/get_partners_ui()
 	return partners_d ? partners_d.get_partners_ui() : list()
@@ -601,9 +595,6 @@
 
 /datum/erp_controller/proc/request_ui_update()
 	ui_d?.request_ui_update()
-
-/datum/erp_controller/proc/_do_ui_update()
-	ui_d?._do_ui_update()
 
 /datum/erp_controller/proc/set_default_link_speed(mob/user, value)
 	if(!user || user.client != owner?.get_client())

@@ -1,15 +1,12 @@
 /obj/item/clothing/cloak/stabard/mercenary/Initialize()
 	. = ..()
-	var/static/list/dye_colors = GLOB.peasant_dyes + GLOB.noble_dyes + GLOB.royal_dyes
-	var/recolored = FALSE
-	if(!color)
-		color = dye_colors[pick(dye_colors)]
-		recolored = TRUE
-	if(!detail_color)
-		detail_color = dye_colors[pick(dye_colors)]
-		recolored = TRUE
-	if(!recolored)
+	if(color && detail_color)
 		return
+	var/list/dye_colors = GLOB.peasant_dyes + GLOB.noble_dyes + GLOB.royal_dyes
+	if(!color)
+		color = pick_assoc(dye_colors)
+	if(!detail_color)
+		detail_color = pick_assoc(dye_colors)
 	update_appearance(UPDATE_ICON)
 	if(ismob(loc))
 		var/mob/L = loc

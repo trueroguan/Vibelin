@@ -24,27 +24,6 @@
 	controller.owner_client?.prefs?.apply_erp_kinks_to_mob(M)
 	controller.ui.ui_interact(M)
 
-/datum/erp_controller_ui/proc/build_ui_payload()
-	if(!controller.ui)
-		return null
-
-	var/list/p = controller.ui.build_payload()
-	if(!islist(p))
-		p = list()
-
-	p["partners"] = controller.get_partners_ui()
-
-	if(controller.active_partner)
-		p["active_partner_ref"] = controller.active_partner.get_ref()
-		p["active_partner_name"] = controller.active_partner.get_display_name()
-		p["active_partner_is_self"] = (controller.active_partner == controller.owner) ? TRUE : FALSE
-	else
-		p["active_partner_ref"] = null
-		p["active_partner_name"] = null
-		p["active_partner_is_self"] = FALSE
-
-	return p
-
 /datum/erp_controller_ui/proc/on_arousal_changed(datum/source)
 	controller.ui?.request_update()
 
@@ -106,23 +85,6 @@
 	return TRUE
 
 /datum/erp_controller_ui/proc/request_ui_update()
-	if(controller.ui_update_scheduled)
-		if(world.time >= controller.next_ui_update)
-			_do_ui_update()
+	if(!controller.ui)
 		return
-
-	if(world.time < controller.next_ui_update)
-		controller.ui_update_scheduled = TRUE
-		return
-
-	_do_ui_update()
-
-/datum/erp_controller_ui/proc/_do_ui_update()
-	var/min_delay = 2
-	if(world.time < controller.next_ui_update)
-		controller.ui_update_scheduled = TRUE
-		return
-
-	controller.ui_update_scheduled = FALSE
-	controller.next_ui_update = world.time + min_delay
 	SStgui.update_uis(controller.ui)

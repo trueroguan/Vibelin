@@ -1,19 +1,26 @@
+/area
+	var/dun_world_lighting_compat = FALSE
+
 /area/rogue
 	name = "Dun World"
+	dun_world_lighting_compat = TRUE
 
 /area/rogue/druidsgrove
 	name = "Dun World - Druidsgrove"
 
 /area/rogue/indoors
 	parent_type = /area/indoors
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Indoors"
 
 /area/rogue/outdoors
 	parent_type = /area/outdoors
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors"
 
 /area/rogue/under
 	parent_type = /area/under
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Under"
 
 /area/rogue/indoors/abandonedhotsprings
@@ -24,6 +31,7 @@
 
 /area/rogue/indoors/cave
 	parent_type = /area/indoors/cave
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Indoors / Cave"
 
 /area/rogue/indoors/eventarea
@@ -37,10 +45,12 @@
 
 /area/rogue/indoors/town
 	parent_type = /area/indoors/town
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Indoors / Town"
 
 /area/rogue/indoors/vampire_manor
 	parent_type = /area/indoors/vampire_manor
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Indoors / Vampire Manor"
 
 /area/rogue/outdoors/banditcamp
@@ -48,46 +58,57 @@
 
 /area/rogue/outdoors/beach
 	parent_type = /area/outdoors/beach
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Beach"
 
 /area/rogue/outdoors/bog
 	parent_type = /area/outdoors/bog
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Bog"
 
 /area/rogue/outdoors/exposed
 	parent_type = /area/outdoors/exposed
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Exposed"
 
 /area/rogue/outdoors/mountains
 	parent_type = /area/outdoors/mountains
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Mountains"
 
 /area/rogue/outdoors/rtfield
 	parent_type = /area/outdoors/basin
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Rogue Territory Field"
 
 /area/rogue/outdoors/town
 	parent_type = /area/outdoors/town
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Town"
 
 /area/rogue/outdoors/woods
 	parent_type = /area/outdoors/wilderness
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Woods"
 
 /area/rogue/under/cave
 	parent_type = /area/under/cave
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Under / Cave"
 
 /area/rogue/under/cavewet
 	parent_type = /area/under/cavewet
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Under / Wet Cave"
 
 /area/rogue/under/town
 	parent_type = /area/under/town
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Under / Town"
 
 /area/rogue/under/underdark
 	parent_type = /area/under/cave
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Under / Underdark"
 
 /area/rogue/indoors/cave/central
@@ -176,6 +197,7 @@
 
 /area/rogue/outdoors/beach/forest
 	parent_type = /area/outdoors/wilderness
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Beach / Forest"
 
 /area/rogue/outdoors/beach/north
@@ -204,6 +226,7 @@
 
 /area/rogue/outdoors/mountains/decap
 	parent_type = /area/outdoors/mountains/decap
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Outdoors / Mountains / Decapitation Grounds"
 
 /area/rogue/outdoors/rtfield/abandonedhotsprings
@@ -289,6 +312,7 @@
 
 /area/rogue/under/town/sewer
 	parent_type = /area/under/town/sewer
+	dun_world_lighting_compat = TRUE
 	name = "Dun World - Under / Town / Sewer"
 
 /area/rogue/under/underdark/north

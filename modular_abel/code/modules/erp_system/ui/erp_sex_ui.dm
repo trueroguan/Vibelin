@@ -54,27 +54,27 @@
 /datum/erp_sex_ui/proc/handle_ui_intent(action, list/params)
 	switch(action)
 		if("set_tab")
-			active_tab = params["tab"]
+			var/static/list/valid_tabs = list("actions", "status", "editor", "kinks")
+			var/tab = params["tab"]
+			if(!(tab in valid_tabs))
+				return FALSE
+			active_tab = tab
 			return TRUE
 
 		if("toggle_hidden")
 			controller?.change_hidden_mode()
-			request_update()
 			return TRUE
 
 		if("yield")
 			controller?.change_yield_state()
-			request_update()
 			return TRUE
-		
+
 		if("freeze_arousal")
 			controller?.change_freeze_arousal()
-			request_update()
 			return TRUE
 
 		if("set_moaning")
 			controller?.change_moaning()
-			request_update()
 			return TRUE
 
 		if("change_direction")
@@ -83,19 +83,13 @@
 
 		if("full_stop")
 			controller?.full_stop()
-			request_update()
 			return TRUE
 
 		if("set_partner")
-			var/ref = params["ref"]
-			if(controller?.set_active_partner_by_ref(ref))
-				request_update()
-				return TRUE
-			return FALSE
+			return controller?.set_active_partner_by_ref(params["ref"])
 
 		if("set_arousal")
 			controller?.set_actor_arousal(actor, text2num(params["amount"]))
-			request_update()
 			return TRUE
 
 	var/datum/erp_sex_ui_tab/T = get_active_tab()
@@ -112,19 +106,13 @@
 		if("kinks")   return kinks_tab
 	return null
 
-/datum/erp_sex_ui/proc/ui_key()
-	return "EroticRolePlayPanel"
-
 /datum/erp_sex_ui/ui_state(mob/user)
 	return GLOB.conscious_state
-
-/datum/erp_sex_ui/ui_static_data(mob/user)
-	return list()
 
 /datum/erp_sex_ui/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, ui_key(), "Утолить желания")
+		ui = new(user, src, "EroticRolePlayPanel", "Утолить желания")
 		ui.open()
 
 /datum/erp_sex_ui/ui_data(mob/user)

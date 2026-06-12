@@ -23,29 +23,10 @@
 	user << browse(null, "window=preferences_browser")
 
 	validate_customizer_entries()
-	preload_preferences_tgui_assets(user)
-
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
 	SStgui.update_uis(src)
-
-/datum/preferences/proc/preload_preferences_tgui_assets(mob/user)
-	if(!user?.client)
-		return
-
-	var/client/C = user.client
-	var/static/list/preloaded_assets = list(
-		/datum/asset/simple/tgui,
-		/datum/asset/simple/namespaced/fontawesome,
-		/datum/asset/simple/namespaced/tgfont,
-		/datum/asset/simple/namespaced/fonts,
-		/datum/asset/json/icon_ref_map,
-	)
-	for(var/asset_type in preloaded_assets)
-		var/datum/asset/asset = get_asset_datum(asset_type)
-		asset.send(C)
-	C.browse_queue_flush()
 
 /datum/preferences/ui_state(mob/user)
 	return GLOB.always_state
