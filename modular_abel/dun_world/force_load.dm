@@ -1,4 +1,3 @@
-// ВРЕМЕННЫЙ ХАК НА ТЕСТОВЫЙ ПЕРИОД: всегда грузить Dun World. УДАЛИТЬ ПЕРЕД РЕЛИЗОМ (этот файл + его include в _module.dm).
 #if !defined(UNIT_TESTS) && !defined(LOWMEMORYMODE) && !defined(FORCE_RANDOM_WORLD_GEN)
 /datum/controller/subsystem/mapping/PreInit()
 	. = ..()

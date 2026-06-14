@@ -10,6 +10,7 @@
 #include "code\modules\mob\living\carbon\human\erp_anatomy.dm"
 #include "code\modules\mob\living\carbon\human\erp_consent.dm"
 #include "code\modules\mob\living\carbon\human\erp_clothing.dm"
+#include "code\modules\mob\living\carbon\human\erp_examine.dm"
 #include "code\modules\client\preferences\preferences_erp.dm"
 #include "code\modules\client\preferences\character_menu.dm"
 #include "code\modules\client\preferences\features_tgui.dm"

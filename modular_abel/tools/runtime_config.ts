@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const UPSTREAM_CONFIG_DIR = 'config';
-const MODULAR_MAPS_FRAGMENT = 'modular_abel/config/maps.dun_world.txt';
+const MODULAR_MAPS_FRAGMENT = 'modular_abel/dun_world/config/maps_fragment.txt';
 
 export const MODULAR_RUNTIME_CONFIG_DIR = 'tmp/modular_abel/config';
 

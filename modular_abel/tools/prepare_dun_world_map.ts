@@ -29,7 +29,7 @@ type DunWorldMapConfig = {
 export const DUN_WORLD_GENERATED_MAP =
   '_maps/map_files/dun_world/dun_world_new.dmm';
 
-const CONFIG_PATH = 'modular_abel/config/dun_world_map.json';
+const CONFIG_PATH = 'modular_abel/dun_world/config/map.json';
 const DOWNLOAD_TIMEOUT_MS = 120000;
 
 const REMOVED_VAR_PATTERNS = [

@@ -4037,12 +4037,6 @@
 	dir = 8
 	},
 /area/rogue/under/cave/inhumen)
-"qa" = (
-/mob/living/simple_animal/pet/cat{
-	name = "vampire lord manor - debug cat for teleporting to"
-	},
-/turf/open/floor/grass,
-/area/rogue/outdoors/woods/vampire_lair)
 "qb" = (
 /obj/structure/fluff/railing/corner/dun_world{
 	dir = 5
@@ -40553,7 +40547,7 @@ PI
 PI
 PI
 St
-qa
+St
 St
 St
 St

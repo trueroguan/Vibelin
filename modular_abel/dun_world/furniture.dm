@@ -19,22 +19,22 @@
 /obj/structure/table/church/dun_world
 
 /obj/structure/table/church/dun_world/alt
-	icon = 'modular_abel/icons/dun_world/tables.dmi'
+	icon = 'modular_abel/dun_world/icons/tables.dmi'
 	icon_state = "churchtable_alt"
 
 /obj/structure/table/church/dun_world/end
-	icon = 'modular_abel/icons/dun_world/tables.dmi'
+	icon = 'modular_abel/dun_world/icons/tables.dmi'
 	icon_state = "churchtable_end"
 
 /obj/structure/table/church/dun_world/end_alt
-	icon = 'modular_abel/icons/dun_world/tables.dmi'
+	icon = 'modular_abel/dun_world/icons/tables.dmi'
 	icon_state = "churchtable_end_alt"
 
 /obj/structure/table/church/dun_world/end_alt/north
 	dir = NORTH
 
 /obj/structure/table/church/dun_world/mid_alt
-	icon = 'modular_abel/icons/dun_world/tables.dmi'
+	icon = 'modular_abel/dun_world/icons/tables.dmi'
 	icon_state = "churchtable_mid_alt"
 
 /obj/structure/table/wood/dun_world
@@ -64,7 +64,7 @@
 /obj/structure/chair/dun_world/frankenstein
 	name = "Fulmenor Chair"
 	desc = "A nightmarish contraption of pipes and sparking electrodes. It seems permanently fixed to the ground."
-	icon = 'modular_abel/icons/dun_world/struc48x48.dmi'
+	icon = 'modular_abel/dun_world/icons/struc48x48.dmi'
 	icon_state = "frankenchair0"
 	density = FALSE
 
@@ -76,7 +76,7 @@
 
 /obj/structure/chair/bench/coucha/dun_world/magenta
 	desc = "A particularly affluent piece of furniture, upholstered with magenta fabric."
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "couchamagentaleft"
 
 /obj/structure/chair/bench/coucha/dun_world/magenta/r
@@ -86,13 +86,13 @@
 
 /obj/structure/window/dun_world/harem2
 	name = "harem window"
-	icon = 'modular_abel/icons/dun_world/roguewindow.dmi'
+	icon = 'modular_abel/dun_world/icons/roguewindow.dmi'
 	icon_state = "harem2-solid"
 	opacity = TRUE
 
 /obj/structure/window/dun_world/harem3
 	name = "harem window"
-	icon = 'modular_abel/icons/dun_world/roguewindow.dmi'
+	icon = 'modular_abel/dun_world/icons/roguewindow.dmi'
 	icon_state = "harem3-solid"
 
 /obj/structure/fluff/walldeco/dun_world
@@ -100,7 +100,7 @@
 /obj/structure/fluff/walldeco/dun_world/alarm
 	name = "alarm"
 	desc = "A wall-mounted sentinel."
-	icon = 'modular_abel/icons/dun_world/decoration.dmi'
+	icon = 'modular_abel/dun_world/icons/decoration.dmi'
 	icon_state = "alarm"
 
 /obj/structure/fluff/walldeco/dun_world/artificerflag
@@ -134,7 +134,7 @@
 /obj/structure/fluff/walldeco/dun_world/painting
 	name = "painting"
 	desc = "A thought-evoking painting of a skull dimly illuminated by a candelabra."
-	icon = 'modular_abel/icons/dun_world/decoration.dmi'
+	icon = 'modular_abel/dun_world/icons/decoration.dmi'
 	icon_state = "painting_1"
 
 /obj/structure/fluff/walldeco/stone/dun_world
@@ -158,7 +158,7 @@
 	icon_state = "walldec6"
 
 /obj/structure/fluff/walldeco/psybanner/dun_world
-	icon = 'modular_abel/icons/dun_world/decoration.dmi'
+	icon = 'modular_abel/dun_world/icons/decoration.dmi'
 
 /obj/structure/fluff/walldeco/psybanner/dun_world/astrata
 	name = "astratan banner"
@@ -184,7 +184,7 @@
 /obj/structure/fluff/dun_world_aspect_rack
 	name = "aspect rack"
 	desc = "A specialized holder designed to securely hold chimeric aspect canisters."
-	icon = 'modular_abel/icons/dun_world/heart_rack.dmi'
+	icon = 'modular_abel/dun_world/icons/heart_rack.dmi'
 	icon_state = "rack"
 	density = TRUE
 	anchored = TRUE
@@ -192,7 +192,7 @@
 /turf/closed/wall/mineral/decostone/dun_world
 	name = "decorated mossy stone wall"
 	desc = "There was much effort put into this wall a long time ago."
-	icon = 'modular_abel/icons/dun_world/wall_mossy.dmi'
+	icon = 'modular_abel/dun_world/icons/wall_mossy.dmi'
 	icon_state = "decostone-b-green"
 
 /turf/closed/wall/mineral/decostone/dun_world/long
@@ -214,11 +214,11 @@
 	icon_state = "decostone-cand-red"
 
 /obj/structure/chair/wood/dun_world_four
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "chair4"
 
 /obj/structure/chair/wood/dun_world_five
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "chair5"
 
 /obj/structure/chair/wood/dun_world_throne

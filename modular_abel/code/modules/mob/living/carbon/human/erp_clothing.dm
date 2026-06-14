@@ -1,4 +1,6 @@
-/mob/living/carbon/human/proc/erp_set_underwear_state(removing)
+/mob/living/carbon/human/proc/erp_set_underwear_state(removing, mob/living/user)
+	if(!user)
+		user = src
 	if(removing)
 		if(underwear == "Nude")
 			return FALSE
@@ -6,14 +8,25 @@
 		underwear = "Nude"
 		update_body()
 		update_body_parts(TRUE)
+		var/obj/item/undies/garment = (gender == FEMALE) ? new /obj/item/undies/f(get_turf(src)) : new /obj/item/undies(get_turf(src))
+		garment.cached_undies = cached_underwear
+		garment.color = underwear_color
+		user.put_in_hands(garment)
 		return TRUE
 	if(underwear != "Nude")
 		return FALSE
-	if(!cached_underwear || cached_underwear == "Nude")
+	var/obj/item/undies/garment = locate(/obj/item/undies) in user.held_items
+	if(!garment)
 		return FALSE
-	underwear = cached_underwear
+	var/restored = (garment.cached_undies && garment.cached_undies != "Nude") ? garment.cached_undies : cached_underwear
+	if(!restored || restored == "Nude")
+		return FALSE
+	underwear = restored
+	if(garment.color)
+		underwear_color = garment.color
 	update_body()
 	update_body_parts(TRUE)
+	qdel(garment)
 	return TRUE
 
 /mob/living/carbon/human/verb/erp_toggle_underwear()
@@ -26,13 +39,13 @@
 		return
 
 	if(underwear != "Nude")
-		if(erp_set_underwear_state(TRUE))
+		if(erp_set_underwear_state(TRUE, src))
 			visible_message(span_notice("[name] slips off their smallclothes."), span_notice("I slip off my smallclothes."))
 		return
-	if(erp_set_underwear_state(FALSE))
+	if(erp_set_underwear_state(FALSE, src))
 		visible_message(span_notice("[name] slips their smallclothes back on."), span_notice("I slip my smallclothes back on."))
 		return
-	to_chat(src, span_warning("I'm not wearing any smallclothes."))
+	to_chat(src, span_warning("I need to be holding my smallclothes to put them on."))
 
 /mob/living/carbon/human/proc/erp_register_clothing_signals()
 	RegisterSignal(src, COMSIG_ATOM_ATTACK_HAND, PROC_REF(erp_on_attack_hand), override = TRUE)
@@ -85,8 +98,10 @@
 		if(!do_after(user, 2 SECONDS, src))
 			return
 	if(removing)
-		if(erp_set_underwear_state(TRUE))
+		if(erp_set_underwear_state(TRUE, user))
 			visible_message(span_notice("[name]'s smallclothes are slipped off."))
 		return
-	if(erp_set_underwear_state(FALSE))
+	if(erp_set_underwear_state(FALSE, user))
 		visible_message(span_notice("[name]'s smallclothes are slipped back on."))
+		return
+	to_chat(user, span_warning("You need to be holding [name]'s smallclothes to put them back on."))

@@ -1,7 +1,7 @@
 /obj/structure/fluff/canopy
 	name = "canopy"
 	desc = "A canopy of striped fabric over a modest stall! A common sight in market towns, under which all manners of goods may be sold."
-	icon = 'modular_abel/icons/dun_world/canopy.dmi'
+	icon = 'modular_abel/dun_world/icons/canopy.dmi'
 	icon_state = "canopy"
 	density = FALSE
 	anchored = TRUE
@@ -49,7 +49,7 @@
 /obj/structure/fluff/pillow
 	name = "pillows"
 	desc = "Soft plush pillows. Resting your head on one is so relaxing."
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "pillow"
 	density = FALSE
 
@@ -77,7 +77,7 @@
 /obj/structure/fluff/dun_world_hookah
 	name = "shisha pipe"
 	desc = "A traditional shisha pipe."
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "hookah"
 	density = FALSE
 	anchored = FALSE
@@ -87,7 +87,7 @@
 /obj/structure/fluff/ceramicswheel
 	name = "potter's wheel"
 	desc = "A rotating platform used by skilled artisans to mold and shape clay."
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "potwheel"
 	density = TRUE
 	anchored = TRUE
@@ -105,7 +105,7 @@
 /obj/structure/fluff/statue/dun_world_abyssor
 	name = "abyssor statue"
 	desc = "A slate statue of the ancient god Abyssor. One of many depictions drawn from a dream no doubt. This particular one is horrifying to look at."
-	icon = 'modular_abel/icons/dun_world/tallandwide.dmi'
+	icon = 'modular_abel/dun_world/icons/tallandwide.dmi'
 	icon_state = "abyssor"
 	pixel_x = -16
 
@@ -116,7 +116,7 @@
 /obj/structure/fluff/statue/dun_world_psybloody
 	name = "legionnaire statue"
 	desc = "A statue styled in the manner of an ancient Legionnaire of times long past. Dried blood cakes its features."
-	icon = 'modular_abel/icons/dun_world/statue96.dmi'
+	icon = 'modular_abel/dun_world/icons/statue96.dmi'
 	icon_state = "psy_bloody"
 	pixel_x = -32
 
@@ -144,7 +144,7 @@
 /obj/structure/train/dun_world
 	name = "far travel"
 	desc = "Frankly, my dear, I don't give a damn.\n(Drag your sprite onto this to exit the round!)"
-	icon = 'modular_abel/icons/dun_world/roguefloor.dmi'
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
 	icon_state = "fartravel"
 	layer = BELOW_OBJ_LAYER
 	density = FALSE
@@ -152,7 +152,7 @@
 /obj/structure/underworld/carriage_normal
 	name = "carriage"
 	desc = "The road home awaits."
-	icon = 'modular_abel/icons/dun_world/carriage.dmi'
+	icon = 'modular_abel/dun_world/icons/carriage.dmi'
 	icon_state = "carriage_normal"
 	anchored = TRUE
 	density = TRUE
@@ -207,7 +207,7 @@
 /obj/structure/fake_machine/merchantvend/dun_world_wretch
 	name = "Vile Vheslie"
 	desc = "A ferocious little beast that hoards a mountain of goods under its home. The dreaded creechur is willing to part ways with its lower quality items... for a price."
-	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon = 'modular_abel/dun_world/icons/structure.dmi'
 	icon_state = "vheslie"
 
 /obj/structure/fake_machine/merchantvend/dun_world_potions
@@ -217,7 +217,7 @@
 /turf/open/floor/sand/dun_world
 	name = "sand"
 	desc = "Warm sand that, sadly, has been mixed with dirt."
-	icon = 'modular_abel/icons/dun_world/roguefloor.dmi'
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
 	icon_state = "grimshart"
 	smoothing_flags = NONE
 	smoothing_list = null
@@ -228,6 +228,6 @@
 	. = ..()
 
 /obj/structure/fluff/railing/corner/dun_world
-	icon = 'modular_abel/icons/dun_world/railing.dmi'
+	icon = 'modular_abel/dun_world/icons/railing.dmi'
 	icon_state = "border"
 	dir = 9

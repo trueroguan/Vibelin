@@ -5,11 +5,24 @@ content from PR #1. `modular_abel/_module.dm` is the single module entry point
 included from `vanderlin.dme`; it pulls in `__includes.dm` (ERP system) and the
 Dun World support files.
 
+Layout:
+
+- `_module.dm` — single entry point: includes `__includes.dm` (ERP system),
+  `dun_world/_dun_world.dm` (the Dun World map import), and `upstream_fixes.dm`.
+- `dun_world/` — everything for the Dun World import in one place: the support
+  `.dm` files (`areas`, `compat`, `furniture`, `items`, `jobs`, `mapgen`,
+  `mobs`, `structures`, `map_adjustment`, `map_rotation`, `force_load`), plus
+  `dun_world/config/` (`map.json` replacement table, `maps_fragment.txt`) and
+  `dun_world/icons/` (ported Azure sprites). `dun_world/_dun_world.dm` is the
+  sub-include list.
+- `code/` — the ERP system tree (included via `__includes.dm`).
+- `tools/` — map generation and QA scripts.
+
 - Source map: `Azure-Peak/Azure-Peak:_maps/map_files/dun_world/dun_world.dmm`
 - Build output: `_maps/map_files/dun_world/dun_world_new.dmm`
 - Extra source z-level: `Azure-Peak/Azure-Peak:_maps/map_files/otherz/wretch_coast.dmm`
 - Extra build output: `_maps/map_files/otherz/wretch_coast_new.dmm`
-- Replacement config: `modular_abel/config/dun_world_map.json`
+- Replacement config: `modular_abel/dun_world/config/map.json`
 
 Run `modular_abel/prepare_map.cmd` on Windows or `modular_abel/prepare_map.sh`
 on Linux to download the raw upstream maps by URL and apply path replacements.
@@ -38,7 +51,7 @@ Tests boot the Dun World map on every push.
 
 Map rotation is integrated through `modular_abel/map_rotation.dm`, which
 registers Dun World in `global.config.maplist` at startup without editing
-`config/maps.txt`. `modular_abel/config/maps.dun_world.txt` is also appended to
+`config/maps.txt`. `modular_abel/dun_world/config/maps_fragment.txt` is also appended to
 the generated runtime config overlay for launch paths that rely on
 `config-directory=tmp/modular_abel/config`. Targets `dm`, `build`, and `server`
 refresh this runtime config overlay; `server` also passes it to DreamDaemon.
@@ -84,10 +97,10 @@ table can target faithful types instead of broad parents (sprites under
 - `dun_world_compat.dm` — fueled-light variants (lit floor candles, wall
   fireplace with our warmth mechanics).
 
-`modular_abel/force_dun_world.dm` is a TEMPORARY test-period override of
+`modular_abel/dun_world/force_load.dm` is a TEMPORARY test-period override of
 `SSmapping/PreInit()` that forces the Dun World map to load. It is guarded off
 under unit tests, low-memory mode, and random worldgen. **Delete this file and
-its `_module.dm` include before release.**
+its `dun_world/_dun_world.dm` include before release.**
 
 `modular_abel/upstream_fixes.dm` keeps upstream files untouched by overriding
 them from the module: the mercenary stabard color fallback (upstream
@@ -109,7 +122,7 @@ Map QA helpers (run from the repo root with `tools/bootstrap/python`):
 
 TODO:
 - Continue the fidelity pass for broad fallback replacements in
-  `modular_abel/config/dun_world_map.json`. Current high-priority leftovers:
+  `modular_abel/dun_world/config/map.json`. Current high-priority leftovers:
   `chimeric_calyx_spawner`, `littlebanners`, `dungeontool/mover`,
   `trimline/yellow`, `roguerune/god/psydon`, `mudcrab`,
   `standingbell`/`boatbell`, `flagpole`, and Azure-only heart canisters.
