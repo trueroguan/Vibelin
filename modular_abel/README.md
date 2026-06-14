@@ -122,12 +122,18 @@ Map QA helpers (run from the repo root with `tools/bootstrap/python`):
 
 TODO:
 - Continue the fidelity pass for broad fallback replacements in
-  `modular_abel/dun_world/config/map.json`. Current high-priority leftovers:
-  `chimeric_calyx_spawner`, `littlebanners`, `dungeontool/mover`,
-  `trimline/yellow`, `roguerune/god/psydon`, `mudcrab`,
-  `standingbell`/`boatbell`, `flagpole`, and Azure-only heart canisters.
-  Wretch Coast also has broad fallbacks for vampire/inhumen areas, keys,
-  ritual circles, Azure-only clothing variants, and old rogue tools/weapons.
+  `modular_abel/dun_world/config/map.json`. Remaining visible-structure
+  leftovers worth faithful ports: `ritualcircle/*` (base missing),
+  `mini_flagpole/*`, `turf_decal/trimline/yellow`, `standingbell`/`boatbell`,
+  `bars/shop`, `leyline/*`, `chimeric_calyx_spawner`, `dungeontool/mover`,
+  `roguerune/god/psydon`, `mudcrab`, and Azure-only heart canisters. Most other
+  fallbacks are loot/clutter inside containers where the generic parent is
+  visually fine. Wretch Coast also has broad fallbacks for vampire/inhumen
+  areas, keys, ritual circles, Azure-only clothing, and old rogue tools.
+- Done so far in the visual pass: deity psycrosses (baotha/graggar/matthios/
+  necra/zizocross stone+golden), `littlebanners/*`, herringbone floor decals,
+  and the golden astrata cross + statue now use the original Azure sprites
+  (under `dun_world/icons/`) instead of generic fallbacks.
 - Turf `icon_state` var edits from the Azure maps are stripped during
   generation (maplint bans them); re-add the intended looks through dedicated
   dun_world turf subtypes where they matter.

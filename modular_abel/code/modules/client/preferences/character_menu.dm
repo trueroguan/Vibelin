@@ -38,6 +38,15 @@
 		ui.set_autoupdate(FALSE)
 		ui.open()
 
+/datum/preferences/proc/abel_selectable_ages()
+	. = list()
+	if(!pref_species)
+		return
+	for(var/possible_age in pref_species.possible_ages)
+		if(possible_age == AGE_CHILD)
+			continue
+		. += possible_age
+
 /datum/preferences/ui_data(mob/user)
 	var/list/data = list()
 
@@ -69,11 +78,12 @@
 	if(selected_patron)
 		patron_name = selected_patron.display_name ? selected_patron.display_name : selected_patron.name
 
+	var/list/selectable_ages = abel_selectable_ages()
 	var/list/age_options = list()
 	var/age_index = 1
-	if(pref_species && length(pref_species.possible_ages))
+	if(length(selectable_ages))
 		var/current_index = 1
-		for(var/possible_age in pref_species.possible_ages)
+		for(var/possible_age in selectable_ages)
 			age_options += "[possible_age]"
 			if(possible_age == age)
 				age_index = current_index
@@ -188,11 +198,12 @@
 			if(!isnum(new_age))
 				return FALSE
 
-			if(!pref_species || !length(pref_species.possible_ages))
+			var/list/selectable_ages = abel_selectable_ages()
+			if(!length(selectable_ages))
 				return FALSE
 
-			var/age_index = clamp(round(new_age), 1, length(pref_species.possible_ages))
-			var/selected_age = pref_species.possible_ages[age_index]
+			var/age_index = clamp(round(new_age), 1, length(selectable_ages))
+			var/selected_age = selectable_ages[age_index]
 			if(age != selected_age)
 				age = selected_age
 				reset_jobs(user)

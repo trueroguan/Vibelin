@@ -85,7 +85,7 @@
 /turf/open/openspace,
 /area/rogue/indoors/eventarea/multiz)
 "an" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/graggar/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "ao" = (
@@ -262,7 +262,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "aY" = (
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "aZ" = (
@@ -297,7 +297,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "bf" = (
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/golden,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "bg" = (
@@ -519,7 +519,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "bS" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/baotha/decorated,
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
@@ -877,7 +877,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "dw" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
 "dx" = (
@@ -1683,7 +1683,7 @@
 /area/rogue/outdoors/woods/wretch_lair)
 "gJ" = (
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/baotha,
 /turf/open/floor/carpet/red,
 /area/rogue/under/cave/inhumen)
 "gK" = (
@@ -1788,7 +1788,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "hf" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "hg" = (
@@ -1846,7 +1846,7 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "hw" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/baotha/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "hx" = (
@@ -3061,7 +3061,7 @@
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "mb" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/mountains)
 "mc" = (
@@ -3581,7 +3581,7 @@
 /area/rogue/indoors/vampire_manor)
 "ox" = (
 /obj/effect/decal/cleanable/blood,
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "oy" = (
@@ -3730,7 +3730,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "pd" = (
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/ruinedwood,
 /area/rogue/under/cave/inhumen)
 "pe" = (
@@ -3799,7 +3799,7 @@
 	pixel_y = -18;
 	pixel_x = 2
 	},
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/under/cave/inhumen)
 "pp" = (
@@ -3933,7 +3933,7 @@
 /obj/structure/fluff/railing/corner/dun_world{
 	dir = 9
 	},
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/ruinedwood,
 /area/rogue/under/cave/inhumen)
 "pI" = (
@@ -4441,7 +4441,7 @@
 /area/rogue/indoors/banditcamp)
 "rK" = (
 /obj/machinery/light/fueled/wallfire/candle/dun_world,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /obj/structure/fluff/psycross/zizocross,
 /turf/open/floor/blocks,
 /area/rogue/indoors/banditcamp)
@@ -4871,7 +4871,7 @@
 /area/rogue/indoors/vampire_manor)
 "te" = (
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "tf" = (
@@ -5397,7 +5397,7 @@
 /area/rogue/under/cave/inhumen)
 "vm" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world,
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "vn" = (
@@ -5414,7 +5414,7 @@
 /obj/effect/decal/cleanable/dirt/cobweb{
 	dir = 1
 	},
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/golden,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "vr" = (
@@ -5464,7 +5464,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "vA" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "vC" = (
@@ -5487,7 +5487,7 @@
 	},
 /area/rogue/under/cave/inhumen)
 "vK" = (
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/golden,
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "vL" = (
@@ -5655,7 +5655,7 @@
 /area/rogue/under/cave/inhumen)
 "wq" = (
 /obj/effect/decal/cleanable/blood/gibs,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/graggar/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "wr" = (
@@ -7280,7 +7280,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "CP" = (
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/churchbrick,
 /area/rogue/under/cave/inhumen)
 "CQ" = (
@@ -8318,7 +8318,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Hs" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "Ht" = (
@@ -8556,7 +8556,7 @@
 /area/rogue/indoors/vampire_manor)
 "IB" = (
 /obj/effect/decal/cleanable/blood/splatter,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/baotha/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "IC" = (
@@ -8716,7 +8716,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Jj" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "Jk" = (
@@ -9386,7 +9386,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Lr" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "Ls" = (
@@ -9485,7 +9485,7 @@
 /area/rogue/outdoors/woods/vampire_lair)
 "LJ" = (
 /obj/structure/fluff/walldeco/chains,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/baotha/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "LL" = (
@@ -10356,7 +10356,7 @@
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "Pn" = (
-/obj/structure/fluff/psycross/zizocross,
+/obj/structure/fluff/psycross/zizocross/stone,
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "Pq" = (
@@ -10631,7 +10631,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "QH" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/graggar,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "QI" = (
@@ -11221,7 +11221,7 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/mountains)
 "Tu" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/graggar,
 /turf/open/floor/naturalstone,
 /area/rogue/outdoors/woods/wretch_lair)
 "Tv" = (
@@ -11537,7 +11537,7 @@
 /turf/open/floor/ruinedwood,
 /area/rogue/indoors/banditcamp)
 "UH" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios/decorated,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "UI" = (
@@ -12001,7 +12001,7 @@
 /area/rogue/outdoors/woods/wretch_lair)
 "WD" = (
 /obj/effect/decal/cleanable/blood,
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/graggar/decorated,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "WE" = (
@@ -12621,7 +12621,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "YJ" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios,
 /turf/open/floor/snow/patchy,
 /area/rogue/outdoors/banditcamp)
 "YK" = (
@@ -12793,7 +12793,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/outdoors/woods/vampire_lair)
 "Zu" = (
-/obj/structure/fluff/psycross,
+/obj/structure/fluff/psycross/matthios,
 /turf/open/floor/twig,
 /area/rogue/outdoors/woods/wretch_lair)
 "Zx" = (

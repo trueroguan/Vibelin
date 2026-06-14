@@ -231,3 +231,98 @@
 	icon = 'modular_abel/dun_world/icons/railing.dmi'
 	icon_state = "border"
 	dir = 9
+
+/obj/structure/fluff/psycross/baotha
+	name = "spider cross"
+	icon = 'modular_abel/dun_world/icons/tallstructure.dmi'
+	icon_state = "cross_baotha"
+
+/obj/structure/fluff/psycross/baotha/decorated
+	name = "webbed spider cross"
+	icon_state = "cross_baotha_u"
+
+/obj/structure/fluff/psycross/graggar
+	name = "vicious cross"
+	icon = 'modular_abel/dun_world/icons/tallstructure.dmi'
+	icon_state = "cross_graggar"
+
+/obj/structure/fluff/psycross/graggar/decorated
+	name = "revered vicious cross"
+	icon_state = "cross_graggar_u"
+
+/obj/structure/fluff/psycross/matthios
+	name = "grinning cross"
+	icon = 'modular_abel/dun_world/icons/tallstructure.dmi'
+	icon_state = "cross_matthios"
+
+/obj/structure/fluff/psycross/matthios/decorated
+	name = "ornate cross"
+	icon_state = "cross_matthios_u"
+
+/obj/structure/fluff/psycross/necra
+	name = "necran cross"
+	icon = 'modular_abel/dun_world/icons/tallstructure.dmi'
+	icon_state = "cross_necra"
+
+/obj/structure/fluff/psycross/necra/cloth
+	icon_state = "cross_necra_cloth"
+
+/obj/structure/fluff/psycross/zizocross/stone
+	name = "stone inverted cross"
+	icon = 'modular_abel/dun_world/icons/tallstructure.dmi'
+	icon_state = "cross_zizo_r"
+
+/obj/structure/fluff/psycross/zizocross/golden
+	name = "golden inverted cross"
+	icon = 'modular_abel/dun_world/icons/tallstructure.dmi'
+	icon_state = "cross_zizo_u"
+
+/obj/structure/fluff/littlebanners
+	name = "hanging little banners"
+	icon = 'modular_abel/dun_world/icons/canopy.dmi'
+	icon_state = "hangingbanners_wr"
+	density = FALSE
+	anchored = TRUE
+	layer = ABOVE_MOB_LAYER
+	plane = GAME_PLANE_UPPER
+	blade_dulling = DULLING_BASH
+	resistance_flags = FLAMMABLE
+	max_integrity = 20
+	integrity_failure = 0.33
+	dir = SOUTH
+
+/obj/structure/fluff/littlebanners/bluered
+	icon_state = "hangingbanners_br"
+
+/obj/structure/fluff/littlebanners/bluewhite
+	icon_state = "hangingbanners_bw"
+
+/obj/structure/fluff/littlebanners/greenblue
+	icon_state = "hangingbanners_gb"
+
+/obj/structure/fluff/littlebanners/greenred
+	icon_state = "hangingbanners_gr"
+
+/obj/structure/fluff/littlebanners/greenwhite
+	icon_state = "hangingbanners_gw"
+
+/obj/effect/decal/herringbone
+	name = "herringbone flooring"
+	desc = "These stone bricks have been carefully arranged in a rather pleasing pattern."
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
+	icon_state = "herringedge"
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/effect/decal/wood/herringbone
+	name = "herringbone flooring"
+	desc = "Thin planks of wood carefully arranged in a rather pleasing pattern."
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
+	icon_state = "herringbonewoodedge"
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/effect/decal/wood/herringbone2
+	name = "herringbone flooring"
+	desc = "Thin planks of wood carefully arranged in a rather pleasing pattern."
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
+	icon_state = "herringbonewood2edge"
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
