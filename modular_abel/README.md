@@ -33,8 +33,8 @@ Targets `dm`, `build`, and `server` use the modular DME. Other upstream targets
 are passed through without DME injection.
 
 `_maps/dun_world.json` is the downstream map config for the generated map. It is
-kept out of the upstream CI map matrix with `exclude_from_ci` until the remaining
-fallback replacements are reviewed in-game.
+now part of the upstream CI map matrix (no `exclude_from_ci`), so Integration
+Tests boot the Dun World map on every push.
 
 Map rotation is integrated through `modular_abel/map_rotation.dm`, which
 registers Dun World in `global.config.maplist` at startup without editing
@@ -68,9 +68,26 @@ The replacement table is populated with Azure Peak path -> Vanderlin path pairs.
 Some entries still intentionally fall back to broader parent types where no
 local analogue has been confirmed yet.
 
-`modular_abel/dun_world_furniture.dm` carries the Azure Peak furniture, wall,
-window and wall-decor ports (sprites under `modular_abel/icons/dun_world/`),
-so the replacement table can target faithful types instead of broad parents.
+Azure Peak content ports live in dedicated module files so the replacement
+table can target faithful types instead of broad parents (sprites under
+`modular_abel/icons/dun_world/`):
+
+- `dun_world_furniture.dm` — tables, chairs, wall-decor, decostone walls.
+- `dun_world_structures.dm` — canopies, pillows, hookah, potter's wheel,
+  statues (aasimar/abyssor/psybloody/female/zizo), the far-travel tile,
+  carriage, one-way barriers, bathhouse/dungeon travel tiles, SILVER/BRASS/
+  WRETCH (Vile Vheslie)/potion vendors, and the AzureSand floor.
+- `dun_world_items.dm` — hair dye cream, dye brush, armour brush, fake crown,
+  the Mad Duke's rapier.
+- `dun_world_mobs.dm` — the Archlich boss, its summon ability, death visual,
+  key, and the lich barrier.
+- `dun_world_compat.dm` — fueled-light variants (lit floor candles, wall
+  fireplace with our warmth mechanics).
+
+`modular_abel/force_dun_world.dm` is a TEMPORARY test-period override of
+`SSmapping/PreInit()` that forces the Dun World map to load. It is guarded off
+under unit tests, low-memory mode, and random worldgen. **Delete this file and
+its `_module.dm` include before release.**
 
 `modular_abel/upstream_fixes.dm` keeps upstream files untouched by overriding
 them from the module: the mercenary stabard color fallback (upstream
@@ -94,15 +111,18 @@ TODO:
 - Continue the fidelity pass for broad fallback replacements in
   `modular_abel/config/dun_world_map.json`. Current high-priority leftovers:
   `chimeric_calyx_spawner`, `littlebanners`, `dungeontool/mover`,
-  `trimline/yellow`, `roguerune/god/psydon`, pillows, `mudcrab`,
+  `trimline/yellow`, `roguerune/god/psydon`, `mudcrab`,
   `standingbell`/`boatbell`, `flagpole`, and Azure-only heart canisters.
   Wretch Coast also has broad fallbacks for vampire/inhumen areas, keys,
   ritual circles, Azure-only clothing variants, and old rogue tools/weapons.
 - Turf `icon_state` var edits from the Azure maps are stripped during
   generation (maplint bans them); re-add the intended looks through dedicated
   dun_world turf subtypes where they matter.
-- Blue/red mossy stone walls currently map to the green
-  `/turf/closed/wall/mineral/stone/moss`; port colored smooth variants if the
-  hue matters in-game.
-- Remove `exclude_from_ci` from `_maps/dun_world.json` after the map survives
-  the in-game validation pass.
+- Spawn coverage: Vanderlin city jobs without a matching
+  `/obj/effect/landmark/start/<job>` on the generated map fall through to the
+  last-resort spawn (often a wretch landmark). Audit the job roster against the
+  remapped landmark set and either add landmark remap rules or curate the job
+  roster for Dun World.
+- `/turf/closed/mineral/rogue/bedrock` resolves to Vanderlin's
+  `/turf/closed/mineral/bedrock`; if the Azure rocky look matters, port the
+  `rockyashbed` sprite to a dedicated dun_world subtype.

@@ -213,19 +213,19 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
       dir: 8,
     },
     '/obj/structure/fluff/railing/corner': {
-      basePath: '/obj/structure/fluff/railing/corner',
+      basePath: '/obj/structure/fluff/railing/corner/dun_world',
       dir: 9,
     },
     '/obj/structure/fluff/railing/corner/north_east': {
-      basePath: '/obj/structure/fluff/railing/corner',
+      basePath: '/obj/structure/fluff/railing/corner/dun_world',
       dir: 5,
     },
     '/obj/structure/fluff/railing/corner/south_east': {
-      basePath: '/obj/structure/fluff/railing/corner',
+      basePath: '/obj/structure/fluff/railing/corner/dun_world',
       dir: 6,
     },
     '/obj/structure/fluff/railing/corner/south_west': {
-      basePath: '/obj/structure/fluff/railing/corner',
+      basePath: '/obj/structure/fluff/railing/corner/dun_world',
       dir: 10,
     },
     '/obj/structure/fluff/railing/wood/north': {

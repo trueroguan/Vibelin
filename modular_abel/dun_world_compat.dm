@@ -315,12 +315,18 @@
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle
 	name = "candles"
 	icon = 'icons/roguetown/items/lighting.dmi'
-	icon_state = "floorcandle1"
-	base_state = "floorcandle"
+	icon_state = "floorcandle1_lit"
+	base_state = "floorcandle1"
 	layer = TABLE_LAYER
 	SET_BASE_PIXEL(0, 0)
 
+/obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/update_icon_state()
+	. = ..()
+	icon_state = on ? "[base_state]_lit" : base_state
+
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt
+	icon_state = "floorcandle0_lit"
+	base_state = "floorcandle0"
 
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/pink
 	color = "#f858b5ff"
@@ -329,6 +335,13 @@
 /obj/machinery/light/fueled/wallfire/candle/dun_world/floorcandle/alt/pink
 	color = "#f858b5ff"
 	bulb_colour = "#ff13d8ff"
+
+/obj/machinery/light/fueled/wallfire/dun_world_fireplace
+	name = "fireplace"
+	desc = "A warm fire dances between a pile of half-burnt logs upon a bed of glowing embers."
+	brightness = 4
+	bulb_colour = "#ffa35c"
+	SET_BASE_PIXEL(0, 32)
 
 /obj/machinery/light/fueled/firebowl/dun_world
 	brightness = 12
@@ -404,17 +417,21 @@
 		to_chat(src, span_warning("Not when you're not dead!"))
 		return
 
-	var/area/thearea = browser_input_list(src, "Area to jump to", "Where?", GLOB.areas)
+	var/list/candidates = list()
+	for(var/area/A as anything in GLOB.areas)
+		if(length(A.get_zlevel_turf_lists()))
+			candidates += A
+	if(!length(candidates))
+		return
+	candidates = sortNames(candidates)
+
+	var/area/thearea = browser_input_list(src, "Area to jump to", "Where?", candidates)
 	if(!thearea || QDELETED(src))
 		return
 
 	var/list/possible_turfs = list()
 	for(var/list/zlevel_turfs as anything in thearea.get_zlevel_turf_lists())
 		possible_turfs += zlevel_turfs
-
-	if(!length(possible_turfs))
-		for(var/turf/T as anything in get_area_turfs(thearea.type))
-			possible_turfs += T
 
 	if(!length(possible_turfs))
 		to_chat(src, span_warning("No location available!"))

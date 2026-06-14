@@ -212,3 +212,17 @@
 
 /turf/closed/wall/mineral/decostone/dun_world/red/cand
 	icon_state = "decostone-cand-red"
+
+/obj/structure/chair/wood/dun_world_four
+	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon_state = "chair4"
+
+/obj/structure/chair/wood/dun_world_five
+	icon = 'modular_abel/icons/dun_world/structure.dmi'
+	icon_state = "chair5"
+
+/obj/structure/chair/wood/dun_world_throne
+	name = "throne chair"
+	desc = "Someone important must sit here."
+	icon_state = "thronechair"
+	item_chair = null
