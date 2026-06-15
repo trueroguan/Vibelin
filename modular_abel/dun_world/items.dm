@@ -200,7 +200,7 @@
 	icon_state = "brush_[roughness]"
 
 /obj/item/clothing/head/crown/dun_world_fake
-	name = "crown"
+	name = "Crown"
 	desc = "A kingly crown, heavy with authority. Or perhaps a clever counterfeit, light as a lie."
 	icon_state = "serpcrown"
 	sellprice = 5

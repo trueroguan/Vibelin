@@ -1,7 +1,7 @@
 #if !defined(UNIT_TESTS) && !defined(LOWMEMORYMODE) && !defined(FORCE_RANDOM_WORLD_GEN)
 /datum/controller/subsystem/mapping/PreInit()
 	. = ..()
-	if(config?.map_name == "Dun World")
+	if(config?.map_name == "Azure Peak")
 		return
 	config = load_map_config("dun_world", "_maps")
 	var/map = config.map_file
@@ -17,5 +17,5 @@
 		map_adjustment = new adjust()
 		log_world("Loaded '[map]' map adjustment.")
 		break
-	log_world("modular_abel: TEMP forced Dun World map (remove before release).")
+	log_world("modular_abel: TEMP forced Azure Peak map (remove before release).")
 #endif

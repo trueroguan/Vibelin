@@ -50,4 +50,4 @@
 			features += "[size_name ? "[lowertext(size_name)] " : ""]breasts[breasts.lactating ? ", lactating" : ""]"
 
 	if(length(features))
-		. += span_notice("Features: [english_list(features)].")
+		. += "<span style='color: #6e3aa8'>[capitalize(english_list(features))].</span>"

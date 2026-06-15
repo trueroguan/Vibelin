@@ -12,15 +12,15 @@ SUBSYSTEM_DEF(modular_abel)
 		return
 
 	LAZYINITLIST(global.config.maplist)
-	if(global.config.maplist["Dun World"])
+	if(global.config.maplist["Azure Peak"])
 		return
 
 	var/datum/map_config/dun_world = load_map_config("dun_world", MAP_DIRECTORY_MAPS, FALSE)
 	if(!dun_world || dun_world.defaulted)
 		qdel(dun_world)
-		log_world("modular_abel: failed to register Dun World in map rotation.")
+		log_world("modular_abel: failed to register Azure Peak in map rotation.")
 		return
 
 	dun_world.votable = TRUE
 	global.config.maplist[dun_world.map_name] = dun_world
-	log_world("modular_abel: registered Dun World in map rotation.")
+	log_world("modular_abel: registered Azure Peak in map rotation.")

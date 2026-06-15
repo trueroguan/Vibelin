@@ -2,414 +2,414 @@
 	var/dun_world_lighting_compat = FALSE
 
 /area/rogue
-	name = "Dun World"
+	name = "Azure Peak"
 	dun_world_lighting_compat = TRUE
 
 /area/rogue/druidsgrove
-	name = "Dun World - Druidsgrove"
+	name = "Azure Peak - Druidsgrove"
 
 /area/rogue/indoors
 	parent_type = /area/indoors
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Indoors"
+	name = "Azure Peak - Indoors"
 
 /area/rogue/outdoors
 	parent_type = /area/outdoors
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors"
+	name = "Azure Peak - Outdoors"
 
 /area/rogue/under
 	parent_type = /area/under
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Under"
+	name = "Azure Peak - Under"
 
 /area/rogue/indoors/abandonedhotsprings
-	name = "Dun World - Indoors / Abandoned Hotsprings"
+	name = "Azure Peak - Indoors / Abandoned Hotsprings"
 
 /area/rogue/indoors/banditcamp
-	name = "Dun World - Indoors / Bandit Camp"
+	name = "Azure Peak - Indoors / Bandit Camp"
 
 /area/rogue/indoors/cave
 	parent_type = /area/indoors/cave
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Indoors / Cave"
+	name = "Azure Peak - Indoors / Cave"
 
 /area/rogue/indoors/eventarea
-	name = "Dun World - Indoors / Eventarea"
+	name = "Azure Peak - Indoors / Eventarea"
 
 /area/rogue/indoors/inq
-	name = "Dun World - Indoors / Inquisition"
+	name = "Azure Peak - Indoors / Inquisition"
 
 /area/rogue/indoors/shelter
-	name = "Dun World - Indoors / Shelter"
+	name = "Azure Peak - Indoors / Shelter"
 
 /area/rogue/indoors/town
 	parent_type = /area/indoors/town
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Indoors / Town"
+	name = "Azure Peak - Indoors / Town"
 
 /area/rogue/indoors/vampire_manor
 	parent_type = /area/indoors/vampire_manor
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Indoors / Vampire Manor"
+	name = "Azure Peak - Indoors / Vampire Manor"
 
 /area/rogue/outdoors/banditcamp
-	name = "Dun World - Outdoors / Bandit Camp"
+	name = "Azure Peak - Outdoors / Bandit Camp"
 
 /area/rogue/outdoors/beach
 	parent_type = /area/outdoors/beach
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Beach"
+	name = "Azure Peak - Outdoors / Beach"
 
 /area/rogue/outdoors/bog
 	parent_type = /area/outdoors/bog
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Bog"
+	name = "Azure Peak - Outdoors / Bog"
 
 /area/rogue/outdoors/exposed
 	parent_type = /area/outdoors/exposed
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Exposed"
+	name = "Azure Peak - Outdoors / Exposed"
 
 /area/rogue/outdoors/mountains
 	parent_type = /area/outdoors/mountains
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Mountains"
+	name = "Azure Peak - Outdoors / Mountains"
 
 /area/rogue/outdoors/rtfield
 	parent_type = /area/outdoors/basin
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Rogue Territory Field"
+	name = "Azure Peak - Outdoors / Rogue Territory Field"
 
 /area/rogue/outdoors/town
 	parent_type = /area/outdoors/town
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Town"
+	name = "Azure Peak - Outdoors / Town"
 
 /area/rogue/outdoors/woods
 	parent_type = /area/outdoors/wilderness
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Woods"
+	name = "Azure Peak - Outdoors / Woods"
 
 /area/rogue/under/cave
 	parent_type = /area/under/cave
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Under / Cave"
+	name = "Azure Peak - Under / Cave"
 
 /area/rogue/under/cavewet
 	parent_type = /area/under/cavewet
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Under / Wet Cave"
+	name = "Azure Peak - Under / Wet Cave"
 
 /area/rogue/under/town
 	parent_type = /area/under/town
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Under / Town"
+	name = "Azure Peak - Under / Town"
 
 /area/rogue/under/underdark
 	parent_type = /area/under/cave
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Under / Underdark"
+	name = "Azure Peak - Under / Underdark"
 
 /area/rogue/indoors/cave/central
-	name = "Dun World - Indoors / Cave / Central"
+	name = "Azure Peak - Indoors / Cave / Central"
 
 /area/rogue/indoors/cave/east
-	name = "Dun World - Indoors / Cave / East"
+	name = "Azure Peak - Indoors / Cave / East"
 
 /area/rogue/indoors/cave/northern
-	name = "Dun World - Indoors / Cave / Northern"
+	name = "Azure Peak - Indoors / Cave / Northern"
 
 /area/rogue/indoors/cave/southern
-	name = "Dun World - Indoors / Cave / Southern"
+	name = "Azure Peak - Indoors / Cave / Southern"
 
 /area/rogue/indoors/cave/underhamlet
-	name = "Dun World - Indoors / Cave / Underhamlet"
+	name = "Azure Peak - Indoors / Cave / Underhamlet"
 
 /area/rogue/indoors/cave/west
-	name = "Dun World - Indoors / Cave / West"
+	name = "Azure Peak - Indoors / Cave / West"
 
 /area/rogue/indoors/eventarea/multiz
-	name = "Dun World - Indoors / Eventarea / Multiz"
+	name = "Azure Peak - Indoors / Eventarea / Multiz"
 
 /area/rogue/indoors/inq/basement
-	name = "Dun World - Indoors / Inquisition / Basement"
+	name = "Azure Peak - Indoors / Inquisition / Basement"
 
 /area/rogue/indoors/inq/import
-	name = "Dun World - Indoors / Inquisition / Import"
+	name = "Azure Peak - Indoors / Inquisition / Import"
 
 /area/rogue/indoors/inq/office
-	name = "Dun World - Indoors / Inquisition / Office"
+	name = "Azure Peak - Indoors / Inquisition / Office"
 
 /area/rogue/indoors/shelter/bog
-	name = "Dun World - Indoors / Shelter / Bog"
+	name = "Azure Peak - Indoors / Shelter / Bog"
 
 /area/rogue/indoors/shelter/mountains
-	name = "Dun World - Indoors / Shelter / Mountains"
+	name = "Azure Peak - Indoors / Shelter / Mountains"
 
 /area/rogue/indoors/shelter/woods
-	name = "Dun World - Indoors / Shelter / Woods"
+	name = "Azure Peak - Indoors / Shelter / Woods"
 
 /area/rogue/indoors/town/bath
-	name = "Dun World - Indoors / Town / Bath"
+	name = "Azure Peak - Indoors / Town / Bath"
 
 /area/rogue/indoors/town/church
-	name = "Dun World - Indoors / Town / Church"
+	name = "Azure Peak - Indoors / Town / Church"
 
 /area/rogue/indoors/town/dwarfin
-	name = "Dun World - Indoors / Town / Dwarven Inn"
+	name = "Azure Peak - Indoors / Town / Dwarven Inn"
 
 /area/rogue/indoors/town/garrison
-	name = "Dun World - Indoors / Town / Garrison"
+	name = "Azure Peak - Indoors / Town / Garrison"
 
 /area/rogue/indoors/town/magician
-	name = "Dun World - Indoors / Town / Magician"
+	name = "Azure Peak - Indoors / Town / Magician"
 
 /area/rogue/indoors/town/manor
-	name = "Dun World - Indoors / Town / Manor"
+	name = "Azure Peak - Indoors / Town / Manor"
 
 /area/rogue/indoors/town/pestra_sanctum
-	name = "Dun World - Indoors / Town / Pestra Sanctum"
+	name = "Azure Peak - Indoors / Town / Pestra Sanctum"
 
 /area/rogue/indoors/town/physician
-	name = "Dun World - Indoors / Town / Physician"
+	name = "Azure Peak - Indoors / Town / Physician"
 
 /area/rogue/indoors/town/shop
-	name = "Dun World - Indoors / Town / Shop"
+	name = "Azure Peak - Indoors / Town / Shop"
 
 /area/rogue/indoors/town/steward
-	name = "Dun World - Indoors / Town / Steward"
+	name = "Azure Peak - Indoors / Town / Steward"
 
 /area/rogue/indoors/town/tavern
-	name = "Dun World - Indoors / Town / Tavern"
+	name = "Azure Peak - Indoors / Town / Tavern"
 
 /area/rogue/indoors/town/vault
-	name = "Dun World - Indoors / Town / Vault"
+	name = "Azure Peak - Indoors / Town / Vault"
 
 /area/rogue/indoors/town/warehouse
-	name = "Dun World - Indoors / Town / Warehouse"
+	name = "Azure Peak - Indoors / Town / Warehouse"
 
 /area/rogue/indoors/town/zhurch
-	name = "Dun World - Indoors / Town / Zizo Church"
+	name = "Azure Peak - Indoors / Town / Zizo Church"
 
 /area/rogue/outdoors/beach/central
-	name = "Dun World - Outdoors / Beach / Central"
+	name = "Azure Peak - Outdoors / Beach / Central"
 
 /area/rogue/outdoors/beach/forest
 	parent_type = /area/outdoors/wilderness
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Beach / Forest"
+	name = "Azure Peak - Outdoors / Beach / Forest"
 
 /area/rogue/outdoors/beach/north
-	name = "Dun World - Outdoors / Beach / North"
+	name = "Azure Peak - Outdoors / Beach / North"
 
 /area/rogue/outdoors/beach/south
-	name = "Dun World - Outdoors / Beach / South"
+	name = "Azure Peak - Outdoors / Beach / South"
 
 /area/rogue/outdoors/bog/north
-	name = "Dun World - Outdoors / Bog / North"
+	name = "Azure Peak - Outdoors / Bog / North"
 
 /area/rogue/outdoors/bog/south
-	name = "Dun World - Outdoors / Bog / South"
+	name = "Azure Peak - Outdoors / Bog / South"
 
 /area/rogue/outdoors/exposed/bath
-	name = "Dun World - Outdoors / Exposed / Bath"
+	name = "Azure Peak - Outdoors / Exposed / Bath"
 
 /area/rogue/outdoors/exposed/church
-	name = "Dun World - Outdoors / Exposed / Church"
+	name = "Azure Peak - Outdoors / Exposed / Church"
 
 /area/rogue/outdoors/exposed/magiciantower
-	name = "Dun World - Outdoors / Exposed / Magician Tower"
+	name = "Azure Peak - Outdoors / Exposed / Magician Tower"
 
 /area/rogue/outdoors/exposed/town
-	name = "Dun World - Outdoors / Exposed / Town"
+	name = "Azure Peak - Outdoors / Exposed / Town"
 
 /area/rogue/outdoors/mountains/decap
 	parent_type = /area/outdoors/mountains/decap
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Outdoors / Mountains / Decapitation Grounds"
+	name = "Azure Peak - Outdoors / Mountains / Decapitation Grounds"
 
 /area/rogue/outdoors/rtfield/abandonedhotsprings
-	name = "Dun World - Outdoors / Rogue Territory Field / Abandoned Hotsprings"
+	name = "Azure Peak - Outdoors / Rogue Territory Field / Abandoned Hotsprings"
 
 /area/rogue/outdoors/rtfield/eora
-	name = "Dun World - Outdoors / Rogue Territory Field / Eora"
+	name = "Azure Peak - Outdoors / Rogue Territory Field / Eora"
 
 /area/rogue/outdoors/town/roofs
-	name = "Dun World - Outdoors / Town / Roofs"
+	name = "Azure Peak - Outdoors / Town / Roofs"
 
 /area/rogue/outdoors/woods/north
-	name = "Dun World - Outdoors / Woods / North"
+	name = "Azure Peak - Outdoors / Woods / North"
 
 /area/rogue/outdoors/woods/south
-	name = "Dun World - Outdoors / Woods / South"
+	name = "Azure Peak - Outdoors / Woods / South"
 
 /area/rogue/outdoors/woods/southeast
-	name = "Dun World - Outdoors / Woods / Southeast"
+	name = "Azure Peak - Outdoors / Woods / Southeast"
 
 /area/rogue/outdoors/woods/southwest
-	name = "Dun World - Outdoors / Woods / Southwest"
+	name = "Azure Peak - Outdoors / Woods / Southwest"
 
 /area/rogue/outdoors/woods/vampire_lair
-	name = "Dun World - Outdoors / Woods / Vampire Lair"
+	name = "Azure Peak - Outdoors / Woods / Vampire Lair"
 
 /area/rogue/outdoors/woods/wretch_lair
-	name = "Dun World - Outdoors / Woods / Wretch Lair"
+	name = "Azure Peak - Outdoors / Woods / Wretch Lair"
 
 /area/rogue/under/cave/dragonden
-	name = "Dun World - Under / Cave / Dragon Den"
+	name = "Azure Peak - Under / Cave / Dragon Den"
 
 /area/rogue/under/cave/dukecourt
-	name = "Dun World - Under / Cave / Duke Court"
+	name = "Azure Peak - Under / Cave / Duke Court"
 
 /area/rogue/under/cave/dungeon1
-	name = "Dun World - Under / Cave / Dungeon1"
+	name = "Azure Peak - Under / Cave / Dungeon1"
 
 /area/rogue/under/cave/fishmandungeon
-	name = "Dun World - Under / Cave / Fishman Dungeon"
+	name = "Azure Peak - Under / Cave / Fishman Dungeon"
 
 /area/rogue/under/cave/goblinfort
-	name = "Dun World - Under / Cave / Goblin Fort"
+	name = "Azure Peak - Under / Cave / Goblin Fort"
 
 /area/rogue/under/cave/his_vault
-	name = "Dun World - Under / Cave / HIS Vault"
+	name = "Azure Peak - Under / Cave / HIS Vault"
 
 /area/rogue/under/cave/inhumen
-	name = "Dun World - Under / Cave / Inhumen"
+	name = "Azure Peak - Under / Cave / Inhumen"
 
 /area/rogue/under/cave/licharena
-	name = "Dun World - Under / Cave / Lich Arena"
+	name = "Azure Peak - Under / Cave / Lich Arena"
 
 /area/rogue/under/cave/mazedungeon
-	name = "Dun World - Under / Cave / Maze Dungeon"
+	name = "Azure Peak - Under / Cave / Maze Dungeon"
 
 /area/rogue/under/cave/minotaurcave
-	name = "Dun World - Under / Cave / Minotaur Cave"
+	name = "Azure Peak - Under / Cave / Minotaur Cave"
 
 /area/rogue/under/cave/orcdungeon
-	name = "Dun World - Under / Cave / Orc Dungeon"
+	name = "Azure Peak - Under / Cave / Orc Dungeon"
 
 /area/rogue/under/cave/peace
-	name = "Dun World - Under / Cave / Peace"
+	name = "Azure Peak - Under / Cave / Peace"
 
 /area/rogue/under/cave/scarymaze
-	name = "Dun World - Under / Cave / Scary Maze"
+	name = "Azure Peak - Under / Cave / Scary Maze"
 
 /area/rogue/under/cave/skeletoncrypt
-	name = "Dun World - Under / Cave / Skeleton Crypt"
+	name = "Azure Peak - Under / Cave / Skeleton Crypt"
 
 /area/rogue/under/cave/spider
-	name = "Dun World - Under / Cave / Spider"
+	name = "Azure Peak - Under / Cave / Spider"
 
 /area/rogue/under/cave/taricheamanor
-	name = "Dun World - Under / Cave / Tarichean Manor"
+	name = "Azure Peak - Under / Cave / Tarichean Manor"
 
 /area/rogue/under/cavewet/bogcaves
-	name = "Dun World - Under / Wet Cave / Bog Caves"
+	name = "Azure Peak - Under / Wet Cave / Bog Caves"
 
 /area/rogue/under/town/basement
-	name = "Dun World - Under / Town / Basement"
+	name = "Azure Peak - Under / Town / Basement"
 
 /area/rogue/under/town/sewer
 	parent_type = /area/under/town/sewer
 	dun_world_lighting_compat = TRUE
-	name = "Dun World - Under / Town / Sewer"
+	name = "Azure Peak - Under / Town / Sewer"
 
 /area/rogue/under/underdark/north
-	name = "Dun World - Under / Underdark / North"
+	name = "Azure Peak - Under / Underdark / North"
 
 /area/rogue/under/underdark/south
-	name = "Dun World - Under / Underdark / South"
+	name = "Azure Peak - Under / Underdark / South"
 
 /area/rogue/indoors/shelter/bog/bogmanfort
-	name = "Dun World - Indoors / Shelter / Bog / Bogman Fort"
+	name = "Azure Peak - Indoors / Shelter / Bog / Bogman Fort"
 
 /area/rogue/indoors/shelter/bog/skeletonfort
-	name = "Dun World - Indoors / Shelter / Bog / Skeleton Fort"
+	name = "Azure Peak - Indoors / Shelter / Bog / Skeleton Fort"
 
 /area/rogue/indoors/shelter/mountains/decap
-	name = "Dun World - Indoors / Shelter / Mountains / Decapitation Grounds"
+	name = "Azure Peak - Indoors / Shelter / Mountains / Decapitation Grounds"
 
 /area/rogue/indoors/town/church/basement
-	name = "Dun World - Indoors / Town / Church / Basement"
+	name = "Azure Peak - Indoors / Town / Church / Basement"
 
 /area/rogue/indoors/town/church/chapel
-	name = "Dun World - Indoors / Town / Church / Chapel"
+	name = "Azure Peak - Indoors / Town / Church / Chapel"
 
 /area/rogue/outdoors/beach/forest/hamlet
-	name = "Dun World - Outdoors / Beach / Forest / Hamlet"
+	name = "Azure Peak - Outdoors / Beach / Forest / Hamlet"
 
 /area/rogue/outdoors/beach/forest/north
-	name = "Dun World - Outdoors / Beach / Forest / North"
+	name = "Azure Peak - Outdoors / Beach / Forest / North"
 
 /area/rogue/outdoors/beach/forest/south
-	name = "Dun World - Outdoors / Beach / Forest / South"
+	name = "Azure Peak - Outdoors / Beach / Forest / South"
 
 /area/rogue/outdoors/exposed/bath/vault
-	name = "Dun World - Outdoors / Exposed / Bath / Vault"
+	name = "Azure Peak - Outdoors / Exposed / Bath / Vault"
 
 /area/rogue/outdoors/exposed/town/keep
-	name = "Dun World - Outdoors / Exposed / Town / Keep"
+	name = "Azure Peak - Outdoors / Exposed / Town / Keep"
 
 /area/rogue/outdoors/mountains/decap/banditcamp
-	name = "Dun World - Outdoors / Mountains / Decapitation Grounds / Bandit Camp"
+	name = "Azure Peak - Outdoors / Mountains / Decapitation Grounds / Bandit Camp"
 
 /area/rogue/outdoors/mountains/decap/gunduzirak
-	name = "Dun World - Outdoors / Mountains / Decapitation Grounds / Gunduzirak"
+	name = "Azure Peak - Outdoors / Mountains / Decapitation Grounds / Gunduzirak"
 
 /area/rogue/outdoors/mountains/decap/minotaurfort
-	name = "Dun World - Outdoors / Mountains / Decapitation Grounds / Minotaur Fort"
+	name = "Azure Peak - Outdoors / Mountains / Decapitation Grounds / Minotaur Fort"
 
 /area/rogue/outdoors/mountains/decap/stepbelow
-	name = "Dun World - Outdoors / Mountains / Decapitation Grounds / Step Below"
+	name = "Azure Peak - Outdoors / Mountains / Decapitation Grounds / Step Below"
 
 /area/rogue/outdoors/town/roofs/keep
-	name = "Dun World - Outdoors / Town / Roofs / Keep"
+	name = "Azure Peak - Outdoors / Town / Roofs / Keep"
 
 /area/rogue/under/cave/dungeon1/gethsmane
-	name = "Dun World - Under / Cave / Dungeon1 / Gethsmane"
+	name = "Azure Peak - Under / Cave / Dungeon1 / Gethsmane"
 
 /area/rogue/under/cave/his_vault/four
-	name = "Dun World - Under / Cave / HIS Vault / Four"
+	name = "Azure Peak - Under / Cave / HIS Vault / Four"
 
 /area/rogue/under/cave/his_vault/one
-	name = "Dun World - Under / Cave / HIS Vault / One"
+	name = "Azure Peak - Under / Cave / HIS Vault / One"
 
 /area/rogue/under/cave/his_vault/puzzle
-	name = "Dun World - Under / Cave / HIS Vault / Puzzle"
+	name = "Azure Peak - Under / Cave / HIS Vault / Puzzle"
 
 /area/rogue/under/cave/his_vault/three
-	name = "Dun World - Under / Cave / HIS Vault / Three"
+	name = "Azure Peak - Under / Cave / HIS Vault / Three"
 
 /area/rogue/under/cave/his_vault/two
-	name = "Dun World - Under / Cave / HIS Vault / Two"
+	name = "Azure Peak - Under / Cave / HIS Vault / Two"
 
 /area/rogue/under/cave/licharena/bossroom
-	name = "Dun World - Under / Cave / Lich Arena / Boss Room"
+	name = "Azure Peak - Under / Cave / Lich Arena / Boss Room"
 
 /area/rogue/under/cavewet/bogcaves/central
-	name = "Dun World - Under / Wet Cave / Bog Caves / Central"
+	name = "Azure Peak - Under / Wet Cave / Bog Caves / Central"
 
 /area/rogue/under/cavewet/bogcaves/north
-	name = "Dun World - Under / Wet Cave / Bog Caves / North"
+	name = "Azure Peak - Under / Wet Cave / Bog Caves / North"
 
 /area/rogue/under/cavewet/bogcaves/south
-	name = "Dun World - Under / Wet Cave / Bog Caves / South"
+	name = "Azure Peak - Under / Wet Cave / Bog Caves / South"
 
 /area/rogue/under/cavewet/bogcaves/west
-	name = "Dun World - Under / Wet Cave / Bog Caves / West"
+	name = "Azure Peak - Under / Wet Cave / Bog Caves / West"
 
 /area/rogue/under/town/basement/keep
-	name = "Dun World - Under / Town / Basement / Keep"
+	name = "Azure Peak - Under / Town / Basement / Keep"
 
 /area/rogue/indoors/shelter/mountains/decap/banditcamp
-	name = "Dun World - Indoors / Shelter / Mountains / Decapitation Grounds / Bandit Camp"
+	name = "Azure Peak - Indoors / Shelter / Mountains / Decapitation Grounds / Bandit Camp"
 
 /area/rogue/outdoors/exposed/town/keep/unbuildable
-	name = "Dun World - Outdoors / Exposed / Town / Keep / Unbuildable"
+	name = "Azure Peak - Outdoors / Exposed / Town / Keep / Unbuildable"
 
 /area/rogue/outdoors/mountains/decap/gunduzirak/bossarena
-	name = "Dun World - Outdoors / Mountains / Decapitation Grounds / Gunduzirak / Boss Arena"
+	name = "Azure Peak - Outdoors / Mountains / Decapitation Grounds / Gunduzirak / Boss Arena"
 
 /area/rogue/under/cave/dungeon1/gethsmane/inner
-	name = "Dun World - Under / Cave / Dungeon1 / Gethsmane / Inner"
+	name = "Azure Peak - Under / Cave / Dungeon1 / Gethsmane / Inner"

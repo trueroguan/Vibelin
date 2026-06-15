@@ -757,9 +757,9 @@ export const PreferencesMenu = () => {
           </Stack.Item>
 
           <Stack.Item grow basis={0}>
-            <Box height="100%" style={{ overflowY: 'auto' }}>
+            <Section fill scrollable>
               {renderActiveTab()}
-            </Box>
+            </Section>
           </Stack.Item>
 
           <Stack.Item>
