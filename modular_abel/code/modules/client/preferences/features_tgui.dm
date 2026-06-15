@@ -75,6 +75,7 @@
 			"enabled" = !entry.disabled,
 			"can_disable" = customizer.allows_disabling,
 			"choice_name" = choice.name,
+			"choice_value" = "[entry.customizer_choice_type]",
 		)
 
 		if(length(customizer.customizer_choices) > 1)
@@ -88,6 +89,7 @@
 			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(entry.accessory_type)
 			if(accessory)
 				feature["accessory_name"] = accessory.name
+				feature["accessory_value"] = "[entry.accessory_type]"
 				if(length(choice.sprite_accessories) > 1)
 					var/list/accessory_options = list()
 					for(var/accessory_type in choice.sprite_accessories)

@@ -417,22 +417,11 @@
 		to_chat(src, span_warning("Not when you're not dead!"))
 		return
 
-	var/list/candidates = list()
-	for(var/area/A as anything in GLOB.areas)
-		if(length(A.get_zlevel_turf_lists()))
-			candidates += A
-	if(!length(candidates))
-		return
-	candidates = sortNames(candidates)
-
-	var/area/thearea = browser_input_list(src, "Area to jump to", "Where?", candidates)
+	var/area/thearea = browser_input_list(src, "Area to jump to", "Where?", sortNames(GLOB.areas))
 	if(!thearea || QDELETED(src))
 		return
 
-	var/list/possible_turfs = list()
-	for(var/list/zlevel_turfs as anything in thearea.get_zlevel_turf_lists())
-		possible_turfs += zlevel_turfs
-
+	var/list/possible_turfs = get_area_turfs(thearea)
 	if(!length(possible_turfs))
 		to_chat(src, span_warning("No location available!"))
 		return

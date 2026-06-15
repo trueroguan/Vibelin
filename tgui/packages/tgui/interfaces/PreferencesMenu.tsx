@@ -43,8 +43,10 @@ type FeatureEntry = {
   enabled: Booleanish;
   can_disable: Booleanish;
   choice_name: string;
+  choice_value?: string;
   choice_options?: FeatureOption[];
   accessory_name?: string;
+  accessory_value?: string;
   accessory_options?: FeatureOption[];
   colors?: FeatureColor[];
   extras?: FeatureExtra[];
@@ -488,8 +490,9 @@ export const PreferencesMenu = () => {
                 'Type',
                 <Dropdown
                   width="180px"
+                  buttons
                   displayText={feature.choice_name}
-                  selected={null}
+                  selected={feature.choice_value}
                   options={feature.choice_options.map((option) => ({
                     displayText: option.name,
                     value: option.value,
@@ -511,7 +514,7 @@ export const PreferencesMenu = () => {
                     width="180px"
                     buttons
                     displayText={feature.accessory_name}
-                    selected={null}
+                    selected={feature.accessory_value}
                     options={feature.accessory_options.map((option) => ({
                       displayText: option.name,
                       value: option.value,

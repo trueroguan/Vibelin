@@ -36,9 +36,9 @@
 	icon_state = "canopyg-booth-2"
 
 /obj/structure/fluff/canopy/booth/CanAllowThrough(atom/movable/mover, turf/target)
+	. = ..()
 	if(get_dir(loc, mover) == dir)
 		return FALSE
-	return !density
 
 /obj/structure/fluff/canopy/booth/proc/on_exit(datum/source, atom/movable/leaving, atom/new_location)
 	SIGNAL_HANDLER
@@ -326,3 +326,18 @@
 	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
 	icon_state = "herringbonewood2edge"
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/structure/fluff/dun_world_mossmother
+	name = "Mossmother"
+	desc = "One of the most sacred of trees. The very heart of the bog, its roots extend across every single inch of land drenched by maddened waters. Its moss is said to have magical properties."
+	icon = 'modular_abel/dun_world/icons/hag_tree.dmi'
+	icon_state = "mossmother"
+	density = TRUE
+	anchored = TRUE
+	layer = BELOW_OBJ_LAYER
+	pixel_y = -30
+
+/obj/structure/fluff/dun_world_mossmother/tree
+	name = "Heartroot tree"
+	desc = "No one knows why, but these trees seem nigh indestructible. You feel uneasy looking at this monstrosity of roots and bark."
+	icon_state = "tree"

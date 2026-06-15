@@ -172,7 +172,12 @@
 	if(!zone)
 		return TRUE
 
-	return get_location_accessible(target, zone)
+	for(var/obj/item/equipped in target.get_equipped_items())
+		if(zone2covered(zone, equipped.body_parts_covered))
+			return FALSE
+	if(zone == BODY_ZONE_PRECISE_GROIN && target.underwear != "Nude")
+		return FALSE
+	return TRUE
 
 /datum/erp_actor/human/proc/_organ_type_to_bodyzone(organ_type)
 	switch(organ_type)

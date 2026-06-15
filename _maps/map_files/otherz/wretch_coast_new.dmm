@@ -304,7 +304,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom X";
 	lockid = "zurch_bedroom_10";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -796,7 +796,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom VII";
 	lockid = "zurch_bedroom_7";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -1245,7 +1245,7 @@
 "fb" = (
 /obj/structure/door{
 	lockid = "mansionvampire";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
@@ -1304,7 +1304,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom XII";
 	lockid = "zurch_bedroom_12";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -1384,7 +1384,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom I";
 	lockid = "zurch_bedroom_1";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -3406,7 +3406,7 @@
 "nJ" = (
 /obj/structure/door/swing{
 	lockid = "bandit";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/grass/cold,
 /area/rogue/indoors/banditcamp)
@@ -3968,7 +3968,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom IX";
 	lockid = "zurch_bedroom_9";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -4373,7 +4373,7 @@
 	pixel_y = 1
 	},
 /obj/structure/door/iron/bars{
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/locked;
 	lockid = "mansionvampire_maid"
 	},
 /turf/open/floor/cobble/mossy/dun_world,
@@ -4434,7 +4434,7 @@
 /area/rogue/indoors/vampire_manor)
 "rG" = (
 /obj/structure/door/iron/bars{
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/locked;
 	lockid = "bandit"
 	},
 /turf/open/floor/dirt/road,
@@ -5061,7 +5061,7 @@
 /obj/structure/vine,
 /obj/structure/door/viewport{
 	dir = 8;
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/locked;
 	max_integrity = 9999;
 	lockid = "admin_event_door"
 	},
@@ -5621,7 +5621,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom XI";
 	lockid = "zurch_bedroom_11";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -6219,7 +6219,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom V";
 	lockid = "zurch_bedroom_5";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -7015,7 +7015,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom VI";
 	lockid = "zurch_bedroom_6";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -7102,7 +7102,7 @@
 "Cb" = (
 /obj/structure/door/swing{
 	lockid = "bandit";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/dirt,
 /area/rogue/indoors/banditcamp)
@@ -7661,7 +7661,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom II";
 	lockid = "zurch_bedroom_2";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -8090,7 +8090,7 @@
 	},
 /obj/structure/door{
 	lockid = "mansionvampire";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
@@ -10429,7 +10429,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom III";
 	lockid = "zurch_bedroom_3";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -10786,7 +10786,7 @@
 /area/rogue/indoors/vampire_manor)
 "Rs" = (
 /obj/structure/door/iron/bars{
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/locked;
 	lockid = "mansionvampire"
 	},
 /turf/open/floor/blocks,
@@ -11179,7 +11179,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom VIII";
 	lockid = "zurch_bedroom_8";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)
@@ -11506,7 +11506,7 @@
 /obj/structure/door/stone{
 	name = "Bedroom IV";
 	lockid = "zurch_bedroom_4";
-	lock = /datum/lock/key/locked
+	lock = /datum/lock/locked
 	},
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
@@ -11783,7 +11783,7 @@
 /area/rogue/indoors/vampire_manor)
 "VH" = (
 /obj/structure/door/iron/bars{
-	lock = /datum/lock/key/locked;
+	lock = /datum/lock/locked;
 	lockid = "mansionvampire_maid"
 	},
 /turf/open/floor/cobble/dun_world,

@@ -1,16 +1,30 @@
-/mob/living/carbon/human/examine(mob/user)
+/mob/living/carbon/human/Topic(href, href_list)
 	. = ..()
-	var/list/erp_lines = erp_examine_features(user)
-	if(length(erp_lines))
-		. += erp_lines
+	if(!href_list["view_descriptors"])
+		return
+	if(!ismob(usr))
+		return
+	if(!isobserver(usr) && !usr.can_perform_action(src, NEED_LIGHT))
+		return
+	var/list/organ_lines = erp_examine_features(usr)
+	if(length(organ_lines))
+		to_chat(usr, span_info("[organ_lines.Join("\n")]"))
+
+/mob/living/carbon/human/proc/erp_zone_uncovered(zone)
+	for(var/obj/item/equipped in get_equipped_items())
+		if(zone2covered(zone, equipped.body_parts_covered))
+			return FALSE
+	if(zone == BODY_ZONE_PRECISE_GROIN && underwear != "Nude")
+		return FALSE
+	return TRUE
 
 /mob/living/carbon/human/proc/erp_examine_features(mob/user)
 	. = list()
 	if(!client?.prefs?.erp_enabled)
 		return
 
-	var/groin_exposed = isnull(wear_pants)
-	var/chest_exposed = isnull(wear_shirt)
+	var/groin_exposed = erp_zone_uncovered(BODY_ZONE_PRECISE_GROIN)
+	var/chest_exposed = erp_zone_uncovered(BODY_ZONE_CHEST)
 	if(!groin_exposed && !chest_exposed)
 		return
 
@@ -34,15 +48,6 @@
 		if(breasts?.visible_organ && breasts.accessory_type)
 			var/size_name = find_key_by_value(BREAST_SIZES_BY_NAME, breasts.breast_size)
 			features += "[size_name ? "[lowertext(size_name)] " : ""]breasts[breasts.lactating ? ", lactating" : ""]"
-
-	var/naked_note
-	if(groin_exposed && chest_exposed)
-		naked_note = "[p_their(TRUE)] body is bared, leaving nothing to the imagination."
-	else if(groin_exposed)
-		naked_note = "[p_their(TRUE)] groin is left exposed."
-	else
-		naked_note = "[p_their(TRUE)] chest is left bare."
-	. += span_warning(naked_note)
 
 	if(length(features))
 		. += span_notice("Features: [english_list(features)].")

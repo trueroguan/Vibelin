@@ -406,12 +406,19 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
     }
 
     const isTurf = entry.path.startsWith('/turf/');
+    const isDoor = entry.path.startsWith('/obj/structure/door');
     const vars = entry.vars.flatMap((varLines) => {
       const varText = varLines[0].trim();
 
       const lockedMatch = varText.match(/^locked\s*=\s*([01])$/);
       if (lockedMatch) {
-        return lockedMatch[1] === '1' ? [['\tlock = /datum/lock/key/locked']] : [];
+        if (lockedMatch[1] !== '1') {
+          return [];
+        }
+        const lockPath = isDoor
+          ? '/datum/lock/locked'
+          : '/datum/lock/key/locked';
+        return [[`\tlock = ${lockPath}`]];
       }
 
       if (REMOVED_VAR_PATTERNS.some((pattern) => pattern.test(varText))) {
