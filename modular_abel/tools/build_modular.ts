@@ -212,11 +212,7 @@ function withForcedDunWorld(dme: string) {
 }
 
 function withModularIncludes(dme: string): string {
-  const includeLines = [
-    '#include "modular_abel\\_module.dm"',
-    '#include "_maps\\map_files\\dun_world\\dun_world_new.dmm"',
-    '#include "_maps\\map_files\\otherz\\wretch_coast_new.dmm"',
-  ];
+  const includeLines = ['#include "modular_abel\\_module.dm"'];
   const missingLines = includeLines.filter((line) => !dme.includes(line));
   if (missingLines.length === 0) {
     return dme;

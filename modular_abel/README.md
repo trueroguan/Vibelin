@@ -37,13 +37,16 @@ For a root-level one-button build, use `BUILD_MODULAR_ABEL.cmd` on Windows or
 `BUILD_MODULAR_ABEL.sh` on Linux. These launchers call the modular wrapper and
 leave the upstream `BUILD.cmd` unchanged.
 
-The modular wrapper injects `modular_abel/_module.dm`,
-`_maps/map_files/dun_world/dun_world_new.dmm`, and
-`_maps/map_files/otherz/wretch_coast_new.dmm` into
+The modular wrapper injects only `modular_abel/_module.dm` into
 `vanderlin.modular_abel.dme`, compiles that temporary DME, and copies the
 resulting build artifacts to the normal `vanderlin.dmb`/`vanderlin.rsc` names.
-Targets `dm`, `build`, and `server` use the modular DME. Other upstream targets
-are passed through without DME injection.
+The generated maps are NOT compiled into the DME — like every other playable
+map they are loaded at runtime by `SSmapping` from `_maps/dun_world.json`.
+Compiling a playable map into the DME pre-creates its z-levels at world start,
+which trips the `DEFAULT_MAP_TRAITS` vs `world.maxz` warning in
+`zlevel_manager.dm` and double-loads the map. Targets `dm`, `build`, and
+`server` use the modular DME. Other upstream targets are passed through without
+DME injection.
 
 `_maps/dun_world.json` is the downstream map config for the generated map. It is
 now part of the upstream CI map matrix (no `exclude_from_ci`), so Integration
@@ -73,9 +76,10 @@ windows_scripts:
 ```
 
 The modular TGS precompile script runs `modular_abel/prepare_map.*`, runs the
-upstream TGS build target, injects the module and generated map into the
-disposable TGS `vanderlin.dme`, and appends the map rotation block to that
-disposable checkout's `config/maps.txt`.
+upstream TGS build target, injects the module into the disposable TGS
+`vanderlin.dme`, and appends the map rotation block to that disposable
+checkout's `config/maps.txt`. The generated maps load at runtime from
+`_maps/dun_world.json`, not from the DME.
 
 The replacement table is populated with Azure Peak path -> Vanderlin path pairs.
 Some entries still intentionally fall back to broader parent types where no
