@@ -1,17 +1,8 @@
 /turf/open/floor/cobblerock/dun_world
-	smoothing_flags = NONE
-	smoothing_list = null
-	neighborlay = null
 
 /turf/open/floor/cobble/dun_world
-	smoothing_flags = NONE
-	smoothing_list = null
-	neighborlay = null
 
 /turf/open/floor/cobble/mossy/dun_world
-	smoothing_flags = NONE
-	smoothing_list = null
-	neighborlay = null
 
 /obj/effect/decal/cobbleedge/dun_world
 	icon = null
