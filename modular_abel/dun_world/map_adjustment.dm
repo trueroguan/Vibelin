@@ -16,6 +16,7 @@
 
 /datum/map_adjustment/dun_world/job_change()
 	. = ..()
+	change_job_position(/datum/job/lord, 1, 1)
 	change_job_position(/datum/job/villager, 0, 40)
 	GLOB.peasant_positions.Add(/datum/job/villager::title)
 	GLOB.serf_positions.Add("Guildmaster", "Guildsman", "Bathmaster")

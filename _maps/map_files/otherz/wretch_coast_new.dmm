@@ -2298,7 +2298,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "jw" = (
-/obj/structure,
+/obj/structure/throne/vthrone,
 /turf/open/floor/carpet/lord/center,
 /area/rogue/indoors/vampire_manor)
 "jx" = (

@@ -121,6 +121,12 @@ Map QA helpers (run from the repo root with `tools/bootstrap/python`):
   with two files shows the states present only in the second one.
 
 TODO:
+- Bathhouse drug merchant at roughly (57,56,1) does not appear: `bathvend` and
+  `vendor/bathhouse` are mapped, so the source tile likely holds a different
+  Azure type. Needs the exact source type to add a remap.
+- `headeater`/`stockpile` wall machines render through walls (their sprite is
+  pixel-offset up onto the wall tile and visible from both sides). Needs an
+  in-game look to decide a directional-render or placement fix.
 - Continue the fidelity pass for broad fallback replacements in
   `modular_abel/dun_world/config/map.json`. Remaining visible-structure
   leftovers worth faithful ports: `ritualcircle/*` (base missing),

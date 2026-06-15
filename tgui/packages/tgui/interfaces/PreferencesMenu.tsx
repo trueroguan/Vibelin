@@ -665,6 +665,7 @@ export const PreferencesMenu = () => {
           <PrefRow icon="music" label="Lobby Music" value={asBool(game.lobby_music) ? 'ON' : 'OFF'} selected={asBool(game.lobby_music)} onClick={() => toggle('lobby_music')} />
           <PrefRow icon="music" label="Admin MIDIs" value={asBool(game.hear_midis) ? 'ON' : 'OFF'} selected={asBool(game.hear_midis)} onClick={() => toggle('hear_midis')} />
           <PrefRow icon="user-secret" label="Midround Antag" value={asBool(game.allow_midround_antag) ? 'ON' : 'OFF'} selected={asBool(game.allow_midround_antag)} onClick={() => toggle('allow_midround_antag')} />
+          <PrefRow icon="heart" label="Intimacy Opt-in (ERP)" value={erpEnabled ? 'ON' : 'OFF'} selected={erpEnabled} onClick={() => doPref('abel_erp_toggle')} />
           <ActionButton icon="toggle-on" label="Toggle Bitfields" onClick={() => doPref('toggles')} />
           <ActionButton icon="keyboard" label="Keybinds" onClick={() => doPref('keybinds', 'menu')} />
           <ActionButton icon="save" label="Save Preferences" color="blue" onClick={() => doPref('save')} />
