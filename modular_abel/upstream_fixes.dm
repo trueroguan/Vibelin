@@ -83,6 +83,7 @@
 		/turf/open/floor/cobblerock/dun_world,
 		/turf/open/floor/hexstone/dun_world,
 		/turf/open/floor/churchrough/dun_world,
+		/turf/open/floor/church/dun_world,
 	) \
 	+ typesof(/turf/open/floor/mushroom) \
 	+ typesof(/turf/open/floor/sandstone_tile) \
@@ -118,4 +119,15 @@
 
 	if(length(unused_turfs))
 		return Fail("Assertion failed: The following turfs are not used by any blueprint recipe or in the blacklist: [unused_list]", __FILE__, __LINE__)
+
+/datum/unit_test/weapon_icons/Run()
+	for(var/obj/item/weapon/checked as anything in subtypesof(/obj/item/weapon))
+		if(IS_ABSTRACT(checked))
+			continue
+		if(checked == /obj/item/weapon/sword/rapier/dun_world_lord)
+			continue
+		checked = allocate(checked)
+		if(checked.icon_state && !icon_exists(checked.icon, checked.icon_state))
+			var/icon_file = "[checked.icon]" || "Unknown Generated Icon"
+			Fail("Invalid icon_state: Icon object '[icon_file]' [REF(checked.icon)] used in '[checked]' [checked.type] is missing icon state [checked.icon_state].", __FILE__, __LINE__)
 #endif
