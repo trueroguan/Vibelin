@@ -381,3 +381,9 @@
 	. = ..()
 	icon_state = "baldguy"
 	dir = SOUTH
+
+/obj/structure/fake_machine/stockpile/dun_world
+	SET_BASE_PIXEL(0, 0)
+
+/obj/structure/fake_machine/headeater/dun_world
+	SET_BASE_PIXEL(0, 0)
