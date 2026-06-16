@@ -14,7 +14,7 @@
 	actions_tab = new /datum/erp_sex_ui_tab/actions(src, "actions")
 	status_tab  = new /datum/erp_sex_ui_tab/status(src, "status")
 	editor_tab  = new /datum/erp_sex_ui_tab/editor(src, "editor")
-	kinks_tab   = new /datum/erp_sex_ui_tab/kinks(src, "kinks")
+	kinks_tab   = new /datum/erp_sex_ui_tab/kinks(src, "erp")
 
 /datum/erp_sex_ui/proc/build_payload(mob/living/current_actor)
 	actor = current_actor
@@ -25,14 +25,14 @@
 		"status"  = null,
 		"actions" = null,
 		"editor"  = null,
-		"kinks"   = null
+		"erp"     = null
 	)
 
 	switch(active_tab)
 		if("status")  tabs["status"]  = status_tab.build()
 		if("actions") tabs["actions"] = actions_tab.build()
 		if("editor")  tabs["editor"]  = editor_tab.build()
-		if("kinks")   tabs["kinks"]   = kinks_tab.build()
+		if("erp")     tabs["erp"]     = kinks_tab.build()
 
 	return list(
 		"actor_name" = "[actor]",
@@ -54,7 +54,7 @@
 /datum/erp_sex_ui/proc/handle_ui_intent(action, list/params)
 	switch(action)
 		if("set_tab")
-			var/static/list/valid_tabs = list("actions", "status", "editor", "kinks")
+			var/static/list/valid_tabs = list("actions", "status", "editor", "erp")
 			var/tab = params["tab"]
 			if(!(tab in valid_tabs))
 				return FALSE
@@ -103,7 +103,7 @@
 		if("actions") return actions_tab
 		if("status")  return status_tab
 		if("editor")  return editor_tab
-		if("kinks")   return kinks_tab
+		if("erp")     return kinks_tab
 	return null
 
 /datum/erp_sex_ui/ui_state(mob/user)

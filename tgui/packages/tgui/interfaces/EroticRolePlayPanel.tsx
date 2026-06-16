@@ -159,7 +159,7 @@ export type SexSessionData = {
 
   tabs?: {
     actions?: ActionsTabPayload;
-    kinks?: { entries?: KinkEntry[] };
+    erp?: { entries?: KinkEntry[] };
     status?: { entries?: StatusEntry[]; arousal?: number; arousal_data?: ArousalPayload | null };
     editor?: {
       templates?: EditorTemplateEntry[];
@@ -494,7 +494,7 @@ const TabsRow: React.FC<{ active: string; onSet: (tab: string) => void }> = ({ a
   const tabs = [
     { id: 'actions', name: 'ДЕЙСТВИЯ' },
     { id: 'status', name: 'СТАТУС' },
-    { id: 'kinks', name: 'ФЕТИШИ' },
+    { id: 'erp', name: 'ЭРП' },
     { id: 'editor', name: 'РЕДАКТОР' },
   ];
   return (
@@ -1951,7 +1951,7 @@ export const EroticRolePlayPanel: React.FC = () => {
   useEffect(() => {
     if (data.active_tab && data.active_tab !== activeTab) setActiveTab(data.active_tab);
   }, [data.active_tab]);
-  const kinkEntries = data.tabs?.kinks?.entries ?? [];
+  const kinkEntries = data.tabs?.erp?.entries ?? [];
   const [kinkLocal, setKinkLocal] = useState<Record<string, number>>({});
   useEffect(() => {
     const next: Record<string, number> = {};
@@ -2081,7 +2081,7 @@ export const EroticRolePlayPanel: React.FC = () => {
           <Stack.Item>
             {activeTab === 'actions' ? (
               <ActionsTab payload={actionsPayload} act={act} />
-            ) : activeTab === 'kinks' ? (
+            ) : activeTab === 'erp' ? (
               <Stack vertical>
                 <Stack.Item>
                   <Section title="Фетиши">

@@ -153,6 +153,7 @@
 #include "code\modules\erp_system\organs\_erp_sex_organ.dm"
 #include "code\modules\erp_system\organs\erp_liquid_storage.dm"
 #include "code\modules\erp_system\organs\erp_organ_inject_router.dm"
+#include "code\modules\erp_system\organs\erp_organ_fill.dm"
 #include "code\modules\erp_system\organs\erp_organ_prefs_service.dm"
 #include "code\modules\erp_system\organs\erp_organ_spill_policy.dm"
 #include "code\modules\erp_system\organs\types\anus.dm"

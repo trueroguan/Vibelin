@@ -103,6 +103,13 @@
 	if(storage.total_volume() <= 0)
 		return
 
+	var/mob/living/carbon/H = get_owner()
+	if(istype(H) && H.reagents && storage.reagents && storage.reagents.total_volume > 0)
+		var/absorb = min(storage.total_volume(), ERP_ORGAN_ABSORB_PER_DRAIN)
+		if(absorb > 0)
+			storage.reagents.trans_to(H, absorb, method = INJECT)
+			return
+
 	storage.drain(1)
 
 /datum/erp_sex_organ/proc/receive_reagents(datum/reagents/R, amount)

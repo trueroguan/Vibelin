@@ -24,18 +24,18 @@
 
 /proc/get_erp_moan_sound(mob/living/user)
 	var/static/list/feminine_moans = list(
-		'modular_abel/sound/misc/mat/sex_moans/mature_woman/SWFMoan159.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/mature_woman/SWFMoan164.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/mature_woman/SWFMoan171.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/mature_woman/SWFMoan178.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/mature_woman/SWFMoan182.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/mature_woman/SWFMoan159.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/mature_woman/SWFMoan164.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/mature_woman/SWFMoan171.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/mature_woman/SWFMoan178.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/mature_woman/SWFMoan182.ogg',
 	)
 	var/static/list/masculine_moans = list(
-		'modular_abel/sound/misc/mat/sex_moans/fem_man/SWFMoan210.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/fem_man/SWFMoan213.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/fem_man/SWFMoan216.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/fem_man/SWFMoan217.ogg',
-		'modular_abel/sound/misc/mat/sex_moans/fem_man/SWFMoan219.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/fem_man/SWFMoan210.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/fem_man/SWFMoan213.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/fem_man/SWFMoan216.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/fem_man/SWFMoan217.ogg',
+		'modular_abel/erp/sound/misc/mat/sex_moans/fem_man/SWFMoan219.ogg',
 	)
 	if(user?.gender == FEMALE)
 		return pick(feminine_moans)

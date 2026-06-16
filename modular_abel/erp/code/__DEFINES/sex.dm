@@ -131,20 +131,20 @@
 #define KNOTTED_AS_BTM 2
 
 #define SEX_SOUNDS_SLOW list(\
-	'modular_abel/sound/misc/mat/sex_clap/slow/SexSlap14.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/slow/SexSlap20.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/slow/SexSlap21.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/slow/SexSlap23.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/slow/SexSlap34.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/slow/SexSlap14.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/slow/SexSlap20.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/slow/SexSlap21.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/slow/SexSlap23.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/slow/SexSlap34.ogg',\
 	)
 
 #define SEX_SOUNDS_HARD list(\
-	'modular_abel/sound/misc/mat/sex_clap/hard/SexSmack17.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/hard/SexSmack18.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/hard/SexSmack20.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/hard/SexSmack21.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/hard/SexSmack24.ogg',\
-	'modular_abel/sound/misc/mat/sex_clap/hard/SexSmack26.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/hard/SexSmack17.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/hard/SexSmack18.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/hard/SexSmack20.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/hard/SexSmack21.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/hard/SexSmack24.ogg',\
+	'modular_abel/erp/sound/misc/mat/sex_clap/hard/SexSmack26.ogg',\
 	)
 
 #ifndef STATS_PLEASURES

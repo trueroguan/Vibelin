@@ -2,12 +2,12 @@
 
 This module owns the Azure Peak map import pipeline and the ERP/character menu
 content from PR #1. `modular_abel/_module.dm` is the single module entry point
-included from `vanderlin.dme`; it pulls in `__includes.dm` (ERP system) and the
+included from `vanderlin.dme`; it pulls in `erp/_erp.dm` (ERP system) and the
 Azure Peak support files.
 
 Layout:
 
-- `_module.dm` — single entry point: includes `__includes.dm` (ERP system),
+- `_module.dm` — single entry point: includes `erp/_erp.dm` (ERP system),
   `dun_world/_dun_world.dm` (the Azure Peak map import), and `upstream_fixes.dm`.
 - `dun_world/` — everything for the Azure Peak import in one place: the support
   `.dm` files (`areas`, `compat`, `furniture`, `items`, `jobs`, `mapgen`,
@@ -15,7 +15,10 @@ Layout:
   `dun_world/config/` (`map.json` replacement table, `maps_fragment.txt`) and
   `dun_world/icons/` (ported Azure sprites). `dun_world/_dun_world.dm` is the
   sub-include list.
-- `code/` — the ERP system tree (included via `__includes.dm`).
+- `erp/` — everything for the ERP system in one place: `erp/_erp.dm` (the
+  include list), `erp/code/` (the ERP/sexcon/organ/sprite-accessory sources),
+  `erp/icons/` and `erp/sound/` (ERP assets), and `erp/_parked_twilight/`
+  (unported Twilight reference material).
 - `tools/` — map generation and QA scripts.
 
 - Source map: `Azure-Peak/Azure-Peak:_maps/map_files/dun_world/dun_world.dmm`

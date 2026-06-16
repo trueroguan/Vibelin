@@ -230,19 +230,19 @@
 	switch(climax_type)
 		if("outside", "onto")
 			log_combat(climaxer, partner, "Came onto [partner]")
-			playsound(climaxer, 'modular_abel/sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
+			playsound(climaxer, 'modular_abel/erp/sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
 			if(partner)
-				playsound(partner, 'modular_abel/sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
+				playsound(partner, 'modular_abel/erp/sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
 				new /obj/effect/decal/cleanable/coom(get_turf(partner))
 		if("inside", "into")
 			log_combat(climaxer, partner, "Came inside [partner]")
-			playsound(climaxer, 'modular_abel/sound/misc/mat/endin.ogg', 50, TRUE, ignore_walls = FALSE)
+			playsound(climaxer, 'modular_abel/erp/sound/misc/mat/endin.ogg', 50, TRUE, ignore_walls = FALSE)
 			if(partner)
-				playsound(partner, 'modular_abel/sound/misc/mat/endin.ogg', 50, TRUE, ignore_walls = FALSE)
+				playsound(partner, 'modular_abel/erp/sound/misc/mat/endin.ogg', 50, TRUE, ignore_walls = FALSE)
 		else
 			log_combat(climaxer, climaxer, "Ejaculated")
 			climaxer.visible_message(span_love("[climaxer] makes a mess!"))
-			playsound(climaxer, 'modular_abel/sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
+			playsound(climaxer, 'modular_abel/erp/sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
 			new /obj/effect/decal/cleanable/coom(get_turf(climaxer))
 
 /datum/component/arousal/proc/after_ejaculation(mob/living/carbon/human/climaxer, mob/living/carbon/human/partner)
@@ -251,7 +251,7 @@
 	charge = max(0, charge - CHARGE_FOR_CLIMAX)
 	climaxer.emote("moan", forced = TRUE)
 	if(climaxer.client)
-		climaxer.playsound_local(climaxer, 'modular_abel/sound/misc/mat/end.ogg', 100)
+		climaxer.playsound_local(climaxer, 'modular_abel/erp/sound/misc/mat/end.ogg', 100)
 
 /datum/component/arousal/proc/try_do_moan(arousal_amt, pain_amt, applied_force, giving)
 	var/mob/user = parent

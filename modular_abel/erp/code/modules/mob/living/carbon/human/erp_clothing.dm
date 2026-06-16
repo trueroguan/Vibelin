@@ -49,6 +49,7 @@
 
 /mob/living/carbon/human/proc/erp_register_clothing_signals()
 	RegisterSignal(src, COMSIG_ATOM_ATTACK_HAND, PROC_REF(erp_on_attack_hand), override = TRUE)
+	RegisterSignal(src, COMSIG_ATOM_ATTACKBY, PROC_REF(erp_on_attackby), override = TRUE)
 	RegisterSignal(src, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(erp_on_clothing_changed), override = TRUE)
 	RegisterSignal(src, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(erp_on_clothing_changed), override = TRUE)
 
