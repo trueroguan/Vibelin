@@ -4,6 +4,7 @@
 #include "furniture.dm"
 #include "items.dm"
 #include "jobs.dm"
+#include "keys.dm"
 #include "map_adjustment.dm"
 #include "map_rotation.dm"
 #include "mapgen.dm"
