@@ -140,7 +140,11 @@
 	data["loadouts"] = loadout_slots
 	data["triumphs"] = triumphs
 	data["special_role"] = next_special_trait ? "[next_special_trait]" : "None"
-	data["player_quality"] = user?.ckey ? get_playerquality(user.ckey, text = TRUE) : "Unknown"
+	var/pq_raw = user?.ckey ? get_playerquality(user.ckey, text = TRUE) : "Unknown"
+	var/regex/pq_tags = new(@"<[^>]*>", "g")
+	var/regex/pq_color = new(@"color:\s*(#[0-9a-fA-F]+)")
+	data["player_quality"] = pq_tags.Replace(pq_raw, "")
+	data["player_quality_color"] = pq_color.Find(pq_raw) ? pq_color.group[1] : null
 
 	data["game_prefs"] = list(
 		"hotkeys" = !!hotkeys,

@@ -25,18 +25,26 @@
 	taste_description = "salty"
 	reagent_state = LIQUID
 	color = "#ebebeb"
+	metabolizing = TRUE
 
 /datum/reagent/erpjuice/cum
-	name = "Erotic Fluid"
-	description = "A thick, sticky, cream-like fluid produced during orgasm."
+	name = "Semen"
+	description = "A thick, sticky, cream-like fluid spilled during a male orgasm."
 	color = "#ebebeb"
 	taste_description = "salty and tangy"
+
+/datum/reagent/erpjuice/femcum
+	name = "Feminine Fluid"
+	description = "A warm, slick fluid that flows freely during a female orgasm."
+	color = "#f1e7ec"
+	taste_description = "tangy and faintly sweet"
 
 /datum/reagent/erpjuice/lube
 	name = "Lubricant"
 	description = "A slick, translucent fluid that helps things go smoothly."
 	color = "#e6f0ff"
 	taste_description = "slippery"
+	metabolization_rate = 0.05
 
 /datum/reagent/consumable/milk/erp
 	name = "Breast Milk"
@@ -44,6 +52,8 @@
 	color = "#eee4e4"
 	taste_description = "sweet and tart"
 	nutriment_factor = 0
+	metabolizing = TRUE
+	metabolization_rate = 0.1
 
 #define ERP_COATING_DRY_AFTER (4 MINUTES)
 

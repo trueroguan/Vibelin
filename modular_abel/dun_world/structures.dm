@@ -347,6 +347,8 @@
 	desc = "A large wooden notice board, carrying postings from all across the realm. A perch sits atop it."
 	icon = 'modular_abel/dun_world/icons/noticeboard64.dmi'
 	icon_state = "noticeboard0"
+	layer = ABOVE_MOB_LAYER
+	plane = GAME_PLANE_UPPER
 
 /obj/structure/noticeboard/dun_world/Initialize(mapload)
 	. = ..()

@@ -17,6 +17,12 @@
 	host = V.owner
 	can_be_pregnant = V.fertility
 	storage = new(VAGINA_MAX_UNITS, src)
+	producing = new(VAGINA_MAX_UNITS, src)
+	producing.producing_reagent = /datum/reagent/erpjuice/femcum
+	producing.production_rate = 0.5
+
+/datum/erp_sex_organ/vagina/get_production_mult()
+	return 1
 
 /datum/erp_sex_organ/vagina/proc/on_climax(mob/living/carbon/human/father, arousal, knot_bonus = 0)
 	if(pregnant || !can_be_pregnant || !father)

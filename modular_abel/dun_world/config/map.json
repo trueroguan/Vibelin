@@ -1619,7 +1619,7 @@
 		"/turf/open/floor/rogue/carpet/lord/center/no_teleport": "/turf/open/floor/carpet/lord/center",
 		"/turf/open/floor/rogue/carpet/lord/left": "/turf/open/floor/carpet/lord/left",
 		"/turf/open/floor/rogue/carpet/lord/right": "/turf/open/floor/carpet/lord/right",
-		"/turf/open/floor/rogue/church": "/turf/open/floor/church",
+		"/turf/open/floor/rogue/church": "/turf/open/floor/church/dun_world",
 		"/turf/open/floor/rogue/churchbrick": "/turf/open/floor/churchbrick",
 		"/turf/open/floor/rogue/churchmarble": "/turf/open/floor/churchmarble",
 		"/turf/open/floor/rogue/churchrough": "/turf/open/floor/churchrough/dun_world",

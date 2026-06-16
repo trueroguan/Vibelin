@@ -1,6 +1,8 @@
 /turf/open/floor/cobblerock/dun_world
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
 
 /turf/open/floor/cobble/dun_world
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
 
 /turf/open/floor/cobble/mossy/dun_world
 
@@ -11,6 +13,10 @@
 /turf/open/floor/churchrough/dun_world
 	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
 	icon_state = "church_rough"
+
+/turf/open/floor/church/dun_world
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
+	icon_state = "church"
 
 /obj/effect/decal/cobbleedge/dun_world
 	icon = null

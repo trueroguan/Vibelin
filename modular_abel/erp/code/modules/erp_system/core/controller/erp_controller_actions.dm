@@ -90,7 +90,7 @@
 	if(A.required_target_organ && target.erp_organ_type != A.required_target_organ)
 		return "Нужна другая цель."
 
-	if(!ctx.has_passive_grab && !in_shared_closet)
+	if(!in_shared_closet)
 		var/it = init.erp_organ_type
 		if(!(it in ctx.self_access))
 			ctx.self_access[it] = controller.owner.is_organ_accessible_for(controller.owner, it, FALSE)

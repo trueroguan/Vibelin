@@ -86,6 +86,7 @@ type PrefsData = {
   triumphs: number;
   special_role: string;
   player_quality: string;
+  player_quality_color: string | null;
   game_prefs: {
     hotkeys: Booleanish;
     buttons_locked: Booleanish;
@@ -201,10 +202,11 @@ type InfoRowProps = {
   label: string;
   value?: unknown;
   swatch?: string;
+  valueColor?: string;
 };
 
 const InfoRow = (props: InfoRowProps) => {
-  const { icon, label, value, swatch } = props;
+  const { icon, label, value, swatch, valueColor } = props;
   return (
     <Box mb={0.5} p={0.5}>
       <Stack align="center">
@@ -220,7 +222,9 @@ const InfoRow = (props: InfoRowProps) => {
           </Stack.Item>
         ) : null}
         <Stack.Item>
-          <Box bold>{display(value)}</Box>
+          <Box bold color={valueColor}>
+            {display(value)}
+          </Box>
         </Stack.Item>
       </Stack>
     </Box>
@@ -342,7 +346,7 @@ export const PreferencesMenu = () => {
         <PrefRow icon="star" label="Patron" value={data.patron_name} onClick={() => doPref('patron', 'input')} />
         <PrefRow icon="asterisk" label="Faith" value={data.faith_name} onClick={() => doPref('faith', 'input')} />
         <PrefRow icon="briefcase" label="Class" value={data.high_job} onClick={() => doPref('job', 'menu')} />
-        <InfoRow icon="award" label="Player Quality" value={data.player_quality} />
+        <InfoRow icon="award" label="Player Quality" value={data.player_quality} valueColor={data.player_quality_color || undefined} />
       </Panel>
 
       <Panel title="Portrait" icon="image">
