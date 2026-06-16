@@ -42,11 +42,14 @@
 		count_to_action = 1
 		return
 
+	have_knot = FALSE
 	switch(P.penis_type)
 		if(PENIS_TYPE_KNOTTED, PENIS_TYPE_TAPERED_DOUBLE_KNOTTED, PENIS_TYPE_BARBED_KNOTTED, PENIS_TYPE_TAPERED_KNOTTED, PENIS_TYPE_EQUINE_KNOTTED)
 			have_knot = TRUE
-		else
-			have_knot = FALSE
+	if(!have_knot && P.accessory_type)
+		var/datum/sprite_accessory/penis/SA = SPRITE_ACCESSORY(P.accessory_type)
+		if(istype(SA) && SA.erp_has_knot)
+			have_knot = TRUE
 
 	var/datum/component/erp_knotting/K = H.GetComponent(/datum/component/erp_knotting)
 	if(have_knot)
@@ -137,6 +140,10 @@
 	else
 		var/datum/erp_sex_organ/penis/SP = sex_organ
 		SP.refresh_from_organ(src)
+
+/obj/item/organ/penis/set_accessory_type(new_accessory_type, colors)
+	. = ..()
+	refresh_sex_organ()
 
 /obj/item/organ/penis/proc/set_manual_erect_state(state)
 	manual_erection_override = TRUE

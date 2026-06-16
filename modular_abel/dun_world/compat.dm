@@ -4,6 +4,14 @@
 
 /turf/open/floor/cobble/mossy/dun_world
 
+/turf/open/floor/hexstone/dun_world
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
+	icon_state = "hexstone"
+
+/turf/open/floor/churchrough/dun_world
+	icon = 'modular_abel/dun_world/icons/roguefloor.dmi'
+	icon_state = "church_rough"
+
 /obj/effect/decal/cobbleedge/dun_world
 	icon = null
 	icon_state = null
@@ -418,3 +426,8 @@
 		return
 
 	forceMove(pick(possible_turfs))
+
+/obj/effect/landmark/start/lord/Initialize(mapload)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		GLOB.latejoin_landmarks |= src

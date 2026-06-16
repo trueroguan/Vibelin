@@ -50,7 +50,7 @@ export async function prepareDunWorldMap() {
   const config = readConfig();
   const replacements = config.replacements || {};
   await generateMap({
-    name: 'Dun World',
+    name: 'Azure Peak',
     source: config.source,
     outputPath: config.output?.path || DUN_WORLD_GENERATED_MAP,
     replacements,

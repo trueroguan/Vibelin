@@ -635,7 +635,7 @@
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "cr" = (
-/obj/structure/notice_board{
+/obj/structure/fluff/walldeco/wantedposter/dun_world_excidium{
 	color = "#F75D59"
 	},
 /turf/open/floor/dirt,
@@ -1085,7 +1085,7 @@
 /area/rogue/indoors/vampire_manor)
 "ep" = (
 /obj/structure/vampire/portalmaker,
-/turf/open/floor/hexstone,
+/turf/open/floor/hexstone/dun_world,
 /area/rogue/indoors/vampire_manor)
 "eq" = (
 /turf/open/floor/blocks,
@@ -2365,7 +2365,7 @@
 	name = "Ancient Statue";
 	pixel_y = 0
 	},
-/turf/open/floor/hexstone,
+/turf/open/floor/hexstone/dun_world,
 /area/rogue/indoors/vampire_manor)
 "jL" = (
 /obj/structure/table/wood/fancy/purple,
@@ -5119,7 +5119,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/vampire_lair)
 "tT" = (
-/turf/open/floor/hexstone,
+/turf/open/floor/hexstone/dun_world,
 /area/rogue/indoors/eventarea/multiz)
 "tV" = (
 /turf/closed/wall/mineral/stone/moss,
@@ -5984,7 +5984,7 @@
 /turf/open/floor/concrete,
 /area/rogue/indoors/vampire_manor)
 "xL" = (
-/turf/open/floor/hexstone,
+/turf/open/floor/hexstone/dun_world,
 /area/rogue/indoors/vampire_manor)
 "xM" = (
 /obj/structure/flora/grass/herb/matricaria,
@@ -6469,7 +6469,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
 "zX" = (
-/obj/structure/notice_board{
+/obj/structure/fluff/walldeco/wantedposter/dun_world_excidium{
 	color = "#F75D59"
 	},
 /turf/open/floor/concrete,
@@ -11319,7 +11319,7 @@
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "TN" = (
-/obj/structure/notice_board,
+/obj/structure/fluff/walldeco/wantedposter/dun_world_excidium,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "TO" = (

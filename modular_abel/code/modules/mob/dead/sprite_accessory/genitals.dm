@@ -4,6 +4,7 @@
 	color_key_names = list("Member", "Skin")
 	relevant_layers = list(BODY_BEHIND_LAYER, BODY_FRONT_LAYER)
 	var/has_erect_states = TRUE
+	var/erp_has_knot = FALSE
 
 /datum/sprite_accessory/penis/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
@@ -38,6 +39,7 @@
 	name = "Knotted"
 	color_key_defaults = list(null, KEY_CHEST_COLOR)
 	default_colors = list("C52828", null)
+	erp_has_knot = TRUE
 
 /datum/sprite_accessory/penis/flared
 	icon_state = "flared"
@@ -48,18 +50,21 @@
 	icon_state = "flared"
 	name = "Flared, Knotted"
 	color_key_defaults = list(KEY_CHEST_COLOR, KEY_CHEST_COLOR)
+	erp_has_knot = TRUE
 
 /datum/sprite_accessory/penis/barbknot
 	icon_state = "barbknot"
 	name = "Barbed, Knotted"
 	color_key_defaults = list(null, KEY_CHEST_COLOR)
 	default_colors = list("C52828", null)
+	erp_has_knot = TRUE
 
 /datum/sprite_accessory/penis/tapered_knot
 	icon_state = "knotted2"
 	name = "Tapered, Knotted"
 	default_colors = list("C52828", "C52828")
 	has_erect_states = FALSE
+	erp_has_knot = TRUE
 
 /datum/sprite_accessory/penis/tapered
 	icon_state = "tapered"
@@ -86,6 +91,7 @@
 	icon_state = "hemiknot"
 	name = "Knotted Hemi"
 	default_colors = list("C52828", "C52828")
+	erp_has_knot = TRUE
 
 /datum/sprite_accessory/testicles
 	icon = 'modular_abel/icons/mob/sprite_accessory/genitals/gonads.dmi'

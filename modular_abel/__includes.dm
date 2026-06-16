@@ -7,6 +7,7 @@
 #include "code\modules\client\customizer\customizers\organ\genitals.dm"
 #include "code\modules\client\customizer\customizers\organ\genitals_registration.dm"
 #include "code\modules\sexcon\arousal.dm"
+#include "code\modules\sexcon\moan_emotes.dm"
 #include "code\modules\mob\living\carbon\human\erp_anatomy.dm"
 #include "code\modules\mob\living\carbon\human\erp_consent.dm"
 #include "code\modules\mob\living\carbon\human\erp_clothing.dm"

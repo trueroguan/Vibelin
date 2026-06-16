@@ -59,6 +59,15 @@
 			return TRUE
 	return FALSE
 
+/mob/living/carbon/human/generate_icon_render_key()
+	. = ..()
+	if(!erp_has_visible_genitals())
+		return
+	var/groin_open = get_location_accessible(src, BODY_ZONE_PRECISE_GROIN) ? 1 : 0
+	var/chest_open = get_location_accessible(src, BODY_ZONE_CHEST) ? 1 : 0
+	var/undies_on = (underwear && underwear != "Nude") ? 1 : 0
+	return "[.]-erp[undies_on][groin_open][chest_open]"
+
 /mob/living/carbon/human/proc/erp_on_clothing_changed(datum/source, obj/item/equipped_item)
 	SIGNAL_HANDLER
 	if(!istype(equipped_item, /obj/item/clothing))

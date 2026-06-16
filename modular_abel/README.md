@@ -1,15 +1,15 @@
 # modular_abel
 
-This module owns the Dun World map import pipeline and the ERP/character menu
+This module owns the Azure Peak map import pipeline and the ERP/character menu
 content from PR #1. `modular_abel/_module.dm` is the single module entry point
 included from `vanderlin.dme`; it pulls in `__includes.dm` (ERP system) and the
-Dun World support files.
+Azure Peak support files.
 
 Layout:
 
 - `_module.dm` — single entry point: includes `__includes.dm` (ERP system),
-  `dun_world/_dun_world.dm` (the Dun World map import), and `upstream_fixes.dm`.
-- `dun_world/` — everything for the Dun World import in one place: the support
+  `dun_world/_dun_world.dm` (the Azure Peak map import), and `upstream_fixes.dm`.
+- `dun_world/` — everything for the Azure Peak import in one place: the support
   `.dm` files (`areas`, `compat`, `furniture`, `items`, `jobs`, `mapgen`,
   `mobs`, `structures`, `map_adjustment`, `map_rotation`, `force_load`), plus
   `dun_world/config/` (`map.json` replacement table, `maps_fragment.txt`) and
@@ -50,10 +50,10 @@ DME injection.
 
 `_maps/dun_world.json` is the downstream map config for the generated map. It is
 now part of the upstream CI map matrix (no `exclude_from_ci`), so Integration
-Tests boot the Dun World map on every push.
+Tests boot the Azure Peak map on every push.
 
 Map rotation is integrated through `modular_abel/map_rotation.dm`, which
-registers Dun World in `global.config.maplist` at startup without editing
+registers Azure Peak in `global.config.maplist` at startup without editing
 `config/maps.txt`. `modular_abel/dun_world/config/maps_fragment.txt` is also appended to
 the generated runtime config overlay for launch paths that rely on
 `config-directory=tmp/modular_abel/config`. Targets `dm`, `build`, and `server`
@@ -102,7 +102,7 @@ table can target faithful types instead of broad parents (sprites under
   fireplace with our warmth mechanics).
 
 `modular_abel/dun_world/force_load.dm` is a TEMPORARY test-period override of
-`SSmapping/PreInit()` that forces the Dun World map to load. It is guarded off
+`SSmapping/PreInit()` that forces the Azure Peak map to load. It is guarded off
 under unit tests, low-memory mode, and random worldgen. **Delete this file and
 its `dun_world/_dun_world.dm` include before release.**
 
@@ -151,7 +151,7 @@ TODO:
   `/obj/effect/landmark/start/<job>` on the generated map fall through to the
   last-resort spawn (often a wretch landmark). Audit the job roster against the
   remapped landmark set and either add landmark remap rules or curate the job
-  roster for Dun World.
+  roster for Azure Peak.
 - `/turf/closed/mineral/rogue/bedrock` resolves to Vanderlin's
   `/turf/closed/mineral/bedrock`; if the Azure rocky look matters, port the
   `rockyashbed` sprite to a dedicated dun_world subtype.

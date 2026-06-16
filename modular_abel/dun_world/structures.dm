@@ -341,3 +341,41 @@
 	name = "Heartroot tree"
 	desc = "No one knows why, but these trees seem nigh indestructible. You feel uneasy looking at this monstrosity of roots and bark."
 	icon_state = "tree"
+
+/obj/structure/noticeboard/dun_world
+	name = "notice board"
+	desc = "A large wooden notice board, carrying postings from all across the realm. A perch sits atop it."
+	icon = 'modular_abel/dun_world/icons/noticeboard64.dmi'
+	icon_state = "noticeboard0"
+
+/obj/structure/noticeboard/dun_world/Initialize(mapload)
+	. = ..()
+	dun_world_refresh_icon()
+
+/obj/structure/noticeboard/dun_world/attackby(obj/item/O, mob/user, list/modifiers)
+	. = ..()
+	dun_world_refresh_icon()
+
+/obj/structure/noticeboard/dun_world/Topic(href, href_list)
+	. = ..()
+	dun_world_refresh_icon()
+
+/obj/structure/noticeboard/dun_world/proc/dun_world_refresh_icon()
+	icon_state = "noticeboard[clamp(notices, 0, 3)]"
+
+/obj/structure/noticeboard/dun_world/wall
+	icon = 'modular_abel/dun_world/icons/noticeboard32.dmi'
+
+/obj/structure/fluff/walldeco/wantedposter/dun_world_excidium
+	name = "Excidium"
+	desc = "A device hungering for the flesh and souls of the wicked. While favored by Astratan orders and tolerated by Ravoxian sects, it is seen as nothing more than a barbaric implement by anyone else. This one allows one to meditate upon those who need to be brought to justice."
+	icon = 'modular_abel/dun_world/icons/statue1.dmi'
+	icon_state = "baldguy"
+	layer = ABOVE_MOB_LAYER
+	plane = GAME_PLANE_UPPER
+	SET_BASE_PIXEL(0, 0)
+
+/obj/structure/fluff/walldeco/wantedposter/dun_world_excidium/Initialize()
+	. = ..()
+	icon_state = "baldguy"
+	dir = SOUTH
