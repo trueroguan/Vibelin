@@ -81,6 +81,8 @@
 		/turf/open/floor/cobble/dun_world,
 		/turf/open/floor/cobble/mossy/dun_world,
 		/turf/open/floor/cobblerock/dun_world,
+		/turf/open/floor/hexstone/dun_world,
+		/turf/open/floor/churchrough/dun_world,
 	) \
 	+ typesof(/turf/open/floor/mushroom) \
 	+ typesof(/turf/open/floor/sandstone_tile) \

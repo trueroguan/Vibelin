@@ -52,6 +52,21 @@
 		list("task" = "fertile", "label" = "Fertility", "kind" = "text", "value" = vagina_entry.fertility ? "Fertile" : "Sterile"),
 	)
 
+/datum/customizer_choice/proc/abel_is_erp()
+	return FALSE
+
+/datum/customizer_choice/organ/penis/abel_is_erp()
+	return TRUE
+
+/datum/customizer_choice/organ/testicles/abel_is_erp()
+	return TRUE
+
+/datum/customizer_choice/organ/breasts/abel_is_erp()
+	return TRUE
+
+/datum/customizer_choice/organ/vagina/abel_is_erp()
+	return TRUE
+
 /datum/preferences/proc/abel_build_features_data()
 	var/list/features = list()
 	if(!pref_species)
@@ -76,6 +91,7 @@
 			"can_disable" = customizer.allows_disabling,
 			"choice_name" = choice.name,
 			"choice_value" = "[entry.customizer_choice_type]",
+			"erp" = choice.abel_is_erp() ? TRUE : FALSE,
 		)
 
 		if(length(customizer.customizer_choices) > 1)

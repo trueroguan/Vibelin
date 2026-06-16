@@ -204,6 +204,7 @@
 	desc = "A kingly crown, heavy with authority. Or perhaps a clever counterfeit, light as a lie."
 	icon_state = "serpcrown"
 	sellprice = 5
+	misc_flags = CRAFTING_TEST_EXCLUDE
 
 /obj/item/weapon/sword/rapier/dun_world_lord
 	name = "sword of the Mad Duke"

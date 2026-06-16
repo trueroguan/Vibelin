@@ -50,6 +50,7 @@ type FeatureEntry = {
   accessory_options?: FeatureOption[];
   colors?: FeatureColor[];
   extras?: FeatureExtra[];
+  erp?: Booleanish;
 };
 
 type PrefsData = {
@@ -108,6 +109,7 @@ const tabs = [
   { id: 'body', label: 'Body', icon: 'male' },
   { id: 'appearance', label: 'Appearance', icon: 'palette' },
   { id: 'features', label: 'Features', icon: 'user-edit' },
+  { id: 'erp', label: 'ERP', icon: 'heart' },
   { id: 'lore', label: 'Lore', icon: 'book' },
   { id: 'gameplay', label: 'Gameplay', icon: 'gamepad' },
   { id: 'game', label: 'Game Prefs', icon: 'sliders-h' },
@@ -393,6 +395,7 @@ export const PreferencesMenu = () => {
     <Columns>
       <Panel title="Appearance" icon="palette">
         <PrefRow icon="sliders-h" label="Features" value="Customize" onClick={() => selectTab('features')} />
+        <PrefRow icon="heart" label="ERP" value="Customize" onClick={() => selectTab('erp')} />
         <PrefRow icon="image" label="Headshot" value={data.headshot ? 'Set' : 'None'} onClick={() => doPref('headshot', 'input')} />
         <PrefRow icon="dice" label="Randomise" value="Appearance" onClick={() => doPref('randomiseappearanceprefs')} />
       </Panel>
@@ -565,12 +568,11 @@ export const PreferencesMenu = () => {
     );
   };
 
-  const renderFeatures = () => {
-    const features = data.features || [];
+  const renderFeatureColumns = (features: FeatureEntry[], emptyLabel: string) => {
     if (!features.length) {
       return (
         <Section>
-          <Box color="label">No customization available for this species.</Box>
+          <Box color="label">{emptyLabel}</Box>
         </Section>
       );
     }
@@ -587,6 +589,30 @@ export const PreferencesMenu = () => {
       </Stack>
     );
   };
+
+  const renderFeatures = () =>
+    renderFeatureColumns(
+      (data.features || []).filter((feature) => !asBool(feature.erp)),
+      'No customization available for this species.',
+    );
+
+  const renderErp = () => (
+    <>
+      <Section>
+        <PrefRow
+          icon="heart"
+          label="Intimacy Opt-in (ERP)"
+          value={erpEnabled ? 'ON' : 'OFF'}
+          selected={erpEnabled}
+          onClick={() => doPref('abel_erp_toggle')}
+        />
+      </Section>
+      {renderFeatureColumns(
+        (data.features || []).filter((feature) => asBool(feature.erp)),
+        'No intimate customization available for this species.',
+      )}
+    </>
+  );
 
   const renderLore = () => (
     <Columns>
@@ -713,6 +739,8 @@ export const PreferencesMenu = () => {
         return renderAppearance();
       case 'features':
         return renderFeatures();
+      case 'erp':
+        return renderErp();
       case 'lore':
         return renderLore();
       case 'gameplay':
