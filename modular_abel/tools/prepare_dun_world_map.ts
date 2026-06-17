@@ -387,6 +387,24 @@ function isInsideMultilineString(varLines: string[]): boolean {
   return opens > closes;
 }
 
+function normalizeDunWorldLockid(lockid: string): string {
+  if (/^manor_knight/.test(lockid) || /^guest_knight/.test(lockid) || lockid === 'knight') return 'at_arms';
+  if (/^squire_room/.test(lockid)) return 'at_arms';
+  if (lockid === 'captain_bedroom' || lockid === 'sergeant' || lockid === 'armory') return 'garrison';
+  if (/^manor_councillor/.test(lockid) || /^servant_room/.test(lockid)) return 'manor';
+  if (lockid === 'heir' || lockid === 'heir1' || lockid === 'heir2' || lockid === 'royal' || lockid === 'baroness') return 'manor';
+  if (/^church_bedroom/.test(lockid) || lockid === 'zhurch') return 'church';
+  if (/^merc_bunk/.test(lockid) || lockid === 'merc') return 'mercenary';
+  if (lockid === 'bath1' || lockid === 'bath2' || lockid === 'bath3') return 'bathhouse';
+  if (lockid === 'crafterguild' || lockid === 'craftermaster' || lockid === 'townie_smith_extra') return 'artificer';
+  if (lockid === 'towner_blacksmith') return 'blacksmith';
+  if (/^stable_master/.test(lockid) || lockid === 'stablemaster' || lockid === 'keeper' || lockid === 'keeper2' || lockid === 'farm') return 'soilson';
+  if (/^stall/.test(lockid) || lockid === 'shop') return 'merchant';
+  if (lockid === 'warden') return 'dungeon';
+  if (/^room/.test(lockid) || /^fancy/.test(lockid) || /^locker/.test(lockid)) return 'tavern';
+  return lockid;
+}
+
 function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
   const hasClosedTurf = entries.some(
     (entry) =>
@@ -422,7 +440,7 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
 
       const lockidMatch = varText.match(/^lockid\s*=\s*"([^"]+)"$/);
       if (lockidMatch) {
-        return [[`\tlockids = list("${lockidMatch[1]}")`]];
+        return [[`\tlockids = list("${normalizeDunWorldLockid(lockidMatch[1])}")`]];
       }
 
       const lockedMatch = varText.match(/^locked\s*=\s*([01])$/);
