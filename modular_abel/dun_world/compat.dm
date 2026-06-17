@@ -437,3 +437,8 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		GLOB.latejoin_landmarks |= src
+
+/datum/job/lord/New()
+	. = ..()
+	if(SSmapping.config?.monarch_title)
+		ruler_title = SSmapping.config.monarch_title

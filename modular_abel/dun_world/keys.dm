@@ -50,3 +50,53 @@
 /datum/job/mercenary/dun_world_veteran/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
 	dun_world_grant_keys(spawned, list("merc", "merc_bunk_i", "merc_bunk_ii", "merc_bunk_iii", "merc_bunk_iv", "merc_bunk_v", "merc_bunk_vi", "merc_bunk_vii", "merc_bunk_viii"))
+
+/datum/job/lord/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list(ACCESS_LORD))
+
+/datum/job/consort/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("baroness", "royal", "heir", "manor", "walls"))
+
+/datum/job/prince/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("heir", "heir1", "heir2", "royal", "manor", "walls"))
+
+/datum/job/steward/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("steward", "manor", "vault", "walls"))
+
+/datum/job/hand/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("hand", "manor", "steward", "walls", "garrison"))
+
+/datum/job/captain/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("captain_bedroom", "garrison", "armory", "sergeant", "dungeon", "walls", "manor"))
+
+/datum/job/guardsman/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("garrison", "walls", "armory", "sergeant"))
+
+/datum/job/squire/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("squire_room_one", "squire_room_two", "squire_room_three", "squire_room_four", "manor", "walls"))
+
+/datum/job/priest/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("church", "priest", "zhurch", "graveyard"))
+
+/datum/job/monk/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("church", "priest", "zhurch"))

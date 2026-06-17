@@ -238,7 +238,7 @@ WIKIURL https://wiki.monkestation.com/en/vanderlin
 RULESURL https://wiki.monkestation.com/en/vanderlin/rules
 
 ## Github address
-GITHUBURL https://github.com/Monkestation/Vanderlin
+GITHUBURL https://github.com/PatapoIIIkaForAll/Vanderlin
 
 ## Round specific stats address
 ## Link to round specific parsed logs; IE statbus. It is appended with the RoundID automatically by ticker/Reboot()
@@ -252,7 +252,7 @@ GITHUBURL https://github.com/Monkestation/Vanderlin
 # GAMELOGURL
 
 ## Ban appeals URL - usually for a forum or wherever people should go to contact your admins.
-BANAPPEALS https://discord.monkestation.com
+BANAPPEALS https://discord.gg/MVAcYJemaX
 
 ## System command that invokes youtube-dl, used by Play Internet Sound.
 ## You can install youtube-dl with
