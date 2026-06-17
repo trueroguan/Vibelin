@@ -1507,7 +1507,7 @@
 		"/obj/structure/table/cooling": "/obj/structure/table/wood/dun_world/cooling",
 		"/obj/structure/table/finestone": "/obj/structure/table/stone_small",
 		"/obj/structure/table/wood/large_table": "/obj/structure/table/wood/large/corner/dun_world",
-		"/obj/structure/table/wood/large_table/middle": "/obj/structure/table/wood/large/dun_world/east",
+		"/obj/structure/table/wood/large_table/middle": "/obj/structure/table/wood/large/dun_world",
 		"/obj/structure/table/wood/large_table/middle_east": "/obj/structure/table/wood/large/dun_world/east",
 		"/obj/structure/table/wood/large_table/middle_west": "/obj/structure/table/wood/large/dun_world/west",
 		"/obj/structure/table/wood/large_table/north": "/obj/structure/table/wood/large/dun_world/north",

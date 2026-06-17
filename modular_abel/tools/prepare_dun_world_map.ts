@@ -425,6 +425,7 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
 
     const isTurf = entry.path.startsWith('/turf/');
     const isDoor = entry.path.startsWith('/obj/structure/door');
+    const isDeadbolt = entry.path.includes('deadbolt');
 
     let lockidValue: string | null = null;
     for (const varLines of entry.vars) {
@@ -440,12 +441,18 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
 
       const lockidMatch = varText.match(/^lockid\s*=\s*"([^"]+)"$/);
       if (lockidMatch) {
+        if (isDeadbolt) {
+          return [];
+        }
         return [[`\tlockids = list("${normalizeDunWorldLockid(lockidMatch[1])}")`]];
       }
 
       const lockedMatch = varText.match(/^locked\s*=\s*([01])$/);
       if (lockedMatch) {
         if (lockedMatch[1] !== '1') {
+          return [];
+        }
+        if (isDeadbolt) {
           return [];
         }
         const lockPath =

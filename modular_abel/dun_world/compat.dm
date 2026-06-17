@@ -134,12 +134,15 @@
 	dir = SOUTH
 
 /obj/structure/table/wood/large/dun_world/north
+	icon_state = "largetable"
 	dir = NORTH
 
 /obj/structure/table/wood/large/dun_world/east
+	icon_state = "largetable"
 	dir = EAST
 
 /obj/structure/table/wood/large/dun_world/west
+	icon_state = "largetable"
 	dir = WEST
 
 /obj/structure/table/wood/large/corner/dun_world
@@ -447,3 +450,10 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		jobs_to_spawn -= ROLE_WRETCH
+
+/datum/controller/subsystem/job/get_last_resort_spawn_points()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		var/obj/effect/landmark/start/outsider/fallback = locate(/obj/effect/landmark/start/outsider) in GLOB.latejoin_landmarks
+		if(fallback)
+			return fallback
+	return ..()
