@@ -442,3 +442,8 @@
 	. = ..()
 	if(SSmapping.config?.monarch_title)
 		ruler_title = SSmapping.config.monarch_title
+
+/obj/effect/landmark/start/outsider/Initialize(mapload)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		jobs_to_spawn -= ROLE_WRETCH
