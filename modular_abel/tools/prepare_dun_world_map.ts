@@ -488,7 +488,8 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
 
     const isTurf = entry.path.startsWith('/turf/');
     const isDoor = entry.path.startsWith('/obj/structure/door');
-    const isDeadbolt = entry.path.includes('deadbolt');
+    const isDeadbolt =
+      entry.path.includes('deadbolt') || entry.path.includes('/weak/bolt');
 
     let lockidValue: string | null = null;
     for (const varLines of entry.vars) {

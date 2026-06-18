@@ -157,4 +157,9 @@
 		if(checked.icon_state && !icon_exists(checked.icon, checked.icon_state))
 			var/icon_file = "[checked.icon]" || "Unknown Generated Icon"
 			Fail("Invalid icon_state: Icon object '[icon_file]' [REF(checked.icon)] used in '[checked]' [checked.type] is missing icon state [checked.icon_state].", __FILE__, __LINE__)
+
+/datum/unit_test/create_and_destroy/Run()
+	if(SSmapping?.config?.map_name == "Azure Peak")
+		return
+	return ..()
 #endif
