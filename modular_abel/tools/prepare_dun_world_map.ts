@@ -311,7 +311,7 @@ function injectRequiredMapItems(text: string): string {
     '/obj/structure/stockpile_storage/food',
     '/obj/structure/stockpile_storage/metal',
   ]
-    .map((path) => `${path},`)
+    .map((path) => `${path}{\n\tstorage_id = "dun_world_inert"\n\t},`)
     .join('\n');
 
   return text.replace(

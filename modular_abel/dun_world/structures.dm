@@ -202,7 +202,9 @@
 
 /obj/structure/fake_machine/merchantvend/dun_world_bath
 	name = "BRASSFACE"
+	desc = "A brass-faced cabinet that promises sweet comfort to the lonely and the weary... for a price."
 	icon_state = "vendor-bath"
+	unlocked_cats = list("Narcotics", "Drinks", "Luxury", "Instruments", "Jewelry", "Apparel")
 
 /obj/structure/fake_machine/merchantvend/dun_world_wretch
 	name = "Vile Vheslie"
@@ -213,6 +215,9 @@
 /obj/structure/fake_machine/merchantvend/dun_world_potions
 	name = "POTIONSELLER"
 	icon_state = "vendor-drugold"
+
+/obj/structure/fake_machine/atm/dun_world
+	SET_BASE_PIXEL(0, 0)
 
 /turf/open/floor/sand/dun_world
 	name = "sand"

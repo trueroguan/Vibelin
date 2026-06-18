@@ -39,6 +39,10 @@
 			M.adjustBruteLoss(5)
 		to_chat(M, span_warning("I nick myself on the thorny vines."))
 
+/datum/wound/cbt/get_crit_prob(bclass, dam, damage_dividend, mob/living/user, obj/item/bodypart/affected, zone_precise, list/modifiers)
+	var/cbt_multiplier = (user && HAS_TRAIT(user, TRAIT_NUTCRACKER)) ? 2 : 1
+	return round(dam / 5) * cbt_multiplier
+
 #if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 /datum/unit_test/turf_coverage/Run()
 	var/list/all_turfs = subtypesof(/turf)

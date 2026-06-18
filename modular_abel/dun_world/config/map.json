@@ -1461,7 +1461,7 @@
 		"/obj/structure/roguemachine/talkstatue/mercenary": "/obj/structure/fake_machine/hailer",
 		"/obj/structure/roguemachine/titan": "/obj/structure/fake_machine/titan",
 		"/obj/structure/roguemachine/vaultbank": "/obj/structure/fake_machine/atm",
-		"/obj/structure/roguemachine/vaultbank/bathhouse": "/obj/structure/fake_machine/atm",
+		"/obj/structure/roguemachine/vaultbank/bathhouse": "/obj/structure/fake_machine/atm/dun_world",
 		"/obj/structure/roguemachine/vaultbank/church": "/obj/structure/fake_machine/atm",
 		"/obj/structure/roguemachine/vaultbank/innkeeper": "/obj/structure/fake_machine/atm",
 		"/obj/structure/roguemachine/vaultbank/merchant": "/obj/structure/fake_machine/atm",
