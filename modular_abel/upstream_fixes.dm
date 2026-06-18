@@ -12,6 +12,33 @@
 		var/mob/L = loc
 		L.update_inv_cloak()
 
+// UPSTREAM BUG (remove this override once fixed upstream): /obj/structure/vine/Crossed types the crosser as /mob and reads crosser.m_intent, but non-mob movers (e.g. the wandering /obj/item/reagent_containers/food/snacks/smallrat) cross vines and runtime on the undefined var. Reimplemented with an ismob() guard; replicates /atom/movable/Crossed (COMSIG_MOVABLE_CROSSED) and /obj/structure/Crossed (climb offset) because the same-type redefinition bypasses the upstream ..() chain.
+/obj/structure/vine/Crossed(atom/movable/crosser, oldloc)
+	SEND_SIGNAL(src, COMSIG_MOVABLE_CROSSED, crosser)
+	if(isliving(crosser) && !crosser.throwing && climb_offset)
+		var/mob/living/climber = crosser
+		climber.add_offsets("structure_climb", x_add = 0, y_add = climb_offset)
+	if(ismob(crosser))
+		var/mob/mob_crosser = crosser
+		if(mob_crosser.m_intent != MOVE_INTENT_SNEAK)
+			playsound(src, 'sound/items/seedextract.ogg', 80, TRUE, -1)
+	if(isliving(crosser))
+		for(var/datum/vine_mutation/SM in mutations)
+			SM.on_cross(src, crosser)
+	if(prob(23) && ismob(crosser) && !isvineimmune(crosser))
+		var/mob/living/M = crosser
+		if(iscarbon(M))
+			var/mob/living/carbon/H = M
+			var/obj/item/bodypart/l_leg/left = H.get_bodypart(BODY_ZONE_L_LEG)
+			var/obj/item/bodypart/r_leg/right = H.get_bodypart(BODY_ZONE_R_LEG)
+			if(prob(50))
+				left.bodypart_attacked_by(BCLASS_CUT, 6)
+			else
+				right.bodypart_attacked_by(BCLASS_CUT, 6)
+		else
+			M.adjustBruteLoss(5)
+		to_chat(M, span_warning("I nick myself on the thorny vines."))
+
 #if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 /datum/unit_test/turf_coverage/Run()
 	var/list/all_turfs = subtypesof(/turf)

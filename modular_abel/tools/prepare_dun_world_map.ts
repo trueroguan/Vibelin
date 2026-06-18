@@ -405,6 +405,37 @@ function normalizeDunWorldLockid(lockid: string): string {
   return lockid;
 }
 
+function isDunWorldBedroomLockid(lockid: string): boolean {
+  if (/^manor_knight/.test(lockid)) return true;
+  if (/^guest_knight/.test(lockid)) return true;
+  if (/^squire_room/.test(lockid)) return true;
+  if (/^manor_councillor/.test(lockid)) return true;
+  if (/^servant_room/.test(lockid)) return true;
+  if (/^church_bedroom/.test(lockid)) return true;
+  if (/^merc_bunk/.test(lockid)) return true;
+  if (/^stable_master/.test(lockid)) return true;
+  if (/^room/.test(lockid) || /^fancy/.test(lockid) || /^locker/.test(lockid)) return true;
+  return [
+    'captain_bedroom',
+    'stablemaster',
+    'keeper',
+    'keeper2',
+    'heir',
+    'heir1',
+    'heir2',
+    'royal',
+    'baroness',
+  ].includes(lockid);
+}
+
+function extractLockid(varText: string): string | null {
+  const quoted = varText.match(/^lockid\s*=\s*"([^"]+)"$/);
+  if (quoted) return quoted[1];
+  const listed = varText.match(/^lockid\s*=\s*list\(\s*"([^"]+)"\s*\)$/);
+  if (listed) return listed[1];
+  return null;
+}
+
 function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
   const hasClosedTurf = entries.some(
     (entry) =>
@@ -429,9 +460,9 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
 
     let lockidValue: string | null = null;
     for (const varLines of entry.vars) {
-      const lockidMatch = varLines[0].trim().match(/^lockid\s*=\s*"([^"]+)"$/);
-      if (lockidMatch) {
-        lockidValue = lockidMatch[1];
+      const lid = extractLockid(varLines[0].trim());
+      if (lid && !(isDoor && isDunWorldBedroomLockid(lid))) {
+        lockidValue = lid;
         break;
       }
     }
@@ -439,12 +470,15 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
     const vars = entry.vars.flatMap((varLines) => {
       const varText = varLines[0].trim();
 
-      const lockidMatch = varText.match(/^lockid\s*=\s*"([^"]+)"$/);
-      if (lockidMatch) {
+      const lid = extractLockid(varText);
+      if (lid !== null) {
         if (isDeadbolt) {
           return [];
         }
-        return [[`\tlockids = list("${normalizeDunWorldLockid(lockidMatch[1])}")`]];
+        if (isDoor && isDunWorldBedroomLockid(lid)) {
+          return [];
+        }
+        return [[`\tlockids = list("${normalizeDunWorldLockid(lid)}")`]];
       }
 
       const lockedMatch = varText.match(/^locked\s*=\s*([01])$/);

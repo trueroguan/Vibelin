@@ -9,4 +9,6 @@
 #include "map_rotation.dm"
 #include "mapgen.dm"
 #include "mobs.dm"
+#include "residents/grant.dm"
+#include "residents/residents.dm"
 #include "structures.dm"

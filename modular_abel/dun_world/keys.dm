@@ -15,6 +15,11 @@
 		return
 	spawned.put_in_hands(granted)
 
+/datum/job/proc/dun_world_grant_authority(mob/living/carbon/human/spawned)
+	if(!istype(spawned))
+		return
+	spawned.add_spell(/datum/action/cooldown/spell/undirected/list_target/grant_resident)
+
 /datum/job/innkeep/dun_world_bathmaster/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
 	dun_world_grant_keys(spawned, list("bathhouse"))
@@ -55,6 +60,7 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		dun_world_grant_keys(spawned, list(ACCESS_LORD))
+		dun_world_grant_authority(spawned)
 
 /datum/job/consort/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
@@ -70,11 +76,13 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		dun_world_grant_keys(spawned, list("steward", "manor", "vault", "walls"))
+		dun_world_grant_authority(spawned)
 
 /datum/job/hand/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		dun_world_grant_keys(spawned, list("hand", "manor", "steward", "walls", "garrison"))
+		dun_world_grant_authority(spawned)
 
 /datum/job/captain/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
