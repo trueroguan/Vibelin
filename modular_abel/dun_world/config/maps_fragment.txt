@@ -1,0 +1,4 @@
+# Appended to config/maps.txt by modular_abel/tools/runtime_config.ts.
+map dun_world
+	votable
+endmap

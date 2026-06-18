@@ -43,11 +43,14 @@ type FeatureEntry = {
   enabled: Booleanish;
   can_disable: Booleanish;
   choice_name: string;
+  choice_value?: string;
   choice_options?: FeatureOption[];
   accessory_name?: string;
+  accessory_value?: string;
   accessory_options?: FeatureOption[];
   colors?: FeatureColor[];
   extras?: FeatureExtra[];
+  erp?: Booleanish;
 };
 
 type PrefsData = {
@@ -83,6 +86,7 @@ type PrefsData = {
   triumphs: number;
   special_role: string;
   player_quality: string;
+  player_quality_color: string | null;
   game_prefs: {
     hotkeys: Booleanish;
     buttons_locked: Booleanish;
@@ -106,6 +110,7 @@ const tabs = [
   { id: 'body', label: 'Body', icon: 'male' },
   { id: 'appearance', label: 'Appearance', icon: 'palette' },
   { id: 'features', label: 'Features', icon: 'user-edit' },
+  { id: 'erp', label: 'ERP', icon: 'heart' },
   { id: 'lore', label: 'Lore', icon: 'book' },
   { id: 'gameplay', label: 'Gameplay', icon: 'gamepad' },
   { id: 'game', label: 'Game Prefs', icon: 'sliders-h' },
@@ -197,10 +202,11 @@ type InfoRowProps = {
   label: string;
   value?: unknown;
   swatch?: string;
+  valueColor?: string;
 };
 
 const InfoRow = (props: InfoRowProps) => {
-  const { icon, label, value, swatch } = props;
+  const { icon, label, value, swatch, valueColor } = props;
   return (
     <Box mb={0.5} p={0.5}>
       <Stack align="center">
@@ -216,7 +222,9 @@ const InfoRow = (props: InfoRowProps) => {
           </Stack.Item>
         ) : null}
         <Stack.Item>
-          <Box bold>{display(value)}</Box>
+          <Box bold color={valueColor}>
+            {display(value)}
+          </Box>
         </Stack.Item>
       </Stack>
     </Box>
@@ -338,7 +346,7 @@ export const PreferencesMenu = () => {
         <PrefRow icon="star" label="Patron" value={data.patron_name} onClick={() => doPref('patron', 'input')} />
         <PrefRow icon="asterisk" label="Faith" value={data.faith_name} onClick={() => doPref('faith', 'input')} />
         <PrefRow icon="briefcase" label="Class" value={data.high_job} onClick={() => doPref('job', 'menu')} />
-        <InfoRow icon="award" label="Player Quality" value={data.player_quality} />
+        <InfoRow icon="award" label="Player Quality" value={data.player_quality} valueColor={data.player_quality_color || undefined} />
       </Panel>
 
       <Panel title="Portrait" icon="image">
@@ -391,6 +399,7 @@ export const PreferencesMenu = () => {
     <Columns>
       <Panel title="Appearance" icon="palette">
         <PrefRow icon="sliders-h" label="Features" value="Customize" onClick={() => selectTab('features')} />
+        <PrefRow icon="heart" label="ERP" value="Customize" onClick={() => selectTab('erp')} />
         <PrefRow icon="image" label="Headshot" value={data.headshot ? 'Set' : 'None'} onClick={() => doPref('headshot', 'input')} />
         <PrefRow icon="dice" label="Randomise" value="Appearance" onClick={() => doPref('randomiseappearanceprefs')} />
       </Panel>
@@ -488,8 +497,9 @@ export const PreferencesMenu = () => {
                 'Type',
                 <Dropdown
                   width="180px"
+                  buttons
                   displayText={feature.choice_name}
-                  selected={null}
+                  selected={feature.choice_value}
                   options={feature.choice_options.map((option) => ({
                     displayText: option.name,
                     value: option.value,
@@ -511,7 +521,7 @@ export const PreferencesMenu = () => {
                     width="180px"
                     buttons
                     displayText={feature.accessory_name}
-                    selected={null}
+                    selected={feature.accessory_value}
                     options={feature.accessory_options.map((option) => ({
                       displayText: option.name,
                       value: option.value,
@@ -562,12 +572,11 @@ export const PreferencesMenu = () => {
     );
   };
 
-  const renderFeatures = () => {
-    const features = data.features || [];
+  const renderFeatureColumns = (features: FeatureEntry[], emptyLabel: string) => {
     if (!features.length) {
       return (
         <Section>
-          <Box color="label">No customization available for this species.</Box>
+          <Box color="label">{emptyLabel}</Box>
         </Section>
       );
     }
@@ -584,6 +593,30 @@ export const PreferencesMenu = () => {
       </Stack>
     );
   };
+
+  const renderFeatures = () =>
+    renderFeatureColumns(
+      (data.features || []).filter((feature) => !asBool(feature.erp)),
+      'No customization available for this species.',
+    );
+
+  const renderErp = () => (
+    <>
+      <Section>
+        <PrefRow
+          icon="heart"
+          label="Intimacy Opt-in (ERP)"
+          value={erpEnabled ? 'ON' : 'OFF'}
+          selected={erpEnabled}
+          onClick={() => doPref('abel_erp_toggle')}
+        />
+      </Section>
+      {renderFeatureColumns(
+        (data.features || []).filter((feature) => asBool(feature.erp)),
+        'No intimate customization available for this species.',
+      )}
+    </>
+  );
 
   const renderLore = () => (
     <Columns>
@@ -662,6 +695,7 @@ export const PreferencesMenu = () => {
           <PrefRow icon="music" label="Lobby Music" value={asBool(game.lobby_music) ? 'ON' : 'OFF'} selected={asBool(game.lobby_music)} onClick={() => toggle('lobby_music')} />
           <PrefRow icon="music" label="Admin MIDIs" value={asBool(game.hear_midis) ? 'ON' : 'OFF'} selected={asBool(game.hear_midis)} onClick={() => toggle('hear_midis')} />
           <PrefRow icon="user-secret" label="Midround Antag" value={asBool(game.allow_midround_antag) ? 'ON' : 'OFF'} selected={asBool(game.allow_midround_antag)} onClick={() => toggle('allow_midround_antag')} />
+          <PrefRow icon="heart" label="Intimacy Opt-in (ERP)" value={erpEnabled ? 'ON' : 'OFF'} selected={erpEnabled} onClick={() => doPref('abel_erp_toggle')} />
           <ActionButton icon="toggle-on" label="Toggle Bitfields" onClick={() => doPref('toggles')} />
           <ActionButton icon="keyboard" label="Keybinds" onClick={() => doPref('keybinds', 'menu')} />
           <ActionButton icon="save" label="Save Preferences" color="blue" onClick={() => doPref('save')} />
@@ -709,6 +743,8 @@ export const PreferencesMenu = () => {
         return renderAppearance();
       case 'features':
         return renderFeatures();
+      case 'erp':
+        return renderErp();
       case 'lore':
         return renderLore();
       case 'gameplay':
@@ -753,9 +789,9 @@ export const PreferencesMenu = () => {
           </Stack.Item>
 
           <Stack.Item grow basis={0}>
-            <Box height="100%" style={{ overflowY: 'auto' }}>
+            <Section fill scrollable>
               {renderActiveTab()}
-            </Box>
+            </Section>
           </Stack.Item>
 
           <Stack.Item>
