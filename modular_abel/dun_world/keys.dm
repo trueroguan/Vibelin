@@ -24,6 +24,11 @@
 	. = ..()
 	dun_world_grant_keys(spawned, list("bathhouse"))
 
+/datum/job/matron/after_spawn(mob/living/carbon/human/spawned, client/player_client)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_keys(spawned, list("bathhouse"))
+
 /datum/job/merchant/dun_world_guildmaster/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
 	dun_world_grant_keys(spawned, list("artificer", "blacksmith", "tailor", "merchant"))
@@ -76,7 +81,6 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		dun_world_grant_keys(spawned, list("steward", "manor", "vault", "walls"))
-		dun_world_grant_authority(spawned)
 
 /datum/job/hand/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
@@ -88,6 +92,12 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		dun_world_grant_keys(spawned, list("at_arms", "garrison", "dungeon", "walls", "manor"))
+		dun_world_grant_authority(spawned)
+
+/datum/job/town_elder/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name == "Azure Peak")
+		dun_world_grant_authority(spawned)
 
 /datum/job/guardsman/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()

@@ -32,11 +32,27 @@
 /obj/structure/door/town
 	homestead = TRUE
 
+/obj/structure/door/town/blacksmith
+	required_job_title = JOB_BLACKSMITH
+
+/obj/structure/door/town/fisher
+	required_job_title = JOB_FISHER
+
+/obj/structure/door/town/hunter
+	required_job_title = JOB_HUNTER
+
+/obj/structure/door/town/seamstress
+	required_job_title = JOB_TAILOR
+
+/obj/structure/door/town/woodworker
+	required_job_title = JOB_LUMBERJACK
+
 /obj/structure/door
 	var/homestead = FALSE
 	var/grant_resident_key = TRUE
 	var/resident_key_type = /obj/item/key/town
 	var/house_id
+	var/required_job_title
 
 /proc/generate_town_lockid(obj/structure/door/D)
 	return "town_[world.time % 1000000][D.x][D.y][D.z][rand(1, 1000)]"
@@ -58,6 +74,9 @@
 		return FALSE
 	var/mob/living/carbon/human/H = user
 	if(!H.has_quirk(/datum/quirk/boon/resident) || H.received_resident_key || !house_id)
+		return FALSE
+	if(required_job_title && (!H.mind || !H.mind.assigned_role || H.mind.assigned_role.title != required_job_title))
+		to_chat(H, span_warning("This home is set aside for the [required_job_title]."))
 		return FALSE
 	if(alert(H, "Is this my home?", "Home", "Yes", "No") != "Yes")
 		return FALSE
@@ -85,3 +104,14 @@
 				to_chat(H, span_warning("This is not my home."))
 				return FALSE
 	return ..()
+
+/datum/job/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
+	. = ..()
+	if(SSmapping.config?.map_name != "Azure Peak")
+		return
+	if(!istype(spawned))
+		return
+	if(!(department_flag & (PEASANTS | SERFS)))
+		return
+	if(!spawned.has_quirk(/datum/quirk/boon/resident))
+		spawned.add_quirk(/datum/quirk/boon/resident)
