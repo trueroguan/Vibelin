@@ -2,8 +2,6 @@
 	name = "Resident"
 	desc = "I am no stranger to these lands. I hold the right to a home of my own here."
 	point_value = -3
-	gain_text = span_notice("I feel at home here.")
-	lose_text = span_danger("I no longer feel like a local resident.")
 
 /datum/quirk/boon/resident/proc/clear_foreigner_status()
 	if(!owner)
@@ -12,16 +10,16 @@
 	REMOVE_TRAIT(owner, TRAIT_FOREIGNER, TRAIT_GENERIC)
 
 /datum/quirk/boon/resident/on_spawn()
-	if(gain_text && owner)
-		to_chat(owner, gain_text)
+	if(owner)
+		to_chat(owner, span_notice("I feel at home here."))
 	clear_foreigner_status()
 
 /datum/quirk/boon/resident/after_job_spawn(datum/job/job)
 	clear_foreigner_status()
 
 /datum/quirk/boon/resident/on_remove()
-	if(lose_text && owner)
-		to_chat(owner, lose_text)
+	if(owner)
+		to_chat(owner, span_danger("I no longer feel like a local resident."))
 
 /mob/living/carbon/human/var/received_resident_key = FALSE
 
