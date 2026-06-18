@@ -118,3 +118,21 @@
 	. = ..()
 	if(SSmapping.config?.map_name == "Azure Peak")
 		dun_world_grant_keys(spawned, list("church", "priest"))
+
+/obj/structure/door/proc/dun_world_bumper_has_key(mob/living/user)
+	if(!lock_check(TRUE))
+		return FALSE
+	var/datum/lock/key/KL = lock
+	for(var/obj/item/I in user.get_equipped_items(INCLUDE_HELD))
+		if(KL.check_access(I))
+			return TRUE
+	return FALSE
+
+/obj/structure/door/Bumped(atom/movable/AM)
+	if(isliving(AM) && locked() && SSmapping.config?.map_name == "Azure Peak" && dun_world_bumper_has_key(AM))
+		var/datum/lock/key/KL = lock
+		KL.locked = FALSE
+		. = ..()
+		KL.locked = TRUE
+		return .
+	return ..()

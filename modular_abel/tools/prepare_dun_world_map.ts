@@ -270,7 +270,7 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
     },
   };
 
-  return sourceText
+  const adjustedText = sourceText
     .split(/\r?\n/)
     .flatMap((line) => {
       const match = line.match(/^(\s*)(\/[\w/]+)([,{])$/);
@@ -298,6 +298,26 @@ function applySourcePathStructuralAdjustments(sourceText: string): string {
       ];
     })
     .join('\n');
+
+  return injectRequiredMapItems(adjustedText);
+}
+
+// Vanderlin's required_map_items unit test demands one each of the economy
+// stockpile structures on every non-exempt map; Azure's source map has no
+// equivalent, so place them on the (unique, station-level) titan tile.
+function injectRequiredMapItems(text: string): string {
+  const requiredItems = [
+    '/obj/structure/stockpile_storage',
+    '/obj/structure/stockpile_storage/food',
+    '/obj/structure/stockpile_storage/metal',
+  ]
+    .map((path) => `${path},`)
+    .join('\n');
+
+  return text.replace(
+    /(\/obj\/structure\/roguemachine\/titan\{[^}]*\},)/,
+    `$1\n${requiredItems}`,
+  );
 }
 
 type PopEntry = {
@@ -443,6 +463,7 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
   );
 
   const adjusted: PopEntry[] = [];
+  const seenContraptions = new Set<string>();
   for (const entry of entries) {
     if (
       hasClosedTurf &&
@@ -452,6 +473,17 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
       )
     ) {
       continue;
+    }
+
+    // rotation_contraption/Initialize() stacks same-type pieces sharing a tile,
+    // qdel'ing the extras before their Initialize runs; Azure stacks many per
+    // tile, which trips the create_and_destroy unit test. The stack merges to a
+    // single sprite anyway, so keep one of each exact type per tile.
+    if (entry.path.startsWith('/obj/item/rotation_contraption')) {
+      if (seenContraptions.has(entry.path)) {
+        continue;
+      }
+      seenContraptions.add(entry.path);
     }
 
     const isTurf = entry.path.startsWith('/turf/');
