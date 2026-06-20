@@ -3,7 +3,7 @@
 	desc = ""
 	icon = 'modular_abel/races/icons/taurs.dmi'
 	icon_state = ""
-	max_damage = 200
+	max_damage = 300
 	body_zone = BODY_ZONE_TAUR
 	body_part = LEGS
 	body_damage_coeff = 1

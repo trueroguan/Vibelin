@@ -8,3 +8,4 @@
 #include "lizardfolk.dm"
 #include "moth.dm"
 #include "moth_wings.dm"
+#include "aura.dm"

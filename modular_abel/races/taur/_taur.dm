@@ -5,3 +5,5 @@
 #include "clip_mask.dm"
 #include "taur_kin.dm"
 #include "chargen.dm"
+#include "legs.dm"
+#include "riding/_riding.dm"
