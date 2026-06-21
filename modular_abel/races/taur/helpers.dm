@@ -30,7 +30,9 @@
 /mob/living/carbon/human/proc/taur_groin_covered()
 	if(!get_taur_tail())
 		return FALSE
-	var/list/covering_items = list(wear_pants, wear_armor, wear_shirt, cloak)
+	if(wear_pants)
+		return TRUE
+	var/list/covering_items = list(wear_armor, wear_shirt, cloak)
 	for(var/obj/item/clothing/covering as anything in covering_items)
 		if(!covering)
 			continue

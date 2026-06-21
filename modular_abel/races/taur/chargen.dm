@@ -74,3 +74,44 @@
 			update_menu_data(user)
 			return TRUE
 	return ..()
+
+/datum/preferences/save_character()
+	. = ..()
+	if(!path)
+		return
+	var/savefile/S = new /savefile(path)
+	if(!S)
+		return
+	S.cd = "/character[default_slot]"
+	WRITE_FILE(S["abel_taur_type"], taur_type ? "[taur_type]" : "")
+	WRITE_FILE(S["abel_taur_color"], taur_color)
+	WRITE_FILE(S["abel_taur_markings"], taur_markings)
+	WRITE_FILE(S["abel_taur_tertiary"], taur_tertiary)
+
+/datum/preferences/load_character(slot)
+	. = ..()
+	if(!path || !fexists(path))
+		return
+	var/savefile/S = new /savefile(path)
+	if(!S)
+		return
+	if(!slot)
+		slot = default_slot
+	slot = sanitize_integer(slot, 1, max_save_slots, initial(default_slot))
+	S.cd = "/character[slot]"
+	var/loaded_taur
+	S["abel_taur_type"] >> loaded_taur
+	var/resolved = loaded_taur ? text2path(loaded_taur) : null
+	taur_type = ispath(resolved, /obj/item/bodypart/taur) ? resolved : null
+	var/loaded_color
+	S["abel_taur_color"] >> loaded_color
+	if(loaded_color)
+		taur_color = loaded_color
+	var/loaded_markings
+	S["abel_taur_markings"] >> loaded_markings
+	if(loaded_markings)
+		taur_markings = loaded_markings
+	var/loaded_tertiary
+	S["abel_taur_tertiary"] >> loaded_tertiary
+	if(loaded_tertiary)
+		taur_tertiary = loaded_tertiary

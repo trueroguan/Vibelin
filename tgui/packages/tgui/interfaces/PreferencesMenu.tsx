@@ -5,7 +5,6 @@ import {
   Dropdown,
   Icon,
   Section,
-  Slider,
   Stack,
   Tabs,
 } from 'tgui-core/components';
@@ -303,7 +302,6 @@ export const PreferencesMenu = () => {
 
   const ageOptions = data.age_options ?? [];
   const ageMin = Number(data.age_min ?? 1);
-  const ageMax = Number(data.age_max ?? Math.max(1, ageOptions.length));
   const ageValue = Number(data.age_index ?? ageMin);
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
@@ -386,14 +384,16 @@ export const PreferencesMenu = () => {
             <Box>{display(data.age)}</Box>
           </Stack.Item>
         </Stack>
-        <Slider
+        <Dropdown
           mb={1}
-          value={ageValue}
-          minValue={ageMin}
-          maxValue={ageMax}
-          step={1}
-          format={(value) => display(ageOptions[Math.round(value) - 1], data.age)}
-          onChange={(_event, value) => commitAge(value)}
+          width="100%"
+          displayText={display(data.age)}
+          selected={ageValue}
+          options={ageOptions.map((option, index) => ({
+            displayText: display(option, option),
+            value: index + 1,
+          }))}
+          onSelected={(value) => commitAge(value)}
         />
         <PrefRow icon="hand-paper" label="Dominant Hand" value={data.domhand} onClick={() => doPref('domhand')} />
         <PrefRow icon="leaf" label={display(data.ancestry_label, 'Ancestry')} value="Choose" onClick={() => doPref('s_tone', 'input')} />
