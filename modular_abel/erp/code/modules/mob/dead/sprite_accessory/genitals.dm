@@ -6,10 +6,17 @@
 	if(!taur_part)
 		return
 	var/offset_y = taur_part.vars["genital_offset_y"]
-	if(!isnum(offset_y))
-		return
+	// The BODY_BEHIND_LAYER half of a genital is meant to peek out from behind a humanoid's legs.
+	// A taur has no humanoid lower body, so that half renders as a stray fragment on the beast back.
+	// Drop it, and nudge the remaining (front-facing) halves down onto the taur transition.
+	var/list/to_remove = list()
 	for(var/mutable_appearance/appearance as anything in appearance_list)
-		appearance.pixel_y += offset_y
+		if(appearance.layer == -BODY_BEHIND_LAYER)
+			to_remove += appearance
+			continue
+		if(isnum(offset_y))
+			appearance.pixel_y += offset_y
+	appearance_list -= to_remove
 
 /datum/sprite_accessory/penis
 	icon = 'modular_abel/erp/icons/mob/sprite_accessory/genitals/pintle.dmi'

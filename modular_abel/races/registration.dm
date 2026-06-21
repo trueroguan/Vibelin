@@ -12,6 +12,13 @@ GLOBAL_LIST_INIT(modular_race_followers, list(
 	SPEC_ID_AURA = SPEC_ID_RAKSHARI,
 ))
 
+GLOBAL_LIST_INIT(modular_outsider_categories, list(
+	CTAG_ADVENTURER,
+	CTAG_PILGRIM,
+	CTAG_WRETCH,
+	CTAG_CHALLENGE,
+))
+
 /datum/job/New()
 	. = ..()
 	if(!length(allowed_races))
@@ -20,3 +27,16 @@ GLOBAL_LIST_INIT(modular_race_followers, list(
 		var/proxy_id = GLOB.modular_race_followers[new_id]
 		if(proxy_id in allowed_races)
 			allowed_races |= new_id
+
+/datum/job/advclass/New()
+	. = ..()
+	if(!length(allowed_races))
+		return
+	if(length(allowed_races) < 7)
+		return
+	if(!length(category_tags))
+		return
+	if(!length(category_tags & GLOB.modular_outsider_categories))
+		return
+	for(var/new_id in GLOB.modular_race_followers)
+		allowed_races |= new_id
