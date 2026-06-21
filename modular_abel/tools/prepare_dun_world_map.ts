@@ -46,6 +46,16 @@ const CLOSED_TURF_REMOVED_PATHS = [
   '/obj/structure/window',
 ];
 
+// Azure's dun_world is a dense monster dungeon. Loaded as Vanderlin's live map, these
+// placed creatures wander out and swarm the town for no apparent reason (draggers are
+// underworld soul-hunters that have no business on the surface at all). Drop them (and
+// their subtypes) during generation. These are post-replacement (Vanderlin) paths, since
+// path replacement runs before this pass. Extend the list as more offenders surface.
+const STRIPPED_ATOM_PATHS = [
+  '/mob/living/simple_animal/hostile/dragger',
+  '/mob/living/simple_animal/hostile/retaliate/fox',
+];
+
 export async function prepareDunWorldMap() {
   const config = readConfig();
   const replacements = config.replacements || {};
@@ -468,6 +478,15 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
     if (
       hasClosedTurf &&
       CLOSED_TURF_REMOVED_PATHS.some(
+        (banned) =>
+          entry.path === banned || entry.path.startsWith(`${banned}/`),
+      )
+    ) {
+      continue;
+    }
+
+    if (
+      STRIPPED_ATOM_PATHS.some(
         (banned) =>
           entry.path === banned || entry.path.startsWith(`${banned}/`),
       )

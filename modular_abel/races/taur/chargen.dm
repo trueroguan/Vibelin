@@ -83,7 +83,8 @@
 	if(!S)
 		return
 	S.cd = "/character[default_slot]"
-	WRITE_FILE(S["abel_taur_type"], taur_type ? "[taur_type]" : "")
+	var/taur_type_text = taur_type ? "[taur_type]" : ""
+	WRITE_FILE(S["abel_taur_type"], taur_type_text)
 	WRITE_FILE(S["abel_taur_color"], taur_color)
 	WRITE_FILE(S["abel_taur_markings"], taur_markings)
 	WRITE_FILE(S["abel_taur_tertiary"], taur_tertiary)
