@@ -1,6 +1,7 @@
 #include "_taur_defines.dm"
 #include "bodyparts.dm"
 #include "organ.dm"
+#include "protection.dm"
 #include "helpers.dm"
 #include "clip_mask.dm"
 #include "taur_kin.dm"

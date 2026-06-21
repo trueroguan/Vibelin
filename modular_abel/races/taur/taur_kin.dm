@@ -22,7 +22,7 @@
 	magical anomalies or curses, Divine or otherwise. \
 	\n\n\
 	Where their kin walk on two legs, a Taur-Kin's body splits into a beastly lower half, leaving them powerful \
-	but heavy, unable to wear footwear or fit through narrow places as easily as others. \
+	but heavy, unable to wear ordinary footwear or fit through narrow places as easily as others. \
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. EXPECT A MORE DIFFICULT EXPERIENCE. PLAY AT YOUR OWN RISK."
 

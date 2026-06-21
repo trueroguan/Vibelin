@@ -1,5 +1,3 @@
-// ---------------- HORNS ----------------
-
 /datum/sprite_accessory/horns/aura
 	abstract_type = /datum/sprite_accessory/horns/aura
 	icon = 'modular_abel/races/icons/horns/aura.dmi'
@@ -32,7 +30,6 @@
 		/datum/sprite_accessory/horns/aura/dragonfaceguard,
 	)
 
-// ---------------- TAIL ----------------
 
 /datum/sprite_accessory/tail/aura
 	abstract_type = /datum/sprite_accessory/tail/aura
@@ -59,7 +56,6 @@
 		/datum/sprite_accessory/tail/aura/dragontail,
 	)
 
-// ---------------- BODY MARKINGS ----------------
 
 /datum/body_marking/aura
 	abstract_type = /datum/body_marking/aura
@@ -103,7 +99,6 @@
 	name = "Равновесие"
 	body_marking_list = list(/datum/body_marking/aura/v)
 
-// ---------------- SPECIES ----------------
 
 /mob/living/carbon/human/species/aura
 	race = /datum/species/aura

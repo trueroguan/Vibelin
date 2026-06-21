@@ -15,6 +15,7 @@
 	var/offset_x = -16
 	var/offset_y = 0
 	var/body_offset_y = 0
+	var/genital_offset_y = -10
 	var/bellyride_victim_y_offset = 0
 	var/bellyride_quadruped = FALSE
 	var/taur_icon_state = "naga_s"

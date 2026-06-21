@@ -1,5 +1,3 @@
-// ---------------- SNOUTS ----------------
-
 /datum/customizer/organ/snout/tabaxi
 	customizer_choices = list(/datum/customizer_choice/organ/snout/tabaxi)
 
@@ -184,7 +182,6 @@
 		/datum/sprite_accessory/snout/front/sergal,
 	)
 
-// ---------------- TAILS ----------------
 
 /datum/customizer/organ/tail/tabaxi
 	customizer_choices = list(/datum/customizer_choice/organ/tail/tabaxi)

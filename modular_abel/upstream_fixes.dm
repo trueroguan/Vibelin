@@ -43,6 +43,38 @@
 	var/cbt_multiplier = (user && HAS_TRAIT(user, TRAIT_NUTCRACKER)) ? 2 : 1
 	return round(dam / 5) * cbt_multiplier
 
+// UPSTREAM BUG: moondust animates affected_mob.client without checking that the metabolizing mob has a client. NPCs can metabolize this reagent, so keep the animation client-only.
+/datum/reagent/moondust/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	if(affected_mob.client)
+		animate(affected_mob.client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
+		animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
+	affected_mob.add_chem_effect(CE_PULSE, 1, "[type]")
+
+/datum/reagent/moondust/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	affected_mob.remove_status_effect(/datum/status_effect/buff/moondust)
+	if(affected_mob.client)
+		animate(affected_mob.client)
+	affected_mob.remove_chem_effect(CE_PULSE, "[type]")
+
+/datum/reagent/moondust_purest/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	affected_mob.playsound_local(affected_mob, 'sound/ravein/small/hello_my_friend.ogg', 100, FALSE)
+	affected_mob.overlay_fullscreen("purest_kaif", /atom/movable/screen/fullscreen/purest)
+	if(affected_mob.client)
+		animate(affected_mob.client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
+		animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
+	affected_mob.add_chem_effect(CE_PULSE, 2, "[type]")
+
+/datum/reagent/moondust_purest/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	if(affected_mob.client)
+		animate(affected_mob.client)
+	affected_mob.clear_fullscreen("purest_kaif")
+	affected_mob.remove_status_effect(/datum/status_effect/buff/moondust_purest)
+	affected_mob.remove_chem_effect(CE_PULSE, "[type]")
+
 #if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 /datum/unit_test/turf_coverage/Run()
 	var/list/all_turfs = subtypesof(/turf)

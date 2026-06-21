@@ -11,7 +11,6 @@
 		TEXT_WEST = list(3, 6, OBJ_LAYER),
 	)
 
-// ---------------- ANTI-GRIEF CONSENT ----------------
 
 /mob/living/carbon/human/proc/taur_consent_prebuckle(datum/source, mob/living/rider, force, ride_check_flags)
 	SIGNAL_HANDLER
@@ -33,7 +32,6 @@
 	if(!taur_allow_riding && has_buckled_mobs())
 		unbuckle_all_mobs()
 
-// ---------------- HIT REDIRECT (rider -> taur, by riding skill) ----------------
 
 /mob/living/carbon/apply_damage(damage, damagetype = BRUTE, def_zone = null, blocked = FALSE, forced = FALSE, spread_damage = FALSE, damage_type, skip_dtype, can_crit = TRUE)
 	if(damage > 0 && (damagetype == BRUTE || damagetype == BURN) && istype(buckled, /mob/living/carbon/human))
