@@ -2,6 +2,7 @@
 #include "bodyparts.dm"
 #include "organ.dm"
 #include "protection.dm"
+#include "recipes.dm"
 #include "helpers.dm"
 #include "clip_mask.dm"
 #include "taur_kin.dm"
