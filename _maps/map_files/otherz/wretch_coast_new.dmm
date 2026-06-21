@@ -2663,7 +2663,6 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "kG" = (
-/mob/living/simple_animal/hostile/retaliate,
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "kH" = (
@@ -3250,7 +3249,6 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "mR" = (
-/mob/living/simple_animal/hostile/retaliate,
 /turf/open/floor/dirt,
 /area/rogue/indoors/banditcamp)
 "mS" = (
@@ -6491,7 +6489,6 @@
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/vampire_manor)
 "Ab" = (
-/mob/living/simple_animal/hostile/retaliate,
 /turf/open/floor/dirt,
 /area/rogue/indoors/banditcamp)
 "Ac" = (
@@ -12911,7 +12908,6 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "ZV" = (
-/mob/living/simple_animal/hostile/retaliate,
 /turf/open/floor/sand/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "ZW" = (
