@@ -387,6 +387,10 @@ export const PreferencesMenu = () => {
   const ageOptions = data.age_options ?? [];
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
+  const backdropTile =
+    data.background && data.background !== 'none'
+      ? data.background_options?.find((o) => o.value === data.background)?.thumb
+      : undefined;
 
   const doPref = (
     preference: string,
@@ -1058,6 +1062,14 @@ export const PreferencesMenu = () => {
                           position: 'relative',
                           height: '100%',
                           width: '100%',
+                          ...(backdropTile
+                            ? {
+                                backgroundImage: `url(${backdropTile})`,
+                                backgroundRepeat: 'repeat',
+                                backgroundSize: '48px 48px',
+                                imageRendering: 'pixelated',
+                              }
+                            : {}),
                         }}
                       >
                         {data.preview_image ? (

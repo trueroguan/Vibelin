@@ -3,6 +3,7 @@ GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
 /datum/sprite_accessory/proc/abel_thumbnail()
 	if(type in GLOB.abel_accessory_thumb_cache)
 		return GLOB.abel_accessory_thumb_cache[type]
+	GLOB.pref_thumbnail_renders++
 	var/result = ""
 	if(icon && !isnull(icon_state) && icon_state != "")
 		var/state = icon_state
@@ -92,6 +93,7 @@ GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
 	return TRUE
 
 /datum/preferences/proc/abel_build_features_data()
+	var/_t = world.timeofday
 	var/list/features = list()
 	if(!pref_species)
 		return features
@@ -155,4 +157,5 @@ GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
 			feature["extras"] = extras
 
 		features += list(feature)
+	pref_log_op("abel_build_features_data", _t, "features=[length(features)]")
 	return features

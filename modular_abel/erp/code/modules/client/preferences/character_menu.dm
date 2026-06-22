@@ -11,6 +11,56 @@
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
 GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 
+// Background pre-warm of accessory thumbnails so the first chargen open / species switch
+// doesn't block ~4s rendering hundreds of thumbnails. Runs over ticks, never blocks boot.
+SUBSYSTEM_DEF(abel_thumb_warm)
+	name = "Abel Thumb Warm"
+	init_order = INIT_ORDER_DEFAULT
+	flags = SS_NO_FIRE
+
+/datum/controller/subsystem/abel_thumb_warm/Initialize(start_timeofday)
+	abel_warm_thumbnails()
+	return ..()
+
+/proc/abel_warm_thumbnails()
+	set waitfor = FALSE
+	for(var/atype in subtypesof(/datum/sprite_accessory))
+		var/datum/sprite_accessory/acc = SPRITE_ACCESSORY(atype)
+		if(acc)
+			acc.abel_thumbnail()
+		CHECK_TICK
+
+// ===== PREF MENU DEBUG LOGGER (temporary — remove with its hooks once chargen perf is fixed) =====
+GLOBAL_VAR_INIT(pref_menu_debug, TRUE)
+GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
+
+/datum/preferences/var/list/pref_log_counts
+/datum/preferences/var/pref_log_action_name = ""
+/datum/preferences/var/pref_log_action_tod = 0
+
+/datum/preferences/proc/pref_log(category, msg)
+	if(!GLOB.pref_menu_debug)
+		return
+	WRITE_LOG("[GLOB.log_directory]/pref_menu.log", "[world.timeofday]ds [parent?.ckey || "?"] \[[category]\] [msg]")
+
+/datum/preferences/proc/pref_log_action(action_name, extra)
+	if(!GLOB.pref_menu_debug)
+		return
+	pref_log_counts = list()
+	pref_log_action_name = action_name
+	pref_log_action_tod = world.timeofday
+	pref_log("ACTION", ">>>>> [action_name][extra ? " ([extra])" : ""]")
+
+/datum/preferences/proc/pref_log_op(op, start_tod, detail)
+	if(!GLOB.pref_menu_debug)
+		return
+	LAZYINITLIST(pref_log_counts)
+	pref_log_counts[op] = (pref_log_counts[op] || 0) + 1
+	var/cnt = pref_log_counts[op]
+	var/delta = world.timeofday - start_tod
+	pref_log("OP", "[op] x[cnt] took=[delta]ds[detail ? " {[detail]}" : ""][cnt > 1 ? "  *** MULTIPLICATIVE in [pref_log_action_name] ***" : ""]")
+// ===== END PREF MENU DEBUG LOGGER =====
+
 /datum/preferences/show_choices(mob/user, tabchoice)
 	if(!user || !user.client)
 		return
@@ -38,22 +88,28 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
+	var/_t = world.timeofday
 	var/new_static_sig = "[pref_species?.type]-[gender]"
 	if(new_static_sig != abel_static_sig)
 		abel_static_sig = new_static_sig
+		pref_log("UPDATE", "static sig changed ([new_static_sig]) -> update_static_data (resends thumbs catalog!)")
 		update_static_data(user)
-	SStgui.update_uis(src)
+	pref_log_op("update_menu_data", _t)
 	abel_refresh_preview(user)
 
 /datum/preferences/ui_state(mob/user)
 	return GLOB.always_state
 
 /datum/preferences/ui_static_data(mob/user)
+	var/_t = world.timeofday
 	. = list()
 	.["background_options"] = abel_background_options()
 	.["thumbs"] = abel_thumbnail_catalog()
+	pref_log_op("ui_static_data", _t, "thumbs=[length(.["thumbs"])] bg=[length(.["background_options"])]")
 
 /datum/preferences/proc/abel_thumbnail_catalog()
+	var/_t = world.timeofday
+	var/start_renders = GLOB.pref_thumbnail_renders
 	. = list()
 	if(!pref_species)
 		return
@@ -74,6 +130,7 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 					.[key] = accessory.abel_thumbnail()
 	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
 		.[undie.name] = undie.abel_thumbnail()
+	pref_log_op("abel_thumbnail_catalog", _t, "entries=[length(.)] rendered=[GLOB.pref_thumbnail_renders - start_renders]")
 
 /datum/preferences/reset_jobs(mob/user, silent = FALSE)
 	job_preferences = list()
@@ -116,19 +173,26 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 
 /datum/preferences/proc/abel_refresh_preview(mob/user)
 	set waitfor = FALSE
+	pref_log("REFRESH", "abel_refresh_preview start (async)")
 	var/previous = abel_preview_sig
 	abel_build_preview(user, json_encode(abel_build_features_data()))
 	if(abel_preview_sig != previous)
+		pref_log("REFRESH", "preview changed -> 2nd update_uis (extra ui_data!)")
 		SStgui.update_uis(src)
 
 /datum/preferences/proc/abel_preview_extra_sig()
 	return ""
 
 /datum/preferences/proc/abel_setup_preview_dummy(datum/job/preview_job, datum/outfit/preview_outfit, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+	var/_t = world.timeofday
 	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(slotkey)
+	pref_log_op("dummy_generate", _t, "slot=[slotkey]")
 	if(!body)
 		return null
+	_t = world.timeofday
 	apply_prefs_to(body, TRUE)
+	pref_log_op("apply_prefs_to", _t)
+	_t = world.timeofday
 	if(preview_job)
 		body.dna.species.pre_equip_species_outfit(preview_job, body, TRUE)
 	if(preview_outfit)
@@ -137,6 +201,7 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	body.update_inv_belt(hide_experimental = TRUE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
+	pref_log_op("dummy_dress", _t)
 	return body
 
 /datum/preferences/proc/abel_finish_preview_dummy(mob/living/carbon/human/dummy/body, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
@@ -148,39 +213,30 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	body.update_inv_head()
 	unset_busy_human_dummy(slotkey)
 
-/datum/preferences/proc/abel_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir, bg_type)
+/datum/preferences/proc/abel_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir)
+	var/_t = world.timeofday
 	body.setDir(preview_dir)
-	var/icon/character = getFlatIcon(body, defdir = preview_dir)
-	if(!character)
-		return null
-	if(bg_type)
-		var/turf/bg = bg_type
-		var/icon/backdrop = icon(initial(bg.icon), initial(bg.icon_state))
-		backdrop.Scale(character.Width(), character.Height())
-		backdrop.Blend(character, ICON_OVERLAY)
-		return backdrop
+	var/icon/character = getFlatIcon(body, defdir = preview_dir, no_anim = TRUE)
+	pref_log_op("getFlatIcon", _t, "dir=[preview_dir] size=[character ? "[character.Width()]x[character.Height()]" : "null"]")
 	return character
 
-/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, bg_type)
+/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir)
 	var/mob/living/carbon/human/dummy/body = abel_setup_preview_dummy(preview_job, preview_outfit)
 	if(!body)
 		return null
-	var/icon/out_icon = abel_flatten_dummy(body, preview_dir, bg_type)
+	var/icon/out_icon = abel_flatten_dummy(body, preview_dir)
 	abel_finish_preview_dummy(body)
 	return out_icon
 
 /datum/preferences/proc/abel_build_preview(mob/user, features_json)
 	if(!pref_species)
 		return null
+	var/_t = world.timeofday
 
 	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
 	var/datum/outfit/preview_outfit
 	if(preview_job)
 		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
-
-	var/bg_type = abel_preview_background ? text2path(abel_preview_background) : null
-	if(bg_type && !ispath(bg_type, /turf))
-		bg_type = null
 
 	var/sig = list2params(list(
 		"sp" = "[pref_species.type]",
@@ -190,7 +246,6 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 		"su" = abel_preview_underwear,
 		"sc" = abel_preview_clothes,
 		"d" = abel_preview_dir,
-		"bg" = bg_type ? "[bg_type]" : "none",
 		"j" = preview_job ? "[preview_job.type]" : "none",
 		"o" = preview_outfit ? "[preview_outfit]" : "none",
 		"sk" = skin_tone,
@@ -203,23 +258,27 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	if(cached)
 		abel_preview_cache = cached
 		abel_preview_sig = sig
+		pref_log_op("abel_build_preview", _t, "CACHE_HIT")
 		return cached
 
 	var/saved_underwear = underwear
 	if(!abel_preview_underwear)
 		underwear = "Nude"
-	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir, bg_type)
+	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir)
 	underwear = saved_underwear
 	if(!flat)
 		return abel_preview_cache
 
+	var/_tb = world.timeofday
 	var/b64 = icon2base64(flat)
+	pref_log_op("icon2base64", _tb)
 	if(!b64)
 		return abel_preview_cache
 
 	abel_preview_cache = "data:image/png;base64,[b64]"
 	abel_preview_sig = sig
 	GLOB.abel_preview_b64_cache[sig] = abel_preview_cache
+	pref_log_op("abel_build_preview", _t, "RENDER dir=[abel_preview_dir]")
 	return abel_preview_cache
 
 /datum/preferences/proc/abel_turf_thumbnail(turf_type)
@@ -264,6 +323,7 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	return options
 
 /datum/preferences/ui_data(mob/user)
+	var/_t = world.timeofday
 	var/list/data = list()
 
 	var/datum/faith/selected_faith
@@ -387,6 +447,7 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 		"scaling_method" = "[scaling_method]",
 	)
 
+	pref_log_op("ui_data", _t, "features=[length(data["features"])] uw_opts=[length(data["underwear_options"])]")
 	return data
 
 /datum/preferences/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -440,10 +501,15 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	return FALSE
 
 /datum/preferences/process_link(mob/user, list/href_list)
+	pref_log_action("pref:[href_list["preference"]]", json_encode(href_list))
 	switch(href_list["preference"])
 		if("abel_customizer")
+			var/_ct = world.timeofday
 			validate_customizer_entries()
+			pref_log_op("validate_customizer_entries", _ct)
+			_ct = world.timeofday
 			handle_customizer_topic(user, href_list)
+			pref_log_op("handle_customizer_topic", _ct)
 			update_menu_data(user)
 			return TRUE
 		if("abel_set_choice")
