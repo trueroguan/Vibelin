@@ -596,9 +596,9 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 			return TRUE
 		if("abel_hover")
 			var/acc_path = text2path(href_list["acc"])
-			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : null
+			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : GLOB.underwear_list[href_list["acc"]]
 			abel_hover_for = href_list["acc"]
-			abel_hover_cache = sa ? sa.abel_dir_sprite(abel_preview_dir) : ""
+			abel_hover_cache = sa ? sa.abel_dir_sprite(abel_preview_dir, href_list["color"]) : ""
 			SStgui.update_uis(src)
 			return TRUE
 	return ..()

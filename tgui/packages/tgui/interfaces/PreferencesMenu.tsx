@@ -396,7 +396,8 @@ export const PreferencesMenu = () => {
 
   useEffect(() => {
     setActiveSection(mapTab(data.initial_tab));
-  }, [data.initial_tab, data.open_sequence]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.open_sequence]);
 
   const ageOptions = data.age_options ?? [];
   const erpEnabled = asBool(data.erp_enabled);
@@ -432,7 +433,7 @@ export const PreferencesMenu = () => {
     });
   };
 
-  const requestHover = (value: string | null) => {
+  const requestHover = (value: string | null, color?: string) => {
     if (hoverTimer.current) {
       clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
@@ -442,7 +443,7 @@ export const PreferencesMenu = () => {
       return;
     }
     hoverTimer.current = setTimeout(() => {
-      doPref('abel_hover', undefined, { acc: value });
+      doPref('abel_hover', undefined, { acc: value, color: color || '' });
     }, 120);
   };
 
@@ -604,7 +605,13 @@ export const PreferencesMenu = () => {
               onSelect={(value) =>
                 customizerAct(feature.key, 'select_acc', { acc_type: value })
               }
-              onHover={requestHover}
+              onHover={(v) =>
+                requestHover(
+                  v,
+                  feature.colors?.[0]?.value ??
+                    feature.extras?.find((e) => e.kind === 'color')?.value,
+                )
+              }
               thumbs={data.thumbs}
             />
           </Box>
@@ -1096,7 +1103,7 @@ export const PreferencesMenu = () => {
                             ? {
                                 backgroundImage: `url(${backdropTile})`,
                                 backgroundRepeat: 'repeat',
-                                backgroundSize: '48px 48px',
+                                backgroundSize: '64px 64px',
                                 imageRendering: 'pixelated',
                               }
                             : {}),
@@ -1114,8 +1121,8 @@ export const PreferencesMenu = () => {
                               height: '100%',
                               objectFit: 'contain',
                               imageRendering: 'pixelated',
-                              filter: hoverValue ? 'grayscale(1)' : undefined,
-                              opacity: hoverValue ? 0.75 : 1,
+                              filter: hoverValue ? 'grayscale(0.25)' : undefined,
+                              opacity: hoverValue ? 0.85 : 1,
                             }}
                           />
                         ) : (

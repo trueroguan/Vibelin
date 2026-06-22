@@ -29,14 +29,16 @@ GLOBAL_LIST_EMPTY(abel_dir_sprite_cache)
 	GLOB.abel_accessory_thumb_cache[type] = result
 	return result
 
-/datum/sprite_accessory/proc/abel_dir_sprite(sprite_dir)
-	var/cache_key = "[type]-[sprite_dir]"
+/datum/sprite_accessory/proc/abel_dir_sprite(sprite_dir, sprite_color)
+	var/cache_key = "[type]-[sprite_dir]-[sprite_color]"
 	if(cache_key in GLOB.abel_dir_sprite_cache)
 		return GLOB.abel_dir_sprite_cache[cache_key]
 	var/result = ""
 	var/state = abel_thumb_state()
 	if(state)
 		var/icon/spr = icon(icon, state, sprite_dir)
+		if(spr && sprite_color)
+			spr.Blend(sprite_color, ICON_MULTIPLY)
 		var/b64 = spr ? icon2base64(spr) : null
 		if(b64)
 			result = "data:image/png;base64,[b64]"
