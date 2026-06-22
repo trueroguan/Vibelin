@@ -7,28 +7,11 @@
 /datum/preferences/var/abel_preview_cache
 /datum/preferences/var/abel_preview_sig
 /datum/preferences/var/abel_static_sig
+/datum/preferences/var/abel_hover_cache
+/datum/preferences/var/abel_hover_for
 
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
 GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
-
-// Background pre-warm of accessory thumbnails so the first chargen open / species switch
-// doesn't block ~4s rendering hundreds of thumbnails. Runs over ticks, never blocks boot.
-SUBSYSTEM_DEF(abel_thumb_warm)
-	name = "Abel Thumb Warm"
-	init_order = INIT_ORDER_DEFAULT
-	flags = SS_NO_FIRE
-
-/datum/controller/subsystem/abel_thumb_warm/Initialize(start_timeofday)
-	abel_warm_thumbnails()
-	return ..()
-
-/proc/abel_warm_thumbnails()
-	set waitfor = FALSE
-	for(var/atype in subtypesof(/datum/sprite_accessory))
-		var/datum/sprite_accessory/acc = SPRITE_ACCESSORY(atype)
-		if(acc)
-			acc.abel_thumbnail()
-		CHECK_TICK
 
 // ===== PREF MENU DEBUG LOGGER (temporary — remove with its hooks once chargen perf is fixed) =====
 GLOBAL_VAR_INIT(pref_menu_debug, TRUE)
@@ -100,6 +83,9 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 /datum/preferences/ui_state(mob/user)
 	return GLOB.always_state
 
+/datum/preferences/ui_assets(mob/user)
+	return list(get_asset_datum(/datum/asset/spritesheet/abel_chargen))
+
 /datum/preferences/ui_static_data(mob/user)
 	var/_t = world.timeofday
 	. = list()
@@ -127,9 +113,9 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 					continue
 				var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
 				if(accessory)
-					.[key] = accessory.abel_thumbnail()
+					.[key] = sanitize_css_class_name("[accessory_type]")
 	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
-		.[undie.name] = undie.abel_thumbnail()
+		.[undie.name] = sanitize_css_class_name("[undie.type]")
 	pref_log_op("abel_thumbnail_catalog", _t, "entries=[length(.)] rendered=[GLOB.pref_thumbnail_renders - start_renders]")
 
 /datum/preferences/reset_jobs(mob/user, silent = FALSE)
@@ -412,6 +398,8 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	data["preview_dir"] = abel_preview_dir
 	data["background"] = abel_preview_background ? abel_preview_background : "none"
 	data["preview_image"] = abel_preview_cache
+	data["hover_sprite"] = abel_hover_cache
+	data["hover_for"] = abel_hover_for
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -605,5 +593,12 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 					abel_preview_background = bg_choice
 			save_character()
 			update_menu_data(user)
+			return TRUE
+		if("abel_hover")
+			var/acc_path = text2path(href_list["acc"])
+			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : null
+			abel_hover_for = href_list["acc"]
+			abel_hover_cache = sa ? sa.abel_dir_sprite(abel_preview_dir) : ""
+			SStgui.update_uis(src)
 			return TRUE
 	return ..()

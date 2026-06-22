@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -90,6 +90,8 @@ type PrefsData = {
   background_options: FeatureOption[];
   thumbs?: Record<string, string>;
   preview_image: string | null;
+  hover_sprite: string | null;
+  hover_for: string | null;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -310,7 +312,7 @@ const OptionGrid = (props: {
             tooltip={option.name}
             selected={String(selected) === String(option.value)}
             onClick={() => onSelect(option.value)}
-            onMouseOver={() => onHover?.(thumb || null)}
+            onMouseOver={() => onHover?.(option.value)}
             onMouseLeave={() => onHover?.(null)}
             style={
               hasThumbs
@@ -328,16 +330,27 @@ const OptionGrid = (props: {
                 }}
               >
                 {thumb ? (
-                  <img
-                    src={thumb}
-                    alt=""
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      objectFit: 'contain',
-                      imageRendering: 'pixelated',
-                    }}
-                  />
+                  thumb.startsWith('data:') ? (
+                    <img
+                      src={thumb}
+                      alt=""
+                      style={{
+                        width: '50px',
+                        height: '50px',
+                        objectFit: 'contain',
+                        imageRendering: 'pixelated',
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      className={`abel_chargen48x48 ${thumb}`}
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        imageRendering: 'pixelated',
+                      }}
+                    />
+                  )
                 ) : (
                   <Icon name="ban" color="label" />
                 )}
@@ -378,7 +391,8 @@ export const PreferencesMenu = () => {
 
   const [activeSection, setActiveSection] = useState(mapTab(data.initial_tab));
   const [activeFeature, setActiveFeature] = useState<string>(UNDERWEAR_KEY);
-  const [hoverThumb, setHoverThumb] = useState<string | null>(null);
+  const [hoverValue, setHoverValue] = useState<string | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setActiveSection(mapTab(data.initial_tab));
@@ -391,6 +405,8 @@ export const PreferencesMenu = () => {
     data.background && data.background !== 'none'
       ? data.background_options?.find((o) => o.value === data.background)?.thumb
       : undefined;
+  const hoverOverlay =
+    hoverValue && data.hover_for === hoverValue ? data.hover_sprite : null;
 
   const doPref = (
     preference: string,
@@ -414,6 +430,20 @@ export const PreferencesMenu = () => {
       customizer_task: task,
       ...(extra || {}),
     });
+  };
+
+  const requestHover = (value: string | null) => {
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+    setHoverValue(value);
+    if (!value) {
+      return;
+    }
+    hoverTimer.current = setTimeout(() => {
+      doPref('abel_hover', undefined, { acc: value });
+    }, 120);
   };
 
   const headerMeta = [
@@ -574,7 +604,7 @@ export const PreferencesMenu = () => {
               onSelect={(value) =>
                 customizerAct(feature.key, 'select_acc', { acc_type: value })
               }
-              onHover={setHoverThumb}
+              onHover={requestHover}
               thumbs={data.thumbs}
             />
           </Box>
@@ -683,7 +713,7 @@ export const PreferencesMenu = () => {
             onSelect={(value) =>
               doPref('abel_underwear', undefined, { undie: value })
             }
-            onHover={setHoverThumb}
+            onHover={requestHover}
             thumbs={data.thumbs}
           />
         </FieldBlock>
@@ -1084,8 +1114,8 @@ export const PreferencesMenu = () => {
                               height: '100%',
                               objectFit: 'contain',
                               imageRendering: 'pixelated',
-                              filter: hoverThumb ? 'grayscale(1)' : undefined,
-                              opacity: hoverThumb ? 0.75 : 1,
+                              filter: hoverValue ? 'grayscale(1)' : undefined,
+                              opacity: hoverValue ? 0.75 : 1,
                             }}
                           />
                         ) : (
@@ -1104,9 +1134,9 @@ export const PreferencesMenu = () => {
                             <Icon name="user" size={6} color="label" />
                           </Box>
                         )}
-                        {hoverThumb ? (
+                        {hoverOverlay ? (
                           <img
-                            src={hoverThumb}
+                            src={hoverOverlay}
                             alt=""
                             style={{
                               position: 'absolute',

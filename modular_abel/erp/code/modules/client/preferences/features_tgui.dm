@@ -1,27 +1,80 @@
 GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
+GLOBAL_LIST_EMPTY(abel_dir_sprite_cache)
+
+/datum/sprite_accessory/proc/abel_thumb_state()
+	if(!icon || isnull(icon_state) || icon_state == "")
+		return null
+	var/state = icon_state
+	if(length(relevant_layers))
+		var/layer_for_thumb = (BODY_FRONT_LAYER in relevant_layers) ? BODY_FRONT_LAYER : relevant_layers[1]
+		state = "[icon_state]_[get_layer_suffix(layer_for_thumb)]"
+	if(color_keys > 1)
+		state = "[state]_1"
+	var/list/states = icon_states(icon)
+	if(!(state in states))
+		state = (icon_state in states) ? icon_state : null
+	return state
 
 /datum/sprite_accessory/proc/abel_thumbnail()
 	if(type in GLOB.abel_accessory_thumb_cache)
 		return GLOB.abel_accessory_thumb_cache[type]
 	GLOB.pref_thumbnail_renders++
 	var/result = ""
-	if(icon && !isnull(icon_state) && icon_state != "")
-		var/state = icon_state
-		if(length(relevant_layers))
-			var/layer_for_thumb = (BODY_FRONT_LAYER in relevant_layers) ? BODY_FRONT_LAYER : relevant_layers[1]
-			state = "[icon_state]_[get_layer_suffix(layer_for_thumb)]"
-		if(color_keys > 1)
-			state = "[state]_1"
-		var/list/states = icon_states(icon)
-		if(!(state in states))
-			state = (icon_state in states) ? icon_state : null
-		if(state)
-			var/icon/thumb = icon(icon, state)
-			var/b64 = thumb ? icon2base64(thumb) : null
-			if(b64)
-				result = "data:image/png;base64,[b64]"
+	var/state = abel_thumb_state()
+	if(state)
+		var/icon/thumb = icon(icon, state)
+		var/b64 = thumb ? icon2base64(thumb) : null
+		if(b64)
+			result = "data:image/png;base64,[b64]"
 	GLOB.abel_accessory_thumb_cache[type] = result
 	return result
+
+/datum/sprite_accessory/proc/abel_dir_sprite(sprite_dir)
+	var/cache_key = "[type]-[sprite_dir]"
+	if(cache_key in GLOB.abel_dir_sprite_cache)
+		return GLOB.abel_dir_sprite_cache[cache_key]
+	var/result = ""
+	var/state = abel_thumb_state()
+	if(state)
+		var/icon/spr = icon(icon, state, sprite_dir)
+		var/b64 = spr ? icon2base64(spr) : null
+		if(b64)
+			result = "data:image/png;base64,[b64]"
+	GLOB.abel_dir_sprite_cache[cache_key] = result
+	return result
+
+/datum/asset/spritesheet/abel_chargen
+	name = "abel_chargen"
+
+/datum/asset/spritesheet/abel_chargen/create_spritesheets()
+	var/list/seen = list()
+	for(var/choice_type in subtypesof(/datum/customizer_choice))
+		var/datum/customizer_choice/choice = CUSTOMIZER_CHOICE(choice_type)
+		if(!choice || !LAZYLEN(choice.sprite_accessories))
+			continue
+		for(var/accessory_type in choice.sprite_accessories)
+			abel_insert_chargen_sprite(accessory_type, seen)
+	for(var/undie_name in GLOB.underwear_list)
+		var/datum/sprite_accessory/undie = GLOB.underwear_list[undie_name]
+		if(undie)
+			abel_insert_chargen_sprite(undie.type, seen)
+
+/datum/asset/spritesheet/abel_chargen/proc/abel_insert_chargen_sprite(accessory_type, list/seen)
+	var/key = sanitize_css_class_name("[accessory_type]")
+	if(seen[key])
+		return
+	seen[key] = TRUE
+	var/datum/sprite_accessory/acc = SPRITE_ACCESSORY(accessory_type)
+	if(!acc)
+		return
+	var/state = acc.abel_thumb_state()
+	if(!state)
+		return
+	var/icon/spr = icon(acc.icon, state)
+	if(!spr)
+		return
+	spr.Scale(48, 48)
+	Insert(key, spr)
 
 /datum/customizer_choice/proc/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	return null
