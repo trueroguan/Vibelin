@@ -88,6 +88,7 @@ type PrefsData = {
   preview_dir: number;
   background: string;
   background_options: FeatureOption[];
+  thumbs?: Record<string, string>;
   preview_image: string | null;
   ghost_image: string | null;
   culture_name: string;
@@ -291,67 +292,73 @@ const OptionGrid = (props: {
   options: FeatureOption[];
   selected?: string;
   onSelect: (value: string) => void;
-  onHover?: (thumb: string | null) => void;
+  onHover?: (value: string | null) => void;
+  thumbs?: Record<string, string>;
 }) => {
-  const { options, selected, onSelect, onHover } = props;
-  const hasThumbs = options.some((option) => option.thumb);
+  const { options, selected, onSelect, onHover, thumbs } = props;
+  const thumbOf = (option: FeatureOption) =>
+    option.thumb || thumbs?.[option.value];
+  const hasThumbs = options.some((option) => thumbOf(option));
   return (
     <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {options.map((option) => (
-        <Button
-          key={option.value}
-          mr={0.5}
-          mb={0.5}
-          tooltip={option.name}
-          selected={String(selected) === String(option.value)}
-          onClick={() => onSelect(option.value)}
-          onMouseOver={() => onHover?.(option.value)}
-          onMouseLeave={() => onHover?.(null)}
-          style={
-            hasThumbs
-              ? { width: '66px', height: '80px', padding: '2px' }
-              : undefined
-          }
-        >
-          {hasThumbs ? (
+      {options.map((option) => {
+        const thumb = thumbOf(option);
+        return (
+          <Button
+            key={option.value}
+            mr={0.5}
+            mb={0.5}
+            tooltip={option.name}
+            selected={String(selected) === String(option.value)}
+            onClick={() => onSelect(option.value)}
+            onMouseOver={() => onHover?.(option.value)}
+            onMouseLeave={() => onHover?.(null)}
+            style={
+              hasThumbs
+                ? { width: '66px', height: '80px', padding: '2px' }
+                : undefined
+            }
+          >
+            {hasThumbs ? (
+              <Box
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '50px',
+                }}
+              >
+                {thumb ? (
+                  <img
+                    src={thumb}
+                    alt=""
+                    style={{
+                      width: '50px',
+                      height: '50px',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                    }}
+                  />
+                ) : (
+                  <Icon name="ban" color="label" />
+                )}
+              </Box>
+            ) : null}
             <Box
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '50px',
+                fontSize: '9px',
+                lineHeight: '1.1',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                textAlign: 'center',
               }}
             >
-              {option.thumb ? (
-                <img
-                  src={option.thumb}
-                  alt=""
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    objectFit: 'contain',
-                    imageRendering: 'pixelated',
-                  }}
-                />
-              ) : (
-                <Icon name="ban" color="label" />
-              )}
+              {option.name}
             </Box>
-          ) : null}
-          <Box
-            style={{
-              fontSize: '9px',
-              lineHeight: '1.1',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              textAlign: 'center',
-            }}
-          >
-            {option.name}
-          </Box>
-        </Button>
-      ))}
+          </Button>
+        );
+      })}
     </Box>
   );
 };
@@ -518,6 +525,7 @@ export const PreferencesMenu = () => {
               customizerAct(feature.key, 'select_acc', { acc_type: value })
             }
             onHover={(value) => requestGhost(feature.key, value)}
+            thumbs={data.thumbs}
           />
         </FieldBlock>
       ) : feature.accessory_name ? (
@@ -642,6 +650,7 @@ export const PreferencesMenu = () => {
             onSelect={(value) =>
               doPref('abel_underwear', undefined, { undie: value })
             }
+            thumbs={data.thumbs}
           />
         </FieldBlock>
         {!isNude ? (

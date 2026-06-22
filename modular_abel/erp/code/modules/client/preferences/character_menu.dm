@@ -8,6 +8,7 @@
 /datum/preferences/var/abel_preview_sig
 /datum/preferences/var/abel_ghost_cache
 /datum/preferences/var/abel_ghost_rendering = FALSE
+/datum/preferences/var/abel_static_sig
 
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
 GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
@@ -34,10 +35,15 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	user << browse(null, "window=preferences_browser")
 
 	validate_customizer_entries()
+	abel_static_sig = "[pref_species?.type]-[gender]"
 	abel_build_preview(user, json_encode(abel_build_features_data()))
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
+	var/new_static_sig = "[pref_species?.type]-[gender]"
+	if(new_static_sig != abel_static_sig)
+		abel_static_sig = new_static_sig
+		update_static_data(user)
 	SStgui.update_uis(src)
 	abel_refresh_preview(user)
 
@@ -45,7 +51,31 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	return GLOB.always_state
 
 /datum/preferences/ui_static_data(mob/user)
-	return list("background_options" = abel_background_options())
+	. = list()
+	.["background_options"] = abel_background_options()
+	.["thumbs"] = abel_thumbnail_catalog()
+
+/datum/preferences/proc/abel_thumbnail_catalog()
+	. = list()
+	if(!pref_species)
+		return
+	for(var/customizer_type in pref_species.customizers)
+		var/datum/customizer/customizer = CUSTOMIZER(customizer_type)
+		if(!customizer)
+			continue
+		for(var/choice_type in customizer.customizer_choices)
+			var/datum/customizer_choice/choice = CUSTOMIZER_CHOICE(choice_type)
+			if(!choice || !LAZYLEN(choice.sprite_accessories))
+				continue
+			for(var/accessory_type in choice.sprite_accessories)
+				var/key = "[accessory_type]"
+				if(.[key])
+					continue
+				var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
+				if(accessory)
+					.[key] = accessory.abel_thumbnail()
+	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
+		.[undie.name] = undie.abel_thumbnail()
 
 /datum/preferences/reset_jobs(mob/user, silent = FALSE)
 	job_preferences = list()
@@ -75,7 +105,7 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	if(!pref_species)
 		return
 	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
-		. += list(list("name" = undie.name, "value" = undie.name, "thumb" = undie.abel_thumbnail()))
+		. += list(list("name" = undie.name, "value" = undie.name))
 
 /datum/preferences/proc/abel_preview_job()
 	for(var/job_type in job_preferences)

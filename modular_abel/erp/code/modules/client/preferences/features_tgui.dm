@@ -130,12 +130,11 @@ GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
 			if(accessory)
 				feature["accessory_name"] = accessory.name
 				feature["accessory_value"] = "[entry.accessory_type]"
-				feature["accessory_thumb"] = accessory.abel_thumbnail()
 				if(length(choice.sprite_accessories) > 1)
 					var/list/accessory_options = list()
 					for(var/accessory_type in choice.sprite_accessories)
 						var/datum/sprite_accessory/iter_accessory = SPRITE_ACCESSORY(accessory_type)
-						accessory_options += list(list("name" = iter_accessory.name, "value" = "[accessory_type]", "thumb" = iter_accessory.abel_thumbnail()))
+						accessory_options += list(list("name" = iter_accessory.name, "value" = "[accessory_type]"))
 					feature["accessory_options"] = accessory_options
 				if(choice.allows_accessory_color_customization && accessory.color_keys)
 					var/list/colors = list()
