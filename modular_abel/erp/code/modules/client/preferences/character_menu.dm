@@ -2,8 +2,13 @@
 /datum/preferences/var/abel_preferences_open_sequence = 0
 /datum/preferences/var/abel_preview_underwear = TRUE
 /datum/preferences/var/abel_preview_clothes = TRUE
+/datum/preferences/var/abel_preview_dir = SOUTH
+/datum/preferences/var/abel_preview_background
 /datum/preferences/var/abel_preview_cache
 /datum/preferences/var/abel_preview_sig
+
+GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
+GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 
 /datum/preferences/show_choices(mob/user, tabchoice)
 	if(!user || !user.client)
@@ -58,7 +63,7 @@
 	if(!pref_species)
 		return
 	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
-		. += list(list("name" = undie.name, "value" = undie.name))
+		. += list(list("name" = undie.name, "value" = undie.name, "thumb" = undie.abel_thumbnail()))
 
 /datum/preferences/proc/abel_preview_job()
 	for(var/job_type in job_preferences)
@@ -75,6 +80,10 @@
 		return null
 
 	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
+	var/datum/outfit/preview_outfit
+	if(preview_job)
+		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
+
 	var/sig = list2params(list(
 		"sp" = "[pref_species.type]",
 		"g" = gender,
@@ -83,30 +92,23 @@
 		"su" = abel_preview_underwear,
 		"sc" = abel_preview_clothes,
 		"j" = preview_job ? "[preview_job.type]" : "none",
+		"o" = preview_outfit ? "[preview_outfit]" : "none",
 		"sk" = skin_tone,
 		"a" = age,
 		"f" = features_json,
 	))
-	if(sig == abel_preview_sig && abel_preview_cache)
-		return abel_preview_cache
 
-	var/mob/living/carbon/human/dummy/mannequin = generate_or_wait_for_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
-	if(!mannequin)
-		return abel_preview_cache
+	var/cached = GLOB.abel_preview_b64_cache[sig]
+	if(cached)
+		abel_preview_cache = cached
+		abel_preview_sig = sig
+		return cached
 
 	var/saved_underwear = underwear
 	if(!abel_preview_underwear)
 		underwear = "Nude"
-	apply_prefs_to(mannequin, TRUE)
+	var/icon/flat = get_flat_human_icon(null, preview_job, src, DUMMY_HUMAN_SLOT_PREFERENCES, list(SOUTH), preview_outfit)
 	underwear = saved_underwear
-
-	if(preview_job)
-		mannequin.job = preview_job.title
-		mannequin.dress_up_as_job(preview_job, TRUE)
-
-	mannequin.setDir(SOUTH)
-	var/icon/flat = getFlatIcon(mannequin, defdir = SOUTH)
-	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
 	if(!flat)
 		return abel_preview_cache
 
@@ -116,6 +118,7 @@
 
 	abel_preview_cache = "data:image/png;base64,[b64]"
 	abel_preview_sig = sig
+	GLOB.abel_preview_b64_cache[sig] = abel_preview_cache
 	return abel_preview_cache
 
 /datum/preferences/ui_data(mob/user)

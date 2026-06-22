@@ -76,6 +76,16 @@
 	affected_mob.remove_status_effect(/datum/status_effect/buff/moondust_purest)
 	affected_mob.remove_chem_effect(CE_PULSE, "[type]")
 
+// UPSTREAM BUG: /datum/tgui/open() null-checks user.client at the top, then yields (send_assets) before
+// get_payload() re-reads user.client.prefs (tgui.dm:260). If the client vanishes during that yield - e.g.
+// AGGRESSIVE_CHANGELOG force-opening the Changelog for a guest mid-login - get_payload crashes
+// "Cannot read null.prefs". Guard the client read; same-type redefs CHAIN, so ..() builds the real payload
+// whenever the client is still valid, and the orphaned UI is reaped by the tgui process loop.
+/datum/tgui/get_payload(custom_data, with_data, with_static_data)
+	if(!user?.client)
+		return list()
+	return ..()
+
 #if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 /datum/unit_test/turf_coverage/Run()
 	var/list/all_turfs = subtypesof(/turf)

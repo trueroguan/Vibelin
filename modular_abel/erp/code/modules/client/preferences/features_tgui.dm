@@ -1,3 +1,27 @@
+GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
+
+/datum/sprite_accessory/proc/abel_thumbnail()
+	if(type in GLOB.abel_accessory_thumb_cache)
+		return GLOB.abel_accessory_thumb_cache[type]
+	var/result = ""
+	if(icon && !isnull(icon_state) && icon_state != "")
+		var/state = icon_state
+		if(length(relevant_layers))
+			var/layer_for_thumb = (BODY_FRONT_LAYER in relevant_layers) ? BODY_FRONT_LAYER : relevant_layers[1]
+			state = "[icon_state]_[get_layer_suffix(layer_for_thumb)]"
+		if(color_keys > 1)
+			state = "[state]_1"
+		var/list/states = icon_states(icon)
+		if(!(state in states))
+			state = (icon_state in states) ? icon_state : null
+		if(state)
+			var/icon/thumb = icon(icon, state)
+			var/b64 = thumb ? icon2base64(thumb) : null
+			if(b64)
+				result = "data:image/png;base64,[b64]"
+	GLOB.abel_accessory_thumb_cache[type] = result
+	return result
+
 /datum/customizer_choice/proc/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	return null
 
@@ -106,11 +130,12 @@
 			if(accessory)
 				feature["accessory_name"] = accessory.name
 				feature["accessory_value"] = "[entry.accessory_type]"
+				feature["accessory_thumb"] = accessory.abel_thumbnail()
 				if(length(choice.sprite_accessories) > 1)
 					var/list/accessory_options = list()
 					for(var/accessory_type in choice.sprite_accessories)
 						var/datum/sprite_accessory/iter_accessory = SPRITE_ACCESSORY(accessory_type)
-						accessory_options += list(list("name" = iter_accessory.name, "value" = "[accessory_type]"))
+						accessory_options += list(list("name" = iter_accessory.name, "value" = "[accessory_type]", "thumb" = iter_accessory.abel_thumbnail()))
 					feature["accessory_options"] = accessory_options
 				if(choice.allows_accessory_color_customization && accessory.color_keys)
 					var/list/colors = list()

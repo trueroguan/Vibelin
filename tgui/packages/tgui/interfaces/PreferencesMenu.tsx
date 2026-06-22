@@ -21,6 +21,7 @@ type LoadoutSlot = {
 type FeatureOption = {
   name: string;
   value: string;
+  thumb?: string;
 };
 
 type FeatureColor = {
@@ -281,6 +282,7 @@ const OptionGrid = (props: {
   onSelect: (value: string) => void;
 }) => {
   const { options, selected, onSelect } = props;
+  const hasThumbs = options.some((option) => option.thumb);
   return (
     <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
       {options.map((option) => (
@@ -288,10 +290,52 @@ const OptionGrid = (props: {
           key={option.value}
           mr={0.5}
           mb={0.5}
+          tooltip={option.name}
           selected={String(selected) === String(option.value)}
           onClick={() => onSelect(option.value)}
+          style={
+            hasThumbs
+              ? { width: '66px', height: '80px', padding: '2px' }
+              : undefined
+          }
         >
-          {option.name}
+          {hasThumbs ? (
+            <Box
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '50px',
+              }}
+            >
+              {option.thumb ? (
+                <img
+                  src={option.thumb}
+                  alt=""
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    objectFit: 'contain',
+                    imageRendering: 'pixelated',
+                  }}
+                />
+              ) : (
+                <Icon name="ban" color="label" />
+              )}
+            </Box>
+          ) : null}
+          <Box
+            style={{
+              fontSize: '9px',
+              lineHeight: '1.1',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              textAlign: 'center',
+            }}
+          >
+            {option.name}
+          </Box>
         </Button>
       ))}
     </Box>
