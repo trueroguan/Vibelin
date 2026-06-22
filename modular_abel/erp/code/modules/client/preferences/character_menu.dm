@@ -7,6 +7,7 @@
 /datum/preferences/var/abel_preview_cache
 /datum/preferences/var/abel_preview_sig
 /datum/preferences/var/abel_ghost_cache
+/datum/preferences/var/list/abel_ghost_cache_dirs
 /datum/preferences/var/abel_ghost_rendering = FALSE
 /datum/preferences/var/abel_static_sig
 
@@ -215,10 +216,11 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
 	if(!entry)
 		return
-	var/sig = "ghost|[abel_preview_sig]|[customizer_type]|[acc_type]"
+	var/sig = "ghost4|[abel_preview_sig]|[customizer_type]|[acc_type]"
 	var/cached = GLOB.abel_preview_b64_cache[sig]
-	if(cached)
-		abel_ghost_cache = cached
+	if(islist(cached))
+		abel_ghost_cache_dirs = cached
+		abel_ghost_cache = length(cached) ? cached[1] : null
 		SStgui.update_uis(src)
 		return
 	if(abel_ghost_rendering)
@@ -235,18 +237,22 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	var/saved_underwear = underwear
 	if(!abel_preview_underwear)
 		underwear = "Nude"
-	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir, null)
+	var/list/rendered_images = list()
+	var/list/ghost_dirs = list(WEST, SOUTH, NORTH, EAST)
+	for(var/ghost_dir in ghost_dirs)
+		var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, ghost_dir, null)
+		var/b64 = flat ? icon2base64(flat) : null
+		if(b64)
+			rendered_images += "data:image/png;base64,[b64]"
 	underwear = saved_underwear
 	entry.accessory_type = saved_acc
 	entry.disabled = saved_disabled
 	abel_ghost_rendering = FALSE
-	if(!flat)
+	if(!length(rendered_images))
 		return
-	var/b64 = icon2base64(flat)
-	if(!b64)
-		return
-	abel_ghost_cache = "data:image/png;base64,[b64]"
-	GLOB.abel_preview_b64_cache[sig] = abel_ghost_cache
+	abel_ghost_cache_dirs = rendered_images
+	abel_ghost_cache = rendered_images[1]
+	GLOB.abel_preview_b64_cache[sig] = rendered_images.Copy()
 	SStgui.update_uis(src)
 
 /datum/preferences/proc/abel_turf_thumbnail(turf_type)
@@ -379,6 +385,7 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	data["background"] = abel_preview_background ? abel_preview_background : "none"
 	data["preview_image"] = abel_preview_cache
 	data["ghost_image"] = abel_ghost_cache
+	data["ghost_images"] = abel_ghost_cache_dirs || list()
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"

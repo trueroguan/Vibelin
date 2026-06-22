@@ -91,6 +91,7 @@ type PrefsData = {
   thumbs?: Record<string, string>;
   preview_image: string | null;
   ghost_image: string | null;
+  ghost_images?: string[];
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -381,6 +382,11 @@ export const PreferencesMenu = () => {
   const [activeFeature, setActiveFeature] = useState<string>(UNDERWEAR_KEY);
   const [ghostActive, setGhostActive] = useState(false);
   const ghostTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ghostImages = data.ghost_images?.length
+    ? data.ghost_images
+    : data.ghost_image
+      ? [data.ghost_image]
+      : [];
 
   useEffect(() => {
     setActiveSection(mapTab(data.initial_tab));
@@ -499,94 +505,140 @@ export const PreferencesMenu = () => {
     </Box>
   );
 
-  const renderFeatureBody = (feature: FeatureEntry, skipColors?: boolean) => (
-    <>
-      {feature.choice_options ? (
-        <FieldBlock label="Type">
-          <OptionGrid
-            options={feature.choice_options}
-            selected={feature.choice_value}
-            onSelect={(value) =>
-              doPref('abel_set_choice', undefined, {
-                key: feature.key,
-                choice_type: value,
-              })
-            }
-          />
-        </FieldBlock>
-      ) : null}
+  const renderFeatureExtras = (feature: FeatureEntry) => {
+    const extras = feature.extras || [];
+    if (!extras.length) {
+      return null;
+    }
 
-      {feature.accessory_options ? (
-        <FieldBlock label="Style">
-          <OptionGrid
-            options={feature.accessory_options}
-            selected={feature.accessory_value}
-            onSelect={(value) =>
-              customizerAct(feature.key, 'select_acc', { acc_type: value })
-            }
-            onHover={(value) => requestGhost(feature.key, value)}
-            thumbs={data.thumbs}
-          />
-        </FieldBlock>
-      ) : feature.accessory_name ? (
-        <FieldBlock label="Style">
-          <Box>{feature.accessory_name}</Box>
-        </FieldBlock>
-      ) : null}
-
-      {!skipColors && feature.colors?.length ? (
-        <FieldBlock label="Colors">{renderColorSwatches(feature)}</FieldBlock>
-      ) : null}
-
-      {(feature.extras || []).map((extra) => (
-        <FieldBlock key={extra.task} label={extra.label}>
-          {extra.kind === 'color' ? (
-            <Button onClick={() => customizerAct(feature.key, extra.task)}>
-              <Box
-                inline
-                width="22px"
-                height="11px"
-                verticalAlign="middle"
-                backgroundColor={swatchColor(extra.value)}
-              />
+    return (
+      <Box
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: '4px 6px',
+        }}
+      >
+        {extras.map((extra) => (
+          <Box
+            key={extra.task}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            <Box color="label" style={{ fontSize: '10px', lineHeight: '12px' }}>
+              {extra.label}
+            </Box>
+            <Button
+              compact
+              tooltip={extra.label}
+              onClick={() => customizerAct(feature.key, extra.task)}
+            >
+              {extra.kind === 'color' ? (
+                <Box
+                  inline
+                  width="22px"
+                  height="11px"
+                  verticalAlign="middle"
+                  backgroundColor={swatchColor(extra.value)}
+                />
+              ) : (
+                display(extra.value)
+              )}
             </Button>
-          ) : (
-            <Button onClick={() => customizerAct(feature.key, extra.task)}>
-              {display(extra.value)}
-            </Button>
-          )}
-        </FieldBlock>
-      ))}
-    </>
-  );
+          </Box>
+        ))}
+      </Box>
+    );
+  };
 
+  const renderFeatureBody = (feature: FeatureEntry, skipColors?: boolean) => {
+    const extraControls = renderFeatureExtras(feature);
+
+    return (
+      <>
+        {!skipColors && feature.colors?.length ? (
+          <FieldBlock label="Colors">{renderColorSwatches(feature)}</FieldBlock>
+        ) : null}
+
+        {feature.choice_options ? (
+          <FieldBlock label="Type">
+            <OptionGrid
+              options={feature.choice_options}
+              selected={feature.choice_value}
+              onSelect={(value) =>
+                doPref('abel_set_choice', undefined, {
+                  key: feature.key,
+                  choice_type: value,
+                })
+              }
+            />
+          </FieldBlock>
+        ) : null}
+
+        {feature.accessory_options ? (
+          <Box mb={1}>
+            <Stack align="center" mb={0.5}>
+              <Stack.Item>
+                <Box color="label">Style</Box>
+              </Stack.Item>
+              {extraControls ? <Stack.Item grow>{extraControls}</Stack.Item> : null}
+            </Stack>
+            <OptionGrid
+              options={feature.accessory_options}
+              selected={feature.accessory_value}
+              onSelect={(value) =>
+                customizerAct(feature.key, 'select_acc', { acc_type: value })
+              }
+              onHover={(value) => requestGhost(feature.key, value)}
+              thumbs={data.thumbs}
+            />
+          </Box>
+        ) : feature.accessory_name ? (
+          <Box mb={1}>
+            <Stack align="center" mb={0.5}>
+              <Stack.Item>
+                <Box color="label">Style</Box>
+              </Stack.Item>
+              {extraControls ? <Stack.Item grow>{extraControls}</Stack.Item> : null}
+            </Stack>
+            <Box>{feature.accessory_name}</Box>
+          </Box>
+        ) : extraControls ? (
+          <FieldBlock label="Options">{extraControls}</FieldBlock>
+        ) : null}
+      </>
+    );
+  };
   const renderFeatureEditor = (feature: FeatureEntry, showName?: boolean) => {
     const enabled = asBool(feature.enabled);
     return (
       <Box mb={1}>
-        <Stack align="center" mb={0.5}>
-          {showName ? (
-            <Stack.Item>
-              <Box bold>{feature.name}</Box>
-            </Stack.Item>
-          ) : null}
-          {asBool(feature.can_disable) ? (
-            <Stack.Item>
-              <Button
-                icon={enabled ? 'toggle-on' : 'toggle-off'}
-                selected={enabled}
-                onClick={() => customizerAct(feature.key, 'toggle_missing')}
-              >
-                {enabled ? 'On' : 'Off'}
-              </Button>
-            </Stack.Item>
-          ) : null}
-          {enabled && feature.colors?.length ? (
-            <Stack.Item grow>{renderColorSwatches(feature)}</Stack.Item>
-          ) : null}
-        </Stack>
+        {showName || asBool(feature.can_disable) ? (
+          <Stack align="center" mb={0.5}>
+            {showName ? (
+              <Stack.Item>
+                <Box bold>{feature.name}</Box>
+              </Stack.Item>
+            ) : null}
+            {asBool(feature.can_disable) ? (
+              <Stack.Item>
+                <Button
+                  icon={enabled ? 'toggle-on' : 'toggle-off'}
+                  selected={enabled}
+                  onClick={() => customizerAct(feature.key, 'toggle_missing')}
+                >
+                  {enabled ? 'On' : 'Off'}
+                </Button>
+              </Stack.Item>
+            ) : null}
+          </Stack>
+        ) : null}
         {enabled ? (
-          renderFeatureBody(feature, true)
+          renderFeatureBody(feature)
         ) : (
           <Box color="label">This feature is hidden.</Box>
         )}
@@ -1016,22 +1068,35 @@ export const PreferencesMenu = () => {
                     <Box my={1} mx={1} height="1px" backgroundColor="rgba(255,255,255,0.15)" />
                     {systemSections.map(NavTab)}
                   </Tabs>
-                  {ghostActive && data.ghost_image ? (
+                  {ghostActive && ghostImages.length ? (
                     <Box mt={2} style={{ textAlign: 'center' }}>
                       <Box color="label" mb={0.5}>
                         Preview
                       </Box>
-                      <img
-                        src={data.ghost_image}
-                        alt=""
+                      <Box
                         style={{
-                          width: '100%',
-                          maxWidth: '170px',
-                          objectFit: 'contain',
-                          imageRendering: 'pixelated',
-                          opacity: 0.85,
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                          gap: '4px',
+                          justifyItems: 'center',
                         }}
-                      />
+                      >
+                        {ghostImages.map((image, index) => (
+                          <img
+                            key={`${index}-${image.length}`}
+                            src={image}
+                            alt=""
+                            style={{
+                              width: '72px',
+                              maxWidth: '100%',
+                              objectFit: 'contain',
+                              imageRendering: 'pixelated',
+                              opacity: 0.5,
+                              filter: 'grayscale(1) contrast(0.9)',
+                            }}
+                          />
+                        ))}
+                      </Box>
                     </Box>
                   ) : null}
                 </Section>
