@@ -1,4 +1,4 @@
-import { Children, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -79,6 +79,12 @@ type PrefsData = {
   erp_enabled: Booleanish;
   headshot: string | null;
   features: FeatureEntry[];
+  underwear: string;
+  underwear_color: string;
+  underwear_options: FeatureOption[];
+  preview_underwear: Booleanish;
+  preview_clothes: Booleanish;
+  preview_image: string | null;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -109,18 +115,21 @@ type PrefsData = {
   };
 };
 
-const tabs = [
-  { id: 'identity', label: 'Identity', icon: 'user' },
-  { id: 'body', label: 'Body', icon: 'male' },
+const charSections = [
+  { id: 'identity', label: 'Identity', icon: 'id-card' },
   { id: 'appearance', label: 'Appearance', icon: 'palette' },
-  { id: 'features', label: 'Features', icon: 'user-edit' },
-  { id: 'erp', label: 'ERP', icon: 'heart' },
-  { id: 'lore', label: 'Lore', icon: 'book' },
+  { id: 'voice', label: 'Voice', icon: 'volume-up' },
+  { id: 'background', label: 'Background', icon: 'book-open' },
   { id: 'gameplay', label: 'Gameplay', icon: 'gamepad' },
-  { id: 'game', label: 'Game Prefs', icon: 'sliders-h' },
-  { id: 'menu', label: 'Menu', icon: 'bars' },
-  { id: 'system', label: 'System', icon: 'cog' },
+  { id: 'profile', label: 'Profile', icon: 'image' },
 ];
+
+const systemSections = [
+  { id: 'erp', label: 'Intimacy', icon: 'heart' },
+  { id: 'settings', label: 'Settings', icon: 'cog' },
+];
+
+const UNDERWEAR_KEY = '__underwear__';
 
 const asBool = (value: Booleanish | undefined) => value === true || value === 1;
 
@@ -129,16 +138,26 @@ const display = (value: unknown, fallback = 'None') => {
   return text || fallback;
 };
 
+const swatchColor = (value: string) => {
+  const text = String(value || '').trim();
+  if (!text) {
+    return '#888888';
+  }
+  return text.startsWith('#') ? text : `#${text}`;
+};
+
 type PanelProps = {
   title: string;
   icon?: string;
+  buttons?: React.ReactNode;
   children?: React.ReactNode;
 };
 
 const Panel = (props: PanelProps) => {
-  const { title, icon, children } = props;
+  const { title, icon, buttons, children } = props;
   return (
     <Section
+      mb={1}
       title={
         <Stack align="center">
           {icon ? (
@@ -149,21 +168,12 @@ const Panel = (props: PanelProps) => {
           <Stack.Item>{title}</Stack.Item>
         </Stack>
       }
+      buttons={buttons}
     >
       {children}
     </Section>
   );
 };
-
-const Columns = (props: { children?: React.ReactNode }) => (
-  <Stack>
-    {Children.toArray(props.children).map((child, index) => (
-      <Stack.Item key={index} grow basis={0}>
-        {child}
-      </Stack.Item>
-    ))}
-  </Stack>
-);
 
 type PrefRowProps = {
   icon: string;
@@ -172,11 +182,13 @@ type PrefRowProps = {
   onClick?: () => void;
   disabled?: boolean;
   selected?: boolean;
+  swatch?: string;
   tooltip?: string;
 };
 
 const PrefRow = (props: PrefRowProps) => {
-  const { icon, label, value, onClick, disabled, selected, tooltip } = props;
+  const { icon, label, value, onClick, disabled, selected, swatch, tooltip } =
+    props;
   return (
     <Button
       fluid
@@ -193,6 +205,16 @@ const PrefRow = (props: PrefRowProps) => {
         <Stack.Item grow>
           <Box textAlign="left">{label}</Box>
         </Stack.Item>
+        {swatch ? (
+          <Stack.Item>
+            <Box
+              width="12px"
+              height="12px"
+              style={{ border: '1px solid rgba(0,0,0,0.6)' }}
+              backgroundColor={swatchColor(swatch)}
+            />
+          </Stack.Item>
+        ) : null}
         <Stack.Item>
           <Box bold>{display(value)}</Box>
         </Stack.Item>
@@ -201,16 +223,13 @@ const PrefRow = (props: PrefRowProps) => {
   );
 };
 
-type InfoRowProps = {
+const InfoRow = (props: {
   icon: string;
   label: string;
   value?: unknown;
-  swatch?: string;
   valueColor?: string;
-};
-
-const InfoRow = (props: InfoRowProps) => {
-  const { icon, label, value, swatch, valueColor } = props;
+}) => {
+  const { icon, label, value, valueColor } = props;
   return (
     <Box mb={0.5} p={0.5}>
       <Stack align="center">
@@ -220,11 +239,6 @@ const InfoRow = (props: InfoRowProps) => {
         <Stack.Item grow>
           <Box textAlign="left">{label}</Box>
         </Stack.Item>
-        {swatch ? (
-          <Stack.Item>
-            <Box width="12px" height="12px" backgroundColor={swatch} />
-          </Stack.Item>
-        ) : null}
         <Stack.Item>
           <Box bold color={valueColor}>
             {display(value)}
@@ -235,16 +249,14 @@ const InfoRow = (props: InfoRowProps) => {
   );
 };
 
-type ActionButtonProps = {
+const ActionButton = (props: {
   icon: string;
   label: string;
   onClick?: () => void;
   color?: string;
   disabled?: boolean;
   selected?: boolean;
-};
-
-const ActionButton = (props: ActionButtonProps) => {
+}) => {
   const { icon, label, onClick, color, disabled, selected } = props;
   return (
     <Button
@@ -263,54 +275,53 @@ const ActionButton = (props: ActionButtonProps) => {
   );
 };
 
-type LoadoutButtonProps = {
-  slot: number;
-  name: string;
-  onClick?: () => void;
-};
-
-const LoadoutButton = (props: LoadoutButtonProps) => {
-  const { slot, name, onClick } = props;
+const OptionGrid = (props: {
+  options: FeatureOption[];
+  selected?: string;
+  onSelect: (value: string) => void;
+}) => {
+  const { options, selected, onSelect } = props;
   return (
-    <Button
-      fluid
-      mb={0.5}
-      tooltip={`Edit loadout slot ${slot}`}
-      onClick={onClick}
-    >
-      <Stack align="center">
-        <Stack.Item grow>
-          <Box textAlign="left">Slot {slot}</Box>
-        </Stack.Item>
-        <Stack.Item>
-          <Box bold>{display(name)}</Box>
-        </Stack.Item>
-      </Stack>
-    </Button>
+    <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          mr={0.5}
+          mb={0.5}
+          selected={String(selected) === String(option.value)}
+          onClick={() => onSelect(option.value)}
+        >
+          {option.name}
+        </Button>
+      ))}
+    </Box>
   );
 };
 
-const EmptyPortrait = () => (
-  <Box textAlign="center" py={3}>
-    <Icon name="user" size={4} />
+const FieldBlock = (props: { label: string; children: React.ReactNode }) => (
+  <Box mb={1}>
+    <Box color="label" mb={0.5}>
+      {props.label}
+    </Box>
+    {props.children}
   </Box>
 );
 
 export const PreferencesMenu = () => {
   const { act, data } = useBackend<PrefsData>();
-  const [activeTab, setActiveTab] = useState(data.initial_tab || 'identity');
 
-  const ageOptions = data.age_options ?? [];
-  const ageMin = Number(data.age_min ?? 1);
-  const ageValue = Number(data.age_index ?? ageMin);
-  const erpEnabled = asBool(data.erp_enabled);
-  const loadouts = data.loadouts ?? [];
+  const mapTab = (tab: string) => (tab === 'game' ? 'settings' : 'identity');
+
+  const [activeSection, setActiveSection] = useState(mapTab(data.initial_tab));
+  const [activeFeature, setActiveFeature] = useState<string>(UNDERWEAR_KEY);
 
   useEffect(() => {
-    if (data.initial_tab) {
-      setActiveTab(data.initial_tab);
-    }
+    setActiveSection(mapTab(data.initial_tab));
   }, [data.initial_tab, data.open_sequence]);
+
+  const ageOptions = data.age_options ?? [];
+  const erpEnabled = asBool(data.erp_enabled);
+  const loadouts = data.loadouts ?? [];
 
   const doPref = (
     preference: string,
@@ -324,131 +335,11 @@ export const PreferencesMenu = () => {
     });
   };
 
-  const commitAge = (value: number) => {
-    act('set_age', { value });
-  };
-
-  const selectTab = (tabId: string) => {
-    setActiveTab(tabId);
-  };
-
-  const headerMeta = [data.species_name, data.gender, `Slot ${display(data.default_slot, '1')}`]
-    .filter(Boolean)
-    .join(' / ');
-
-  const renderIdentity = () => (
-    <Columns>
-      <Panel title="Identity" icon="id-card">
-        <PrefRow icon="signature" label="Name" value={data.real_name} onClick={() => doPref('name', 'input')} />
-        <PrefRow icon="users" label="Species" value={data.species_name} onClick={() => doPref('species', 'input')} />
-        {asBool(data.is_taur) && (
-          <>
-            <PrefRow icon="paw" label="Taur Body" value={data.taur_body} onClick={() => doPref('abel_taur_body')} />
-            <PrefRow icon="palette" label="Taur Color" value={data.taur_color} onClick={() => doPref('abel_taur_color', undefined, { which: 'base' })} />
-            <PrefRow icon="palette" label="Taur Markings" value={data.taur_markings} onClick={() => doPref('abel_taur_color', undefined, { which: 'markings' })} />
-            <PrefRow icon="palette" label="Taur Tertiary" value={data.taur_tertiary} onClick={() => doPref('abel_taur_color', undefined, { which: 'tertiary' })} />
-          </>
-        )}
-        <PrefRow icon="venus-mars" label="Body Type" value={data.gender} onClick={() => doPref('gender')} />
-        <PrefRow icon="comment" label="Pronouns" value={data.pronouns} onClick={() => doPref('pronouns', 'input')} />
-      </Panel>
-
-      <Panel title="Faith & Class" icon="sun">
-        <PrefRow icon="star" label="Patron" value={data.patron_name} onClick={() => doPref('patron', 'input')} />
-        <PrefRow icon="asterisk" label="Faith" value={data.faith_name} onClick={() => doPref('faith', 'input')} />
-        <PrefRow icon="briefcase" label="Class" value={data.high_job} onClick={() => doPref('job', 'menu')} />
-        <InfoRow icon="award" label="Player Quality" value={data.player_quality} valueColor={data.player_quality_color || undefined} />
-      </Panel>
-
-      <Panel title="Portrait" icon="image">
-        <Box textAlign="center" mb={1}>
-          {data.headshot ? (
-            <img src={data.headshot} alt="" style={{ maxWidth: '100%' }} />
-          ) : (
-            <EmptyPortrait />
-          )}
-        </Box>
-        <ActionButton icon="image" label="Headshot" onClick={() => doPref('headshot', 'input')} />
-      </Panel>
-    </Columns>
-  );
-
-  const renderBody = () => (
-    <Columns>
-      <Panel title="Body" icon="child">
-        <Stack align="center" mb={1}>
-          <Stack.Item grow>
-            <Box bold>Age</Box>
-          </Stack.Item>
-          <Stack.Item>
-            <Box>{display(data.age)}</Box>
-          </Stack.Item>
-        </Stack>
-        <Dropdown
-          mb={1}
-          width="100%"
-          displayText={display(data.age)}
-          selected={ageValue}
-          options={ageOptions.map((option, index) => ({
-            displayText: display(option, option),
-            value: index + 1,
-          }))}
-          onSelected={(value) => commitAge(value)}
-        />
-        <PrefRow icon="hand-paper" label="Dominant Hand" value={data.domhand} onClick={() => doPref('domhand')} />
-        <PrefRow icon="leaf" label={display(data.ancestry_label, 'Ancestry')} value="Choose" onClick={() => doPref('s_tone', 'input')} />
-        <PrefRow icon="theater-masks" label="Quirks" value="Select" onClick={() => doPref('select_quirks')} />
-      </Panel>
-
-      <Panel title="Family Shape" icon="home">
-        <PrefRow icon="users" label="Family" value={data.family} onClick={() => doPref('family')} />
-        <PrefRow icon="heart" label="Spouse Pref" value={data.spouse} onClick={() => doPref('setspouse')} />
-        <PrefRow icon="venus-mars" label="Gender Pref" value={data.gender_pref} onClick={() => doPref('gender_choice')} />
-      </Panel>
-    </Columns>
-  );
-
-  const renderAppearance = () => (
-    <Columns>
-      <Panel title="Appearance" icon="palette">
-        <PrefRow icon="sliders-h" label="Features" value="Customize" onClick={() => selectTab('features')} />
-        <PrefRow icon="heart" label="ERP" value="Customize" onClick={() => selectTab('erp')} />
-        <PrefRow icon="image" label="Headshot" value={data.headshot ? 'Set' : 'None'} onClick={() => doPref('headshot', 'input')} />
-        <PrefRow icon="dice" label="Randomise" value="Appearance" onClick={() => doPref('randomiseappearanceprefs')} />
-      </Panel>
-
-      <Panel title="Voice" icon="volume-up">
-        <PrefRow icon="microphone" label="Voice Type" value={data.voice_type} onClick={() => doPref('voicetype', 'input')} />
-        <PrefRow icon="comment-dots" label="Accent" value={data.selected_accent} onClick={() => doPref('selected_accent', 'input')} />
-        <PrefRow icon="tint" label="Voice Color" value={data.voice_color} onClick={() => doPref('voice', 'input')} />
-      </Panel>
-
-      <Panel title="Intimacy Settings" icon="heart">
-        <Stack align="center" mb={1}>
-          <Stack.Item grow>
-            <Box bold>Opt-in</Box>
-          </Stack.Item>
-          <Stack.Item>
-            <Box bold>{erpEnabled ? 'ON' : 'OFF'}</Box>
-          </Stack.Item>
-        </Stack>
-        <ActionButton
-          icon={erpEnabled ? 'toggle-on' : 'toggle-off'}
-          label={erpEnabled ? 'Disable Opt-in' : 'Enable Opt-in'}
-          selected={erpEnabled}
-          onClick={() => doPref('abel_erp_toggle')}
-        />
-        <ActionButton
-          icon="key"
-          label="Open Intimacy Panel"
-          disabled={!erpEnabled}
-          onClick={() => doPref('abel_erp_panel')}
-        />
-      </Panel>
-    </Columns>
-  );
-
-  const customizerAct = (key: string, task: string, extra?: Record<string, unknown>) => {
+  const customizerAct = (
+    key: string,
+    task: string,
+    extra?: Record<string, unknown>,
+  ) => {
     doPref('abel_customizer', undefined, {
       customizer: key,
       customizer_task: task,
@@ -456,40 +347,153 @@ export const PreferencesMenu = () => {
     });
   };
 
-  const swatchColor = (value: string) => {
-    const text = String(value || '').trim();
-    if (!text) {
-      return '#888888';
-    }
-    return text.startsWith('#') ? text : `#${text}`;
-  };
+  const headerMeta = [
+    data.species_name,
+    data.gender,
+    `Slot ${display(data.default_slot, '1')}`,
+  ]
+    .filter(Boolean)
+    .join('  /  ');
 
-  const renderFeatureRow = (label: string, control: React.ReactNode) => (
-    <Stack align="center" mb={0.5}>
-      <Stack.Item grow>
-        <Box color="label">{label}</Box>
-      </Stack.Item>
-      <Stack.Item>{control}</Stack.Item>
-    </Stack>
+  // ---- Detail panels ----
+
+  const renderIdentity = () => (
+    <>
+      <Panel title="Identity" icon="id-card">
+        <PrefRow icon="signature" label="Name" value={data.real_name} onClick={() => doPref('name', 'input')} />
+        <PrefRow icon="users" label="Species" value={data.species_name} onClick={() => doPref('species', 'input')} />
+        <PrefRow icon="venus-mars" label="Body Type" value={data.gender} onClick={() => doPref('gender')} />
+        <PrefRow icon="comment" label="Pronouns" value={data.pronouns} onClick={() => doPref('pronouns', 'input')} />
+        <FieldBlock label="Age">
+          <Dropdown
+            width="100%"
+            displayText={display(data.age)}
+            selected={display(data.age)}
+            options={ageOptions.map((option, index) => ({
+              displayText: display(option, option),
+              value: index + 1,
+            }))}
+            onSelected={(value) => act('set_age', { value })}
+          />
+        </FieldBlock>
+        <PrefRow icon="leaf" label={display(data.ancestry_label, 'Ancestry')} value="Choose" onClick={() => doPref('s_tone', 'input')} />
+        <PrefRow icon="hand-paper" label="Dominant Hand" value={data.domhand} onClick={() => doPref('domhand')} />
+        <PrefRow icon="theater-masks" label="Quirks" value="Select" onClick={() => doPref('select_quirks')} />
+      </Panel>
+
+      {asBool(data.is_taur) && (
+        <Panel title="Taur Body" icon="paw">
+          <PrefRow icon="paw" label="Body" value={data.taur_body} onClick={() => doPref('abel_taur_body')} />
+          <PrefRow icon="palette" label="Color" swatch={data.taur_color} value={data.taur_color} onClick={() => doPref('abel_taur_color', undefined, { which: 'base' })} />
+          <PrefRow icon="palette" label="Markings" swatch={data.taur_markings} value={data.taur_markings} onClick={() => doPref('abel_taur_color', undefined, { which: 'markings' })} />
+          <PrefRow icon="palette" label="Tertiary" swatch={data.taur_tertiary} value={data.taur_tertiary} onClick={() => doPref('abel_taur_color', undefined, { which: 'tertiary' })} />
+        </Panel>
+      )}
+
+      <Panel title="Faith & Standing" icon="sun">
+        <PrefRow icon="star" label="Patron" value={data.patron_name} onClick={() => doPref('patron', 'input')} />
+        <PrefRow icon="asterisk" label="Faith" value={data.faith_name} onClick={() => doPref('faith', 'input')} />
+        <InfoRow icon="award" label="Player Quality" value={data.player_quality} valueColor={data.player_quality_color || undefined} />
+      </Panel>
+    </>
   );
 
-  const renderSwatchButton = (value: string, onClick: () => void) => (
-    <Button onClick={onClick}>
-      <Box
-        inline
-        width="24px"
-        height="11px"
-        verticalAlign="middle"
-        backgroundColor={swatchColor(value)}
-      />
-    </Button>
+  const renderFeatureBody = (feature: FeatureEntry) => (
+    <>
+      {feature.choice_options ? (
+        <FieldBlock label="Type">
+          <OptionGrid
+            options={feature.choice_options}
+            selected={feature.choice_value}
+            onSelect={(value) =>
+              doPref('abel_set_choice', undefined, {
+                key: feature.key,
+                choice_type: value,
+              })
+            }
+          />
+        </FieldBlock>
+      ) : null}
+
+      {feature.accessory_options ? (
+        <FieldBlock label="Style">
+          <OptionGrid
+            options={feature.accessory_options}
+            selected={feature.accessory_value}
+            onSelect={(value) =>
+              customizerAct(feature.key, 'select_acc', { acc_type: value })
+            }
+          />
+        </FieldBlock>
+      ) : feature.accessory_name ? (
+        <FieldBlock label="Style">
+          <Box>{feature.accessory_name}</Box>
+        </FieldBlock>
+      ) : null}
+
+      {feature.colors?.length ? (
+        <FieldBlock label="Colors">
+          <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {feature.colors.map((color) => (
+              <Button
+                key={color.index}
+                mr={0.5}
+                mb={0.5}
+                tooltip={color.name}
+                onClick={() =>
+                  customizerAct(feature.key, 'acc_color', {
+                    color_index: color.index,
+                  })
+                }
+              >
+                <Box
+                  inline
+                  width="22px"
+                  height="11px"
+                  verticalAlign="middle"
+                  backgroundColor={swatchColor(color.value)}
+                />
+              </Button>
+            ))}
+            <Button
+              icon="undo"
+              mb={0.5}
+              onClick={() => customizerAct(feature.key, 'reset_colors')}
+            >
+              Reset
+            </Button>
+          </Box>
+        </FieldBlock>
+      ) : null}
+
+      {(feature.extras || []).map((extra) => (
+        <FieldBlock key={extra.task} label={extra.label}>
+          {extra.kind === 'color' ? (
+            <Button onClick={() => customizerAct(feature.key, extra.task)}>
+              <Box
+                inline
+                width="22px"
+                height="11px"
+                verticalAlign="middle"
+                backgroundColor={swatchColor(extra.value)}
+              />
+            </Button>
+          ) : (
+            <Button onClick={() => customizerAct(feature.key, extra.task)}>
+              {display(extra.value)}
+            </Button>
+          )}
+        </FieldBlock>
+      ))}
+    </>
   );
 
-  const renderFeature = (feature: FeatureEntry) => {
+  const renderFeatureCard = (feature: FeatureEntry) => {
     const enabled = asBool(feature.enabled);
     return (
       <Section
         key={feature.key}
+        mb={1}
         title={feature.name}
         buttons={
           asBool(feature.can_disable) ? (
@@ -503,166 +507,175 @@ export const PreferencesMenu = () => {
           ) : null
         }
       >
-        {enabled && (
-          <>
-            {feature.choice_options ? (
-              renderFeatureRow(
-                'Type',
-                <Dropdown
-                  width="180px"
-                  buttons
-                  displayText={feature.choice_name}
-                  selected={feature.choice_value}
-                  options={feature.choice_options.map((option) => ({
-                    displayText: option.name,
-                    value: option.value,
-                  }))}
-                  onSelected={(value) =>
-                    doPref('abel_set_choice', undefined, {
-                      key: feature.key,
-                      choice_type: value,
-                    })
-                  }
-                />,
-              )
-            ) : null}
-            {feature.accessory_name ? (
-              feature.accessory_options ? (
-                renderFeatureRow(
-                  'Style',
-                  <Dropdown
-                    width="180px"
-                    buttons
-                    displayText={feature.accessory_name}
-                    selected={feature.accessory_value}
-                    options={feature.accessory_options.map((option) => ({
-                      displayText: option.name,
-                      value: option.value,
-                    }))}
-                    onSelected={(value) =>
-                      customizerAct(feature.key, 'select_acc', { acc_type: value })
-                    }
-                  />,
-                )
-              ) : (
-                renderFeatureRow('Style', <Box>{feature.accessory_name}</Box>)
-              )
-            ) : null}
-            {(feature.colors || []).map((color) =>
-              renderFeatureRow(
-                color.name,
-                renderSwatchButton(color.value, () =>
-                  customizerAct(feature.key, 'acc_color', { color_index: color.index }),
-                ),
-              ),
-            )}
-            {feature.colors?.length ? (
-              <Button
-                icon="undo"
-                mb={0.5}
-                onClick={() => customizerAct(feature.key, 'reset_colors')}
-              >
-                Reset Colors
-              </Button>
-            ) : null}
-            {(feature.extras || []).map((extra) =>
-              renderFeatureRow(
-                extra.label,
-                extra.kind === 'color' ? (
-                  renderSwatchButton(extra.value, () =>
-                    customizerAct(feature.key, extra.task),
-                  )
-                ) : (
-                  <Button onClick={() => customizerAct(feature.key, extra.task)}>
-                    {display(extra.value)}
-                  </Button>
-                ),
-              ),
-            )}
-          </>
-        )}
+        {enabled ? renderFeatureBody(feature) : null}
       </Section>
     );
   };
 
-  const renderFeatureColumns = (features: FeatureEntry[], emptyLabel: string) => {
-    if (!features.length) {
-      return (
-        <Section>
-          <Box color="label">{emptyLabel}</Box>
-        </Section>
-      );
-    }
-    const left = features.filter((_, index) => index % 2 === 0);
-    const right = features.filter((_, index) => index % 2 === 1);
+  const renderUnderwearEditor = () => {
+    const isNude = String(data.underwear) === 'Nude';
     return (
-      <Stack>
-        <Stack.Item grow basis={0}>
-          {left.map(renderFeature)}
-        </Stack.Item>
-        <Stack.Item grow basis={0}>
-          {right.map(renderFeature)}
-        </Stack.Item>
-      </Stack>
+      <>
+        <FieldBlock label="Underwear">
+          <OptionGrid
+            options={data.underwear_options ?? []}
+            selected={data.underwear}
+            onSelect={(value) =>
+              doPref('abel_underwear', undefined, { undie: value })
+            }
+          />
+        </FieldBlock>
+        {!isNude ? (
+          <FieldBlock label="Color">
+            <Button onClick={() => doPref('abel_underwear_color')}>
+              <Box
+                inline
+                width="22px"
+                height="11px"
+                verticalAlign="middle"
+                backgroundColor={swatchColor(data.underwear_color)}
+              />
+            </Button>
+          </FieldBlock>
+        ) : null}
+      </>
     );
   };
 
-  const renderFeatures = () =>
-    renderFeatureColumns(
-      (data.features || []).filter((feature) => !asBool(feature.erp)),
-      'No customization available for this species.',
+  const renderAppearance = () => {
+    const appearanceFeatures = (data.features || []).filter(
+      (feature) => !asBool(feature.erp),
+    );
+    const featureTabs = [
+      { key: UNDERWEAR_KEY, name: 'Underwear' },
+      ...appearanceFeatures.map((feature) => ({
+        key: feature.key,
+        name: feature.name,
+      })),
+    ];
+    const currentKey = featureTabs.some((tab) => tab.key === activeFeature)
+      ? activeFeature
+      : featureTabs[0]?.key;
+    const currentFeature = appearanceFeatures.find(
+      (feature) => feature.key === currentKey,
     );
 
-  const renderErp = () => (
-    <>
-      <Section>
-        <PrefRow
-          icon="heart"
-          label="Intimacy Opt-in (ERP)"
-          value={erpEnabled ? 'ON' : 'OFF'}
-          selected={erpEnabled}
-          onClick={() => doPref('abel_erp_toggle')}
-        />
-      </Section>
-      {renderFeatureColumns(
-        (data.features || []).filter((feature) => asBool(feature.erp)),
-        'No intimate customization available for this species.',
-      )}
-    </>
+    return (
+      <Panel
+        title="Appearance"
+        icon="palette"
+        buttons={
+          <Button
+            icon="dice"
+            onClick={() => doPref('randomiseappearanceprefs')}
+          >
+            Randomise
+          </Button>
+        }
+      >
+        <Box style={{ display: 'flex', flexWrap: 'wrap' }} mb={1}>
+          {featureTabs.map((tab) => (
+            <Button
+              key={tab.key}
+              mr={0.5}
+              mb={0.5}
+              selected={tab.key === currentKey}
+              onClick={() => setActiveFeature(tab.key)}
+            >
+              {tab.name}
+            </Button>
+          ))}
+        </Box>
+        <Section>
+          {currentKey === UNDERWEAR_KEY
+            ? renderUnderwearEditor()
+            : currentFeature
+              ? (
+                <>
+                  {asBool(currentFeature.can_disable) ? (
+                    <Button
+                      mb={1}
+                      icon={
+                        asBool(currentFeature.enabled)
+                          ? 'toggle-on'
+                          : 'toggle-off'
+                      }
+                      selected={asBool(currentFeature.enabled)}
+                      onClick={() =>
+                        customizerAct(currentFeature.key, 'toggle_missing')
+                      }
+                    >
+                      {asBool(currentFeature.enabled) ? 'Enabled' : 'Disabled'}
+                    </Button>
+                  ) : null}
+                  {asBool(currentFeature.enabled)
+                    ? renderFeatureBody(currentFeature)
+                    : (
+                      <Box color="label">
+                        This feature is disabled.
+                      </Box>
+                    )}
+                </>
+              )
+              : (
+                <Box color="label">
+                  No customization available for this species.
+                </Box>
+              )}
+        </Section>
+      </Panel>
+    );
+  };
+
+  const renderVoice = () => (
+    <Panel title="Voice" icon="volume-up">
+      <PrefRow icon="microphone" label="Voice Type" value={data.voice_type} onClick={() => doPref('voicetype', 'input')} />
+      <PrefRow icon="comment-dots" label="Accent" value={data.selected_accent} onClick={() => doPref('selected_accent', 'input')} />
+      <PrefRow icon="tint" label="Voice Color" swatch={data.voice_color} value={data.voice_color} onClick={() => doPref('voice', 'input')} />
+    </Panel>
   );
 
-  const renderLore = () => (
-    <Columns>
-      <Panel title="Flavour" icon="book-open">
-        <PrefRow icon="scroll" label="Flavour Text" value="Edit" onClick={() => doPref('flavortext', 'input')} />
+  const renderBackground = () => (
+    <>
+      <Panel title="Flavour" icon="scroll">
+        <PrefRow icon="align-left" label="Flavour Text" value="Edit" onClick={() => doPref('flavortext', 'input')} />
         <PrefRow icon="tags" label="Descriptors" value="Edit" onClick={() => doPref('descriptors', 'menu')} />
         <PrefRow icon="map" label="Culture" value={data.culture_name} onClick={() => doPref('culture', 'input')} />
         <PrefRow icon="utensils" label="Food Preferences" value="Edit" onClick={() => doPref('culinary', 'menu')} />
+      </Panel>
+
+      <Panel title="Relations" icon="users">
+        <PrefRow icon="home" label="Family" value={data.family} onClick={() => doPref('family')} />
+        <PrefRow icon="heart" label="Spouse Pref" value={data.spouse} onClick={() => doPref('setspouse')} />
+        <PrefRow icon="venus-mars" label="Gender Pref" value={data.gender_pref} onClick={() => doPref('gender_choice')} />
       </Panel>
 
       <Panel title="OOC" icon="sticky-note">
         <PrefRow icon="sticky-note" label="OOC Notes" value="Edit" onClick={() => doPref('ooc_notes', 'input')} />
         <PrefRow icon="paperclip" label="OOC Extra" value="Edit" onClick={() => doPref('ooc_extra', 'input')} />
       </Panel>
-
-      <Panel title="Voice & Family" icon="users">
-        <InfoRow icon="microphone" label="Voice Type" value={data.voice_type} swatch={data.voice_color} />
-        <InfoRow icon="comment-dots" label="Accent" value={data.selected_accent} />
-        <InfoRow icon="home" label="Family" value={data.family} />
-        <ActionButton icon="heart" label="Spouse Pref" onClick={() => doPref('setspouse')} />
-      </Panel>
-    </Columns>
+    </>
   );
 
   const renderGameplay = () => (
-    <Columns>
+    <>
+      <Panel title="Class & Roles" icon="shield-alt">
+        <PrefRow icon="briefcase" label="Class / Jobs" value={data.high_job} onClick={() => doPref('job', 'menu')} />
+        <PrefRow icon="list-ol" label="Ready Order" value="Edit" onClick={() => doPref('multi', 'menu')} />
+        <InfoRow icon="star" label="Special Role" value={data.special_role} />
+        <ActionButton icon="user-secret" label="Special Roles" onClick={() => doPref('antag', 'menu')} />
+      </Panel>
+
       <Panel title="Loadout" icon="shopping-bag">
         {loadouts.map((slot) => (
-          <LoadoutButton
+          <PrefRow
             key={slot.slot}
-            slot={slot.slot}
-            name={slot.name}
-            onClick={() => doPref('loadout_item', 'input', { loadout_number: slot.slot })}
+            icon="box"
+            label={`Slot ${slot.slot}`}
+            value={slot.name}
+            onClick={() =>
+              doPref('loadout_item', 'input', { loadout_number: slot.slot })
+            }
           />
         ))}
       </Panel>
@@ -670,23 +683,97 @@ export const PreferencesMenu = () => {
       <Panel title="Triumphs" icon="trophy">
         <InfoRow icon="coins" label="Balance" value={data.triumphs} />
         <ActionButton icon="shopping-bag" label="Triumph Shop" onClick={() => doPref('triumph_buy_menu')} />
-        <ActionButton icon="star" label="Special Roles" onClick={() => doPref('antag', 'menu')} />
       </Panel>
-
-      <Panel title="Round Entry" icon="tasks">
-        <InfoRow icon="star" label="Special Role" value={data.special_role} />
-        <ActionButton icon="list-ol" label="Character Ready Order" onClick={() => doPref('multi', 'menu')} />
-        <ActionButton icon="briefcase" label="Class Preferences" onClick={() => doPref('job', 'menu')} />
-      </Panel>
-    </Columns>
+    </>
   );
 
-  const renderGamePrefs = () => {
+  const renderProfile = () => (
+    <Panel title="Profile Link" icon="image">
+      <Box textAlign="center" mb={1}>
+        {data.headshot ? (
+          <img
+            src={data.headshot}
+            alt=""
+            style={{ maxWidth: '100%', maxHeight: '320px' }}
+          />
+        ) : (
+          <Box py={3} color="label">
+            <Icon name="user" size={4} />
+            <Box mt={1}>No headshot set</Box>
+          </Box>
+        )}
+      </Box>
+      <ActionButton icon="link" label="Set Headshot URL" onClick={() => doPref('headshot', 'input')} />
+    </Panel>
+  );
+
+  const renderErp = () => {
+    const erpFeatures = (data.features || []).filter((feature) =>
+      asBool(feature.erp),
+    );
+    return (
+      <>
+        <Section mb={1}>
+          <Stack align="center">
+            <Stack.Item grow>
+              <Box>
+                Intimacy opt-in is{' '}
+                <Box as="span" bold color={erpEnabled ? 'good' : 'bad'}>
+                  {erpEnabled ? 'ENABLED' : 'DISABLED'}
+                </Box>
+                . Toggle it in{' '}
+                <Button
+                  inline
+                  compact
+                  icon="cog"
+                  onClick={() => setActiveSection('settings')}
+                >
+                  Settings
+                </Button>
+                .
+              </Box>
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                icon="key"
+                disabled={!erpEnabled}
+                onClick={() => doPref('abel_erp_panel')}
+              >
+                Open Intimacy Panel
+              </Button>
+            </Stack.Item>
+          </Stack>
+        </Section>
+        {erpFeatures.length ? (
+          <Stack>
+            <Stack.Item grow basis={0}>
+              {erpFeatures
+                .filter((_, index) => index % 2 === 0)
+                .map(renderFeatureCard)}
+            </Stack.Item>
+            <Stack.Item grow basis={0}>
+              {erpFeatures
+                .filter((_, index) => index % 2 === 1)
+                .map(renderFeatureCard)}
+            </Stack.Item>
+          </Stack>
+        ) : (
+          <Section>
+            <Box color="label">
+              No intimate customization available for this species.
+            </Box>
+          </Section>
+        )}
+      </>
+    );
+  };
+
+  const renderSettings = () => {
     const game = data.game_prefs || ({} as PrefsData['game_prefs']);
     const toggle = (preference: string) => doPref(preference);
 
     return (
-      <Columns>
+      <>
         <Panel title="Interface" icon="desktop">
           <PrefRow icon="keyboard" label="Hotkeys" value={asBool(game.hotkeys) ? 'ON' : 'OFF'} selected={asBool(game.hotkeys)} onClick={() => toggle('hotkeys')} />
           <PrefRow icon="mouse-pointer" label="Action Buttons" value={asBool(game.buttons_locked) ? 'Locked' : 'Unlocked'} selected={asBool(game.buttons_locked)} onClick={() => toggle('action_buttons')} />
@@ -708,115 +795,197 @@ export const PreferencesMenu = () => {
           <PrefRow icon="music" label="Lobby Music" value={asBool(game.lobby_music) ? 'ON' : 'OFF'} selected={asBool(game.lobby_music)} onClick={() => toggle('lobby_music')} />
           <PrefRow icon="music" label="Admin MIDIs" value={asBool(game.hear_midis) ? 'ON' : 'OFF'} selected={asBool(game.hear_midis)} onClick={() => toggle('hear_midis')} />
           <PrefRow icon="user-secret" label="Midround Antag" value={asBool(game.allow_midround_antag) ? 'ON' : 'OFF'} selected={asBool(game.allow_midround_antag)} onClick={() => toggle('allow_midround_antag')} />
+        </Panel>
+
+        <Panel title="Intimacy & Tools" icon="sliders-h">
           <PrefRow icon="heart" label="Intimacy Opt-in (ERP)" value={erpEnabled ? 'ON' : 'OFF'} selected={erpEnabled} onClick={() => doPref('abel_erp_toggle')} />
           <ActionButton icon="toggle-on" label="Toggle Bitfields" onClick={() => doPref('toggles')} />
           <ActionButton icon="keyboard" label="Keybinds" onClick={() => doPref('keybinds', 'menu')} />
           <ActionButton icon="save" label="Save Preferences" color="blue" onClick={() => doPref('save')} />
         </Panel>
-      </Columns>
+      </>
     );
   };
 
-  const renderMenu = () => (
-    <Columns>
-      <Panel title="Character Menu" icon="bars">
-        <ActionButton icon="list-ol" label="Character Ready Order" onClick={() => doPref('multi', 'menu')} />
-        <ActionButton icon="exchange-alt" label="Change Character" onClick={() => doPref('changeslot')} />
-        <ActionButton icon="dice" label="Randomise Appearance" onClick={() => doPref('randomiseappearanceprefs')} />
-      </Panel>
-
-      <Panel title="Tools" icon="wrench">
-        <ActionButton icon="toggle-on" label="Toggles" onClick={() => doPref('toggles')} />
-        <ActionButton icon="keyboard" label="Keybinds" onClick={() => doPref('keybinds', 'menu')} />
-        <ActionButton icon="star" label="Special Roles" onClick={() => doPref('antag', 'menu')} />
-      </Panel>
-    </Columns>
-  );
-
-  const renderSystem = () => (
-    <Columns>
-      <Panel title="Slot" icon="save">
-        <InfoRow icon="id-card" label="Current Slot" value={data.default_slot} />
-        <ActionButton icon="save" label="Save Character" color="blue" onClick={() => doPref('save')} />
-        <ActionButton icon="undo" label="Undo From Save" onClick={() => doPref('load')} />
-      </Panel>
-
-      <Panel title="Exit" icon="check">
-        <ActionButton icon="check" label="Done" color="green" onClick={() => doPref('finished')} />
-        <ActionButton icon="exchange-alt" label="Change Character" onClick={() => doPref('changeslot')} />
-      </Panel>
-    </Columns>
-  );
-
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 'body':
-        return renderBody();
+  const renderActiveSection = () => {
+    switch (activeSection) {
       case 'appearance':
         return renderAppearance();
-      case 'features':
-        return renderFeatures();
-      case 'erp':
-        return renderErp();
-      case 'lore':
-        return renderLore();
+      case 'voice':
+        return renderVoice();
+      case 'background':
+        return renderBackground();
       case 'gameplay':
         return renderGameplay();
-      case 'game':
-        return renderGamePrefs();
-      case 'menu':
-        return renderMenu();
-      case 'system':
-        return renderSystem();
+      case 'profile':
+        return renderProfile();
+      case 'erp':
+        return renderErp();
+      case 'settings':
+        return renderSettings();
       default:
         return renderIdentity();
     }
   };
 
+  const NavTab = (section: { id: string; label: string; icon: string }) => (
+    <Tabs.Tab
+      key={section.id}
+      icon={section.icon}
+      selected={activeSection === section.id}
+      onClick={() => setActiveSection(section.id)}
+    >
+      {section.label}
+    </Tabs.Tab>
+  );
+
+  const FooterSummary = (props: {
+    icon: string;
+    label: string;
+    value?: unknown;
+    onClick: () => void;
+  }) => (
+    <Button color="transparent" onClick={props.onClick} tooltip={props.label}>
+      <Stack align="center">
+        <Stack.Item>
+          <Icon name={props.icon} />
+        </Stack.Item>
+        <Stack.Item>
+          <Box color="label" fontSize="10px">
+            {props.label}
+          </Box>
+          <Box bold>{display(props.value)}</Box>
+        </Stack.Item>
+      </Stack>
+    </Button>
+  );
+
   return (
-    <Window title="Preferences" width={1024} height={650} theme="grim">
+    <Window title="Character Setup" width={1180} height={760} theme="grim">
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>
             <Section>
-              <Box bold fontSize="18px">
-                {display(data.real_name, 'Unnamed')}
-              </Box>
-              <Box color="label">{headerMeta}</Box>
+              <Stack align="center">
+                <Stack.Item grow>
+                  <Box bold fontSize="18px">
+                    {display(data.real_name, 'Unnamed')}
+                  </Box>
+                  <Box color="label">{headerMeta}</Box>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="exchange-alt" onClick={() => doPref('changeslot')}>
+                    Change Character
+                  </Button>
+                </Stack.Item>
+              </Stack>
             </Section>
           </Stack.Item>
 
-          <Stack.Item>
-            <Tabs fluid>
-              {tabs.map((tab) => (
-                <Tabs.Tab
-                  key={tab.id}
-                  icon={tab.icon}
-                  selected={activeTab === tab.id}
-                  onClick={() => selectTab(tab.id)}
-                >
-                  {tab.label}
-                </Tabs.Tab>
-              ))}
-            </Tabs>
-          </Stack.Item>
+          <Stack.Item grow>
+            <Stack fill>
+              <Stack.Item basis="190px">
+                <Section fill scrollable>
+                  <Tabs vertical>
+                    {charSections.map(NavTab)}
+                    <Box my={1} mx={1} height="1px" backgroundColor="rgba(255,255,255,0.15)" />
+                    {systemSections.map(NavTab)}
+                  </Tabs>
+                </Section>
+              </Stack.Item>
 
-          <Stack.Item grow basis={0}>
-            <Section fill scrollable>
-              {renderActiveTab()}
-            </Section>
+              <Stack.Item basis="320px">
+                <Section fill title="Looking Glass">
+                  <Stack vertical fill>
+                    <Stack.Item grow>
+                      <Box
+                        style={{
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {data.preview_image ? (
+                          <img
+                            src={data.preview_image}
+                            alt=""
+                            style={{
+                              height: '100%',
+                              maxHeight: '420px',
+                              maxWidth: '100%',
+                              objectFit: 'contain',
+                              imageRendering: 'pixelated',
+                            }}
+                          />
+                        ) : (
+                          <Icon name="user" size={6} color="label" />
+                        )}
+                      </Box>
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Button
+                        fluid
+                        mb={0.5}
+                        icon={asBool(data.preview_underwear) ? 'check-square' : 'square'}
+                        selected={asBool(data.preview_underwear)}
+                        onClick={() => doPref('abel_preview_layer', undefined, { layer: 'underwear' })}
+                      >
+                        Underwear Layer
+                      </Button>
+                      <Button
+                        fluid
+                        mb={0.5}
+                        icon={asBool(data.preview_clothes) ? 'check-square' : 'square'}
+                        selected={asBool(data.preview_clothes)}
+                        onClick={() => doPref('abel_preview_layer', undefined, { layer: 'clothes' })}
+                      >
+                        Work Clothes Layer
+                      </Button>
+                      <Button
+                        fluid
+                        icon="dice"
+                        onClick={() => doPref('randomiseappearanceprefs')}
+                      >
+                        Randomise Appearance
+                      </Button>
+                    </Stack.Item>
+                  </Stack>
+                </Section>
+              </Stack.Item>
+
+              <Stack.Item grow basis={0}>
+                <Section fill scrollable>{renderActiveSection()}</Section>
+              </Stack.Item>
+            </Stack>
           </Stack.Item>
 
           <Stack.Item>
             <Section>
               <Stack align="center">
                 <Stack.Item grow>
-                  <Icon name="id-card" mr={1} />
-                  {display(data.species_name)} / {display(data.high_job)} / Slot{' '}
-                  {display(data.default_slot, '1')}
+                  <Stack>
+                    <Stack.Item>
+                      <FooterSummary icon="shield-alt" label="Class" value={data.high_job} onClick={() => setActiveSection('gameplay')} />
+                    </Stack.Item>
+                    <Stack.Item>
+                      <FooterSummary icon="shopping-bag" label="Loadout" value="Manage" onClick={() => setActiveSection('gameplay')} />
+                    </Stack.Item>
+                    <Stack.Item>
+                      <FooterSummary icon="trophy" label="Triumphs" value={data.triumphs} onClick={() => setActiveSection('gameplay')} />
+                    </Stack.Item>
+                    <Stack.Item>
+                      <FooterSummary icon="star" label="Special Role" value={data.special_role} onClick={() => setActiveSection('gameplay')} />
+                    </Stack.Item>
+                  </Stack>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button icon="undo" tooltip="Undo" onClick={() => doPref('load')}>
+                  <Button icon="dice" tooltip="Randomise Appearance" onClick={() => doPref('randomiseappearanceprefs')}>
+                    Randomise
+                  </Button>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="undo" tooltip="Undo from save" onClick={() => doPref('load')}>
                     Undo
                   </Button>
                 </Stack.Item>

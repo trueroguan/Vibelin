@@ -1,5 +1,9 @@
 /datum/preferences/var/abel_preferences_initial_tab = "identity"
 /datum/preferences/var/abel_preferences_open_sequence = 0
+/datum/preferences/var/abel_preview_underwear = TRUE
+/datum/preferences/var/abel_preview_clothes = TRUE
+/datum/preferences/var/abel_preview_cache
+/datum/preferences/var/abel_preview_sig
 
 /datum/preferences/show_choices(mob/user, tabchoice)
 	if(!user || !user.client)
@@ -23,9 +27,11 @@
 	user << browse(null, "window=preferences_browser")
 
 	validate_customizer_entries()
+	abel_refresh_preview(user)
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
+	abel_refresh_preview(user)
 	SStgui.update_uis(src)
 
 /datum/preferences/ui_state(mob/user)
@@ -34,7 +40,7 @@
 /datum/preferences/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreferencesMenu", "Preferences", 1024, 650)
+		ui = new(user, src, "PreferencesMenu", "Character Setup", 1180, 760)
 		ui.set_autoupdate(FALSE)
 		ui.open()
 
@@ -46,6 +52,71 @@
 		if(possible_age == AGE_CHILD)
 			continue
 		. += possible_age
+
+/datum/preferences/proc/abel_underwear_options()
+	. = list(list("name" = "Nude", "value" = "Nude"))
+	if(!pref_species)
+		return
+	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
+		. += list(list("name" = undie.name, "value" = undie.name))
+
+/datum/preferences/proc/abel_preview_job()
+	for(var/job_type in job_preferences)
+		if(job_preferences[job_type] != JP_HIGH)
+			continue
+		return SSjob.GetJob(job_type)
+	return null
+
+/datum/preferences/proc/abel_refresh_preview(mob/user)
+	abel_build_preview(user, json_encode(abel_build_features_data()))
+
+/datum/preferences/proc/abel_build_preview(mob/user, features_json)
+	if(!pref_species)
+		return null
+
+	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
+	var/sig = list2params(list(
+		"sp" = "[pref_species.type]",
+		"g" = gender,
+		"u" = underwear,
+		"uc" = "[underwear_color]",
+		"su" = abel_preview_underwear,
+		"sc" = abel_preview_clothes,
+		"j" = preview_job ? "[preview_job.type]" : "none",
+		"sk" = skin_tone,
+		"a" = age,
+		"f" = features_json,
+	))
+	if(sig == abel_preview_sig && abel_preview_cache)
+		return abel_preview_cache
+
+	var/mob/living/carbon/human/dummy/mannequin = generate_or_wait_for_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+	if(!mannequin)
+		return abel_preview_cache
+
+	var/saved_underwear = underwear
+	if(!abel_preview_underwear)
+		underwear = "Nude"
+	apply_prefs_to(mannequin, TRUE)
+	underwear = saved_underwear
+
+	if(preview_job)
+		mannequin.job = preview_job.title
+		mannequin.dress_up_as_job(preview_job, TRUE)
+
+	mannequin.setDir(SOUTH)
+	var/icon/flat = getFlatIcon(mannequin, defdir = SOUTH)
+	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+	if(!flat)
+		return abel_preview_cache
+
+	var/b64 = icon2base64(flat)
+	if(!b64)
+		return abel_preview_cache
+
+	abel_preview_cache = "data:image/png;base64,[b64]"
+	abel_preview_sig = sig
+	return abel_preview_cache
 
 /datum/preferences/ui_data(mob/user)
 	var/list/data = list()
@@ -128,6 +199,12 @@
 	data["erp_enabled"] = !!erp_enabled
 	data["headshot"] = is_valid_headshot_link(null, headshot_link, TRUE) ? headshot_link : null
 	data["features"] = abel_build_features_data()
+	data["underwear"] = underwear || "Nude"
+	data["underwear_color"] = underwear_color ? underwear_color : "#cccccc"
+	data["underwear_options"] = abel_underwear_options()
+	data["preview_underwear"] = !!abel_preview_underwear
+	data["preview_clothes"] = !!abel_preview_clothes
+	data["preview_image"] = abel_preview_cache
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -252,5 +329,32 @@
 				to_chat(user, span_warning("Enable the intimacy opt-in first, in a living body."))
 				return TRUE
 			H.start_erp_session(H)
+			return TRUE
+		if("abel_preview_layer")
+			switch(href_list["layer"])
+				if("underwear")
+					abel_preview_underwear = !abel_preview_underwear
+				if("clothes")
+					abel_preview_clothes = !abel_preview_clothes
+			update_menu_data(user)
+			return TRUE
+		if("abel_underwear")
+			var/choice = href_list["undie"]
+			if(choice == "Nude")
+				underwear = "Nude"
+			else if(pref_species)
+				for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
+					if(undie.name == choice)
+						underwear = choice
+						break
+			save_character()
+			update_menu_data(user)
+			return TRUE
+		if("abel_underwear_color")
+			var/new_color = input(user, "Choose underwear color", "Underwear", underwear_color) as color|null
+			if(new_color)
+				underwear_color = new_color
+				save_character()
+			update_menu_data(user)
 			return TRUE
 	return ..()

@@ -11,7 +11,7 @@ Layout:
   `dun_world/_dun_world.dm` (the Azure Peak map import), and `upstream_fixes.dm`.
 - `dun_world/` — everything for the Azure Peak import in one place: the support
   `.dm` files (`areas`, `compat`, `furniture`, `items`, `jobs`, `mapgen`,
-  `mobs`, `structures`, `map_adjustment`, `map_rotation`, `force_load`), plus
+  `mobs`, `structures`, `map_adjustment`), plus
   `dun_world/config/` (`map.json` replacement table, `maps_fragment.txt`) and
   `dun_world/icons/` (ported Azure sprites). `dun_world/_dun_world.dm` is the
   sub-include list.
@@ -55,9 +55,10 @@ DME injection.
 now part of the upstream CI map matrix (no `exclude_from_ci`), so Integration
 Tests boot the Azure Peak map on every push.
 
-Map rotation is integrated through `modular_abel/map_rotation.dm`, which
-registers Azure Peak in `global.config.maplist` at startup without editing
-`config/maps.txt`. `modular_abel/dun_world/config/maps_fragment.txt` is also appended to
+Map rotation is config-driven: Azure Peak (`dun_world`) is listed as a votable
+map in `config/maps.txt` alongside the stock maps. The boot/default map is also
+set there via the `default` keyword (currently `minimal_test`).
+`modular_abel/dun_world/config/maps_fragment.txt` is also appended to
 the generated runtime config overlay for launch paths that rely on
 `config-directory=tmp/modular_abel/config`. Targets `dm`, `build`, and `server`
 refresh this runtime config overlay; `server` also passes it to DreamDaemon.
@@ -104,10 +105,11 @@ table can target faithful types instead of broad parents (sprites under
 - `dun_world_compat.dm` — fueled-light variants (lit floor candles, wall
   fireplace with our warmth mechanics).
 
-`modular_abel/dun_world/force_load.dm` is a TEMPORARY test-period override of
-`SSmapping/PreInit()` that forces the Azure Peak map to load. It is guarded off
-under unit tests, low-memory mode, and random worldgen. **Delete this file and
-its `dun_world/_dun_world.dm` include before release.**
+The Azure Peak map is no longer force-loaded. The temporary
+`SSmapping/PreInit()` override (`force_load.dm`) and the programmatic rotation
+registrar (`map_rotation.dm`) have been removed in favour of config-driven map
+selection in `config/maps.txt` (boot/default map via `default`, Azure Peak via a
+`map dun_world` / `votable` block).
 
 `modular_abel/upstream_fixes.dm` keeps upstream files untouched by overriding
 them from the module: the mercenary stabard color fallback (upstream
