@@ -6,6 +6,8 @@
 /datum/preferences/var/abel_preview_background
 /datum/preferences/var/abel_preview_cache
 /datum/preferences/var/abel_preview_sig
+/datum/preferences/var/abel_ghost_cache
+/datum/preferences/var/abel_ghost_rendering = FALSE
 
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
 GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
@@ -32,15 +34,25 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	user << browse(null, "window=preferences_browser")
 
 	validate_customizer_entries()
-	abel_refresh_preview(user)
+	abel_build_preview(user, json_encode(abel_build_features_data()))
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
-	abel_refresh_preview(user)
 	SStgui.update_uis(src)
+	abel_refresh_preview(user)
 
 /datum/preferences/ui_state(mob/user)
 	return GLOB.always_state
+
+/datum/preferences/ui_static_data(mob/user)
+	return list("background_options" = abel_background_options())
+
+/datum/preferences/reset_jobs(mob/user, silent = FALSE)
+	job_preferences = list()
+	if(!silent)
+		to_chat(user, "<font color='red'>Classes reset.</font>")
+	if(winget(user, "mob_occupation", "is-visible") == "true")
+		set_choices(user)
 
 /datum/preferences/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -73,7 +85,45 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	return null
 
 /datum/preferences/proc/abel_refresh_preview(mob/user)
+	set waitfor = FALSE
+	var/previous = abel_preview_sig
 	abel_build_preview(user, json_encode(abel_build_features_data()))
+	if(abel_preview_sig != previous)
+		SStgui.update_uis(src)
+
+/datum/preferences/proc/abel_preview_extra_sig()
+	return ""
+
+/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, bg_type)
+	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+	if(!body)
+		return null
+	apply_prefs_to(body, TRUE)
+	if(preview_job)
+		body.dna.species.pre_equip_species_outfit(preview_job, body, TRUE)
+	if(preview_outfit)
+		body.equipOutfit(preview_outfit, TRUE)
+	body.update_inv_hands(hide_experimental = TRUE)
+	body.update_inv_belt(hide_experimental = TRUE)
+	body.update_inv_back(hide_experimental = TRUE)
+	body.update_inv_head(hide_nonstandard = TRUE)
+	body.setDir(preview_dir)
+	var/icon/character = getFlatIcon(body, defdir = preview_dir)
+	body.update_inv_hands()
+	body.update_inv_belt()
+	body.update_inv_back()
+	body.update_inv_head()
+	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+	if(!character)
+		return null
+	var/icon/out_icon = icon('icons/effects/effects.dmi', "nothing")
+	out_icon.Insert(character, dir = SOUTH)
+	if(bg_type)
+		var/turf/bg = bg_type
+		var/icon/backdrop = icon(initial(bg.icon), initial(bg.icon_state))
+		backdrop.Blend(out_icon, ICON_OVERLAY)
+		return backdrop
+	return out_icon
 
 /datum/preferences/proc/abel_build_preview(mob/user, features_json)
 	if(!pref_species)
@@ -84,6 +134,10 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	if(preview_job)
 		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
 
+	var/bg_type = abel_preview_background ? text2path(abel_preview_background) : null
+	if(bg_type && !ispath(bg_type, /turf))
+		bg_type = null
+
 	var/sig = list2params(list(
 		"sp" = "[pref_species.type]",
 		"g" = gender,
@@ -91,10 +145,13 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 		"uc" = "[underwear_color]",
 		"su" = abel_preview_underwear,
 		"sc" = abel_preview_clothes,
+		"d" = abel_preview_dir,
+		"bg" = bg_type ? "[bg_type]" : "none",
 		"j" = preview_job ? "[preview_job.type]" : "none",
 		"o" = preview_outfit ? "[preview_outfit]" : "none",
 		"sk" = skin_tone,
 		"a" = age,
+		"x" = abel_preview_extra_sig(),
 		"f" = features_json,
 	))
 
@@ -107,7 +164,7 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	var/saved_underwear = underwear
 	if(!abel_preview_underwear)
 		underwear = "Nude"
-	var/icon/flat = get_flat_human_icon(null, preview_job, src, DUMMY_HUMAN_SLOT_PREFERENCES, list(SOUTH), preview_outfit)
+	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir, bg_type)
 	underwear = saved_underwear
 	if(!flat)
 		return abel_preview_cache
@@ -120,6 +177,87 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	abel_preview_sig = sig
 	GLOB.abel_preview_b64_cache[sig] = abel_preview_cache
 	return abel_preview_cache
+
+/datum/preferences/proc/abel_build_ghost(customizer_type, acc_type)
+	set waitfor = FALSE
+	if(!pref_species)
+		return
+	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
+	if(!entry)
+		return
+	var/sig = "ghost|[abel_preview_sig]|[customizer_type]|[acc_type]"
+	var/cached = GLOB.abel_preview_b64_cache[sig]
+	if(cached)
+		abel_ghost_cache = cached
+		SStgui.update_uis(src)
+		return
+	if(abel_ghost_rendering)
+		return
+	abel_ghost_rendering = TRUE
+	var/saved_acc = entry.accessory_type
+	var/saved_disabled = entry.disabled
+	entry.accessory_type = acc_type
+	entry.disabled = FALSE
+	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
+	var/datum/outfit/preview_outfit
+	if(preview_job)
+		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
+	var/saved_underwear = underwear
+	if(!abel_preview_underwear)
+		underwear = "Nude"
+	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir, null)
+	underwear = saved_underwear
+	entry.accessory_type = saved_acc
+	entry.disabled = saved_disabled
+	abel_ghost_rendering = FALSE
+	if(!flat)
+		return
+	var/b64 = icon2base64(flat)
+	if(!b64)
+		return
+	abel_ghost_cache = "data:image/png;base64,[b64]"
+	GLOB.abel_preview_b64_cache[sig] = abel_ghost_cache
+	SStgui.update_uis(src)
+
+/datum/preferences/proc/abel_turf_thumbnail(turf_type)
+	if(turf_type in GLOB.abel_turf_thumb_cache)
+		return GLOB.abel_turf_thumb_cache[turf_type]
+	var/result = ""
+	var/turf/T = turf_type
+	var/ic = initial(T.icon)
+	var/state = initial(T.icon_state)
+	if(ic && state)
+		var/icon/thumb = icon(ic, state)
+		var/b64 = thumb ? icon2base64(thumb) : null
+		if(b64)
+			result = "data:image/png;base64,[b64]"
+	GLOB.abel_turf_thumb_cache[turf_type] = result
+	return result
+
+GLOBAL_LIST_EMPTY(abel_background_options_cache)
+
+/datum/preferences/proc/abel_background_options()
+	if(length(GLOB.abel_background_options_cache))
+		return GLOB.abel_background_options_cache
+	var/list/options = list(list("name" = "None", "value" = "none"))
+	var/list/seen = list()
+	for(var/turf/floor_type as anything in subtypesof(/turf/open/floor))
+		var/ic = initial(floor_type.icon)
+		var/state = initial(floor_type.icon_state)
+		if(!ic || !state)
+			continue
+		var/dedupe_key = "[ic]:[state]"
+		if(dedupe_key in seen)
+			continue
+		seen[dedupe_key] = TRUE
+		var/thumb = abel_turf_thumbnail(floor_type)
+		if(!thumb)
+			continue
+		options += list(list("name" = "[initial(floor_type.name)]", "value" = "[floor_type]", "thumb" = thumb))
+		if(length(options) >= 48)
+			break
+	GLOB.abel_background_options_cache = options
+	return options
 
 /datum/preferences/ui_data(mob/user)
 	var/list/data = list()
@@ -207,7 +345,10 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	data["underwear_options"] = abel_underwear_options()
 	data["preview_underwear"] = !!abel_preview_underwear
 	data["preview_clothes"] = !!abel_preview_clothes
+	data["preview_dir"] = abel_preview_dir
+	data["background"] = abel_preview_background ? abel_preview_background : "none"
 	data["preview_image"] = abel_preview_cache
+	data["ghost_image"] = abel_ghost_cache
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -359,5 +500,47 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 				underwear_color = new_color
 				save_character()
 			update_menu_data(user)
+			return TRUE
+		if("gender")
+			gender = (gender == MALE) ? FEMALE : MALE
+			if(pref_species && underwear != "Nude")
+				var/valid_undie = FALSE
+				for(var/datum/sprite_accessory/u in pref_species.get_spec_undies_list(gender))
+					if(u.name == underwear)
+						valid_undie = TRUE
+						break
+				if(!valid_undie)
+					underwear = pref_species.random_underwear(gender) || "Nude"
+			save_character()
+			update_menu_data(user)
+			return TRUE
+		if("abel_preview_rotate")
+			var/list/dir_cycle = list(SOUTH, WEST, NORTH, EAST)
+			var/idx = dir_cycle.Find(abel_preview_dir)
+			if(!idx)
+				idx = 1
+			if(href_list["rotate"] == "left")
+				idx = (idx <= 1) ? length(dir_cycle) : (idx - 1)
+			else
+				idx = (idx >= length(dir_cycle)) ? 1 : (idx + 1)
+			abel_preview_dir = dir_cycle[idx]
+			update_menu_data(user)
+			return TRUE
+		if("abel_preview_background")
+			var/bg_choice = href_list["bg"]
+			if(bg_choice == "none")
+				abel_preview_background = null
+			else
+				var/bgp = text2path(bg_choice)
+				if(ispath(bgp, /turf))
+					abel_preview_background = bg_choice
+			save_character()
+			update_menu_data(user)
+			return TRUE
+		if("abel_preview_ghost")
+			var/ghost_customizer = text2path(href_list["key"])
+			var/ghost_acc = text2path(href_list["acc"])
+			if(ghost_customizer && ghost_acc)
+				abel_build_ghost(ghost_customizer, ghost_acc)
 			return TRUE
 	return ..()

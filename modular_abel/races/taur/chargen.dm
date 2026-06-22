@@ -20,6 +20,10 @@
 		return
 	character.Taurize(chosen, "#[taur_color]", "#[taur_markings]", "#[taur_tertiary]")
 
+/datum/preferences/abel_preview_extra_sig()
+	. = ..()
+	. += "[taur_type]-[taur_color]-[taur_markings]-[taur_tertiary]"
+
 /datum/preferences/ui_data(mob/user)
 	. = ..()
 	if(!islist(.))

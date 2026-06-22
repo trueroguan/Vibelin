@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -85,7 +85,11 @@ type PrefsData = {
   underwear_options: FeatureOption[];
   preview_underwear: Booleanish;
   preview_clothes: Booleanish;
+  preview_dir: number;
+  background: string;
+  background_options: FeatureOption[];
   preview_image: string | null;
+  ghost_image: string | null;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -131,6 +135,13 @@ const systemSections = [
 ];
 
 const UNDERWEAR_KEY = '__underwear__';
+const FACE_KEY = '__face__';
+const TAUR_KEY = '__taur__';
+const BACKDROP_KEY = '__backdrop__';
+
+const FACE_PATTERNS = ['face_detail', 'eyes', 'facial_hair'];
+const isFaceFeature = (key: string) =>
+  FACE_PATTERNS.some((pattern) => key.includes(pattern));
 
 const asBool = (value: Booleanish | undefined) => value === true || value === 1;
 
@@ -280,8 +291,9 @@ const OptionGrid = (props: {
   options: FeatureOption[];
   selected?: string;
   onSelect: (value: string) => void;
+  onHover?: (thumb: string | null) => void;
 }) => {
-  const { options, selected, onSelect } = props;
+  const { options, selected, onSelect, onHover } = props;
   const hasThumbs = options.some((option) => option.thumb);
   return (
     <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -293,6 +305,8 @@ const OptionGrid = (props: {
           tooltip={option.name}
           selected={String(selected) === String(option.value)}
           onClick={() => onSelect(option.value)}
+          onMouseOver={() => onHover?.(option.value)}
+          onMouseLeave={() => onHover?.(null)}
           style={
             hasThumbs
               ? { width: '66px', height: '80px', padding: '2px' }
@@ -358,6 +372,8 @@ export const PreferencesMenu = () => {
 
   const [activeSection, setActiveSection] = useState(mapTab(data.initial_tab));
   const [activeFeature, setActiveFeature] = useState<string>(UNDERWEAR_KEY);
+  const [ghostActive, setGhostActive] = useState(false);
+  const ghostTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setActiveSection(mapTab(data.initial_tab));
@@ -389,6 +405,21 @@ export const PreferencesMenu = () => {
       customizer_task: task,
       ...(extra || {}),
     });
+  };
+
+  const requestGhost = (key: string, value: string | null) => {
+    if (ghostTimer.current) {
+      clearTimeout(ghostTimer.current);
+      ghostTimer.current = null;
+    }
+    if (!value) {
+      setGhostActive(false);
+      return;
+    }
+    ghostTimer.current = setTimeout(() => {
+      setGhostActive(true);
+      doPref('abel_preview_ghost', undefined, { key, acc: value });
+    }, 130);
   };
 
   const headerMeta = [
@@ -425,15 +456,6 @@ export const PreferencesMenu = () => {
         <PrefRow icon="theater-masks" label="Quirks" value="Select" onClick={() => doPref('select_quirks')} />
       </Panel>
 
-      {asBool(data.is_taur) && (
-        <Panel title="Taur Body" icon="paw">
-          <PrefRow icon="paw" label="Body" value={data.taur_body} onClick={() => doPref('abel_taur_body')} />
-          <PrefRow icon="palette" label="Color" swatch={data.taur_color} value={data.taur_color} onClick={() => doPref('abel_taur_color', undefined, { which: 'base' })} />
-          <PrefRow icon="palette" label="Markings" swatch={data.taur_markings} value={data.taur_markings} onClick={() => doPref('abel_taur_color', undefined, { which: 'markings' })} />
-          <PrefRow icon="palette" label="Tertiary" swatch={data.taur_tertiary} value={data.taur_tertiary} onClick={() => doPref('abel_taur_color', undefined, { which: 'tertiary' })} />
-        </Panel>
-      )}
-
       <Panel title="Faith & Standing" icon="sun">
         <PrefRow icon="star" label="Patron" value={data.patron_name} onClick={() => doPref('patron', 'input')} />
         <PrefRow icon="asterisk" label="Faith" value={data.faith_name} onClick={() => doPref('faith', 'input')} />
@@ -442,7 +464,35 @@ export const PreferencesMenu = () => {
     </>
   );
 
-  const renderFeatureBody = (feature: FeatureEntry) => (
+  const renderColorSwatches = (feature: FeatureEntry) => (
+    <Box style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+      {(feature.colors || []).map((color) => (
+        <Button
+          key={color.index}
+          mr={0.5}
+          tooltip={color.name}
+          onClick={() =>
+            customizerAct(feature.key, 'acc_color', { color_index: color.index })
+          }
+        >
+          <Box
+            inline
+            width="22px"
+            height="11px"
+            verticalAlign="middle"
+            backgroundColor={swatchColor(color.value)}
+          />
+        </Button>
+      ))}
+      <Button
+        icon="undo"
+        tooltip="Reset colors"
+        onClick={() => customizerAct(feature.key, 'reset_colors')}
+      />
+    </Box>
+  );
+
+  const renderFeatureBody = (feature: FeatureEntry, skipColors?: boolean) => (
     <>
       {feature.choice_options ? (
         <FieldBlock label="Type">
@@ -467,6 +517,7 @@ export const PreferencesMenu = () => {
             onSelect={(value) =>
               customizerAct(feature.key, 'select_acc', { acc_type: value })
             }
+            onHover={(value) => requestGhost(feature.key, value)}
           />
         </FieldBlock>
       ) : feature.accessory_name ? (
@@ -475,39 +526,8 @@ export const PreferencesMenu = () => {
         </FieldBlock>
       ) : null}
 
-      {feature.colors?.length ? (
-        <FieldBlock label="Colors">
-          <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {feature.colors.map((color) => (
-              <Button
-                key={color.index}
-                mr={0.5}
-                mb={0.5}
-                tooltip={color.name}
-                onClick={() =>
-                  customizerAct(feature.key, 'acc_color', {
-                    color_index: color.index,
-                  })
-                }
-              >
-                <Box
-                  inline
-                  width="22px"
-                  height="11px"
-                  verticalAlign="middle"
-                  backgroundColor={swatchColor(color.value)}
-                />
-              </Button>
-            ))}
-            <Button
-              icon="undo"
-              mb={0.5}
-              onClick={() => customizerAct(feature.key, 'reset_colors')}
-            >
-              Reset
-            </Button>
-          </Box>
-        </FieldBlock>
+      {!skipColors && feature.colors?.length ? (
+        <FieldBlock label="Colors">{renderColorSwatches(feature)}</FieldBlock>
       ) : null}
 
       {(feature.extras || []).map((extra) => (
@@ -530,6 +550,61 @@ export const PreferencesMenu = () => {
         </FieldBlock>
       ))}
     </>
+  );
+
+  const renderFeatureEditor = (feature: FeatureEntry, showName?: boolean) => {
+    const enabled = asBool(feature.enabled);
+    return (
+      <Box mb={1}>
+        <Stack align="center" mb={0.5}>
+          {showName ? (
+            <Stack.Item>
+              <Box bold>{feature.name}</Box>
+            </Stack.Item>
+          ) : null}
+          {asBool(feature.can_disable) ? (
+            <Stack.Item>
+              <Button
+                icon={enabled ? 'toggle-on' : 'toggle-off'}
+                selected={enabled}
+                onClick={() => customizerAct(feature.key, 'toggle_missing')}
+              >
+                {enabled ? 'On' : 'Off'}
+              </Button>
+            </Stack.Item>
+          ) : null}
+          {enabled && feature.colors?.length ? (
+            <Stack.Item grow>{renderColorSwatches(feature)}</Stack.Item>
+          ) : null}
+        </Stack>
+        {enabled ? (
+          renderFeatureBody(feature, true)
+        ) : (
+          <Box color="label">This feature is hidden.</Box>
+        )}
+      </Box>
+    );
+  };
+
+  const renderTaurEditor = () => (
+    <>
+      <PrefRow icon="paw" label="Body" value={data.taur_body} onClick={() => doPref('abel_taur_body')} />
+      <PrefRow icon="palette" label="Color" swatch={data.taur_color} value={data.taur_color} onClick={() => doPref('abel_taur_color', undefined, { which: 'base' })} />
+      <PrefRow icon="palette" label="Markings" swatch={data.taur_markings} value={data.taur_markings} onClick={() => doPref('abel_taur_color', undefined, { which: 'markings' })} />
+      <PrefRow icon="palette" label="Tertiary" swatch={data.taur_tertiary} value={data.taur_tertiary} onClick={() => doPref('abel_taur_color', undefined, { which: 'tertiary' })} />
+    </>
+  );
+
+  const renderBackdropEditor = () => (
+    <FieldBlock label="Backdrop tile">
+      <OptionGrid
+        options={data.background_options ?? []}
+        selected={data.background}
+        onSelect={(value) =>
+          doPref('abel_preview_background', undefined, { bg: value })
+        }
+      />
+    </FieldBlock>
   );
 
   const renderFeatureCard = (feature: FeatureEntry) => {
@@ -590,29 +665,62 @@ export const PreferencesMenu = () => {
     const appearanceFeatures = (data.features || []).filter(
       (feature) => !asBool(feature.erp),
     );
+    const faceFeatures = appearanceFeatures.filter((feature) =>
+      isFaceFeature(feature.key),
+    );
+    const otherFeatures = appearanceFeatures.filter(
+      (feature) => !isFaceFeature(feature.key),
+    );
+
     const featureTabs = [
       { key: UNDERWEAR_KEY, name: 'Underwear' },
-      ...appearanceFeatures.map((feature) => ({
+      ...(faceFeatures.length ? [{ key: FACE_KEY, name: 'Face Details' }] : []),
+      ...otherFeatures.map((feature) => ({
         key: feature.key,
         name: feature.name,
       })),
+      ...(asBool(data.is_taur) ? [{ key: TAUR_KEY, name: 'Taur Body' }] : []),
+      { key: BACKDROP_KEY, name: 'Backdrop' },
     ];
     const currentKey = featureTabs.some((tab) => tab.key === activeFeature)
       ? activeFeature
       : featureTabs[0]?.key;
-    const currentFeature = appearanceFeatures.find(
-      (feature) => feature.key === currentKey,
-    );
+
+    const renderEditor = () => {
+      if (currentKey === UNDERWEAR_KEY) {
+        return renderUnderwearEditor();
+      }
+      if (currentKey === BACKDROP_KEY) {
+        return renderBackdropEditor();
+      }
+      if (currentKey === TAUR_KEY) {
+        return renderTaurEditor();
+      }
+      if (currentKey === FACE_KEY) {
+        if (!faceFeatures.length) {
+          return <Box color="label">No face details for this species.</Box>;
+        }
+        return faceFeatures.map((feature) => (
+          <Fragment key={feature.key}>
+            {renderFeatureEditor(feature, true)}
+          </Fragment>
+        ));
+      }
+      const feature = otherFeatures.find((entry) => entry.key === currentKey);
+      if (!feature) {
+        return (
+          <Box color="label">No customization available for this species.</Box>
+        );
+      }
+      return renderFeatureEditor(feature, false);
+    };
 
     return (
       <Panel
         title="Appearance"
         icon="palette"
         buttons={
-          <Button
-            icon="dice"
-            onClick={() => doPref('randomiseappearanceprefs')}
-          >
+          <Button icon="dice" onClick={() => doPref('randomiseappearanceprefs')}>
             Randomise
           </Button>
         }
@@ -630,43 +738,7 @@ export const PreferencesMenu = () => {
             </Button>
           ))}
         </Box>
-        <Section>
-          {currentKey === UNDERWEAR_KEY
-            ? renderUnderwearEditor()
-            : currentFeature
-              ? (
-                <>
-                  {asBool(currentFeature.can_disable) ? (
-                    <Button
-                      mb={1}
-                      icon={
-                        asBool(currentFeature.enabled)
-                          ? 'toggle-on'
-                          : 'toggle-off'
-                      }
-                      selected={asBool(currentFeature.enabled)}
-                      onClick={() =>
-                        customizerAct(currentFeature.key, 'toggle_missing')
-                      }
-                    >
-                      {asBool(currentFeature.enabled) ? 'Enabled' : 'Disabled'}
-                    </Button>
-                  ) : null}
-                  {asBool(currentFeature.enabled)
-                    ? renderFeatureBody(currentFeature)
-                    : (
-                      <Box color="label">
-                        This feature is disabled.
-                      </Box>
-                    )}
-                </>
-              )
-              : (
-                <Box color="label">
-                  No customization available for this species.
-                </Box>
-              )}
-        </Section>
+        <Section>{renderEditor()}</Section>
       </Panel>
     );
   };
@@ -935,6 +1007,24 @@ export const PreferencesMenu = () => {
                     <Box my={1} mx={1} height="1px" backgroundColor="rgba(255,255,255,0.15)" />
                     {systemSections.map(NavTab)}
                   </Tabs>
+                  {ghostActive && data.ghost_image ? (
+                    <Box mt={2} style={{ textAlign: 'center' }}>
+                      <Box color="label" mb={0.5}>
+                        Preview
+                      </Box>
+                      <img
+                        src={data.ghost_image}
+                        alt=""
+                        style={{
+                          width: '100%',
+                          maxWidth: '170px',
+                          objectFit: 'contain',
+                          imageRendering: 'pixelated',
+                          opacity: 0.85,
+                        }}
+                      />
+                    </Box>
+                  ) : null}
                 </Section>
               </Stack.Item>
 
@@ -944,6 +1034,7 @@ export const PreferencesMenu = () => {
                     <Stack.Item grow>
                       <Box
                         style={{
+                          position: 'relative',
                           height: '100%',
                           display: 'flex',
                           alignItems: 'center',
@@ -968,6 +1059,31 @@ export const PreferencesMenu = () => {
                       </Box>
                     </Stack.Item>
                     <Stack.Item>
+                      <Stack mb={0.5}>
+                        <Stack.Item grow>
+                          <Button
+                            fluid
+                            textAlign="center"
+                            icon="arrow-left"
+                            tooltip="Rotate left"
+                            onClick={() => doPref('abel_preview_rotate', undefined, { rotate: 'left' })}
+                          />
+                        </Stack.Item>
+                        <Stack.Item>
+                          <Box color="label" style={{ lineHeight: '24px' }}>
+                            Rotate
+                          </Box>
+                        </Stack.Item>
+                        <Stack.Item grow>
+                          <Button
+                            fluid
+                            textAlign="center"
+                            icon="arrow-right"
+                            tooltip="Rotate right"
+                            onClick={() => doPref('abel_preview_rotate', undefined, { rotate: 'right' })}
+                          />
+                        </Stack.Item>
+                      </Stack>
                       <Button
                         fluid
                         mb={0.5}
