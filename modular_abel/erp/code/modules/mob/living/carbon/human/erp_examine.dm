@@ -14,6 +14,8 @@
 	for(var/obj/item/equipped in get_equipped_items())
 		if(zone2covered(zone, equipped.body_parts_covered))
 			return FALSE
+	if(zone == BODY_ZONE_PRECISE_GROIN && taur_groin_covered())
+		return FALSE
 	if(zone == BODY_ZONE_PRECISE_GROIN && underwear != "Nude")
 		return FALSE
 	return TRUE

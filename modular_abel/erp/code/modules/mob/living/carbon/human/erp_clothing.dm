@@ -67,7 +67,8 @@
 	var/groin_open = get_location_accessible(src, BODY_ZONE_PRECISE_GROIN) ? 1 : 0
 	var/chest_open = get_location_accessible(src, BODY_ZONE_CHEST) ? 1 : 0
 	var/undies_on = (underwear && underwear != "Nude") ? 1 : 0
-	return "[.]-erp[undies_on][groin_open][chest_open]"
+	var/taur_groin_closed = taur_groin_covered() ? 1 : 0
+	return "[.]-erp[undies_on][groin_open][chest_open][taur_groin_closed]"
 
 /mob/living/carbon/human/proc/erp_on_clothing_changed(datum/source, obj/item/equipped_item)
 	SIGNAL_HANDLER

@@ -46,6 +46,18 @@ const CLOSED_TURF_REMOVED_PATHS = [
   '/obj/structure/window',
 ];
 
+// CLASS FIX: Azure's dun_world bakes roaming hostile creatures (foxes, draggers, wolves,
+// trolls, haunts, ...) across the whole map. Loaded as Vanderlin's live map they wander out
+// and swarm the town/surface for no apparent reason. Vanderlin's surface danger is meant to
+// come from the runtime ambush/event systems, not baked-in mobs. So during generation, drop
+// EVERY placed roaming hostile (path-prefix match, so all current/future types are covered)
+// from any tile whose area is NOT part of the underground dungeon network. Bosses are kept
+// (intended set-piece encounters), and the dungeon stays populated. Paths here are
+// post-replacement (Vanderlin) paths, since path replacement runs before this pass.
+const ROAMING_HOSTILE_PREFIX = '/mob/living/simple_animal/hostile/';
+const ROAMING_HOSTILE_KEEP_PREFIX = '/mob/living/simple_animal/hostile/boss/';
+const MONSTER_AREA_PATTERN = /\/(?:under|cave)(?:\/|$)/;
+
 export async function prepareDunWorldMap() {
   const config = readConfig();
   const replacements = config.replacements || {};
@@ -462,6 +474,11 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
       entry.path === '/turf/closed' || entry.path.startsWith('/turf/closed/'),
   );
 
+  const areaEntry = entries.find((entry) => entry.path.startsWith('/area/'));
+  const isMonsterArea = areaEntry
+    ? MONSTER_AREA_PATTERN.test(areaEntry.path)
+    : false;
+
   const adjusted: PopEntry[] = [];
   const seenContraptions = new Set<string>();
   for (const entry of entries) {
@@ -471,6 +488,14 @@ function adjustPopEntries(entries: PopEntry[]): PopEntry[] {
         (banned) =>
           entry.path === banned || entry.path.startsWith(`${banned}/`),
       )
+    ) {
+      continue;
+    }
+
+    if (
+      !isMonsterArea &&
+      entry.path.startsWith(ROAMING_HOSTILE_PREFIX) &&
+      !entry.path.startsWith(ROAMING_HOSTILE_KEEP_PREFIX)
     ) {
       continue;
     }

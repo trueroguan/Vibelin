@@ -1,3 +1,26 @@
+/datum/sprite_accessory/proc/apply_taur_genital_offset(list/appearance_list, mob/living/carbon/owner)
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H))
+		return
+	var/obj/item/bodypart/taur_part = H.get_taur_tail()
+	if(!taur_part)
+		return
+	var/offset_y = taur_part.vars["genital_offset_y"]
+	var/offset_x = taur_part.vars["genital_offset_x"]
+	// The BODY_BEHIND_LAYER half of a genital is meant to peek out from behind a humanoid's legs.
+	// A taur has no humanoid lower body, so that half renders as a stray fragment on the beast back.
+	// Drop it, and nudge the remaining (front-facing) halves onto the taur body per-type offsets.
+	var/list/to_remove = list()
+	for(var/mutable_appearance/appearance as anything in appearance_list)
+		if(appearance.layer == -BODY_BEHIND_LAYER)
+			to_remove += appearance
+			continue
+		if(isnum(offset_y))
+			appearance.pixel_y += offset_y
+		if(isnum(offset_x))
+			appearance.pixel_x += offset_x
+	appearance_list -= to_remove
+
 /datum/sprite_accessory/penis
 	icon = 'modular_abel/erp/icons/mob/sprite_accessory/genitals/pintle.dmi'
 	color_keys = 2
@@ -8,6 +31,7 @@
 
 /datum/sprite_accessory/penis/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	apply_taur_genital_offset(appearance_list, owner)
 
 /datum/sprite_accessory/penis/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/penis/pp = organ
@@ -24,6 +48,8 @@
 /datum/sprite_accessory/penis/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
 	if(istype(H) && H.underwear && H.underwear != "Nude")
+		return FALSE
+	if(istype(H) && H.taur_groin_covered())
 		return FALSE
 	if(istype(H) && !get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
 		return FALSE
@@ -100,6 +126,7 @@
 
 /datum/sprite_accessory/testicles/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	apply_taur_genital_offset(appearance_list, owner)
 
 /datum/sprite_accessory/testicles/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/testicles/testes = organ
@@ -111,6 +138,8 @@
 		return FALSE
 	var/obj/item/organ/penis/pp = owner.getorganslot(ORGAN_SLOT_PENIS)
 	if(pp && pp.sheath_type == SHEATH_TYPE_SLIT)
+		return FALSE
+	if(istype(H) && H.taur_groin_covered())
 		return FALSE
 	if(istype(H) && !get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
 		return FALSE
@@ -160,10 +189,13 @@
 
 /datum/sprite_accessory/vagina/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	apply_taur_genital_offset(appearance_list, owner)
 
 /datum/sprite_accessory/vagina/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
 	if(istype(H) && H.underwear && H.underwear != "Nude")
+		return FALSE
+	if(istype(H) && H.taur_groin_covered())
 		return FALSE
 	if(istype(H) && !get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
 		return FALSE

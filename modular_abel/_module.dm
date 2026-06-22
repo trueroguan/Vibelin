@@ -1,3 +1,6 @@
 #include "erp/_erp.dm"
 #include "dun_world/_dun_world.dm"
+#include "races/_races.dm"
+#include "job_starting_coins.dm"
+#include "cyrillic_say_fix.dm"
 #include "upstream_fixes.dm"
