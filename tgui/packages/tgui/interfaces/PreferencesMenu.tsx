@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -90,8 +90,6 @@ type PrefsData = {
   background_options: FeatureOption[];
   thumbs?: Record<string, string>;
   preview_image: string | null;
-  ghost_image: string | null;
-  ghost_images?: string[];
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -312,7 +310,7 @@ const OptionGrid = (props: {
             tooltip={option.name}
             selected={String(selected) === String(option.value)}
             onClick={() => onSelect(option.value)}
-            onMouseOver={() => onHover?.(option.value)}
+            onMouseOver={() => onHover?.(thumb || null)}
             onMouseLeave={() => onHover?.(null)}
             style={
               hasThumbs
@@ -380,13 +378,7 @@ export const PreferencesMenu = () => {
 
   const [activeSection, setActiveSection] = useState(mapTab(data.initial_tab));
   const [activeFeature, setActiveFeature] = useState<string>(UNDERWEAR_KEY);
-  const [ghostActive, setGhostActive] = useState(false);
-  const ghostTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const ghostImages = data.ghost_images?.length
-    ? data.ghost_images
-    : data.ghost_image
-      ? [data.ghost_image]
-      : [];
+  const [hoverThumb, setHoverThumb] = useState<string | null>(null);
 
   useEffect(() => {
     setActiveSection(mapTab(data.initial_tab));
@@ -418,21 +410,6 @@ export const PreferencesMenu = () => {
       customizer_task: task,
       ...(extra || {}),
     });
-  };
-
-  const requestGhost = (key: string, value: string | null) => {
-    if (ghostTimer.current) {
-      clearTimeout(ghostTimer.current);
-      ghostTimer.current = null;
-    }
-    if (!value) {
-      setGhostActive(false);
-      return;
-    }
-    ghostTimer.current = setTimeout(() => {
-      setGhostActive(true);
-      doPref('abel_preview_ghost', undefined, { key, acc: value });
-    }, 130);
   };
 
   const headerMeta = [
@@ -593,7 +570,7 @@ export const PreferencesMenu = () => {
               onSelect={(value) =>
                 customizerAct(feature.key, 'select_acc', { acc_type: value })
               }
-              onHover={(value) => requestGhost(feature.key, value)}
+              onHover={setHoverThumb}
               thumbs={data.thumbs}
             />
           </Box>
@@ -702,6 +679,7 @@ export const PreferencesMenu = () => {
             onSelect={(value) =>
               doPref('abel_underwear', undefined, { undie: value })
             }
+            onHover={setHoverThumb}
             thumbs={data.thumbs}
           />
         </FieldBlock>
@@ -1068,37 +1046,6 @@ export const PreferencesMenu = () => {
                     <Box my={1} mx={1} height="1px" backgroundColor="rgba(255,255,255,0.15)" />
                     {systemSections.map(NavTab)}
                   </Tabs>
-                  {ghostActive && ghostImages.length ? (
-                    <Box mt={2} style={{ textAlign: 'center' }}>
-                      <Box color="label" mb={0.5}>
-                        Preview
-                      </Box>
-                      <Box
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                          gap: '4px',
-                          justifyItems: 'center',
-                        }}
-                      >
-                        {ghostImages.map((image, index) => (
-                          <img
-                            key={`${index}-${image.length}`}
-                            src={image}
-                            alt=""
-                            style={{
-                              width: '72px',
-                              maxWidth: '100%',
-                              objectFit: 'contain',
-                              imageRendering: 'pixelated',
-                              opacity: 0.5,
-                              filter: 'grayscale(1) contrast(0.9)',
-                            }}
-                          />
-                        ))}
-                      </Box>
-                    </Box>
-                  ) : null}
                 </Section>
               </Stack.Item>
 
@@ -1110,9 +1057,7 @@ export const PreferencesMenu = () => {
                         style={{
                           position: 'relative',
                           height: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          width: '100%',
                         }}
                       >
                         {data.preview_image ? (
@@ -1120,16 +1065,49 @@ export const PreferencesMenu = () => {
                             src={data.preview_image}
                             alt=""
                             style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
                               height: '100%',
-                              maxHeight: '420px',
-                              maxWidth: '100%',
                               objectFit: 'contain',
                               imageRendering: 'pixelated',
+                              filter: hoverThumb ? 'grayscale(1)' : undefined,
+                              opacity: hoverThumb ? 0.75 : 1,
                             }}
                           />
                         ) : (
-                          <Icon name="user" size={6} color="label" />
+                          <Box
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <Icon name="user" size={6} color="label" />
+                          </Box>
                         )}
+                        {hoverThumb ? (
+                          <img
+                            src={hoverThumb}
+                            alt=""
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain',
+                              imageRendering: 'pixelated',
+                              pointerEvents: 'none',
+                            }}
+                          />
+                        ) : null}
                       </Box>
                     </Stack.Item>
                     <Stack.Item>

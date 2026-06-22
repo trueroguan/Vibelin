@@ -6,9 +6,6 @@
 /datum/preferences/var/abel_preview_background
 /datum/preferences/var/abel_preview_cache
 /datum/preferences/var/abel_preview_sig
-/datum/preferences/var/abel_ghost_cache
-/datum/preferences/var/list/abel_ghost_cache_dirs
-/datum/preferences/var/abel_ghost_rendering = FALSE
 /datum/preferences/var/abel_static_sig
 
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
@@ -109,11 +106,13 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 		. += list(list("name" = undie.name, "value" = undie.name))
 
 /datum/preferences/proc/abel_preview_job()
+	var/datum/job/result
+	var/highest = 0
 	for(var/job_type in job_preferences)
-		if(job_preferences[job_type] != JP_HIGH)
-			continue
-		return SSjob.GetJob(job_type)
-	return null
+		if(job_preferences[job_type] > highest)
+			highest = job_preferences[job_type]
+			result = SSjob.GetJob(job_type)
+	return result
 
 /datum/preferences/proc/abel_refresh_preview(mob/user)
 	set waitfor = FALSE
@@ -125,8 +124,8 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 /datum/preferences/proc/abel_preview_extra_sig()
 	return ""
 
-/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, bg_type)
-	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+/datum/preferences/proc/abel_setup_preview_dummy(datum/job/preview_job, datum/outfit/preview_outfit, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(slotkey)
 	if(!body)
 		return null
 	apply_prefs_to(body, TRUE)
@@ -138,22 +137,36 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	body.update_inv_belt(hide_experimental = TRUE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
-	body.setDir(preview_dir)
-	var/icon/character = getFlatIcon(body, defdir = preview_dir)
+	return body
+
+/datum/preferences/proc/abel_finish_preview_dummy(mob/living/carbon/human/dummy/body, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+	if(!body)
+		return
 	body.update_inv_hands()
 	body.update_inv_belt()
 	body.update_inv_back()
 	body.update_inv_head()
-	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+	unset_busy_human_dummy(slotkey)
+
+/datum/preferences/proc/abel_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir, bg_type)
+	body.setDir(preview_dir)
+	var/icon/character = getFlatIcon(body, defdir = preview_dir)
 	if(!character)
 		return null
-	var/icon/out_icon = icon('icons/effects/effects.dmi', "nothing")
-	out_icon.Insert(character, dir = SOUTH)
 	if(bg_type)
 		var/turf/bg = bg_type
 		var/icon/backdrop = icon(initial(bg.icon), initial(bg.icon_state))
-		backdrop.Blend(out_icon, ICON_OVERLAY)
+		backdrop.Scale(character.Width(), character.Height())
+		backdrop.Blend(character, ICON_OVERLAY)
 		return backdrop
+	return character
+
+/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, bg_type)
+	var/mob/living/carbon/human/dummy/body = abel_setup_preview_dummy(preview_job, preview_outfit)
+	if(!body)
+		return null
+	var/icon/out_icon = abel_flatten_dummy(body, preview_dir, bg_type)
+	abel_finish_preview_dummy(body)
 	return out_icon
 
 /datum/preferences/proc/abel_build_preview(mob/user, features_json)
@@ -209,52 +222,6 @@ GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 	GLOB.abel_preview_b64_cache[sig] = abel_preview_cache
 	return abel_preview_cache
 
-/datum/preferences/proc/abel_build_ghost(customizer_type, acc_type)
-	set waitfor = FALSE
-	if(!pref_species)
-		return
-	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
-	if(!entry)
-		return
-	var/sig = "ghost4|[abel_preview_sig]|[customizer_type]|[acc_type]"
-	var/cached = GLOB.abel_preview_b64_cache[sig]
-	if(islist(cached))
-		abel_ghost_cache_dirs = cached
-		abel_ghost_cache = length(cached) ? cached[1] : null
-		SStgui.update_uis(src)
-		return
-	if(abel_ghost_rendering)
-		return
-	abel_ghost_rendering = TRUE
-	var/saved_acc = entry.accessory_type
-	var/saved_disabled = entry.disabled
-	entry.accessory_type = acc_type
-	entry.disabled = FALSE
-	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
-	var/datum/outfit/preview_outfit
-	if(preview_job)
-		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
-	var/saved_underwear = underwear
-	if(!abel_preview_underwear)
-		underwear = "Nude"
-	var/list/rendered_images = list()
-	var/list/ghost_dirs = list(WEST, SOUTH, NORTH, EAST)
-	for(var/ghost_dir in ghost_dirs)
-		var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, ghost_dir, null)
-		var/b64 = flat ? icon2base64(flat) : null
-		if(b64)
-			rendered_images += "data:image/png;base64,[b64]"
-	underwear = saved_underwear
-	entry.accessory_type = saved_acc
-	entry.disabled = saved_disabled
-	abel_ghost_rendering = FALSE
-	if(!length(rendered_images))
-		return
-	abel_ghost_cache_dirs = rendered_images
-	abel_ghost_cache = rendered_images[1]
-	GLOB.abel_preview_b64_cache[sig] = rendered_images.Copy()
-	SStgui.update_uis(src)
-
 /datum/preferences/proc/abel_turf_thumbnail(turf_type)
 	if(turf_type in GLOB.abel_turf_thumb_cache)
 		return GLOB.abel_turf_thumb_cache[turf_type]
@@ -277,7 +244,8 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 		return GLOB.abel_background_options_cache
 	var/list/options = list(list("name" = "None", "value" = "none"))
 	var/list/seen = list()
-	for(var/turf/floor_type as anything in subtypesof(/turf/open/floor))
+	var/list/wood_floors = typesof(/turf/open/floor/wood) + typesof(/turf/open/floor/woodturned) + typesof(/turf/open/floor/plank)
+	for(var/turf/floor_type as anything in wood_floors)
 		var/ic = initial(floor_type.icon)
 		var/state = initial(floor_type.icon_state)
 		if(!ic || !state)
@@ -384,8 +352,6 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	data["preview_dir"] = abel_preview_dir
 	data["background"] = abel_preview_background ? abel_preview_background : "none"
 	data["preview_image"] = abel_preview_cache
-	data["ghost_image"] = abel_ghost_cache
-	data["ghost_images"] = abel_ghost_cache_dirs || list()
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -573,11 +539,5 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 					abel_preview_background = bg_choice
 			save_character()
 			update_menu_data(user)
-			return TRUE
-		if("abel_preview_ghost")
-			var/ghost_customizer = text2path(href_list["key"])
-			var/ghost_acc = text2path(href_list["acc"])
-			if(ghost_customizer && ghost_acc)
-				abel_build_ghost(ghost_customizer, ghost_acc)
 			return TRUE
 	return ..()
