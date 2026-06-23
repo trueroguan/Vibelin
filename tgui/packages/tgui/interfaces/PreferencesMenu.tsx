@@ -93,6 +93,8 @@ type PrefsData = {
   preview_image: string | null;
   hover_sprite: string | null;
   hover_for: string | null;
+  hover_base: string | null;
+  hover_base_for: string | null;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -409,6 +411,7 @@ export const PreferencesMenu = () => {
   const [activeSection, setActiveSection] = useState(mapTab(data.initial_tab));
   const [activeFeature, setActiveFeature] = useState<string>(UNDERWEAR_KEY);
   const [hoverValue, setHoverValue] = useState<string | null>(null);
+  const [hoverCustomizer, setHoverCustomizer] = useState<string | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -419,12 +422,21 @@ export const PreferencesMenu = () => {
   const ageOptions = data.age_options ?? [];
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
-  const backdropTile =
-    data.background && data.background !== 'none'
-      ? data.background_options?.find((o) => o.value === data.background)?.thumb
-      : undefined;
+  const backdropColor =
+    data.background === 'white'
+      ? '#d8d8d8'
+      : data.background === 'dark'
+        ? '#0a0a0a'
+        : undefined;
   const hoverOverlay =
     hoverValue && data.hover_for === hoverValue ? data.hover_sprite : null;
+  const dollSrc =
+    hoverValue &&
+    hoverCustomizer &&
+    data.hover_base_for === hoverCustomizer &&
+    data.hover_base
+      ? data.hover_base
+      : data.preview_image;
 
   const doPref = (
     preference: string,
@@ -450,17 +462,26 @@ export const PreferencesMenu = () => {
     });
   };
 
-  const requestHover = (value: string | null, color?: string) => {
+  const requestHover = (
+    value: string | null,
+    color?: string,
+    customizer?: string,
+  ) => {
     if (hoverTimer.current) {
       clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
     }
     setHoverValue(value);
+    setHoverCustomizer(value ? customizer || null : null);
     if (!value) {
       return;
     }
     hoverTimer.current = setTimeout(() => {
-      doPref('abel_hover', undefined, { acc: value, color: color || '' });
+      doPref('abel_hover', undefined, {
+        acc: value,
+        color: color || '',
+        customizer: customizer || '',
+      });
     }, 120);
   };
 
@@ -627,6 +648,7 @@ export const PreferencesMenu = () => {
                   v,
                   feature.colors?.[0]?.value ??
                     feature.extras?.find((e) => e.kind === 'color')?.value,
+                  feature.key,
                 )
               }
               thumbs={data.thumbs}
@@ -1137,20 +1159,14 @@ export const PreferencesMenu = () => {
                           position: 'relative',
                           height: '100%',
                           width: '100%',
-                          ...(backdropTile
-                            ? {
-                                backgroundImage: `url(${backdropTile})`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundPosition: 'center',
-                                backgroundSize: '80%',
-                                imageRendering: 'pixelated',
-                              }
+                          ...(backdropColor
+                            ? { backgroundColor: backdropColor }
                             : {}),
                         }}
                       >
-                        {data.preview_image ? (
+                        {dollSrc ? (
                           <img
-                            src={data.preview_image}
+                            src={dollSrc}
                             alt=""
                             style={{
                               position: 'absolute',

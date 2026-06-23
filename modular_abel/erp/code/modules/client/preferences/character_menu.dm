@@ -10,9 +10,12 @@
 /datum/preferences/var/abel_static_sig
 /datum/preferences/var/abel_hover_cache
 /datum/preferences/var/abel_hover_for
+/datum/preferences/var/abel_hover_base
+/datum/preferences/var/abel_hover_base_for
 
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
 GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
+GLOBAL_LIST_EMPTY(abel_hover_base_cache)
 
 // ===== PREF MENU DEBUG LOGGER (temporary — remove with its hooks once chargen perf is fixed) =====
 GLOBAL_VAR_INIT(pref_menu_debug, TRUE)
@@ -399,13 +402,51 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 	pref_log_op("getFlatIcon", _t, "dir=[preview_dir] size=[character ? "[character.Width()]x[character.Height()]" : "null"]")
 	return character
 
-/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir)
-	var/mob/living/carbon/human/dummy/body = abel_setup_preview_dummy(preview_job, preview_outfit)
+/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+	var/mob/living/carbon/human/dummy/body = abel_setup_preview_dummy(preview_job, preview_outfit, slotkey)
 	if(!body)
 		return null
 	var/icon/out_icon = abel_flatten_dummy(body, preview_dir)
-	abel_finish_preview_dummy(body)
+	abel_finish_preview_dummy(body, slotkey)
 	return out_icon
+
+// Renders the doll WITHOUT the hovered customizer (temporarily disables its entry) so the candidate
+// overlay replaces the current one instead of stacking on top. Cached per (customizer, current sig).
+/datum/preferences/proc/abel_render_hover_base(customizer_type)
+	if(!pref_species)
+		return ""
+	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
+	if(!entry)
+		return ""
+	var/cache_key = "[customizer_type]|[abel_preview_sig]"
+	if(cache_key in GLOB.abel_hover_base_cache)
+		return GLOB.abel_hover_base_cache[cache_key]
+	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
+	var/datum/outfit/preview_outfit
+	if(preview_job)
+		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
+	var/saved_underwear = underwear
+	if(!abel_preview_underwear)
+		underwear = "Nude"
+	var/was_disabled = entry.disabled
+	entry.disabled = TRUE
+	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir, "abel_hover_base")
+	entry.disabled = was_disabled
+	underwear = saved_underwear
+	var/result = ""
+	if(flat)
+		var/b64 = icon2base64(flat)
+		if(b64)
+			result = "data:image/png;base64,[b64]"
+	GLOB.abel_hover_base_cache[cache_key] = result
+	return result
+
+/datum/preferences/proc/abel_request_hover_base(customizer_type, customizer_ref)
+	set waitfor = FALSE
+	var/b64 = abel_render_hover_base(customizer_type)
+	if(abel_hover_base_for == customizer_ref)
+		abel_hover_base = b64
+		SStgui.update_uis(src)
 
 /datum/preferences/proc/abel_build_preview(mob/user, features_json)
 	if(!pref_species)
@@ -478,28 +519,11 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 GLOBAL_LIST_EMPTY(abel_background_options_cache)
 
 /datum/preferences/proc/abel_background_options()
-	if(length(GLOB.abel_background_options_cache))
-		return GLOB.abel_background_options_cache
-	var/list/options = list(list("name" = "None", "value" = "none"))
-	var/list/seen = list()
-	var/list/wood_floors = typesof(/turf/open/floor/wood) + typesof(/turf/open/floor/woodturned) + typesof(/turf/open/floor/plank)
-	for(var/turf/floor_type as anything in wood_floors)
-		var/ic = initial(floor_type.icon)
-		var/state = initial(floor_type.icon_state)
-		if(!ic || !state)
-			continue
-		var/dedupe_key = "[ic]:[state]"
-		if(dedupe_key in seen)
-			continue
-		seen[dedupe_key] = TRUE
-		var/thumb = abel_turf_thumbnail(floor_type)
-		if(!thumb)
-			continue
-		options += list(list("name" = "[initial(floor_type.name)]", "value" = "[floor_type]", "thumb" = thumb))
-		if(length(options) >= 48)
-			break
-	GLOB.abel_background_options_cache = options
-	return options
+	return list(
+		list("name" = "None", "value" = "none"),
+		list("name" = "White", "value" = "white"),
+		list("name" = "Dark", "value" = "dark"),
+	)
 
 /datum/preferences/ui_data(mob/user)
 	var/_t = world.timeofday
@@ -594,6 +618,8 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	data["preview_image"] = abel_preview_cache
 	data["hover_sprite"] = abel_hover_cache
 	data["hover_for"] = abel_hover_for
+	data["hover_base"] = abel_hover_base
+	data["hover_base_for"] = abel_hover_base_for
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -783,9 +809,7 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 			if(bg_choice == "none")
 				abel_preview_background = null
 			else
-				var/bgp = text2path(bg_choice)
-				if(ispath(bgp, /turf))
-					abel_preview_background = bg_choice
+				abel_preview_background = bg_choice
 			save_character()
 			update_menu_data(user)
 			return TRUE
@@ -810,6 +834,12 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : GLOB.underwear_list[href_list["acc"]]
 			abel_hover_for = href_list["acc"]
 			abel_hover_cache = sa ? sa.abel_dir_sprite(abel_preview_dir, href_list["color"]) : ""
+			var/cust_ref = href_list["customizer"]
+			abel_hover_base_for = cust_ref
+			abel_hover_base = ""
+			var/cust_type = cust_ref ? text2path(cust_ref) : null
+			if(cust_type)
+				abel_request_hover_base(cust_type, cust_ref)
 			SStgui.update_uis(src)
 			return TRUE
 	return ..()
