@@ -12,10 +12,18 @@
 /datum/preferences/var/abel_hover_for
 /datum/preferences/var/abel_hover_base
 /datum/preferences/var/abel_hover_base_for
+/datum/preferences/var/abel_preview_w = 32
+/datum/preferences/var/abel_preview_h = 32
+/datum/preferences/var/abel_preview_bx = 1
+/datum/preferences/var/abel_preview_by = 1
 
 GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
 GLOBAL_LIST_EMPTY(abel_turf_thumb_cache)
 GLOBAL_LIST_EMPTY(abel_hover_base_cache)
+// Where the human base (32x32) landed inside the last flattened doll canvas (1-based, bottom-left),
+// so a hover overlay can be composited onto a doll-sized canvas and scale/align identically.
+GLOBAL_VAR_INIT(abel_flat_blend_x, 1)
+GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 
 // ===== PREF MENU DEBUG LOGGER (temporary — remove with its hooks once chargen perf is fixed) =====
 GLOBAL_VAR_INIT(pref_menu_debug, TRUE)
@@ -373,6 +381,10 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 		if(appearance.alpha < 255)
 			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
 
+		if(start)
+			GLOB.abel_flat_blend_x = 2 - flatX1
+			GLOB.abel_flat_blend_y = 2 - flatY1
+
 		if(no_anim)
 			var/icon/cleaned = new /icon()
 			cleaned.Insert(flat, "", SOUTH, 1, 0)
@@ -380,6 +392,9 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 		else
 			return icon(flat, "", SOUTH)
 	else if (render_icon)
+		if(start)
+			GLOB.abel_flat_blend_x = 1
+			GLOB.abel_flat_blend_y = 1
 		var/icon/final_icon = icon(icon(curicon, curstate, base_icon_dir), "", SOUTH, no_anim ? TRUE : null)
 
 		if (appearance.alpha < 255)
@@ -407,6 +422,11 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 	if(!body)
 		return null
 	var/icon/out_icon = abel_flatten_dummy(body, preview_dir)
+	if(slotkey == DUMMY_HUMAN_SLOT_PREFERENCES && out_icon)
+		abel_preview_w = out_icon.Width()
+		abel_preview_h = out_icon.Height()
+		abel_preview_bx = GLOB.abel_flat_blend_x
+		abel_preview_by = GLOB.abel_flat_blend_y
 	abel_finish_preview_dummy(body, slotkey)
 	return out_icon
 
@@ -833,7 +853,13 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 			var/acc_path = text2path(href_list["acc"])
 			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : GLOB.underwear_list[href_list["acc"]]
 			abel_hover_for = href_list["acc"]
-			abel_hover_cache = sa ? sa.abel_dir_sprite(abel_preview_dir, href_list["color"]) : ""
+			var/icon/cand = sa ? sa.abel_dir_sprite(abel_preview_dir, href_list["color"]) : null
+			if(cand && (abel_preview_w > 32 || abel_preview_h > 32))
+				var/icon/canvas = icon('icons/blanks/32x32.dmi', "nothing")
+				canvas.Crop(1, 1, abel_preview_w, abel_preview_h)
+				canvas.Blend(cand, ICON_OVERLAY, abel_preview_bx, abel_preview_by)
+				cand = canvas
+			abel_hover_cache = cand ? "data:image/png;base64,[icon2base64(cand)]" : ""
 			var/cust_ref = href_list["customizer"]
 			abel_hover_base_for = cust_ref
 			abel_hover_base = ""
