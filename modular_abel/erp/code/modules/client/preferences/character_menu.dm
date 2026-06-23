@@ -222,10 +222,180 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 	body.update_inv_head()
 	unset_busy_human_dummy(slotkey)
 
+// Modular copy of /proc/getFlatIcon (code/__HELPERS/icons.dm) with the canvas-expansion bug fixed:
+// core uses && (only grows when all four edges change) and scrambles the bound assignments, so any
+// sprite wider/taller than 32x32 (taurs) gets clipped to 32x32. Used ONLY by the chargen preview.
+/proc/abel_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
+	#define ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
+		for (var/i in 1 to length(process)) { \
+			var/image/current = process[i]; \
+			if (!current) { \
+				continue; \
+			} \
+			if (current.plane != FLOAT_PLANE && current.plane != appearance.plane) { \
+				continue; \
+			} \
+			var/current_layer = current.layer; \
+			if (current_layer < 0) { \
+				if (current_layer <= -1000) { \
+					return flat; \
+				} \
+				current_layer = base_layer + appearance.layer + current_layer / 1000; \
+			} \
+			for (var/index_to_compare_to in 1 to length(layers)) { \
+				var/compare_to = layers[index_to_compare_to]; \
+				if (current_layer < layers[compare_to]) { \
+					layers.Insert(index_to_compare_to, current); \
+					break; \
+				} \
+			} \
+			layers[current] = current_layer; \
+		}
+
+	var/static/icon/flat_template = icon('icons/blanks/32x32.dmi', "nothing")
+	var/icon/flat = icon(flat_template)
+
+	if(!appearance || appearance.alpha <= 0)
+		return flat
+
+	if(start)
+		if(!defdir)
+			defdir = appearance.dir
+		if(!deficon)
+			deficon = appearance.icon
+		if(!defstate)
+			defstate = appearance.icon_state
+		if(!defblend)
+			defblend = appearance.blend_mode
+
+	var/curicon = appearance.icon || deficon
+	var/curstate = appearance.icon_state || defstate
+	var/curdir = (!appearance.dir || appearance.dir == SOUTH) ? defdir : appearance.dir
+
+	var/render_icon = curicon
+
+	if(render_icon)
+		if(!icon_exists(curicon, curstate))
+			if(icon_exists(curicon, ""))
+				curstate = ""
+			else
+				render_icon = FALSE
+
+	var/base_icon_dir
+
+	if(render_icon)
+		if (curdir != SOUTH)
+			if(!length(icon_states(icon(curicon, curstate, NORTH))))
+				base_icon_dir = SOUTH
+
+		var/list/icon_dimensions = get_icon_dimensions(curicon)
+		var/icon_width = icon_dimensions["width"]
+		var/icon_height = icon_dimensions["height"]
+		if(icon_width != 32 || icon_height != 32)
+			flat.Scale(icon_width, icon_height)
+
+	if(!base_icon_dir)
+		base_icon_dir = curdir
+
+	var/curblend = appearance.blend_mode || defblend
+
+	if(length(appearance.overlays) || length(appearance.underlays))
+		var/list/layers = list()
+		var/image/copy
+		if(render_icon)
+			copy = image(icon=curicon, icon_state=curstate, layer=appearance.layer, dir=base_icon_dir)
+			copy.color = appearance.color
+			copy.alpha = appearance.alpha
+			copy.blend_mode = curblend
+			layers[copy] = appearance.layer
+
+		ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
+		ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
+
+		var/icon/add
+
+		var/flatX1 = 1
+		var/flatX2 = flat.Width()
+		var/flatY1 = 1
+		var/flatY2 = flat.Height()
+
+		var/addX1 = 0
+		var/addX2 = 0
+		var/addY1 = 0
+		var/addY2 = 0
+
+		for(var/image/layer_image as anything in layers)
+			if(layer_image.alpha == 0)
+				continue
+
+			if(layer_image == copy)
+				curblend = BLEND_OVERLAY
+				add = icon(layer_image.icon, layer_image.icon_state, base_icon_dir)
+			else
+				add = abel_get_flat_icon(image(layer_image), curdir, curicon, curstate, curblend, FALSE, no_anim)
+			if(!add)
+				continue
+
+			addX1 = min(flatX1, layer_image.pixel_x + 1)
+			addX2 = max(flatX2, layer_image.pixel_x + add.Width())
+			addY1 = min(flatY1, layer_image.pixel_y + 1)
+			addY2 = max(flatY2, layer_image.pixel_y + add.Height())
+
+			if (
+				addX1 != flatX1 \
+				|| addX2 != flatX2 \
+				|| addY1 != flatY1 \
+				|| addY2 != flatY2 \
+			)
+				flat.Crop(
+					addX1 - flatX1 + 1,
+					addY1 - flatY1 + 1,
+					addX2 - flatX1 + 1,
+					addY2 - flatY1 + 1
+				)
+
+				flatX1 = addX1
+				flatX2 = addX2
+				flatY1 = addY1
+				flatY2 = addY2
+
+			flat.Blend(add, blendMode2iconMode(curblend), layer_image.pixel_x + 2 - flatX1, layer_image.pixel_y + 2 - flatY1)
+
+		if(appearance.color)
+			if(islist(appearance.color))
+				flat.MapColors(arglist(appearance.color))
+			else
+				flat.Blend(appearance.color, ICON_MULTIPLY)
+
+		if(appearance.alpha < 255)
+			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
+
+		if(no_anim)
+			var/icon/cleaned = new /icon()
+			cleaned.Insert(flat, "", SOUTH, 1, 0)
+			return cleaned
+		else
+			return icon(flat, "", SOUTH)
+	else if (render_icon)
+		var/icon/final_icon = icon(icon(curicon, curstate, base_icon_dir), "", SOUTH, no_anim ? TRUE : null)
+
+		if (appearance.alpha < 255)
+			final_icon.Blend(rgb(255,255,255, appearance.alpha), ICON_MULTIPLY)
+
+		if (appearance.color)
+			if (islist(appearance.color))
+				final_icon.MapColors(arglist(appearance.color))
+			else
+				final_icon.Blend(appearance.color, ICON_MULTIPLY)
+
+		return final_icon
+
+	#undef ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS
+
 /datum/preferences/proc/abel_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir)
 	var/_t = world.timeofday
 	body.setDir(preview_dir)
-	var/icon/character = getFlatIcon(body, defdir = preview_dir, no_anim = TRUE)
+	var/icon/character = abel_get_flat_icon(body, defdir = preview_dir, no_anim = TRUE)
 	pref_log_op("getFlatIcon", _t, "dir=[preview_dir] size=[character ? "[character.Width()]x[character.Height()]" : "null"]")
 	return character
 
@@ -617,6 +787,16 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 				if(ispath(bgp, /turf))
 					abel_preview_background = bg_choice
 			save_character()
+			update_menu_data(user)
+			return TRUE
+		if("species")
+			var/saved_age = age
+			var/saved_name = real_name
+			..()
+			if(saved_age && (saved_age in pref_species.possible_ages))
+				age = saved_age
+			if(saved_name)
+				real_name = saved_name
 			update_menu_data(user)
 			return TRUE
 		if("abel_tgui_theme")
