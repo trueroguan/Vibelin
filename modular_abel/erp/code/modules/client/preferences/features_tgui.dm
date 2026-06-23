@@ -1,6 +1,3 @@
-GLOBAL_LIST_EMPTY(abel_accessory_thumb_cache)
-GLOBAL_LIST_EMPTY(abel_dir_sprite_cache)
-
 /datum/sprite_accessory/proc/abel_thumb_state()
 	if(!icon || isnull(icon_state) || icon_state == "")
 		return null
@@ -14,20 +11,6 @@ GLOBAL_LIST_EMPTY(abel_dir_sprite_cache)
 	if(!(state in states))
 		state = (icon_state in states) ? icon_state : null
 	return state
-
-/datum/sprite_accessory/proc/abel_thumbnail()
-	if(type in GLOB.abel_accessory_thumb_cache)
-		return GLOB.abel_accessory_thumb_cache[type]
-	GLOB.pref_thumbnail_renders++
-	var/result = ""
-	var/state = abel_thumb_state()
-	if(state)
-		var/icon/thumb = icon(icon, state)
-		var/b64 = thumb ? icon2base64(thumb) : null
-		if(b64)
-			result = "data:image/png;base64,[b64]"
-	GLOB.abel_accessory_thumb_cache[type] = result
-	return result
 
 /datum/sprite_accessory/proc/abel_dir_sprite(sprite_dir, sprite_color)
 	var/state = abel_thumb_state()
@@ -141,7 +124,6 @@ GLOBAL_LIST_EMPTY(abel_dir_sprite_cache)
 	return TRUE
 
 /datum/preferences/proc/abel_build_features_data()
-	var/_t = world.timeofday
 	var/list/features = list()
 	if(!pref_species)
 		return features
@@ -205,5 +187,4 @@ GLOBAL_LIST_EMPTY(abel_dir_sprite_cache)
 			feature["extras"] = extras
 
 		features += list(feature)
-	pref_log_op("abel_build_features_data", _t, "features=[length(features)]")
 	return features
