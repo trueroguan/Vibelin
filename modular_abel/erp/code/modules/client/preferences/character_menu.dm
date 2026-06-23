@@ -1,5 +1,6 @@
 /datum/preferences/var/abel_preferences_initial_tab = "identity"
 /datum/preferences/var/abel_preferences_open_sequence = 0
+/datum/preferences/var/abel_tgui_theme = "grim"
 /datum/preferences/var/abel_preview_underwear = TRUE
 /datum/preferences/var/abel_preview_clothes = TRUE
 /datum/preferences/var/abel_preview_dir = SOUTH
@@ -85,6 +86,28 @@ GLOBAL_VAR_INIT(pref_thumbnail_renders, 0)
 
 /datum/preferences/ui_assets(mob/user)
 	return list(get_asset_datum(/datum/asset/spritesheet/abel_chargen))
+
+/datum/preferences/proc/abel_handle_color_task(mob/user, list/href_list)
+	var/customizer_type = text2path(href_list["customizer"])
+	if(!customizer_type)
+		return FALSE
+	var/datum/customizer_entry/hair/he = get_customizer_entry_for_customizer_type(customizer_type)
+	if(!istype(he))
+		return FALSE
+	var/field
+	switch(href_list["customizer_task"])
+		if("hair_color")
+			field = "hair_color"
+		if("natural_gradient_color")
+			field = "natural_color"
+		if("dye_gradient_color")
+			field = "dye_color"
+		else
+			return FALSE
+	var/new_color = input(user, "Choose color", "Color", he.vars[field]) as color|null
+	if(new_color)
+		he.vars[field] = sanitize_hexcolor(new_color)
+	return TRUE
 
 /datum/preferences/ui_static_data(mob/user)
 	var/_t = world.timeofday
@@ -370,6 +393,7 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 	data["real_name"] = real_name || "Unnamed"
 	data["initial_tab"] = abel_preferences_initial_tab
 	data["open_sequence"] = abel_preferences_open_sequence
+	data["tgui_theme"] = abel_tgui_theme
 	data["species_name"] = pref_species ? pref_species.name : "Human"
 	data["gender"] = gender_name
 	data["gender_short"] = gender_short
@@ -496,7 +520,8 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 			validate_customizer_entries()
 			pref_log_op("validate_customizer_entries", _ct)
 			_ct = world.timeofday
-			handle_customizer_topic(user, href_list)
+			if(!abel_handle_color_task(user, href_list))
+				handle_customizer_topic(user, href_list)
 			pref_log_op("handle_customizer_topic", _ct)
 			update_menu_data(user)
 			return TRUE
@@ -593,6 +618,12 @@ GLOBAL_LIST_EMPTY(abel_background_options_cache)
 					abel_preview_background = bg_choice
 			save_character()
 			update_menu_data(user)
+			return TRUE
+		if("abel_tgui_theme")
+			var/new_theme = href_list["theme"]
+			if(new_theme)
+				abel_tgui_theme = new_theme
+				SStgui.update_uis(src)
 			return TRUE
 		if("abel_hover")
 			var/acc_path = text2path(href_list["acc"])

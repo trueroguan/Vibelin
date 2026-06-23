@@ -56,6 +56,7 @@ type FeatureEntry = {
 type PrefsData = {
   real_name: string;
   initial_tab: string;
+  tgui_theme: string;
   open_sequence: number;
   species_name: string;
   is_taur: Booleanish;
@@ -134,6 +135,22 @@ const charSections = [
 const systemSections = [
   { id: 'erp', label: 'Intimacy', icon: 'heart' },
   { id: 'settings', label: 'Settings', icon: 'cog' },
+];
+
+const TGUI_THEMES: { value: string; label: string }[] = [
+  { value: 'grim', label: 'Grim' },
+  { value: 'nanotrasen', label: 'Default' },
+  { value: 'paper', label: 'Paper' },
+  { value: 'neutral', label: 'Neutral' },
+  { value: 'retro', label: 'Retro' },
+  { value: 'hackerman', label: 'Hackerman' },
+  { value: 'syndicate', label: 'Syndicate' },
+  { value: 'wizard', label: 'Wizard' },
+  { value: 'malfunction', label: 'Malfunction' },
+  { value: 'cardtable', label: 'Cardtable' },
+  { value: 'abductor', label: 'Abductor' },
+  { value: 'ntos', label: 'NtOS' },
+  { value: 'admin', label: 'Admin' },
 ];
 
 const UNDERWEAR_KEY = '__underwear__';
@@ -978,6 +995,22 @@ export const PreferencesMenu = () => {
           <PrefRow icon="bolt" label="Window Flashing" value={asBool(game.windowflashing) ? 'ON' : 'OFF'} selected={asBool(game.windowflashing)} onClick={() => toggle('winflash')} />
         </Panel>
 
+        <Panel title="Interface Theme" icon="palette">
+          <Box style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+            {TGUI_THEMES.map((t) => (
+              <Button
+                key={t.value}
+                selected={data.tgui_theme === t.value}
+                onClick={() =>
+                  doPref('abel_tgui_theme', undefined, { theme: t.value })
+                }
+              >
+                {t.label}
+              </Button>
+            ))}
+          </Box>
+        </Panel>
+
         <Panel title="Display" icon="eye">
           <PrefRow icon="comments" label="See Non-mob Chat" value={asBool(game.see_chat_non_mob) ? 'ON' : 'OFF'} selected={asBool(game.see_chat_non_mob)} onClick={() => toggle('see_chat_non_mob')} />
           <PrefRow icon="sun" label="Ambient Occlusion" value={asBool(game.ambientocclusion) ? 'ON' : 'OFF'} selected={asBool(game.ambientocclusion)} onClick={() => toggle('ambientocclusion')} />
@@ -1057,7 +1090,12 @@ export const PreferencesMenu = () => {
   );
 
   return (
-    <Window title="Character Setup" width={1180} height={760} theme="grim">
+    <Window
+      title="Character Setup"
+      width={1180}
+      height={760}
+      theme={data.tgui_theme || 'grim'}
+    >
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>
@@ -1102,8 +1140,9 @@ export const PreferencesMenu = () => {
                           ...(backdropTile
                             ? {
                                 backgroundImage: `url(${backdropTile})`,
-                                backgroundRepeat: 'repeat',
-                                backgroundSize: '64px 64px',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center',
+                                backgroundSize: 'contain',
                                 imageRendering: 'pixelated',
                               }
                             : {}),
