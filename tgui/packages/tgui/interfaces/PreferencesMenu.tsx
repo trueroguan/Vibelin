@@ -1142,7 +1142,7 @@ export const PreferencesMenu = () => {
                                 backgroundImage: `url(${backdropTile})`,
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
-                                backgroundSize: 'contain',
+                                backgroundSize: '80%',
                                 imageRendering: 'pixelated',
                               }
                             : {}),
