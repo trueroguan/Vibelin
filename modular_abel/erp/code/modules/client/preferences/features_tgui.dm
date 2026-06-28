@@ -1,4 +1,4 @@
-/datum/sprite_accessory/proc/abel_thumb_state()
+/datum/sprite_accessory/proc/character_setup_thumb_state()
 	if(!icon || isnull(icon_state) || icon_state == "")
 		return null
 	var/state = icon_state
@@ -12,8 +12,8 @@
 		state = (icon_state in states) ? icon_state : null
 	return state
 
-/datum/sprite_accessory/proc/abel_dir_sprite(sprite_dir, sprite_color)
-	var/state = abel_thumb_state()
+/datum/sprite_accessory/proc/character_setup_dir_sprite(sprite_dir, sprite_color)
+	var/state = character_setup_thumb_state()
 	if(!state)
 		return null
 	var/icon/spr = icon(icon, state, sprite_dir)
@@ -21,23 +21,19 @@
 		spr.Blend(sprite_color, ICON_MULTIPLY)
 	return spr
 
-/datum/asset/spritesheet/abel_chargen
-	name = "abel_chargen"
+/datum/asset/spritesheet/character_setup_chargen
+	name = "character_setup_chargen"
 
-/datum/asset/spritesheet/abel_chargen/create_spritesheets()
+/datum/asset/spritesheet/character_setup_chargen/create_spritesheets()
 	var/list/seen = list()
 	for(var/choice_type in subtypesof(/datum/customizer_choice))
 		var/datum/customizer_choice/choice = CUSTOMIZER_CHOICE(choice_type)
 		if(!choice || !LAZYLEN(choice.sprite_accessories))
 			continue
 		for(var/accessory_type in choice.sprite_accessories)
-			abel_insert_chargen_sprite(accessory_type, seen)
-	for(var/undie_name in GLOB.underwear_list)
-		var/datum/sprite_accessory/undie = GLOB.underwear_list[undie_name]
-		if(undie)
-			abel_insert_chargen_sprite(undie.type, seen)
+			character_setup_insert_chargen_sprite(accessory_type, seen)
 
-/datum/asset/spritesheet/abel_chargen/proc/abel_insert_chargen_sprite(accessory_type, list/seen)
+/datum/asset/spritesheet/character_setup_chargen/proc/character_setup_insert_chargen_sprite(accessory_type, list/seen)
 	var/key = sanitize_css_class_name("[accessory_type]")
 	if(seen[key])
 		return
@@ -45,7 +41,7 @@
 	var/datum/sprite_accessory/acc = SPRITE_ACCESSORY(accessory_type)
 	if(!acc)
 		return
-	var/state = acc.abel_thumb_state()
+	var/state = acc.character_setup_thumb_state()
 	if(!state)
 		return
 	var/icon/spr = icon(acc.icon, state)
@@ -54,10 +50,10 @@
 	spr.Scale(48, 48)
 	Insert(key, spr)
 
-/datum/customizer_choice/proc/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/proc/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	return null
 
-/datum/customizer_choice/bodypart_feature/hair/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/bodypart_feature/hair/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/hair/hair_entry = entry
 	var/list/out = list()
 	out += list(list("task" = "hair_color", "label" = "Hair Color", "kind" = "color", "value" = hair_entry.hair_color))
@@ -73,7 +69,7 @@
 			out += list(list("task" = "dye_gradient_color", "label" = "Dye Color", "kind" = "color", "value" = hair_entry.dye_color))
 	return out
 
-/datum/customizer_choice/organ/eyes/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/organ/eyes/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/organ/eyes/eyes_entry = entry
 	var/list/out = list()
 	out += list(list("task" = "right_eye_color", "label" = "Right Eye Color", "kind" = "color", "value" = eyes_entry.right_eye_color))
@@ -81,49 +77,50 @@
 		out += list(list("task" = "left_eye_color", "label" = "Left Eye Color", "kind" = "color", "value" = eyes_entry.left_eye_color))
 	return out
 
-/datum/customizer_choice/organ/penis/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/organ/penis/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/organ/penis/penis_entry = entry
 	return list(
 		list("task" = "penis_size", "label" = "Size", "kind" = "text", "value" = find_key_by_value(PENIS_SIZES_BY_NAME, penis_entry.penis_size)),
 		list("task" = "functional", "label" = "Functional", "kind" = "text", "value" = penis_entry.functional ? "Yes" : "No"),
 	)
 
-/datum/customizer_choice/organ/testicles/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/organ/testicles/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/organ/testicles/testicles_entry = entry
 	return list(
 		list("task" = "ball_size", "label" = "Size", "kind" = "text", "value" = find_key_by_value(TESTICLE_SIZES_BY_NAME, testicles_entry.ball_size)),
 		list("task" = "virile", "label" = "Fertility", "kind" = "text", "value" = testicles_entry.virility ? "Virile" : "Sterile"),
 	)
 
-/datum/customizer_choice/organ/breasts/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/organ/breasts/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/organ/breasts/breasts_entry = entry
 	return list(
 		list("task" = "breast_size", "label" = "Size", "kind" = "text", "value" = find_key_by_value(BREAST_SIZES_BY_NAME, breasts_entry.breast_size)),
 		list("task" = "lactating", "label" = "Lactation", "kind" = "text", "value" = breasts_entry.lactating ? "Enabled" : "Disabled"),
 	)
 
-/datum/customizer_choice/organ/vagina/abel_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+/datum/customizer_choice/organ/vagina/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/organ/vagina/vagina_entry = entry
 	return list(
 		list("task" = "fertile", "label" = "Fertility", "kind" = "text", "value" = vagina_entry.fertility ? "Fertile" : "Sterile"),
 	)
 
-/datum/customizer_choice/proc/abel_is_erp()
+/datum/customizer_choice/proc/character_setup_is_erp()
 	return FALSE
 
-/datum/customizer_choice/organ/penis/abel_is_erp()
+/datum/customizer_choice/organ/penis/character_setup_is_erp()
 	return TRUE
 
-/datum/customizer_choice/organ/testicles/abel_is_erp()
+/datum/customizer_choice/organ/testicles/character_setup_is_erp()
 	return TRUE
 
-/datum/customizer_choice/organ/breasts/abel_is_erp()
+/datum/customizer_choice/organ/breasts/character_setup_is_erp()
 	return TRUE
 
-/datum/customizer_choice/organ/vagina/abel_is_erp()
+/datum/customizer_choice/organ/vagina/character_setup_is_erp()
 	return TRUE
 
-/datum/preferences/proc/abel_build_features_data()
+/datum/preferences/proc/character_setup_build_features_data()
+	var/_t = world.timeofday
 	var/list/features = list()
 	if(!pref_species)
 		return features
@@ -147,8 +144,11 @@
 			"can_disable" = customizer.allows_disabling,
 			"choice_name" = choice.name,
 			"choice_value" = "[entry.customizer_choice_type]",
-			"erp" = choice.abel_is_erp() ? TRUE : FALSE,
+			"erp" = choice.character_setup_is_erp() ? TRUE : FALSE,
 		)
+		var/feature_section = choice.character_setup_section()
+		if(feature_section)
+			feature["section"] = feature_section
 
 		if(length(customizer.customizer_choices) > 1)
 			var/list/choice_options = list()
@@ -157,16 +157,30 @@
 				choice_options += list(list("name" = iter_choice.name, "value" = "[choice_type]"))
 			feature["choice_options"] = choice_options
 
-		if(choice.sprite_accessories && entry.accessory_type)
+		var/list/accessory_types = choice.character_setup_accessory_types(src)
+		if(length(accessory_types) && entry.accessory_type)
 			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(entry.accessory_type)
 			if(accessory)
 				feature["accessory_name"] = accessory.name
 				feature["accessory_value"] = "[entry.accessory_type]"
-				if(length(choice.sprite_accessories) > 1)
+				if(length(accessory_types) > 1)
 					var/list/accessory_options = list()
-					for(var/accessory_type in choice.sprite_accessories)
+					for(var/accessory_type in accessory_types)
 						var/datum/sprite_accessory/iter_accessory = SPRITE_ACCESSORY(accessory_type)
-						accessory_options += list(list("name" = iter_accessory.name, "value" = "[accessory_type]"))
+						var/list/accessory_option = list(
+							"name" = iter_accessory.name,
+							"value" = "[accessory_type]",
+						)
+						if(feature_section == "underwear")
+							var/list/coverage = list()
+							if(iter_accessory.smallclothes_covers_torso)
+								coverage += "torso"
+							if(iter_accessory.smallclothes_covers_groin)
+								coverage += "groin"
+							if(iter_accessory.smallclothes_covers_legs)
+								coverage += "legs"
+							accessory_option["coverage"] = length(coverage) ? jointext(coverage, ", ") : "decorative"
+						accessory_options += list(accessory_option)
 					feature["accessory_options"] = accessory_options
 				if(choice.allows_accessory_color_customization && accessory.color_keys)
 					var/list/colors = list()
@@ -182,9 +196,10 @@
 					if(length(colors))
 						feature["colors"] = colors
 
-		var/list/extras = choice.abel_tgui_extras(src, entry)
+		var/list/extras = choice.character_setup_tgui_extras(src, entry)
 		if(length(extras))
 			feature["extras"] = extras
 
 		features += list(feature)
+	character_setup_log_op("build_features_data", _t, "features=[length(features)]")
 	return features

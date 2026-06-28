@@ -1,28 +1,80 @@
-/datum/preferences/var/abel_preferences_initial_tab = "identity"
-/datum/preferences/var/abel_preferences_open_sequence = 0
-/datum/preferences/var/abel_tgui_theme = "grim"
-/datum/preferences/var/abel_preview_underwear = TRUE
-/datum/preferences/var/abel_preview_clothes = TRUE
-/datum/preferences/var/abel_preview_dir = SOUTH
-/datum/preferences/var/abel_preview_background
-/datum/preferences/var/abel_preview_cache
-/datum/preferences/var/abel_preview_sig
-/datum/preferences/var/abel_static_sig
-/datum/preferences/var/abel_hover_cache
-/datum/preferences/var/abel_hover_for
-/datum/preferences/var/abel_hover_base
-/datum/preferences/var/abel_hover_base_for
-/datum/preferences/var/abel_preview_w = 32
-/datum/preferences/var/abel_preview_h = 32
-/datum/preferences/var/abel_preview_bx = 1
-/datum/preferences/var/abel_preview_by = 1
+/datum/preferences/var/character_setup_preferences_initial_tab = "identity"
+/datum/preferences/var/character_setup_preferences_open_sequence = 0
+/datum/preferences/var/character_setup_tgui_theme = "grim"
+/datum/preferences/var/character_setup_preferences_fullscreen = TRUE
+/datum/preferences/var/character_setup_preferences_scale = 1
+/datum/preferences/var/character_setup_preferences_scale_version = 3
+/datum/preferences/var/character_setup_preview_underwear = TRUE
+/datum/preferences/var/character_setup_preview_clothes = TRUE
+/datum/preferences/var/character_setup_preview_dir = SOUTH
+/datum/preferences/var/character_setup_preview_background
+/datum/preferences/var/character_setup_preview_cache
+/datum/preferences/var/character_setup_preview_sig
+/datum/preferences/var/character_setup_static_sig
+/datum/preferences/var/character_setup_hover_cache
+/datum/preferences/var/character_setup_hover_for
+/datum/preferences/var/character_setup_hover_base
+/datum/preferences/var/character_setup_hover_base_for
+/datum/preferences/var/character_setup_preview_w = 32
+/datum/preferences/var/character_setup_preview_h = 32
+/datum/preferences/var/character_setup_preview_bx = 1
+/datum/preferences/var/character_setup_preview_by = 1
 
-GLOBAL_LIST_EMPTY(abel_preview_b64_cache)
-GLOBAL_LIST_EMPTY(abel_hover_base_cache)
+GLOBAL_LIST_EMPTY(character_setup_preview_b64_cache)
+GLOBAL_LIST_EMPTY(character_setup_hover_base_cache)
+GLOBAL_LIST_EMPTY(character_setup_chargen_ooc_messages)
+GLOBAL_LIST_INIT(character_setup_normal_preview_species, list("harpy", "medicator", "moth"))
 // Where the human base (32x32) landed inside the last flattened doll canvas (1-based, bottom-left),
 // so a hover overlay can be composited onto a doll-sized canvas and scale/align identically.
-GLOBAL_VAR_INIT(abel_flat_blend_x, 1)
-GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
+GLOBAL_VAR_INIT(character_setup_flat_blend_x, 1)
+GLOBAL_VAR_INIT(character_setup_flat_blend_y, 1)
+
+// ===== CHARACTER SETUP DEBUG LOGGER (temporary — describes every TGUI interaction + per-op timing; toggle via GLOB) =====
+GLOBAL_VAR_INIT(character_setup_debug, TRUE)
+
+/datum/preferences/var/list/character_setup_log_counts
+/datum/preferences/var/character_setup_log_action_name = ""
+/datum/preferences/var/character_setup_log_action_tod = 0
+
+/datum/preferences/proc/character_setup_log(category, msg)
+	if(!GLOB.character_setup_debug)
+		return
+	WRITE_LOG("[GLOB.log_directory]/character_setup.log", "[world.timeofday]ds [parent?.ckey || "?"] \[[category]\] [msg]")
+
+/datum/preferences/proc/character_setup_log_action(action_name, extra)
+	if(!GLOB.character_setup_debug)
+		return
+	character_setup_log_counts = list()
+	character_setup_log_action_name = action_name
+	character_setup_log_action_tod = world.timeofday
+	character_setup_log("ACTION", ">>>>> [action_name][extra ? " ([extra])" : ""]")
+
+/datum/preferences/proc/character_setup_log_op(op, start_tod, detail)
+	if(!GLOB.character_setup_debug)
+		return
+	LAZYINITLIST(character_setup_log_counts)
+	character_setup_log_counts[op] = (character_setup_log_counts[op] || 0) + 1
+	var/cnt = character_setup_log_counts[op]
+	var/delta = world.timeofday - start_tod
+	character_setup_log("OP", "[op] x[cnt] took=[delta]ds[detail ? " {[detail]}" : ""][cnt > 1 ? "  *** MULTIPLICATIVE in [character_setup_log_action_name] ***" : ""]")
+// ===== END CHARACTER SETUP DEBUG LOGGER =====
+
+/proc/character_setup_chargen_record_ooc(sender, message, lobby_only = FALSE)
+	if(!istext(sender) || !istext(message))
+		return
+
+	var/clean_message = trim(STRIP_HTML_FULL(message, MAX_MESSAGE_LEN))
+	if(!length(clean_message))
+		return
+
+	GLOB.character_setup_chargen_ooc_messages += list(list(
+		"sender" = sender,
+		"message" = clean_message,
+		"time" = time2text(world.timeofday, "hh:mm"),
+		"lobby" = !!lobby_only,
+	))
+	if(length(GLOB.character_setup_chargen_ooc_messages) > 40)
+		GLOB.character_setup_chargen_ooc_messages.Cut(1, length(GLOB.character_setup_chargen_ooc_messages) - 39)
 
 /datum/preferences/show_choices(mob/user, tabchoice)
 	if(!user || !user.client)
@@ -31,9 +83,9 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 		load_character(default_slot)
 		slot_randomized = FALSE
 
-	abel_preferences_initial_tab = (tabchoice == 1 || current_tab == 1) ? "game" : "identity"
-	abel_preferences_open_sequence++
-	current_tab = (abel_preferences_initial_tab == "game") ? 1 : 0
+	character_setup_preferences_initial_tab = (tabchoice == 1 || current_tab == 1) ? "game" : "identity"
+	character_setup_preferences_open_sequence++
+	current_tab = (character_setup_preferences_initial_tab == "game") ? 1 : 0
 	build_and_show_menu(user)
 	current_tab = 0
 
@@ -46,24 +98,68 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 	user << browse(null, "window=preferences_browser")
 
 	validate_customizer_entries()
-	abel_static_sig = "[pref_species?.type]-[gender]"
-	abel_build_preview(user, json_encode(abel_build_features_data()))
+	character_setup_static_sig = "[pref_species?.type]-[gender]"
+	character_setup_build_preview(user, json_encode(character_setup_build_features_data()))
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
 	var/new_static_sig = "[pref_species?.type]-[gender]"
-	if(new_static_sig != abel_static_sig)
-		abel_static_sig = new_static_sig
+	if(new_static_sig != character_setup_static_sig)
+		character_setup_static_sig = new_static_sig
 		update_static_data(user)
-	abel_refresh_preview(user)
+	character_setup_refresh_preview(user)
+
+/datum/preferences/proc/character_setup_sanitize_preferences_scale(value)
+	if(!isnum(value))
+		value = text2num("[value]")
+	if(!isnum(value))
+		return 0.85
+	return clamp(round(value * 20) / 20, 0.8, 1.25)
+
+/datum/preferences/proc/character_setup_force_normal_preview_bounds()
+	return pref_species?.id in GLOB.character_setup_normal_preview_species
+
+/datum/preferences/load_preferences()
+	. = ..()
+	if(!. || !path || !fexists(path))
+		return
+	var/savefile/S = new /savefile(path)
+	if(!S)
+		return
+	S.cd = "/"
+	S["character_setup_tgui_theme"] >> character_setup_tgui_theme
+	S["character_setup_preferences_fullscreen"] >> character_setup_preferences_fullscreen
+	S["character_setup_preferences_scale"] >> character_setup_preferences_scale
+	var/loaded_scale_version
+	S["character_setup_preferences_scale_version"] >> loaded_scale_version
+
+	if(!istext(character_setup_tgui_theme) || !length(character_setup_tgui_theme))
+		character_setup_tgui_theme = initial(character_setup_tgui_theme)
+	character_setup_preferences_fullscreen = !!character_setup_preferences_fullscreen
+	if(!isnum(loaded_scale_version) || loaded_scale_version < character_setup_preferences_scale_version)
+		character_setup_preferences_scale = initial(character_setup_preferences_scale)
+	character_setup_preferences_scale = character_setup_sanitize_preferences_scale(character_setup_preferences_scale)
+
+/datum/preferences/save_preferences()
+	. = ..()
+	if(!. || !path)
+		return
+	var/savefile/S = new /savefile(path)
+	if(!S)
+		return
+	S.cd = "/"
+	WRITE_FILE(S["character_setup_tgui_theme"], character_setup_tgui_theme)
+	WRITE_FILE(S["character_setup_preferences_fullscreen"], character_setup_preferences_fullscreen)
+	WRITE_FILE(S["character_setup_preferences_scale"], character_setup_preferences_scale)
+	WRITE_FILE(S["character_setup_preferences_scale_version"], character_setup_preferences_scale_version)
 
 /datum/preferences/ui_state(mob/user)
 	return GLOB.always_state
 
 /datum/preferences/ui_assets(mob/user)
-	return list(get_asset_datum(/datum/asset/spritesheet/abel_chargen))
+	return list(get_asset_datum(/datum/asset/spritesheet/character_setup_chargen))
 
-/datum/preferences/proc/abel_handle_color_task(mob/user, list/href_list)
+/datum/preferences/proc/character_setup_handle_color_task(mob/user, list/href_list)
 	var/customizer_type = text2path(href_list["customizer"])
 	if(!customizer_type)
 		return FALSE
@@ -86,11 +182,212 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 	return TRUE
 
 /datum/preferences/ui_static_data(mob/user)
+	var/_t = world.timeofday
 	. = list()
-	.["background_options"] = abel_background_options()
-	.["thumbs"] = abel_thumbnail_catalog()
+	.["background_options"] = character_setup_background_options()
+	.["thumbs"] = character_setup_thumbnail_catalog()
+	.["species_options"] = character_setup_species_options()
+	character_setup_log_op("ui_static_data", _t, "thumbs=[length(.["thumbs"])] species=[length(.["species_options"])]")
 
-/datum/preferences/proc/abel_thumbnail_catalog()
+/datum/preferences/proc/character_setup_species_lock_reason(datum/species/species)
+	if(!species)
+		return "Unavailable"
+	if(species.preference_accessible(src))
+		return ""
+	switch(species.id)
+		if(SPEC_ID_DWARF_SUBTERRAN, SPEC_ID_KOBOLD_FORMIKRAG)
+			return "Triumph unlock"
+	return "Unavailable"
+
+/datum/preferences/proc/character_setup_stat_modifiers_for_sheet(sheet_type)
+	. = list()
+	if(!sheet_type)
+		return
+
+	var/datum/attribute_holder/sheet/sheet = GLOB.attribute_sheets[sheet_type]
+	if(!sheet)
+		sheet = GLOB.attribute_sheets[sheet_type] = new sheet_type()
+	for(var/stat_type in MOBSTATS)
+		var/value = sheet.raw_attribute_list[stat_type]
+		if(!isnum(value) || !value)
+			continue
+		var/datum/attribute/stat/stat = GET_ATTRIBUTE_DATUM(stat_type)
+		. += list(list(
+			"name" = stat ? stat.name : "[stat_type]",
+			"label" = stat ? stat.shorthand : "[stat_type]",
+			"value" = value,
+		))
+
+/datum/preferences/proc/character_setup_species_stat_modifiers(datum/species/species)
+	if(!species)
+		return list()
+	var/sheet_type = species.statsheet_male
+	if(gender == FEMALE && species.statsheet_female)
+		sheet_type = species.statsheet_female
+	return character_setup_stat_modifiers_for_sheet(sheet_type)
+
+/datum/preferences/proc/character_setup_age_sheet_type(age_name)
+	switch(age_name)
+		if(AGE_MIDDLEAGED)
+			return /datum/attribute_holder/sheet/age/middleaged
+		if(AGE_OLD)
+			return /datum/attribute_holder/sheet/age/old
+		if(AGE_CHILD)
+			return /datum/attribute_holder/sheet/age/child
+
+/datum/preferences/proc/character_setup_stat_modifier_summary(list/modifiers)
+	if(!length(modifiers))
+		return "No stat modifiers."
+	var/list/parts = list()
+	for(var/list/modifier as anything in modifiers)
+		var/value = modifier["value"]
+		parts += "[modifier["label"]] [value > 0 ? "+" : ""][value]"
+	return parts.Join(", ")
+
+/datum/preferences/proc/character_setup_age_stat_tooltip(age_name)
+	var/list/modifiers = character_setup_stat_modifiers_for_sheet(character_setup_age_sheet_type(age_name))
+	if(!length(modifiers))
+		return "[age_name]: No age stat modifiers."
+	return "[age_name]: [character_setup_stat_modifier_summary(modifiers)]"
+
+/datum/preferences/proc/character_setup_species_tags(datum/species/species, available)
+	. = list()
+	if(!species)
+		return
+	if(species.native_language)
+		. += "[species.native_language]"
+	if(species.skin_tone_wording && species.skin_tone_wording != "Ancestry")
+		. += "[species.skin_tone_wording]"
+	var/list/display_ages = character_setup_species_display_ages(species)
+	if(length(display_ages) == 1)
+		. += "[display_ages[1]]"
+	if(!(species.id in RACES_PLAYER_NONDISCRIMINATED))
+		. += "Discriminated"
+	if(!(species.id in RACES_PLAYER_NONEXOTIC))
+		. += "Exotic"
+	if(species.forced_taur)
+		. += "Taur"
+	if(!available)
+		. += "Locked"
+
+/datum/preferences/proc/character_setup_species_tag_description(datum/species/species, tag, available)
+	switch(tag)
+		if("Discriminated")
+			return "This species faces social discrimination; expect a more difficult roundstart experience."
+		if("Exotic")
+			return "This species is considered uncommon or exotic in most local cultures."
+		if("Taur")
+			return "Tauric body plan; some equipment and clothing may fit differently."
+		if("Locked")
+			return available ? "Available." : character_setup_species_lock_reason(species)
+
+	if(species)
+		if(species.native_language && tag == "[species.native_language]")
+			return "Native language or culture group: [tag]."
+		if(species.skin_tone_wording && tag == "[species.skin_tone_wording]")
+			return "This species uses [tag] as its ancestry/color choice."
+		if(tag in character_setup_species_display_ages(species))
+			return "Available age category: [tag]."
+
+	return "[tag] species tag."
+
+/datum/preferences/proc/character_setup_species_tag_descriptions(datum/species/species, available)
+	. = list()
+	for(var/tag in character_setup_species_tags(species, available))
+		.["[tag]"] = character_setup_species_tag_description(species, tag, available)
+
+/datum/preferences/proc/character_setup_species_display_ages(datum/species/species)
+	. = list()
+	if(!species)
+		return
+	for(var/possible_age in species.possible_ages)
+		if(possible_age == AGE_CHILD)
+			continue
+		if(!(possible_age in .))
+			. += possible_age
+
+/datum/preferences/proc/character_setup_species_options()
+	. = list()
+	for(var/species_id in GLOB.roundstart_species)
+		var/species_type = GLOB.species_list[species_id]
+		if(!species_type)
+			continue
+		var/datum/species/species = new species_type()
+		var/lock_reason = character_setup_species_lock_reason(species)
+		var/available = !lock_reason
+		var/description = species.desc ? character_setup_chargen_clean_text(species.desc, 900) : "No description available."
+		var/list/display_ages = character_setup_species_display_ages(species)
+		. += list(list(
+			"id" = species.id,
+			"name" = species.name,
+			"description" = trim(description),
+			"available" = available,
+			"lock_reason" = lock_reason,
+			"language" = species.native_language || "Imperial",
+			"ancestry_label" = species.skin_tone_wording || "Ancestry",
+			"ages" = length(display_ages) ? display_ages.Join(", ") : "Any",
+			"tags" = character_setup_species_tags(species, available),
+			"tag_descriptions" = character_setup_species_tag_descriptions(species, available),
+			"stats" = character_setup_species_stat_modifiers(species),
+		))
+
+/datum/preferences/proc/character_setup_apply_species(mob/user, species_id)
+	if(!user || !species_id)
+		return FALSE
+	if(!(species_id in GLOB.roundstart_species))
+		return FALSE
+
+	var/species_type = GLOB.species_list[species_id]
+	if(!species_type)
+		return FALSE
+
+	var/datum/species/new_species = new species_type()
+	if(!new_species.preference_accessible(src))
+		to_chat(user, span_warning("[new_species.name] is not available for this character."))
+		return TRUE
+
+	if(pref_species?.type == species_type)
+		return TRUE
+
+	var/saved_age = age
+	var/saved_name = real_name
+	selected_accent = ACCENT_DEFAULT
+	pref_species = new_species
+
+	to_chat(user, "<em>[pref_species.name]</em>")
+	if(pref_species.desc)
+		to_chat(user, "[pref_species.desc]")
+
+	if(!length(pref_species.allowed_pronouns))
+		to_chat(user, span_warning("This species does not have any allowed pronouns. Please contact a coder to add them."))
+	else if(length(pref_species.allowed_pronouns) == 1)
+		pronouns = pref_species.allowed_pronouns[1]
+	else if(!(pronouns in pref_species.allowed_pronouns))
+		pronouns = pref_species.allowed_pronouns[1]
+
+	real_name = pref_species.random_name(gender, TRUE)
+	reset_jobs(user)
+	reset_patron(user)
+	reset_culture(user)
+	randomise_appearance_prefs(~(RANDOMIZE_SPECIES))
+	customizer_entries = list()
+	validate_customizer_entries()
+	reset_all_customizer_accessory_colors()
+	randomize_all_customizer_accessories()
+	accessory = "Nothing"
+
+	var/list/selectable_ages = character_setup_species_display_ages(pref_species)
+	if(saved_age && (saved_age in selectable_ages))
+		age = saved_age
+	else if(length(selectable_ages))
+		age = selectable_ages[1]
+	if(saved_name)
+		real_name = saved_name
+
+	update_menu_data(user)
+	return TRUE
+
+/datum/preferences/proc/character_setup_thumbnail_catalog()
 	. = list()
 	if(!pref_species)
 		return
@@ -109,8 +406,6 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 				var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
 				if(accessory)
 					.[key] = sanitize_css_class_name("[accessory_type]")
-	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
-		.[undie.name] = sanitize_css_class_name("[undie.type]")
 
 /datum/preferences/reset_jobs(mob/user, silent = FALSE)
 	job_preferences = list()
@@ -120,13 +415,88 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 		set_choices(user)
 
 /datum/preferences/ui_interact(mob/user, datum/tgui/ui)
+	var/window_width = character_setup_preferences_fullscreen ? 7680 : 1180
+	var/window_height = character_setup_preferences_fullscreen ? 4320 : 760
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreferencesMenu", "Character Setup", 1180, 760)
-		ui.set_autoupdate(FALSE)
+		ui = new(user, src, "PreferencesMenu", "Character Setup", window_width, window_height)
+		ui.set_autoupdate(TRUE)
 		ui.open()
 
-/datum/preferences/proc/abel_selectable_ages()
+/mob/dead/new_player/proc/character_setup_chargen_set_ready(new_ready)
+	ready = new_ready
+	if(ready == PLAYER_READY_TO_PLAY)
+		cache_multi_ready_characters()
+	else
+		multi_ready_characters = list()
+
+	var/datum/hud/new_player/lobby_hud = hud_used
+	if(istype(lobby_hud))
+		for(var/atom/movable/screen/lobby/button/ready/ready_button as anything in lobby_hud.static_inventory)
+			ready_button.ready = (ready == PLAYER_READY_TO_PLAY)
+			ready_button.base_icon_state = ready_button.ready ? "ready" : "not_ready"
+			ready_button.update_appearance(UPDATE_ICON)
+			break
+		SEND_SIGNAL(lobby_hud, COMSIG_HUD_PLAYER_READY_TOGGLE)
+	return TRUE
+
+/mob/dead/new_player/proc/character_setup_chargen_join_round()
+	if(!SSticker?.IsRoundInProgress())
+		to_chat(src, span_boldwarning("The round is either not ready, or has already finished..."))
+		return TRUE
+
+	var/relevant_cap
+	var/hard_popcap = CONFIG_GET(number/hard_popcap)
+	var/extreme_popcap = CONFIG_GET(number/extreme_popcap)
+	if(hard_popcap && extreme_popcap)
+		relevant_cap = min(hard_popcap, extreme_popcap)
+	else
+		relevant_cap = max(hard_popcap, extreme_popcap)
+
+	if(SSticker.queued_players.len || (relevant_cap && living_player_count() >= relevant_cap && !(ckey(key) in GLOB.admin_datums)))
+		to_chat(src, span_danger("[CONFIG_GET(string/hard_popcap_message)]"))
+
+		var/queue_position = SSticker.queued_players.Find(src)
+		if(queue_position == 1)
+			to_chat(src, span_notice("You are next in line to join the game. You will be notified when a slot opens up."))
+		else if(queue_position)
+			to_chat(src, span_notice("There are [queue_position-1] players in front of you in the queue to join the game."))
+		else
+			SSticker.queued_players += src
+			to_chat(src, span_notice("You have been added to the queue to join the game. Your position in queue is [SSticker.queued_players.len]."))
+		return TRUE
+
+	LateChoices()
+	return TRUE
+
+/datum/preferences/proc/character_setup_round_action(mob/user)
+	var/mob/dead/new_player/new_player
+	if(istype(user, /mob/dead/new_player))
+		new_player = user
+	if(!new_player?.client || !SSticker)
+		return TRUE
+
+	if(parent && new_player.client != parent)
+		return TRUE
+
+	if(is_active_migrant())
+		to_chat(new_player, span_boldwarning("You are in the migrant queue."))
+		return TRUE
+
+	if(SSticker.IsRoundInProgress())
+		return new_player.character_setup_chargen_join_round()
+
+	if(SSticker.current_state <= GAME_STATE_PREGAME)
+		if(new_player.ready == PLAYER_READY_TO_PLAY)
+			if(SSticker.job_change_locked)
+				return TRUE
+			return new_player.character_setup_chargen_set_ready(PLAYER_NOT_READY)
+		return new_player.character_setup_chargen_set_ready(PLAYER_READY_TO_PLAY)
+
+	to_chat(new_player, span_boldwarning("The game is starting. You cannot join yet."))
+	return TRUE
+
+/datum/preferences/proc/character_setup_selectable_ages()
 	. = list()
 	if(!pref_species)
 		return
@@ -135,14 +505,10 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			continue
 		. += possible_age
 
-/datum/preferences/proc/abel_underwear_options()
-	. = list(list("name" = "Nude", "value" = "Nude"))
-	if(!pref_species)
-		return
-	for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
-		. += list(list("name" = undie.name, "value" = undie.name))
+/datum/preferences/proc/character_setup_validate_smallclothes()
+	validate_customizer_entries()
 
-/datum/preferences/proc/abel_preview_job()
+/datum/preferences/proc/character_setup_preview_job()
 	var/datum/job/result
 	var/highest = 0
 	for(var/job_type in job_preferences)
@@ -151,17 +517,18 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			result = SSjob.GetJob(job_type)
 	return result
 
-/datum/preferences/proc/abel_refresh_preview(mob/user)
+/datum/preferences/proc/character_setup_refresh_preview(mob/user)
 	set waitfor = FALSE
-	var/previous = abel_preview_sig
-	abel_build_preview(user, json_encode(abel_build_features_data()))
-	if(abel_preview_sig != previous)
+	var/previous = character_setup_preview_sig
+	character_setup_build_preview(user, json_encode(character_setup_build_features_data()))
+	if(character_setup_preview_sig != previous)
 		SStgui.update_uis(src)
 
-/datum/preferences/proc/abel_preview_extra_sig()
+/datum/preferences/proc/character_setup_preview_extra_sig()
 	return ""
 
-/datum/preferences/proc/abel_setup_preview_dummy(datum/job/preview_job, datum/outfit/preview_outfit, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+/datum/preferences/proc/character_setup_setup_preview_dummy(datum/job/preview_job, datum/outfit/preview_outfit, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+	character_setup_validate_smallclothes()
 	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(slotkey)
 	if(!body)
 		return null
@@ -176,7 +543,7 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 	body.update_inv_head(hide_nonstandard = TRUE)
 	return body
 
-/datum/preferences/proc/abel_finish_preview_dummy(mob/living/carbon/human/dummy/body, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+/datum/preferences/proc/character_setup_finish_preview_dummy(mob/living/carbon/human/dummy/body, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
 	if(!body)
 		return
 	body.update_inv_hands()
@@ -188,8 +555,8 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 // Modular copy of /proc/getFlatIcon (code/__HELPERS/icons.dm) with the canvas-expansion bug fixed:
 // core uses && (only grows when all four edges change) and scrambles the bound assignments, so any
 // sprite wider/taller than 32x32 (taurs) gets clipped to 32x32. Used ONLY by the chargen preview.
-/proc/abel_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
-	#define ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
+/proc/character_setup_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
+	#define CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
 		for (var/i in 1 to length(process)) { \
 			var/image/current = process[i]; \
 			if (!current) { \
@@ -272,8 +639,8 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			copy.blend_mode = curblend
 			layers[copy] = appearance.layer
 
-		ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
-		ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
+		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
+		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
 
 		var/icon/add
 
@@ -295,7 +662,7 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 				curblend = BLEND_OVERLAY
 				add = icon(layer_image.icon, layer_image.icon_state, base_icon_dir)
 			else
-				add = abel_get_flat_icon(image(layer_image), curdir, curicon, curstate, curblend, FALSE, no_anim)
+				add = character_setup_get_flat_icon(image(layer_image), curdir, curicon, curstate, curblend, FALSE, no_anim)
 			if(!add)
 				continue
 
@@ -334,8 +701,8 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
 
 		if(start)
-			GLOB.abel_flat_blend_x = 2 - flatX1
-			GLOB.abel_flat_blend_y = 2 - flatY1
+			GLOB.character_setup_flat_blend_x = 2 - flatX1
+			GLOB.character_setup_flat_blend_y = 2 - flatY1
 
 		if(no_anim)
 			var/icon/cleaned = new /icon()
@@ -345,8 +712,8 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			return icon(flat, "", SOUTH)
 	else if (render_icon)
 		if(start)
-			GLOB.abel_flat_blend_x = 1
-			GLOB.abel_flat_blend_y = 1
+			GLOB.character_setup_flat_blend_x = 1
+			GLOB.character_setup_flat_blend_y = 1
 		var/icon/final_icon = icon(icon(curicon, curstate, base_icon_dir), "", SOUTH, no_anim ? TRUE : null)
 
 		if (appearance.alpha < 255)
@@ -360,69 +727,87 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 
 		return final_icon
 
-	#undef ABEL_PROCESS_OVERLAYS_OR_UNDERLAYS
+	#undef CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS
 
-/datum/preferences/proc/abel_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir)
+/datum/preferences/proc/character_setup_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir)
+	var/_t = world.timeofday
 	body.setDir(preview_dir)
-	var/icon/character = abel_get_flat_icon(body, defdir = preview_dir, no_anim = TRUE)
+	var/icon/character
+	if(character_setup_force_normal_preview_bounds())
+		GLOB.character_setup_flat_blend_x = 1
+		GLOB.character_setup_flat_blend_y = 1
+		character = getFlatIcon(body, defdir = preview_dir, no_anim = TRUE)
+	else
+		character = character_setup_get_flat_icon(body, defdir = preview_dir, no_anim = TRUE)
+	character_setup_log_op("getFlatIcon", _t, "dir=[preview_dir] size=[character ? "[character.Width()]x[character.Height()]" : "?"]")
 	return character
 
-/datum/preferences/proc/abel_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
-	var/mob/living/carbon/human/dummy/body = abel_setup_preview_dummy(preview_job, preview_outfit, slotkey)
+/datum/preferences/proc/character_setup_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+	var/mob/living/carbon/human/dummy/body = character_setup_setup_preview_dummy(preview_job, preview_outfit, slotkey)
 	if(!body)
 		return null
-	var/icon/out_icon = abel_flatten_dummy(body, preview_dir)
+	var/icon/out_icon = character_setup_flatten_dummy(body, preview_dir)
 	if(slotkey == DUMMY_HUMAN_SLOT_PREFERENCES && out_icon)
-		abel_preview_w = out_icon.Width()
-		abel_preview_h = out_icon.Height()
-		abel_preview_bx = GLOB.abel_flat_blend_x
-		abel_preview_by = GLOB.abel_flat_blend_y
-	abel_finish_preview_dummy(body, slotkey)
+		character_setup_preview_w = out_icon.Width()
+		character_setup_preview_h = out_icon.Height()
+		character_setup_preview_bx = GLOB.character_setup_flat_blend_x
+		character_setup_preview_by = GLOB.character_setup_flat_blend_y
+	character_setup_finish_preview_dummy(body, slotkey)
 	return out_icon
 
 // Renders the doll WITHOUT the hovered customizer (temporarily disables its entry) so the candidate
 // overlay replaces the current one instead of stacking on top. Cached per (customizer, current sig).
-/datum/preferences/proc/abel_render_hover_base(customizer_type)
+/datum/preferences/proc/character_setup_render_hover_base(customizer_type)
 	if(!pref_species)
 		return ""
 	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
 	if(!entry)
 		return ""
-	var/cache_key = "[customizer_type]|[abel_preview_sig]"
-	if(cache_key in GLOB.abel_hover_base_cache)
-		return GLOB.abel_hover_base_cache[cache_key]
-	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
+	var/cache_key = "[customizer_type]|[character_setup_preview_sig]"
+	if(cache_key in GLOB.character_setup_hover_base_cache)
+		return GLOB.character_setup_hover_base_cache[cache_key]
+	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
 	var/datum/outfit/preview_outfit
 	if(preview_job)
 		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
 	var/saved_underwear = underwear
-	if(!abel_preview_underwear)
+	var/saved_undershirt = undershirt
+	var/saved_socks = socks
+	if(!character_setup_preview_underwear)
 		underwear = "Nude"
+		undershirt = "Nude"
+		socks = "Nude"
 	var/was_disabled = entry.disabled
 	entry.disabled = TRUE
-	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir, "abel_hover_base")
+	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
+	character_setup_suppress_smallclothes_sync = TRUE
+	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir, "character_setup_hover_base")
+	character_setup_suppress_smallclothes_sync = was_sync_suppressed
 	entry.disabled = was_disabled
 	underwear = saved_underwear
+	undershirt = saved_undershirt
+	socks = saved_socks
 	var/result = ""
 	if(flat)
 		var/b64 = icon2base64(flat)
 		if(b64)
 			result = "data:image/png;base64,[b64]"
-	GLOB.abel_hover_base_cache[cache_key] = result
+	GLOB.character_setup_hover_base_cache[cache_key] = result
 	return result
 
-/datum/preferences/proc/abel_request_hover_base(customizer_type, customizer_ref)
+/datum/preferences/proc/character_setup_request_hover_base(customizer_type, customizer_ref)
 	set waitfor = FALSE
-	var/b64 = abel_render_hover_base(customizer_type)
-	if(abel_hover_base_for == customizer_ref)
-		abel_hover_base = b64
+	var/b64 = character_setup_render_hover_base(customizer_type)
+	if(character_setup_hover_base_for == customizer_ref)
+		character_setup_hover_base = b64
 		SStgui.update_uis(src)
 
-/datum/preferences/proc/abel_build_preview(mob/user, features_json)
+/datum/preferences/proc/character_setup_build_preview(mob/user, features_json)
 	if(!pref_species)
 		return null
+	var/_t = world.timeofday
 
-	var/datum/job/preview_job = abel_preview_clothes ? abel_preview_job() : null
+	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
 	var/datum/outfit/preview_outfit
 	if(preview_job)
 		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
@@ -432,53 +817,219 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 		"g" = gender,
 		"u" = underwear,
 		"uc" = "[underwear_color]",
-		"su" = abel_preview_underwear,
-		"sc" = abel_preview_clothes,
-		"d" = abel_preview_dir,
+		"ut" = undershirt,
+		"utc" = "[undershirt_color]",
+		"ul" = socks,
+		"ulc" = "[socks_color]",
+		"su" = character_setup_preview_underwear,
+		"sc" = character_setup_preview_clothes,
+		"d" = character_setup_preview_dir,
 		"j" = preview_job ? "[preview_job.type]" : "none",
 		"o" = preview_outfit ? "[preview_outfit]" : "none",
 		"sk" = skin_tone,
 		"a" = age,
-		"x" = abel_preview_extra_sig(),
+		"x" = character_setup_preview_extra_sig(),
+		"pb" = character_setup_force_normal_preview_bounds() ? "normal" : "expanded",
 		"f" = features_json,
 	))
 
-	var/cached = GLOB.abel_preview_b64_cache[sig]
+	var/cached = GLOB.character_setup_preview_b64_cache[sig]
 	if(cached)
-		abel_preview_cache = cached
-		abel_preview_sig = sig
+		character_setup_preview_cache = cached
+		character_setup_preview_sig = sig
+		character_setup_log_op("build_preview", _t, "CACHE_HIT")
 		return cached
 
 	var/saved_underwear = underwear
-	if(!abel_preview_underwear)
+	var/saved_undershirt = undershirt
+	var/saved_socks = socks
+	if(!character_setup_preview_underwear)
 		underwear = "Nude"
-	var/icon/flat = abel_render_preview_icon(preview_job, preview_outfit, abel_preview_dir)
+		undershirt = "Nude"
+		socks = "Nude"
+	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
+	character_setup_suppress_smallclothes_sync = TRUE
+	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir)
+	character_setup_suppress_smallclothes_sync = was_sync_suppressed
 	underwear = saved_underwear
+	undershirt = saved_undershirt
+	socks = saved_socks
 	if(!flat)
-		return abel_preview_cache
+		return character_setup_preview_cache
 
 	var/b64 = icon2base64(flat)
 	if(!b64)
-		return abel_preview_cache
+		return character_setup_preview_cache
 
-	abel_preview_cache = "data:image/png;base64,[b64]"
-	abel_preview_sig = sig
-	GLOB.abel_preview_b64_cache[sig] = abel_preview_cache
-	return abel_preview_cache
+	character_setup_preview_cache = "data:image/png;base64,[b64]"
+	character_setup_preview_sig = sig
+	GLOB.character_setup_preview_b64_cache[sig] = character_setup_preview_cache
+	character_setup_log_op("build_preview", _t, "RENDER")
+	return character_setup_preview_cache
 
-/datum/preferences/proc/abel_background_options()
+/datum/preferences/proc/character_setup_background_options()
 	return list(
 		list("name" = "None", "value" = "none"),
 		list("name" = "White", "value" = "white"),
 		list("name" = "Dark", "value" = "dark"),
 	)
 
+/datum/preferences/proc/character_setup_chargen_clean_text(text, limit = 900)
+	if(!text)
+		return ""
+	return trim(STRIP_HTML_FULL(replacetext("[text]", "\n", " "), limit))
+
+/datum/preferences/proc/character_setup_patron_options_for_faith(faith_type)
+	. = list()
+	var/list/patrons = GLOB.patrons_by_faith[faith_type]
+	if(!length(patrons))
+		return
+
+	for(var/patron_type in patrons)
+		var/datum/patron/patron = GLOB.patron_list[patron_type]
+		if(!patron)
+			continue
+		var/available = patron.preference_accessible(src)
+		var/patron_name = patron.display_name ? patron.display_name : patron.name
+		. += list(list(
+			"id" = "[patron_type]",
+			"name" = patron_name,
+			"domain" = patron.domain || "",
+			"description" = character_setup_chargen_clean_text(patron.desc, 700),
+			"flaws" = patron.flaws || "",
+			"worshippers" = patron.worshippers || "",
+			"sins" = patron.sins || "",
+			"boons" = patron.boons || "",
+			"available" = available,
+			"selected" = selected_patron == patron_type,
+		))
+
+/datum/preferences/proc/character_setup_faith_options()
+	. = list()
+	var/current_faith = selected_patron ? selected_patron::associated_faith : default_patron::associated_faith
+	for(var/faith_type in GLOB.faith_list)
+		var/datum/faith/faith = GLOB.faith_list[faith_type]
+		if(!faith)
+			continue
+		var/list/patrons = character_setup_patron_options_for_faith(faith_type)
+		var/available = faith.preference_accessible(src)
+		if(!available && !length(patrons))
+			continue
+		. += list(list(
+			"id" = "[faith_type]",
+			"name" = faith.name || "[faith_type]",
+			"description" = character_setup_chargen_clean_text(faith.desc, 700),
+			"available" = available,
+			"selected" = faith_type == current_faith,
+			"patrons" = patrons,
+		))
+
+/datum/preferences/proc/character_setup_current_ancestry_name()
+	if(!pref_species)
+		return "None"
+	var/list/skins = pref_species.get_skin_list()
+	for(var/skin_name in skins)
+		if(skins[skin_name] == skin_tone)
+			return "[skin_name]"
+	return "None"
+
+/datum/preferences/proc/character_setup_ancestry_options()
+	. = list()
+	if(!pref_species)
+		return
+	var/list/skins = pref_species.get_skin_list()
+	for(var/skin_name in skins)
+		var/skin_value = skins[skin_name]
+		. += list(list(
+			"name" = "[skin_name]",
+			"value" = "[skin_name]",
+			"color" = "[skin_value]",
+			"selected" = skin_value == skin_tone,
+		))
+
+/datum/preferences/proc/character_setup_apply_patron(mob/user, patron_id)
+	if(!user || !patron_id)
+		return TRUE
+	var/patron_type = text2path(patron_id)
+	var/datum/patron/patron = GLOB.patron_list[patron_type]
+	if(!patron)
+		return TRUE
+	if(!patron.preference_accessible(src))
+		to_chat(user, span_warning("[patron.display_name || patron.name] is not available for this character."))
+		return TRUE
+
+	selected_patron = patron_type
+	to_chat(user, "<font color='purple'>Patron: [selected_patron::name]</font>")
+	to_chat(user, "<font color='purple'>Domain: [selected_patron::domain]</font>")
+	to_chat(user, "<font color='purple'>Background: [selected_patron::desc]</font>")
+	to_chat(user, "<font color='purple'>Flawed aspects: [selected_patron::flaws]</font>")
+	to_chat(user, "<font color='purple'>Likely Worshippers: [selected_patron::worshippers]</font>")
+	to_chat(user, "<font color='red'>Considers these to be Sins: [selected_patron::sins]</font>")
+	to_chat(user, "<font color='white'>Blessed with boon(s): [selected_patron::boons]</font>")
+	save_character()
+	update_menu_data(user)
+	return TRUE
+
+/datum/preferences/proc/character_setup_apply_faith(mob/user, faith_id)
+	if(!user || !faith_id)
+		return TRUE
+	var/faith_type = text2path(faith_id)
+	var/datum/faith/faith = GLOB.faith_list[faith_type]
+	if(!faith)
+		return TRUE
+	if(!faith.preference_accessible(src))
+		to_chat(user, span_warning("[faith.name] is not available for this character."))
+		return TRUE
+
+	var/patron_type = faith.godhead
+	var/datum/patron/patron = patron_type ? GLOB.patron_list[patron_type] : null
+	if(!patron || !patron.preference_accessible(src))
+		for(var/candidate_type in GLOB.patrons_by_faith[faith_type])
+			var/datum/patron/candidate = GLOB.patron_list[candidate_type]
+			if(candidate && candidate.preference_accessible(src))
+				patron_type = candidate_type
+				break
+	if(!patron_type)
+		return TRUE
+
+	selected_patron = patron_type
+	to_chat(user, "<font color='purple'>Faith: [faith.name]</font>")
+	to_chat(user, "<font color='purple'>Background: [faith.desc]</font>")
+	save_character()
+	update_menu_data(user)
+	return TRUE
+
+/datum/preferences/proc/character_setup_apply_ancestry(mob/user, ancestry_name)
+	if(!user || !pref_species || !ancestry_name)
+		return TRUE
+	var/list/skins = pref_species.get_skin_list()
+	if(!(ancestry_name in skins))
+		return TRUE
+	var/new_skin_tone = skins[ancestry_name]
+	if(skin_tone != new_skin_tone)
+		skin_tone = new_skin_tone
+		save_character()
+		update_menu_data(user)
+	return TRUE
+
+/datum/preferences/proc/character_setup_send_ooc(mob/user, message)
+	if(!user?.client || !istext(message))
+		return TRUE
+	message = trim(message)
+	if(!length(message))
+		return TRUE
+	if(istype(user, /mob/dead/new_player))
+		user.client.lobbyooc(message)
+	else
+		user.client.ooc(message)
+	return TRUE
+
 /datum/preferences/ui_data(mob/user)
 	var/list/data = list()
 
 	var/datum/faith/selected_faith
 	if(selected_patron)
-		selected_faith = GLOB.faith_list[selected_patron.associated_faith]
+		selected_faith = GLOB.faith_list[selected_patron::associated_faith]
 
 	var/high_job = "None"
 	for(var/job_type in job_preferences)
@@ -503,8 +1054,9 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 	var/patron_name = "None"
 	if(selected_patron)
 		patron_name = selected_patron.display_name ? selected_patron.display_name : selected_patron.name
+	var/current_faith_type = selected_patron ? selected_patron::associated_faith : default_patron::associated_faith
 
-	var/list/selectable_ages = abel_selectable_ages()
+	var/list/selectable_ages = character_setup_selectable_ages()
 	var/list/age_options = list()
 	var/age_index = 1
 	if(length(selectable_ages))
@@ -516,6 +1068,12 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			current_index++
 	else
 		age_options += "[age || AGE_ADULT]"
+	var/display_age = age
+	if(length(selectable_ages) && !(display_age in selectable_ages))
+		display_age = selectable_ages[1]
+	var/list/age_tooltips = list()
+	for(var/age_option in age_options)
+		age_tooltips["[age_option]"] = character_setup_age_stat_tooltip(age_option)
 
 	var/list/loadout_slots = list()
 	for(var/slot_number in 1 to 3)
@@ -532,41 +1090,47 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 		))
 
 	data["real_name"] = real_name || "Unnamed"
-	data["initial_tab"] = abel_preferences_initial_tab
-	data["open_sequence"] = abel_preferences_open_sequence
-	data["tgui_theme"] = abel_tgui_theme
+	data["initial_tab"] = character_setup_preferences_initial_tab
+	data["open_sequence"] = character_setup_preferences_open_sequence
+	data["tgui_theme"] = character_setup_tgui_theme
+	data["preferences_fullscreen"] = !!character_setup_preferences_fullscreen
+	data["preferences_scale"] = character_setup_preferences_scale
 	data["species_name"] = pref_species ? pref_species.name : "Human"
+	data["species_id"] = pref_species ? pref_species.id : SPEC_ID_HUMEN
 	data["gender"] = gender_name
 	data["gender_short"] = gender_short
 	data["default_slot"] = default_slot
 
 	data["patron_name"] = patron_name
 	data["faith_name"] = selected_faith ? selected_faith.name : "None"
+	data["selected_patron_id"] = selected_patron ? "[selected_patron]" : ""
+	data["selected_faith_id"] = current_faith_type ? "[current_faith_type]" : ""
+	data["faith_options"] = character_setup_faith_options()
 	data["high_job"] = high_job
-	data["age"] = age
+	data["age"] = display_age
 	data["age_index"] = age_index
 	data["age_min"] = 1
 	data["age_max"] = max(1, length(age_options))
 	data["age_options"] = age_options
+	data["age_tooltips"] = age_tooltips
 	data["pronouns"] = pronouns || "None"
 	data["domhand"] = (domhand == 1) ? "Left" : "Right"
 	data["ancestry_label"] = pref_species?.skin_tone_wording || "Ancestry"
+	data["ancestry_value"] = character_setup_current_ancestry_name()
+	data["ancestry_options"] = character_setup_ancestry_options()
 
 	data["erp_enabled"] = !!erp_enabled
 	data["headshot"] = is_valid_headshot_link(null, headshot_link, TRUE) ? headshot_link : null
-	data["features"] = abel_build_features_data()
-	data["underwear"] = underwear || "Nude"
-	data["underwear_color"] = underwear_color ? underwear_color : "#cccccc"
-	data["underwear_options"] = abel_underwear_options()
-	data["preview_underwear"] = !!abel_preview_underwear
-	data["preview_clothes"] = !!abel_preview_clothes
-	data["preview_dir"] = abel_preview_dir
-	data["background"] = abel_preview_background ? abel_preview_background : "none"
-	data["preview_image"] = abel_preview_cache
-	data["hover_sprite"] = abel_hover_cache
-	data["hover_for"] = abel_hover_for
-	data["hover_base"] = abel_hover_base
-	data["hover_base_for"] = abel_hover_base_for
+	data["features"] = character_setup_build_features_data()
+	data["preview_underwear"] = !!character_setup_preview_underwear
+	data["preview_clothes"] = !!character_setup_preview_clothes
+	data["preview_dir"] = character_setup_preview_dir
+	data["background"] = character_setup_preview_background ? character_setup_preview_background : "none"
+	data["preview_image"] = character_setup_preview_cache
+	data["hover_sprite"] = character_setup_hover_cache
+	data["hover_for"] = character_setup_hover_for
+	data["hover_base"] = character_setup_hover_base
+	data["hover_base_for"] = character_setup_hover_base_for
 
 	data["culture_name"] = culture ? culture::name : "None"
 	data["voice_type"] = voice_type || "Default"
@@ -579,6 +1143,73 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 	data["loadouts"] = loadout_slots
 	data["triumphs"] = triumphs
 	data["special_role"] = next_special_trait ? "[next_special_trait]" : "None"
+	var/mob/dead/new_player/new_player
+	if(istype(user, /mob/dead/new_player))
+		new_player = user
+	var/list/ooc_messages = list()
+	for(var/list/ooc_entry as anything in GLOB.character_setup_chargen_ooc_messages)
+		if(ooc_entry["lobby"] && !user?.client?.holder && SSticker?.current_state != GAME_STATE_FINISHED && !new_player)
+			continue
+		ooc_messages += list(ooc_entry)
+	data["ooc_messages"] = ooc_messages
+	data["round_player_ready"] = new_player?.ready == PLAYER_READY_TO_PLAY
+	data["round_action_label"] = "Unavailable"
+	data["round_action_icon"] = "ban"
+	data["round_action_color"] = null
+	data["round_action_disabled"] = TRUE
+	data["round_action_tooltip"] = "This action is only available in the lobby."
+	if(SSticker)
+		var/time_remaining = SSticker.GetTimeLeft()
+		if(SSticker.HasRoundStarted())
+			data["round_start_status"] = "Round Started"
+			data["round_start_seconds"] = 0
+		else if(SSticker.current_state == GAME_STATE_SETTING_UP)
+			data["round_start_status"] = "Setting Up"
+			data["round_start_seconds"] = 0
+		else if(time_remaining > 0)
+			data["round_start_status"] = "Starts In"
+			data["round_start_seconds"] = max(0, round(time_remaining / 10))
+		else if(time_remaining == -10)
+			data["round_start_status"] = "Delayed"
+			data["round_start_seconds"] = -1
+		else
+			data["round_start_status"] = "Starting Soon"
+			data["round_start_seconds"] = 0
+		data["round_ready_players"] = SSticker.totalPlayersReady
+		data["round_total_players"] = SSticker.totalPlayers
+		if(new_player)
+			if(SSticker.IsRoundInProgress())
+				data["round_action_label"] = "Join Now"
+				data["round_action_icon"] = "sign-in-alt"
+				data["round_action_color"] = "green"
+				data["round_action_disabled"] = FALSE
+				data["round_action_tooltip"] = "Open late join choices."
+			else if(SSticker.current_state <= GAME_STATE_PREGAME)
+				if(new_player.ready == PLAYER_READY_TO_PLAY)
+					data["round_action_label"] = "Cancel Ready"
+					data["round_action_icon"] = "times"
+					data["round_action_color"] = "bad"
+					data["round_action_disabled"] = !!SSticker.job_change_locked
+					data["round_action_tooltip"] = "Cancel roundstart readiness."
+				else
+					data["round_action_label"] = "Ready"
+					data["round_action_icon"] = "user-check"
+					data["round_action_color"] = "green"
+					data["round_action_disabled"] = FALSE
+					data["round_action_tooltip"] = "Ready this character for roundstart."
+			else if(SSticker.current_state == GAME_STATE_SETTING_UP)
+				data["round_action_label"] = "Setting Up"
+				data["round_action_icon"] = "hourglass-half"
+				data["round_action_tooltip"] = "The game is starting."
+			else
+				data["round_action_label"] = "Round Finished"
+				data["round_action_icon"] = "flag-checkered"
+				data["round_action_tooltip"] = "The round has already finished."
+	else
+		data["round_start_status"] = "Unknown"
+		data["round_start_seconds"] = -1
+		data["round_ready_players"] = 0
+		data["round_total_players"] = 0
 	var/pq_raw = user?.ckey ? get_playerquality(user.ckey, text = TRUE) : "Unknown"
 	var/regex/pq_tags = new(@"<[^>]*>", "g")
 	var/regex/pq_color = new(@"color:\s*(#[0-9a-fA-F]+)")
@@ -641,7 +1272,7 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			if(!isnum(new_age))
 				return FALSE
 
-			var/list/selectable_ages = abel_selectable_ages()
+			var/list/selectable_ages = character_setup_selectable_ages()
 			if(!length(selectable_ages))
 				return FALSE
 
@@ -655,14 +1286,40 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 	return FALSE
 
 /datum/preferences/process_link(mob/user, list/href_list)
+	character_setup_log_action("pref:[href_list["preference"]]", json_encode(href_list))
 	switch(href_list["preference"])
-		if("abel_customizer")
+		if("character_setup_select_species")
+			return character_setup_apply_species(user, href_list["species_id"])
+		if("character_setup_select_faith")
+			return character_setup_apply_faith(user, href_list["faith_id"])
+		if("character_setup_select_patron")
+			return character_setup_apply_patron(user, href_list["patron_id"])
+		if("character_setup_select_ancestry")
+			return character_setup_apply_ancestry(user, href_list["ancestry"])
+		if("character_setup_send_ooc")
+			return character_setup_send_ooc(user, href_list["message"])
+		if("character_setup_round_action")
+			return character_setup_round_action(user)
+		if("character_setup_preferences_fullscreen")
+			character_setup_preferences_fullscreen = !character_setup_preferences_fullscreen
+			SStgui.update_uis(src)
+			return TRUE
+		if("character_setup_preferences_scale")
+			character_setup_preferences_scale = character_setup_sanitize_preferences_scale(href_list["scale"])
+			save_preferences()
+			SStgui.update_uis(src)
+			return TRUE
+		if("character_setup_customizer")
 			validate_customizer_entries()
-			if(!abel_handle_color_task(user, href_list))
+			var/customizer_type = text2path(href_list["customizer"])
+			if(!character_setup_handle_color_task(user, href_list))
 				handle_customizer_topic(user, href_list)
+			if(customizer_type in GLOB.character_setup_smallclothes_customizers)
+				character_setup_sync_smallclothes_from_entries()
+				save_character()
 			update_menu_data(user)
 			return TRUE
-		if("abel_set_choice")
+		if("character_setup_set_choice")
 			var/customizer_type = text2path(href_list["key"])
 			var/choice_type = text2path(href_list["choice_type"])
 			if(!customizer_type || !choice_type)
@@ -677,7 +1334,7 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			customizer_entries += customizer.create_customizer_entry(src, choice_type)
 			update_menu_data(user)
 			return TRUE
-		if("abel_erp_toggle")
+		if("character_setup_erp_toggle")
 			erp_enabled = !erp_enabled
 			save_character()
 			var/mob/living/carbon/human/H = user
@@ -686,71 +1343,45 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			to_chat(user, span_notice("Intimacy opt-in [erp_enabled ? "enabled" : "disabled"] for this character (saved to slot)."))
 			update_menu_data(user)
 			return TRUE
-		if("abel_erp_panel")
+		if("character_setup_erp_panel")
 			var/mob/living/carbon/human/H = user
 			if(!istype(H) || !erp_enabled)
 				to_chat(user, span_warning("Enable the intimacy opt-in first, in a living body."))
 				return TRUE
 			H.start_erp_session(H)
 			return TRUE
-		if("abel_preview_layer")
+		if("character_setup_preview_layer")
 			switch(href_list["layer"])
 				if("underwear")
-					abel_preview_underwear = !abel_preview_underwear
+					character_setup_preview_underwear = !character_setup_preview_underwear
 				if("clothes")
-					abel_preview_clothes = !abel_preview_clothes
-			update_menu_data(user)
-			return TRUE
-		if("abel_underwear")
-			var/choice = href_list["undie"]
-			if(choice == "Nude")
-				underwear = "Nude"
-			else if(pref_species)
-				for(var/datum/sprite_accessory/undie in pref_species.get_spec_undies_list(gender))
-					if(undie.name == choice)
-						underwear = choice
-						break
-			save_character()
-			update_menu_data(user)
-			return TRUE
-		if("abel_underwear_color")
-			var/new_color = input(user, "Choose underwear color", "Underwear", underwear_color) as color|null
-			if(new_color)
-				underwear_color = new_color
-				save_character()
+					character_setup_preview_clothes = !character_setup_preview_clothes
 			update_menu_data(user)
 			return TRUE
 		if("gender")
 			gender = (gender == MALE) ? FEMALE : MALE
-			if(pref_species && underwear != "Nude")
-				var/valid_undie = FALSE
-				for(var/datum/sprite_accessory/u in pref_species.get_spec_undies_list(gender))
-					if(u.name == underwear)
-						valid_undie = TRUE
-						break
-				if(!valid_undie)
-					underwear = pref_species.random_underwear(gender) || "Nude"
+			character_setup_validate_smallclothes()
 			save_character()
 			update_menu_data(user)
 			return TRUE
-		if("abel_preview_rotate")
+		if("character_setup_preview_rotate")
 			var/list/dir_cycle = list(SOUTH, WEST, NORTH, EAST)
-			var/idx = dir_cycle.Find(abel_preview_dir)
+			var/idx = dir_cycle.Find(character_setup_preview_dir)
 			if(!idx)
 				idx = 1
 			if(href_list["rotate"] == "left")
 				idx = (idx <= 1) ? length(dir_cycle) : (idx - 1)
 			else
 				idx = (idx >= length(dir_cycle)) ? 1 : (idx + 1)
-			abel_preview_dir = dir_cycle[idx]
+			character_setup_preview_dir = dir_cycle[idx]
 			update_menu_data(user)
 			return TRUE
-		if("abel_preview_background")
+		if("character_setup_preview_background")
 			var/bg_choice = href_list["bg"]
 			if(bg_choice == "none")
-				abel_preview_background = null
+				character_setup_preview_background = null
 			else
-				abel_preview_background = bg_choice
+				character_setup_preview_background = bg_choice
 			save_character()
 			update_menu_data(user)
 			return TRUE
@@ -758,35 +1389,43 @@ GLOBAL_VAR_INIT(abel_flat_blend_y, 1)
 			var/saved_age = age
 			var/saved_name = real_name
 			..()
-			if(saved_age && (saved_age in pref_species.possible_ages))
+			var/list/selectable_ages = character_setup_species_display_ages(pref_species)
+			if(saved_age && (saved_age in selectable_ages))
 				age = saved_age
+			else if(length(selectable_ages))
+				age = selectable_ages[1]
 			if(saved_name)
 				real_name = saved_name
+			character_setup_validate_smallclothes()
 			update_menu_data(user)
 			return TRUE
-		if("abel_tgui_theme")
+		if("character_setup_tgui_theme")
 			var/new_theme = href_list["theme"]
 			if(new_theme)
-				abel_tgui_theme = new_theme
+				character_setup_tgui_theme = new_theme
+				save_preferences()
 				SStgui.update_uis(src)
 			return TRUE
-		if("abel_hover")
+		if("character_setup_hover")
 			var/acc_path = text2path(href_list["acc"])
 			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : GLOB.underwear_list[href_list["acc"]]
-			abel_hover_for = href_list["acc"]
-			var/icon/cand = sa ? sa.abel_dir_sprite(abel_preview_dir, href_list["color"]) : null
-			if(cand && (abel_preview_w > 32 || abel_preview_h > 32))
-				var/icon/canvas = icon('icons/blanks/32x32.dmi', "nothing")
-				canvas.Crop(1, 1, abel_preview_w, abel_preview_h)
-				canvas.Blend(cand, ICON_OVERLAY, abel_preview_bx, abel_preview_by)
-				cand = canvas
-			abel_hover_cache = cand ? "data:image/png;base64,[icon2base64(cand)]" : ""
+			character_setup_hover_for = href_list["acc"]
+			var/icon/cand = sa ? sa.character_setup_dir_sprite(character_setup_preview_dir, href_list["color"]) : null
+			if(cand)
+				if(character_setup_force_normal_preview_bounds())
+					cand.Crop(1, 1, 32, 32)
+				else if(character_setup_preview_w > 32 || character_setup_preview_h > 32)
+					var/icon/canvas = icon('icons/blanks/32x32.dmi', "nothing")
+					canvas.Crop(1, 1, character_setup_preview_w, character_setup_preview_h)
+					canvas.Blend(cand, ICON_OVERLAY, character_setup_preview_bx, character_setup_preview_by)
+					cand = canvas
+			character_setup_hover_cache = cand ? "data:image/png;base64,[icon2base64(cand)]" : ""
 			var/cust_ref = href_list["customizer"]
-			abel_hover_base_for = cust_ref
-			abel_hover_base = ""
+			character_setup_hover_base_for = cust_ref
+			character_setup_hover_base = ""
 			var/cust_type = cust_ref ? text2path(cust_ref) : null
 			if(cust_type)
-				abel_request_hover_base(cust_type, cust_ref)
+				character_setup_request_hover_base(cust_type, cust_ref)
 			SStgui.update_uis(src)
 			return TRUE
 	return ..()
