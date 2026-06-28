@@ -136,6 +136,47 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	return read_preference(/datum/preference/choiced/accessory)
 /datum/preferences/proc/cspref_set_accessory(value)
 	write_preference(/datum/preference/choiced/accessory, value)
+/datum/preferences/proc/cspref_voice_type()
+	return read_preference(/datum/preference/choiced/voice_type)
+/datum/preferences/proc/cspref_set_voice_type(value)
+	write_preference(/datum/preference/choiced/voice_type, value)
+/datum/preferences/proc/cspref_voice_color()
+	return read_preference(/datum/preference/color/voice_color)
+/datum/preferences/proc/cspref_set_voice_color(value)
+	write_preference(/datum/preference/color/voice_color, value)
+/datum/preferences/proc/cspref_selected_accent()
+	return read_preference(/datum/preference/choiced/selected_accent)
+/datum/preferences/proc/cspref_set_selected_accent(value)
+	write_preference(/datum/preference/choiced/selected_accent, value)
+/datum/preferences/proc/cspref_setspouse()
+	return read_preference(/datum/preference/text/setspouse)
+/datum/preferences/proc/cspref_set_setspouse(value)
+	write_preference(/datum/preference/text/setspouse, value)
+/datum/preferences/proc/cspref_hotkeys()
+	return read_preference(/datum/preference/toggle/hotkeys)
+/datum/preferences/proc/cspref_buttons_locked()
+	return read_preference(/datum/preference/toggle/buttons_locked)
+/datum/preferences/proc/cspref_see_chat_non_mob()
+	return read_preference(/datum/preference/toggle/see_chat_non_mob)
+/datum/preferences/proc/cspref_tgui_fancy()
+	return read_preference(/datum/preference/toggle/tgui_fancy)
+/datum/preferences/proc/cspref_tgui_lock()
+	return read_preference(/datum/preference/toggle/tgui_lock)
+/datum/preferences/proc/cspref_windowflashing()
+	return read_preference(/datum/preference/toggle/windowflashing)
+/datum/preferences/proc/cspref_toggles()
+	return read_preference(/datum/preference/bitwise/toggles)
+/datum/preferences/proc/cspref_ambientocclusion()
+	return read_preference(/datum/preference/toggle/ambientocclusion)
+/datum/preferences/proc/cspref_auto_fit_viewport()
+	return read_preference(/datum/preference/toggle/auto_fit_viewport)
+/datum/preferences/proc/cspref_widescreenpref()
+	return read_preference(/datum/preference/toggle/widescreenpref)
+/datum/preferences/proc/cspref_pixel_size()
+	return read_preference(/datum/preference/numeric/pixel_size)
+/datum/preferences/proc/cspref_scaling_method()
+	return read_preference(/datum/preference/choiced/scaling_method)
+/datum/preferences/var/current_tab = 0
 // ===== END datumized-preference accessors =====
 
 /proc/character_setup_chargen_record_ooc(sender, message, lobby_only = FALSE)
@@ -430,7 +471,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	var/saved_age = cspref_age()
 	var/saved_name = cspref_real_name()
-	selected_accent = ACCENT_DEFAULT
+	cspref_set_selected_accent(ACCENT_DEFAULT)
 	pref_species = new_species
 
 	to_chat(user, "<em>[pref_species.name]</em>")
@@ -985,7 +1026,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 /datum/preferences/proc/character_setup_faith_options()
 	. = list()
-	var/current_faith = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : default_patron::associated_faith
+	var/current_faith = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : /datum/patron/divine/astrata::associated_faith
 	for(var/faith_type in GLOB.faith_list)
 		var/datum/faith/faith = GLOB.faith_list[faith_type]
 		if(!faith)
@@ -1133,7 +1174,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/patron_name = "None"
 	if(cspref_selected_patron())
 		patron_name = cspref_selected_patron().display_name ? cspref_selected_patron().display_name : cspref_selected_patron().name
-	var/current_faith_type = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : default_patron::associated_faith
+	var/current_faith_type = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : /datum/patron/divine/astrata::associated_faith
 
 	var/list/selectable_ages = character_setup_selectable_ages()
 	var/list/age_options = list()
@@ -1212,12 +1253,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["hover_base_for"] = character_setup_hover_base_for
 
 	data["culture_name"] = cspref_culture() ? cspref_culture()::name : "None"
-	data["voice_type"] = voice_type || "Default"
-	data["voice_color"] = voice_color ? "#[voice_color]" : "#a0a0a0"
-	data["selected_accent"] = selected_accent || "None"
+	data["voice_type"] = cspref_voice_type() || "Default"
+	data["voice_color"] = cspref_voice_color() ? "#[cspref_voice_color()]" : "#a0a0a0"
+	data["selected_accent"] = cspref_selected_accent() || "None"
 	data["family"] = cspref_family() || "None"
 	data["gender_pref"] = cspref_gender_choice() || "Any"
-	data["spouse"] = setspouse || "None"
+	data["spouse"] = cspref_setspouse() || "None"
 
 	data["loadouts"] = loadout_slots
 	data["triumphs"] = triumphs
@@ -1296,20 +1337,20 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["player_quality_color"] = pq_color.Find(pq_raw) ? pq_color.group[1] : null
 
 	data["game_prefs"] = list(
-		"hotkeys" = !!hotkeys,
-		"buttons_locked" = !!buttons_locked,
-		"see_chat_non_mob" = !!see_chat_non_mob,
-		"tgui_fancy" = !!tgui_fancy,
-		"tgui_lock" = !!tgui_lock,
-		"windowflashing" = !!windowflashing,
-		"lobby_music" = !!(toggles & SOUND_LOBBY),
-		"hear_midis" = !!(toggles & SOUND_MIDI),
-		"ambientocclusion" = !!ambientocclusion,
-		"auto_fit_viewport" = !!auto_fit_viewport,
-		"widescreenpref" = !!widescreenpref,
-		"allow_midround_antag" = !!(toggles & MIDROUND_ANTAG),
-		"pixel_size" = "[pixel_size]",
-		"scaling_method" = "[scaling_method]",
+		"hotkeys" = !!cspref_hotkeys(),
+		"buttons_locked" = !!cspref_buttons_locked(),
+		"see_chat_non_mob" = !!cspref_see_chat_non_mob(),
+		"tgui_fancy" = !!cspref_tgui_fancy(),
+		"tgui_lock" = !!cspref_tgui_lock(),
+		"windowflashing" = !!cspref_windowflashing(),
+		"lobby_music" = !!(cspref_toggles() & SOUND_LOBBY),
+		"hear_midis" = !!(cspref_toggles() & SOUND_MIDI),
+		"ambientocclusion" = !!cspref_ambientocclusion(),
+		"auto_fit_viewport" = !!cspref_auto_fit_viewport(),
+		"widescreenpref" = !!cspref_widescreenpref(),
+		"allow_midround_antag" = !!(cspref_toggles() & MIDROUND_ANTAG),
+		"pixel_size" = "[cspref_pixel_size()]",
+		"scaling_method" = "[cspref_scaling_method()]",
 	)
 
 	return data
