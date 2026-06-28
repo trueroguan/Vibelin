@@ -35,14 +35,14 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	var/legacy_color
 	switch(smallclothes_slot)
 		if("top")
-			legacy_name = prefs.undershirt
+			legacy_name = prefs.cspref_undershirt()
 			legacy_color = prefs.undershirt_color
 		if("legs")
-			legacy_name = prefs.socks
+			legacy_name = prefs.cspref_socks()
 			legacy_color = prefs.socks_color
 		else
-			legacy_name = prefs.underwear
-			legacy_color = prefs.underwear_color
+			legacy_name = prefs.cspref_underwear()
+			legacy_color = prefs.cspref_underwear_color()
 
 	var/list/allowed = choice.character_setup_accessory_types(prefs)
 	var/selected_type = choice.character_setup_accessory_type_by_name(legacy_name, prefs)
@@ -157,17 +157,17 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 		var/selected_color = length(colors) ? colors[1] : null
 		switch(customizer.smallclothes_slot)
 			if("top")
-				undershirt = selected_name
+				cspref_set_undershirt(selected_name)
 				if(selected_color)
 					undershirt_color = selected_color
 			if("legs")
-				socks = selected_name
+				cspref_set_socks(selected_name)
 				if(selected_color)
 					socks_color = selected_color
 			else
-				underwear = selected_name
+				cspref_set_underwear(selected_name)
 				if(selected_color)
-					underwear_color = selected_color
+					cspref_set_underwear_color(selected_color)
 
 /datum/preferences/validate_customizer_entries()
 	if(pref_species && islist(pref_species.customizers))

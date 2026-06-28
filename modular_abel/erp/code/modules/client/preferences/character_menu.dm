@@ -59,6 +59,85 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	character_setup_log("OP", "[op] x[cnt] took=[delta]ds[detail ? " {[detail]}" : ""][cnt > 1 ? "  *** MULTIPLICATIVE in [character_setup_log_action_name] ***" : ""]")
 // ===== END CHARACTER SETUP DEBUG LOGGER =====
 
+// ===== Datumized-preference accessors (upstream moved these off /datum/preferences into the /tg/ preference-datum system) =====
+/datum/preferences/proc/cspref_age()
+	return read_preference(/datum/preference/choiced/age)
+/datum/preferences/proc/cspref_set_age(value)
+	write_preference(/datum/preference/choiced/age, value)
+/datum/preferences/proc/cspref_gender()
+	return read_preference(/datum/preference/choiced/gender)
+/datum/preferences/proc/cspref_set_gender(value)
+	write_preference(/datum/preference/choiced/gender, value)
+/datum/preferences/proc/cspref_underwear()
+	return read_preference(/datum/preference/choiced/underwear)
+/datum/preferences/proc/cspref_set_underwear(value)
+	write_preference(/datum/preference/choiced/underwear, value)
+/datum/preferences/proc/cspref_underwear_color()
+	return read_preference(/datum/preference/color/underwear_color)
+/datum/preferences/proc/cspref_set_underwear_color(value)
+	write_preference(/datum/preference/color/underwear_color, value)
+/datum/preferences/proc/cspref_undershirt()
+	return read_preference(/datum/preference/choiced/undershirt)
+/datum/preferences/proc/cspref_set_undershirt(value)
+	write_preference(/datum/preference/choiced/undershirt, value)
+/datum/preferences/proc/cspref_socks()
+	return read_preference(/datum/preference/choiced/socks)
+/datum/preferences/proc/cspref_set_socks(value)
+	write_preference(/datum/preference/choiced/socks, value)
+/datum/preferences/proc/cspref_skin_tone()
+	return read_preference(/datum/preference/choiced/skin_tone)
+/datum/preferences/proc/cspref_set_skin_tone(value)
+	write_preference(/datum/preference/choiced/skin_tone, value)
+/datum/preferences/proc/cspref_real_name()
+	return read_preference(/datum/preference/text/real_name)
+/datum/preferences/proc/cspref_set_real_name(value)
+	write_preference(/datum/preference/text/real_name, value)
+/datum/preferences/proc/cspref_pronouns()
+	return read_preference(/datum/preference/choiced/pronouns)
+/datum/preferences/proc/cspref_set_pronouns(value)
+	write_preference(/datum/preference/choiced/pronouns, value)
+/datum/preferences/proc/cspref_culture()
+	return read_preference(/datum/preference/choiced/culture)
+/datum/preferences/proc/cspref_set_culture(value)
+	write_preference(/datum/preference/choiced/culture, value)
+/datum/preferences/proc/cspref_domhand()
+	return read_preference(/datum/preference/choiced/domhand)
+/datum/preferences/proc/cspref_set_domhand(value)
+	write_preference(/datum/preference/choiced/domhand, value)
+/datum/preferences/proc/cspref_selected_patron()
+	return read_preference(/datum/preference/choiced/patron)
+/datum/preferences/proc/cspref_set_selected_patron(value)
+	write_preference(/datum/preference/choiced/patron, value)
+/datum/preferences/proc/cspref_faith()
+	return read_preference(/datum/preference/choiced/faith)
+/datum/preferences/proc/cspref_set_faith(value)
+	write_preference(/datum/preference/choiced/faith, value)
+/datum/preferences/proc/cspref_detail()
+	return read_preference(/datum/preference/choiced/detail)
+/datum/preferences/proc/cspref_set_detail(value)
+	write_preference(/datum/preference/choiced/detail, value)
+/datum/preferences/proc/cspref_flavortext()
+	return read_preference(/datum/preference/text/flavortext)
+/datum/preferences/proc/cspref_set_flavortext(value)
+	write_preference(/datum/preference/text/flavortext, value)
+/datum/preferences/proc/cspref_gender_choice()
+	return read_preference(/datum/preference/choiced/gender_choice)
+/datum/preferences/proc/cspref_set_gender_choice(value)
+	write_preference(/datum/preference/choiced/gender_choice, value)
+/datum/preferences/proc/cspref_family()
+	return read_preference(/datum/preference/text/family)
+/datum/preferences/proc/cspref_set_family(value)
+	write_preference(/datum/preference/text/family, value)
+/datum/preferences/proc/cspref_headshot_link()
+	return read_preference(/datum/preference/text/headshot_link)
+/datum/preferences/proc/cspref_set_headshot_link(value)
+	write_preference(/datum/preference/text/headshot_link, value)
+/datum/preferences/proc/cspref_accessory()
+	return read_preference(/datum/preference/choiced/accessory)
+/datum/preferences/proc/cspref_set_accessory(value)
+	write_preference(/datum/preference/choiced/accessory, value)
+// ===== END datumized-preference accessors =====
+
 /proc/character_setup_chargen_record_ooc(sender, message, lobby_only = FALSE)
 	if(!istext(sender) || !istext(message))
 		return
@@ -98,12 +177,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	user << browse(null, "window=preferences_browser")
 
 	validate_customizer_entries()
-	character_setup_static_sig = "[pref_species?.type]-[gender]"
+	character_setup_static_sig = "[pref_species?.type]-[cspref_gender()]"
 	character_setup_build_preview(user, json_encode(character_setup_build_features_data()))
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
-	var/new_static_sig = "[pref_species?.type]-[gender]"
+	var/new_static_sig = "[pref_species?.type]-[cspref_gender()]"
 	if(new_static_sig != character_setup_static_sig)
 		character_setup_static_sig = new_static_sig
 		update_static_data(user)
@@ -222,7 +301,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!species)
 		return list()
 	var/sheet_type = species.statsheet_male
-	if(gender == FEMALE && species.statsheet_female)
+	if(cspref_gender() == FEMALE && species.statsheet_female)
 		sheet_type = species.statsheet_female
 	return character_setup_stat_modifiers_for_sheet(sheet_type)
 
@@ -247,7 +326,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 /datum/preferences/proc/character_setup_age_stat_tooltip(age_name)
 	var/list/modifiers = character_setup_stat_modifiers_for_sheet(character_setup_age_sheet_type(age_name))
 	if(!length(modifiers))
-		return "[age_name]: No age stat modifiers."
+		return "[age_name]: No cspref_age() stat modifiers."
 	return "[age_name]: [character_setup_stat_modifier_summary(modifiers)]"
 
 /datum/preferences/proc/character_setup_species_tags(datum/species/species, available)
@@ -283,11 +362,11 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	if(species)
 		if(species.native_language && tag == "[species.native_language]")
-			return "Native language or culture group: [tag]."
+			return "Native language or cspref_culture() group: [tag]."
 		if(species.skin_tone_wording && tag == "[species.skin_tone_wording]")
 			return "This species uses [tag] as its ancestry/color choice."
 		if(tag in character_setup_species_display_ages(species))
-			return "Available age category: [tag]."
+			return "Available cspref_age() category: [tag]."
 
 	return "[tag] species tag."
 
@@ -349,8 +428,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(pref_species?.type == species_type)
 		return TRUE
 
-	var/saved_age = age
-	var/saved_name = real_name
+	var/saved_age = cspref_age()
+	var/saved_name = cspref_real_name()
 	selected_accent = ACCENT_DEFAULT
 	pref_species = new_species
 
@@ -359,13 +438,13 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		to_chat(user, "[pref_species.desc]")
 
 	if(!length(pref_species.allowed_pronouns))
-		to_chat(user, span_warning("This species does not have any allowed pronouns. Please contact a coder to add them."))
+		to_chat(user, span_warning("This species does not have any allowed cspref_pronouns(). Please contact a coder to add them."))
 	else if(length(pref_species.allowed_pronouns) == 1)
-		pronouns = pref_species.allowed_pronouns[1]
-	else if(!(pronouns in pref_species.allowed_pronouns))
-		pronouns = pref_species.allowed_pronouns[1]
+		cspref_set_pronouns(pref_species.allowed_pronouns[1])
+	else if(!(cspref_pronouns() in pref_species.allowed_pronouns))
+		cspref_set_pronouns(pref_species.allowed_pronouns[1])
 
-	real_name = pref_species.random_name(gender, TRUE)
+	cspref_set_real_name(pref_species.random_name(cspref_gender(), TRUE))
 	reset_jobs(user)
 	reset_patron(user)
 	reset_culture(user)
@@ -374,15 +453,15 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	validate_customizer_entries()
 	reset_all_customizer_accessory_colors()
 	randomize_all_customizer_accessories()
-	accessory = "Nothing"
+	cspref_set_accessory("Nothing")
 
 	var/list/selectable_ages = character_setup_species_display_ages(pref_species)
 	if(saved_age && (saved_age in selectable_ages))
-		age = saved_age
+		cspref_set_age(saved_age)
 	else if(length(selectable_ages))
-		age = selectable_ages[1]
+		cspref_set_age(selectable_ages[1])
 	if(saved_name)
-		real_name = saved_name
+		cspref_set_real_name(saved_name)
 
 	update_menu_data(user)
 	return TRUE
@@ -769,14 +848,14 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
 	var/datum/outfit/preview_outfit
 	if(preview_job)
-		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
-	var/saved_underwear = underwear
-	var/saved_undershirt = undershirt
-	var/saved_socks = socks
+		preview_outfit = (cspref_gender() == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
+	var/saved_underwear = cspref_underwear()
+	var/saved_undershirt = cspref_undershirt()
+	var/saved_socks = cspref_socks()
 	if(!character_setup_preview_underwear)
-		underwear = "Nude"
-		undershirt = "Nude"
-		socks = "Nude"
+		cspref_set_underwear("Nude")
+		cspref_set_undershirt("Nude")
+		cspref_set_socks("Nude")
 	var/was_disabled = entry.disabled
 	entry.disabled = TRUE
 	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
@@ -784,9 +863,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir, "character_setup_hover_base")
 	character_setup_suppress_smallclothes_sync = was_sync_suppressed
 	entry.disabled = was_disabled
-	underwear = saved_underwear
-	undershirt = saved_undershirt
-	socks = saved_socks
+	cspref_set_underwear(saved_underwear)
+	cspref_set_undershirt(saved_undershirt)
+	cspref_set_socks(saved_socks)
 	var/result = ""
 	if(flat)
 		var/b64 = icon2base64(flat)
@@ -810,24 +889,24 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
 	var/datum/outfit/preview_outfit
 	if(preview_job)
-		preview_outfit = (gender == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
+		preview_outfit = (cspref_gender() == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
 
 	var/sig = list2params(list(
 		"sp" = "[pref_species.type]",
-		"g" = gender,
-		"u" = underwear,
-		"uc" = "[underwear_color]",
-		"ut" = undershirt,
+		"g" = cspref_gender(),
+		"u" = cspref_underwear(),
+		"uc" = "[cspref_underwear_color()]",
+		"ut" = cspref_undershirt(),
 		"utc" = "[undershirt_color]",
-		"ul" = socks,
+		"ul" = cspref_socks(),
 		"ulc" = "[socks_color]",
 		"su" = character_setup_preview_underwear,
 		"sc" = character_setup_preview_clothes,
 		"d" = character_setup_preview_dir,
 		"j" = preview_job ? "[preview_job.type]" : "none",
 		"o" = preview_outfit ? "[preview_outfit]" : "none",
-		"sk" = skin_tone,
-		"a" = age,
+		"sk" = cspref_skin_tone(),
+		"a" = cspref_age(),
 		"x" = character_setup_preview_extra_sig(),
 		"pb" = character_setup_force_normal_preview_bounds() ? "normal" : "expanded",
 		"f" = features_json,
@@ -840,20 +919,20 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		character_setup_log_op("build_preview", _t, "CACHE_HIT")
 		return cached
 
-	var/saved_underwear = underwear
-	var/saved_undershirt = undershirt
-	var/saved_socks = socks
+	var/saved_underwear = cspref_underwear()
+	var/saved_undershirt = cspref_undershirt()
+	var/saved_socks = cspref_socks()
 	if(!character_setup_preview_underwear)
-		underwear = "Nude"
-		undershirt = "Nude"
-		socks = "Nude"
+		cspref_set_underwear("Nude")
+		cspref_set_undershirt("Nude")
+		cspref_set_socks("Nude")
 	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
 	character_setup_suppress_smallclothes_sync = TRUE
 	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir)
 	character_setup_suppress_smallclothes_sync = was_sync_suppressed
-	underwear = saved_underwear
-	undershirt = saved_undershirt
-	socks = saved_socks
+	cspref_set_underwear(saved_underwear)
+	cspref_set_undershirt(saved_undershirt)
+	cspref_set_socks(saved_socks)
 	if(!flat)
 		return character_setup_preview_cache
 
@@ -901,12 +980,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			"sins" = patron.sins || "",
 			"boons" = patron.boons || "",
 			"available" = available,
-			"selected" = selected_patron == patron_type,
+			"selected" = cspref_selected_patron() == patron_type,
 		))
 
 /datum/preferences/proc/character_setup_faith_options()
 	. = list()
-	var/current_faith = selected_patron ? selected_patron::associated_faith : default_patron::associated_faith
+	var/current_faith = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : default_patron::associated_faith
 	for(var/faith_type in GLOB.faith_list)
 		var/datum/faith/faith = GLOB.faith_list[faith_type]
 		if(!faith)
@@ -929,7 +1008,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		return "None"
 	var/list/skins = pref_species.get_skin_list()
 	for(var/skin_name in skins)
-		if(skins[skin_name] == skin_tone)
+		if(skins[skin_name] == cspref_skin_tone())
 			return "[skin_name]"
 	return "None"
 
@@ -944,7 +1023,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			"name" = "[skin_name]",
 			"value" = "[skin_name]",
 			"color" = "[skin_value]",
-			"selected" = skin_value == skin_tone,
+			"selected" = skin_value == cspref_skin_tone(),
 		))
 
 /datum/preferences/proc/character_setup_apply_patron(mob/user, patron_id)
@@ -958,14 +1037,14 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		to_chat(user, span_warning("[patron.display_name || patron.name] is not available for this character."))
 		return TRUE
 
-	selected_patron = patron_type
-	to_chat(user, "<font color='purple'>Patron: [selected_patron::name]</font>")
-	to_chat(user, "<font color='purple'>Domain: [selected_patron::domain]</font>")
-	to_chat(user, "<font color='purple'>Background: [selected_patron::desc]</font>")
-	to_chat(user, "<font color='purple'>Flawed aspects: [selected_patron::flaws]</font>")
-	to_chat(user, "<font color='purple'>Likely Worshippers: [selected_patron::worshippers]</font>")
-	to_chat(user, "<font color='red'>Considers these to be Sins: [selected_patron::sins]</font>")
-	to_chat(user, "<font color='white'>Blessed with boon(s): [selected_patron::boons]</font>")
+	cspref_set_selected_patron(patron_type)
+	to_chat(user, "<font color='purple'>Patron: [cspref_selected_patron()::name]</font>")
+	to_chat(user, "<font color='purple'>Domain: [cspref_selected_patron()::domain]</font>")
+	to_chat(user, "<font color='purple'>Background: [cspref_selected_patron()::desc]</font>")
+	to_chat(user, "<font color='purple'>Flawed aspects: [cspref_selected_patron()::flaws]</font>")
+	to_chat(user, "<font color='purple'>Likely Worshippers: [cspref_selected_patron()::worshippers]</font>")
+	to_chat(user, "<font color='red'>Considers these to be Sins: [cspref_selected_patron()::sins]</font>")
+	to_chat(user, "<font color='white'>Blessed with boon(s): [cspref_selected_patron()::boons]</font>")
 	save_character()
 	update_menu_data(user)
 	return TRUE
@@ -992,7 +1071,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!patron_type)
 		return TRUE
 
-	selected_patron = patron_type
+	cspref_set_selected_patron(patron_type)
 	to_chat(user, "<font color='purple'>Faith: [faith.name]</font>")
 	to_chat(user, "<font color='purple'>Background: [faith.desc]</font>")
 	save_character()
@@ -1006,8 +1085,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!(ancestry_name in skins))
 		return TRUE
 	var/new_skin_tone = skins[ancestry_name]
-	if(skin_tone != new_skin_tone)
-		skin_tone = new_skin_tone
+	if(cspref_skin_tone() != new_skin_tone)
+		cspref_set_skin_tone(new_skin_tone)
 		save_character()
 		update_menu_data(user)
 	return TRUE
@@ -1028,8 +1107,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/list/data = list()
 
 	var/datum/faith/selected_faith
-	if(selected_patron)
-		selected_faith = GLOB.faith_list[selected_patron::associated_faith]
+	if(cspref_selected_patron())
+		selected_faith = GLOB.faith_list[cspref_selected_patron()::associated_faith]
 
 	var/high_job = "None"
 	for(var/job_type in job_preferences)
@@ -1040,7 +1119,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	var/gender_name = "Other"
 	var/gender_short = "X"
-	switch(gender)
+	switch(cspref_gender())
 		if(MALE)
 			gender_name = "Masculine"
 			gender_short = "M"
@@ -1052,9 +1131,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			gender_short = "P"
 
 	var/patron_name = "None"
-	if(selected_patron)
-		patron_name = selected_patron.display_name ? selected_patron.display_name : selected_patron.name
-	var/current_faith_type = selected_patron ? selected_patron::associated_faith : default_patron::associated_faith
+	if(cspref_selected_patron())
+		patron_name = cspref_selected_patron().display_name ? cspref_selected_patron().display_name : cspref_selected_patron().name
+	var/current_faith_type = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : default_patron::associated_faith
 
 	var/list/selectable_ages = character_setup_selectable_ages()
 	var/list/age_options = list()
@@ -1063,12 +1142,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		var/current_index = 1
 		for(var/possible_age in selectable_ages)
 			age_options += "[possible_age]"
-			if(possible_age == age)
+			if(possible_age == cspref_age())
 				age_index = current_index
 			current_index++
 	else
-		age_options += "[age || AGE_ADULT]"
-	var/display_age = age
+		age_options += "[cspref_age() || AGE_ADULT]"
+	var/display_age = cspref_age()
 	if(length(selectable_ages) && !(display_age in selectable_ages))
 		display_age = selectable_ages[1]
 	var/list/age_tooltips = list()
@@ -1089,7 +1168,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			"name" = loadout_name,
 		))
 
-	data["real_name"] = real_name || "Unnamed"
+	data["real_name"] = cspref_real_name() || "Unnamed"
 	data["initial_tab"] = character_setup_preferences_initial_tab
 	data["open_sequence"] = character_setup_preferences_open_sequence
 	data["tgui_theme"] = character_setup_tgui_theme
@@ -1103,7 +1182,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	data["patron_name"] = patron_name
 	data["faith_name"] = selected_faith ? selected_faith.name : "None"
-	data["selected_patron_id"] = selected_patron ? "[selected_patron]" : ""
+	data["selected_patron_id"] = cspref_selected_patron() ? "[cspref_selected_patron()]" : ""
 	data["selected_faith_id"] = current_faith_type ? "[current_faith_type]" : ""
 	data["faith_options"] = character_setup_faith_options()
 	data["high_job"] = high_job
@@ -1113,14 +1192,14 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["age_max"] = max(1, length(age_options))
 	data["age_options"] = age_options
 	data["age_tooltips"] = age_tooltips
-	data["pronouns"] = pronouns || "None"
-	data["domhand"] = (domhand == 1) ? "Left" : "Right"
+	data["pronouns"] = cspref_pronouns() || "None"
+	data["domhand"] = (cspref_domhand() == 1) ? "Left" : "Right"
 	data["ancestry_label"] = pref_species?.skin_tone_wording || "Ancestry"
 	data["ancestry_value"] = character_setup_current_ancestry_name()
 	data["ancestry_options"] = character_setup_ancestry_options()
 
 	data["erp_enabled"] = !!erp_enabled
-	data["headshot"] = is_valid_headshot_link(null, headshot_link, TRUE) ? headshot_link : null
+	data["headshot"] = is_valid_headshot_link(null, cspref_headshot_link(), TRUE) ? cspref_headshot_link() : null
 	data["features"] = character_setup_build_features_data()
 	data["preview_underwear"] = !!character_setup_preview_underwear
 	data["preview_clothes"] = !!character_setup_preview_clothes
@@ -1132,12 +1211,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["hover_base"] = character_setup_hover_base
 	data["hover_base_for"] = character_setup_hover_base_for
 
-	data["culture_name"] = culture ? culture::name : "None"
+	data["culture_name"] = cspref_culture() ? cspref_culture()::name : "None"
 	data["voice_type"] = voice_type || "Default"
 	data["voice_color"] = voice_color ? "#[voice_color]" : "#a0a0a0"
 	data["selected_accent"] = selected_accent || "None"
-	data["family"] = family || "None"
-	data["gender_pref"] = gender_choice || "Any"
+	data["family"] = cspref_family() || "None"
+	data["gender_pref"] = cspref_gender_choice() || "Any"
 	data["spouse"] = setspouse || "None"
 
 	data["loadouts"] = loadout_slots
@@ -1278,8 +1357,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 			var/age_index = clamp(round(new_age), 1, length(selectable_ages))
 			var/selected_age = selectable_ages[age_index]
-			if(age != selected_age)
-				age = selected_age
+			if(cspref_age() != selected_age)
+				cspref_set_age(selected_age)
 				reset_jobs(user)
 			return TRUE
 
@@ -1352,14 +1431,14 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			return TRUE
 		if("character_setup_preview_layer")
 			switch(href_list["layer"])
-				if("underwear")
+				if("cspref_underwear()")
 					character_setup_preview_underwear = !character_setup_preview_underwear
 				if("clothes")
 					character_setup_preview_clothes = !character_setup_preview_clothes
 			update_menu_data(user)
 			return TRUE
-		if("gender")
-			gender = (gender == MALE) ? FEMALE : MALE
+		if("cspref_gender()")
+			cspref_set_gender((cspref_gender() == MALE) ? FEMALE : MALE)
 			character_setup_validate_smallclothes()
 			save_character()
 			update_menu_data(user)
@@ -1386,16 +1465,16 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			update_menu_data(user)
 			return TRUE
 		if("species")
-			var/saved_age = age
-			var/saved_name = real_name
+			var/saved_age = cspref_age()
+			var/saved_name = cspref_real_name()
 			..()
 			var/list/selectable_ages = character_setup_species_display_ages(pref_species)
 			if(saved_age && (saved_age in selectable_ages))
-				age = saved_age
+				cspref_set_age(saved_age)
 			else if(length(selectable_ages))
-				age = selectable_ages[1]
+				cspref_set_age(selectable_ages[1])
 			if(saved_name)
-				real_name = saved_name
+				cspref_set_real_name(saved_name)
 			character_setup_validate_smallclothes()
 			update_menu_data(user)
 			return TRUE
