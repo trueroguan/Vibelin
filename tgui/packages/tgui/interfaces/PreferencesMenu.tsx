@@ -9,6 +9,7 @@ import {
   Stack,
   Tabs,
   TextArea,
+  Tooltip,
 } from 'tgui-core/components';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
@@ -1254,16 +1255,23 @@ export const PreferencesMenu = () => {
             <PrefRow icon="venus-mars" label="Body Type" value={data.gender} onClick={() => doPref('gender')} />
             <PrefRow icon="comment" label="Pronouns" value={data.pronouns} onClick={() => doPref('pronouns', 'input')} />
             <FieldBlock label="Age">
-              <Dropdown
-                width="100%"
-                displayText={display(data.age)}
-                selected={display(data.age)}
-                options={ageOptions.map((option, index) => ({
-                  displayText: display(option, option),
-                  value: index + 1,
-                }))}
-                onSelected={(value) => act('set_age', { value })}
-              />
+              <Tooltip
+                content={data.age_tooltips?.[data.age] ?? ''}
+                position="bottom"
+              >
+                <Box>
+                  <Dropdown
+                    width="100%"
+                    displayText={display(data.age)}
+                    selected={display(data.age)}
+                    options={ageOptions.map((option, index) => ({
+                      displayText: display(option, option),
+                      value: index + 1,
+                    }))}
+                    onSelected={(value) => act('set_age', { value })}
+                  />
+                </Box>
+              </Tooltip>
             </FieldBlock>
             <SelectionModeButtons />
           </Panel>

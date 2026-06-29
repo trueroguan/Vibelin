@@ -30,7 +30,7 @@ GLOBAL_VAR_INIT(character_setup_flat_blend_x, 1)
 GLOBAL_VAR_INIT(character_setup_flat_blend_y, 1)
 
 // ===== CHARACTER SETUP DEBUG LOGGER (temporary — describes every TGUI interaction + per-op timing; toggle via GLOB) =====
-GLOBAL_VAR_INIT(character_setup_debug, TRUE)
+GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 
 /datum/preferences/var/list/character_setup_log_counts
 /datum/preferences/var/character_setup_log_action_name = ""
@@ -367,7 +367,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 /datum/preferences/proc/character_setup_age_stat_tooltip(age_name)
 	var/list/modifiers = character_setup_stat_modifiers_for_sheet(character_setup_age_sheet_type(age_name))
 	if(!length(modifiers))
-		return "[age_name]: No cspref_age() stat modifiers."
+		return "[age_name]: No age stat modifiers."
 	return "[age_name]: [character_setup_stat_modifier_summary(modifiers)]"
 
 /datum/preferences/proc/character_setup_species_tags(datum/species/species, available)
@@ -403,11 +403,11 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	if(species)
 		if(species.native_language && tag == "[species.native_language]")
-			return "Native language or cspref_culture() group: [tag]."
+			return "Native language or culture group: [tag]."
 		if(species.skin_tone_wording && tag == "[species.skin_tone_wording]")
 			return "This species uses [tag] as its ancestry/color choice."
 		if(tag in character_setup_species_display_ages(species))
-			return "Available cspref_age() category: [tag]."
+			return "Available age category: [tag]."
 
 	return "[tag] species tag."
 
@@ -479,7 +479,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		to_chat(user, "[pref_species.desc]")
 
 	if(!length(pref_species.allowed_pronouns))
-		to_chat(user, span_warning("This species does not have any allowed cspref_pronouns(). Please contact a coder to add them."))
+		to_chat(user, span_warning("This species does not have any allowed pronouns. Please contact a coder to add them."))
 	else if(length(pref_species.allowed_pronouns) == 1)
 		cspref_set_pronouns(pref_species.allowed_pronouns[1])
 	else if(!(cspref_pronouns() in pref_species.allowed_pronouns))
@@ -489,6 +489,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	reset_jobs(user)
 	reset_patron(user)
 	reset_culture(user)
+	// Commit the choice to the datumized species preference (the source of truth that
+	// apply_prefs_to/apply_to_human reads). Without this, pref_species (the menu's "Current")
+	// and the savefile diverge, so the preview dummy stays the default human/northern - which
+	// is why selected species had no tail / looked like a mis-painted human. Mirrors the core
+	// species handle_link (datums/choiced/species.dm).
+	write_preference(/datum/preference/choiced/species, pref_species.id)
 	randomise_appearance_prefs(~(RANDOMIZE_SPECIES))
 	customizer_entries = list()
 	validate_customizer_entries()
@@ -653,6 +659,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!body)
 		return null
 	apply_prefs_to(body, TRUE)
+	if(GLOB.character_setup_debug)
+		var/obj/item/organ/tail/T = body.getorganslot(ORGAN_SLOT_TAIL)
+		if(!T)
+			character_setup_log("TAIL", "NO tail organ on dummy (species=[body.dna?.species?.type])")
+		else
+			character_setup_log("TAIL", "organ=[T.type] visible_organ=[T.visible_organ] is_visible=[T.is_visible()] accessory_type=[T.accessory_type] icon_state=[T.icon_state] owner=[T.owner ? "yes" : "NO"]")
 	if(preview_job)
 		body.dna.species.pre_equip_species_outfit(preview_job, body, TRUE)
 	if(preview_outfit)
@@ -1465,12 +1477,10 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		if("select_quirks")
 			open_quirk_menu(user)
 			return TRUE
-		if("antag")
-			set_antag(user)
-			return TRUE
-		if("job")
-			set_choices(user)
-			return TRUE
+		// NOTE: "job" and "antag" intentionally fall through to the core process_link (..())
+		// below, which owns their task switches (setJobLevel, be_special, ...). Handling them
+		// here swallowed the task and only ever reopened the browser, so a chosen job priority
+		// was never actually applied (and thus never saved).
 		if("randomiseappearanceprefs")
 			randomise_appearance_prefs()
 			customizer_entries = list()
@@ -1549,13 +1559,13 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			return TRUE
 		if("character_setup_preview_layer")
 			switch(href_list["layer"])
-				if("cspref_underwear()")
+				if("underwear")
 					character_setup_preview_underwear = !character_setup_preview_underwear
 				if("clothes")
 					character_setup_preview_clothes = !character_setup_preview_clothes
 			update_menu_data(user)
 			return TRUE
-		if("cspref_gender()")
+		if("gender")
 			cspref_set_gender((cspref_gender() == MALE) ? FEMALE : MALE)
 			character_setup_validate_smallclothes()
 			save_character()
@@ -1627,8 +1637,10 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			return TRUE
 	if(character_setup_handle_system_action(user, href_list))
 		return TRUE
-	if(href_list["preference"] in GLOB.preference_entries_by_key)
-		. = ..()
-		update_menu_data(user)
-		return .
-	return TRUE
+	// Datum prefs AND all core browser-prefs (job, antag, markings, descriptors, customizers,
+	// role_settings, ...) route to the core handler, which owns the proper task switches.
+	// Previously non-datum keys hit `return TRUE` and were silently swallowed, which is why job
+	// priority / antag toggles never applied. Core CRASHes only on a genuinely invalid key.
+	. = ..()
+	update_menu_data(user)
+	return .
