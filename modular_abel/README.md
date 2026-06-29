@@ -55,9 +55,9 @@ DME injection.
 now part of the upstream CI map matrix (no `exclude_from_ci`), so Integration
 Tests boot the Azure Peak map on every push.
 
-Map rotation is config-driven: Azure Peak (`dun_world`) is listed as a votable
-map in `config/maps.txt` alongside the stock maps. The boot/default map is also
-set there via the `default` keyword (currently `minimal_test`).
+Azure Peak (`dun_world`) is hardcoded as the boot map by the modular
+`dun_world/force_load.dm` mapping override. It remains listed as a votable map
+in `config/maps.txt` alongside the stock maps.
 `modular_abel/dun_world/config/maps_fragment.txt` is also appended to
 the generated runtime config overlay for launch paths that rely on
 `config-directory=tmp/modular_abel/config`. Targets `dm`, `build`, and `server`
@@ -105,11 +105,9 @@ table can target faithful types instead of broad parents (sprites under
 - `dun_world_compat.dm` — fueled-light variants (lit floor candles, wall
   fireplace with our warmth mechanics).
 
-The Azure Peak map is no longer force-loaded. The temporary
-`SSmapping/PreInit()` override (`force_load.dm`) and the programmatic rotation
-registrar (`map_rotation.dm`) have been removed in favour of config-driven map
-selection in `config/maps.txt` (boot/default map via `default`, Azure Peak via a
-`map dun_world` / `votable` block).
+The modular `SSmapping/PreInit()` override in `dun_world/force_load.dm`
+force-loads Azure Peak from `_maps/dun_world.json`. Unit tests and random world
+generation retain their own map selection paths.
 
 `modular_abel/upstream_fixes.dm` keeps upstream files untouched by overriding
 them from the module: the mercenary stabard color fallback (upstream

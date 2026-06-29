@@ -11,3 +11,4 @@
 #include "residents/grant.dm"
 #include "residents/residents.dm"
 #include "structures.dm"
+#include "force_load.dm"
