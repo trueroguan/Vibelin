@@ -561,8 +561,6 @@ export const PreferencesMenu = () => {
   }, [data.open_sequence, data.selected_faith_id]);
 
   const ageOptions = data.age_options ?? [];
-  const ageTooltip = (age: string) =>
-    data.age_tooltips?.[age] || `${age}: No age stat modifiers.`;
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
   const backdropColor =
@@ -1266,22 +1264,6 @@ export const PreferencesMenu = () => {
                 }))}
                 onSelected={(value) => act('set_age', { value })}
               />
-              <Box mt={0.5} style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                {ageOptions.map((option, index) => {
-                  const label = display(option, option);
-                  return (
-                    <Button
-                      key={label}
-                      compact
-                      selected={label === display(data.age)}
-                      tooltip={ageTooltip(label)}
-                      onClick={() => act('set_age', { value: index + 1 })}
-                    >
-                      {label}
-                    </Button>
-                  );
-                })}
-              </Box>
             </FieldBlock>
             <SelectionModeButtons />
           </Panel>

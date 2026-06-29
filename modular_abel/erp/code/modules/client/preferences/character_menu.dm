@@ -1405,6 +1405,83 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	return FALSE
 
+// Routes a legacy menu action name to the corresponding datumized preference's own handle_link.
+/datum/preferences/proc/character_setup_link_pref(mob/user, key)
+	var/datum/preference/pref = GLOB.preference_entries_by_key[key]
+	if(pref)
+		pref.handle_link(src, user)
+	return TRUE
+
+// Handles the menu's non-datum "system" actions (save/load/slot/randomise/sub-menus). The core
+// process_link now only dispatches real preference-datum keys and CRASHes on anything else, so
+// these must be handled here. Returns TRUE if it consumed the action.
+/datum/preferences/proc/character_setup_handle_system_action(mob/user, list/href_list)
+	switch(href_list["preference"])
+		if("save")
+			to_chat(user, span_info("Preferences Saved."))
+			save_preferences()
+			save_character()
+			if(isnewplayer(user))
+				var/mob/dead/new_player/player = user
+				player.cache_multi_ready_characters()
+			return TRUE
+		if("finished")
+			save_character()
+			return TRUE
+		if("load")
+			load_preferences()
+			load_character()
+			if(isnewplayer(user))
+				var/mob/dead/new_player/player = user
+				player.cache_multi_ready_characters()
+			update_menu_data(user)
+			return TRUE
+		if("changeslot")
+			var/list/choices = list()
+			if(path)
+				var/savefile/slot_file = new /savefile(path)
+				if(slot_file)
+					for(var/i in 1 to max_save_slots)
+						var/slot_name
+						slot_file.cd = "/character[i]"
+						slot_file["real_name"] >> slot_name
+						choices[slot_name || "Slot[i]"] = i
+			var/choice = input(user, "WHO IS YOUR HERO?", "NECRA AWAITS") as null|anything in choices
+			if(choice)
+				load_character(choices[choice])
+				update_menu_data(user)
+			return TRUE
+		if("name")
+			return character_setup_link_pref(user, "real_name")
+		if("voice")
+			return character_setup_link_pref(user, "voice_color")
+		if("voicetype")
+			return character_setup_link_pref(user, "voice_type")
+		if("headshot")
+			return character_setup_link_pref(user, "headshot_link")
+		if("loadout_item")
+			open_loadout_shop(user)
+			return TRUE
+		if("select_quirks")
+			open_quirk_menu(user)
+			return TRUE
+		if("antag")
+			set_antag(user)
+			return TRUE
+		if("job")
+			set_choices(user)
+			return TRUE
+		if("randomiseappearanceprefs")
+			randomise_appearance_prefs()
+			customizer_entries = list()
+			validate_customizer_entries()
+			reset_all_customizer_accessory_colors()
+			randomize_all_customizer_accessories()
+			reset_jobs(user)
+			update_menu_data(user)
+			return TRUE
+	return FALSE
+
 /datum/preferences/process_link(mob/user, list/href_list)
 	character_setup_log_action("pref:[href_list["preference"]]", json_encode(href_list))
 	switch(href_list["preference"])
@@ -1548,4 +1625,10 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 				character_setup_request_hover_base(cust_type, cust_ref)
 			SStgui.update_uis(src)
 			return TRUE
-	return ..()
+	if(character_setup_handle_system_action(user, href_list))
+		return TRUE
+	if(href_list["preference"] in GLOB.preference_entries_by_key)
+		. = ..()
+		update_menu_data(user)
+		return .
+	return TRUE
