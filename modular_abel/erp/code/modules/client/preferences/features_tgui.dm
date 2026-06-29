@@ -154,7 +154,10 @@
 			var/list/choice_options = list()
 			for(var/choice_type in customizer.customizer_choices)
 				var/datum/customizer_choice/iter_choice = CUSTOMIZER_CHOICE(choice_type)
-				choice_options += list(list("name" = iter_choice.name, "value" = "[choice_type]"))
+				var/list/choice_option = list("name" = iter_choice.name, "value" = "[choice_type]")
+				if(LAZYLEN(iter_choice.sprite_accessories))
+					choice_option["thumb"] = sanitize_css_class_name("[iter_choice.sprite_accessories[1]]")
+				choice_options += list(choice_option)
 			feature["choice_options"] = choice_options
 
 		var/list/accessory_types = choice.character_setup_accessory_types(src)

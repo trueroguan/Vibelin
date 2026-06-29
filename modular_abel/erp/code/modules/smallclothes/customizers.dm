@@ -23,7 +23,7 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 
 /datum/customizer/bodypart_feature/smallclothes
 	abstract_type = /datum/customizer/bodypart_feature/smallclothes
-	allows_disabling = FALSE
+	allows_disabling = TRUE
 	default_disabled = FALSE
 	var/smallclothes_slot
 

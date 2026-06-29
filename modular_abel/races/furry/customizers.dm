@@ -250,7 +250,7 @@
 
 /datum/customizer/organ/tail/akula
 	customizer_choices = list(/datum/customizer_choice/organ/tail/akula)
-	allows_disabling = TRUE
+	allows_disabling = FALSE
 
 /datum/customizer_choice/organ/tail/akula
 	name = "Axian Tail"
