@@ -107,10 +107,12 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	var/list/allowed = character_setup_accessory_types(prefs)
 	if(!(entry.accessory_type in allowed) && length(allowed))
 		set_accessory_type(prefs, allowed[1], entry)
-	if(length(allowed))
-		entry.disabled = FALSE
-	else
+	var/datum/customizer/customizer = CUSTOMIZER(entry.customizer_type)
+	if(!length(allowed))
 		entry.disabled = TRUE
+	else if(!customizer || !customizer.allows_disabling)
+		entry.disabled = FALSE
+	// else: customizer allows disabling -> keep the user's on/off toggle as-is
 
 /datum/customizer_choice/bodypart_feature/smallclothes/handle_topic(mob/user, list/href_list, datum/preferences/prefs, datum/customizer_entry/entry, customizer_type)
 	if(href_list["customizer_task"] == "select_acc")

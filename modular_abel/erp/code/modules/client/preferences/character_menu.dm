@@ -1514,7 +1514,8 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 		if("character_setup_preferences_scale")
 			character_setup_preferences_scale = character_setup_sanitize_preferences_scale(href_list["scale"])
 			save_preferences()
-			SStgui.update_uis(src)
+			// No update_uis here: the frontend applies the new scale instantly via local state,
+			// so re-sending the whole UI (doll base64, features, ...) would just cause a visible jerk.
 			return TRUE
 		if("character_setup_customizer")
 			validate_customizer_entries()

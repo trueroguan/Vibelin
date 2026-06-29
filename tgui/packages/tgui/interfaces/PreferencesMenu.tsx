@@ -517,7 +517,9 @@ export const PreferencesMenu = () => {
   const { act, data } = useBackend<PrefsData>();
 
   const mapTab = (tab: string) => (tab === 'game' ? 'settings' : 'identity');
-  const menuScale = clampMenuScale(data.preferences_scale);
+  const [menuScale, setMenuScaleState] = useState(
+    clampMenuScale(data.preferences_scale),
+  );
   const isFullscreen = asBool(data.preferences_fullscreen);
   const windowWidth = isFullscreen ? 7680 : 1180;
   const windowHeight = isFullscreen ? 4320 : 760;
@@ -602,8 +604,10 @@ export const PreferencesMenu = () => {
   };
 
   const setMenuScale = (scale: number) => {
+    const clamped = clampMenuScale(scale);
+    setMenuScaleState(clamped); // apply instantly so the screen doesn't jerk
     doPref('character_setup_preferences_scale', undefined, {
-      scale: clampMenuScale(scale),
+      scale: clamped,
     });
   };
 
