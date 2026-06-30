@@ -63,6 +63,20 @@
 
 /datum/sprite_accessory/proc/smallclothes_adjust_appearance(list/appearance_list, obj/item/bodypart/bodypart, mob/living/carbon/human/human)
 	generic_gender_feature_adjust(appearance_list, null, bodypart, human, OFFSET_UNDIES)
+	// smallclothes_state() returns a dwarf-specific icon_state when one exists for this style;
+	// that art is already drawn to fit the short body, so it needs no extra nudge. Styles WITHOUT
+	// one (smallclothes_state == icon_state, i.e. fell back to the human-proportioned sprite) sit
+	// at the wrong height on a short body - same root cause as the genital sprite offset, so this
+	// reuses that per-species table.
+	if(smallclothes_state(human) == icon_state)
+		var/datum/species/species = human.dna?.species
+		if(species)
+			var/use_female = (human.gender == FEMALE) && species.sexes && !species.swap_female_clothes
+			var/list/offsets = use_female ? species.offset_genitals_f : species.offset_genitals_m
+			if(LAZYACCESS(offsets, OFFSET_SMALLCLOTHES))
+				for(var/mutable_appearance/appearance as anything in appearance_list)
+					appearance.pixel_x += offsets[OFFSET_SMALLCLOTHES][1]
+					appearance.pixel_y += offsets[OFFSET_SMALLCLOTHES][2]
 
 /datum/sprite_accessory/underwear/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner
