@@ -107,7 +107,8 @@ table can target faithful types instead of broad parents (sprites under
 
 The modular `SSmapping/PreInit()` override in `dun_world/force_load.dm`
 force-loads Azure Peak from `_maps/dun_world.json`. Unit tests and random world
-generation retain their own map selection paths.
+generation retain their own map selection paths. The override is also disabled
+for `LOWMEMORYMODE`, `NO_DUNGEON`, and `ABSOLUTE_MINIMUM_MODE` builds.
 
 `modular_abel/upstream_fixes.dm` keeps upstream files untouched by overriding
 them from the module: the mercenary stabard color fallback (upstream

@@ -1,4 +1,4 @@
-#if !defined(UNIT_TESTS) && !defined(FORCE_RANDOM_WORLD_GEN)
+#if !defined(UNIT_TESTS) && !defined(FORCE_RANDOM_WORLD_GEN) && !defined(LOWMEMORYMODE) && !defined(NO_DUNGEON) && !defined(ABSOLUTE_MINIMUM_MODE)
 /datum/controller/subsystem/mapping/PreInit()
 	. = ..()
 	config = load_map_config("dun_world", "_maps")
