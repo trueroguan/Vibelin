@@ -975,10 +975,20 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	var/saved_underwear = cspref_underwear()
 	var/saved_undershirt = cspref_undershirt()
 	var/saved_socks = cspref_socks()
+	var/list/saved_smallclothes_disabled
 	if(!character_setup_preview_underwear)
 		cspref_set_underwear("Nude")
 		cspref_set_undershirt("Nude")
 		cspref_set_socks("Nude")
+		// Underwear is a bodypart_feature customizer now, so nuking the legacy prefs above isn't
+		// enough - the customizer entry still covers the groin (which hides the genitals). Disable
+		// the smallclothes customizer entries too so "Underwear Layer" off really bares the body.
+		saved_smallclothes_disabled = list()
+		for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
+			var/datum/customizer_entry/sc_entry = get_customizer_entry_for_customizer_type(customizer_type)
+			if(sc_entry)
+				saved_smallclothes_disabled[customizer_type] = sc_entry.disabled
+				sc_entry.disabled = TRUE
 	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
 	character_setup_suppress_smallclothes_sync = TRUE
 	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir)
@@ -986,6 +996,10 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	cspref_set_underwear(saved_underwear)
 	cspref_set_undershirt(saved_undershirt)
 	cspref_set_socks(saved_socks)
+	for(var/customizer_type in saved_smallclothes_disabled)
+		var/datum/customizer_entry/sc_entry = get_customizer_entry_for_customizer_type(customizer_type)
+		if(sc_entry)
+			sc_entry.disabled = saved_smallclothes_disabled[customizer_type]
 	if(!flat)
 		return character_setup_preview_cache
 
