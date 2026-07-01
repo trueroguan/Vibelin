@@ -41,7 +41,10 @@ GLOBAL_VAR_INIT(character_setup_flat_blend_x, 1)
 GLOBAL_VAR_INIT(character_setup_flat_blend_y, 1)
 
 // ===== CHARACTER SETUP DEBUG LOGGER (temporary — describes every TGUI interaction + per-op timing; toggle via GLOB) =====
-GLOBAL_VAR_INIT(character_setup_debug, FALSE)
+// TEMP re-enabled to capture the genital-preview diagnostic (character_setup_debug_genitals) and
+// the full per-action op log while we chase the "genitals don't render on the doll" bug. Writes to
+// data/logs/<round>/character_setup.log. Flip back to FALSE once that's root-caused.
+GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 /datum/preferences/var/list/character_setup_log_counts
 /datum/preferences/var/character_setup_log_action_name = ""
@@ -684,12 +687,24 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	if(!body)
 		return null
 	apply_prefs_to(body, TRUE)
+	// "Underwear Layer" off is supposed to bare the body so the genitals show. build_preview tries to
+	// do that with cspref_set_underwear("Nude"), but "Nude" is NOT a valid choice for the underwear
+	// preference (it's not in GLOB.underwear_list), so write_preference() silently rejects it and the
+	// dummy keeps wearing its saved underwear item - whose mere presence (H.underwear != "Nude") makes
+	// penis/testicles/vagina is_visible() return FALSE. Force the legacy coverage vars bare directly on
+	// the dummy (bypassing the pref validation) and rebuild the limbs so the genital overlays re-render.
+	if(!character_setup_preview_underwear)
+		body.underwear = "Nude"
+		body.undershirt = "Nude"
+		body.socks = "Nude"
+		body.update_body_parts(TRUE)
 	if(GLOB.character_setup_debug)
 		var/obj/item/organ/tail/T = body.getorganslot(ORGAN_SLOT_TAIL)
 		if(!T)
 			character_setup_log("TAIL", "NO tail organ on dummy (species=[body.dna?.species?.type])")
 		else
 			character_setup_log("TAIL", "organ=[T.type] visible_organ=[T.visible_organ] is_visible=[T.is_visible()] accessory_type=[T.accessory_type] icon_state=[T.icon_state] owner=[T.owner ? "yes" : "NO"]")
+		character_setup_debug_genitals(body)
 	if(preview_job)
 		body.dna.species.pre_equip_species_outfit(preview_job, body, TRUE)
 	if(preview_outfit)
@@ -699,6 +714,38 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
 	return body
+
+// TEMP diagnostic - remove once the "genitals never render on the doll (but DO in the thumbnail
+// cards)" bug is root-caused. The whole render chain reads correct on paper (organ created with
+// accessory_type -> organs_by_zone[CHEST] via check_zone(PRECISE_GROIN) -> chest limb get_organs
+// finds it -> organ.is_visible() -> accessory.get_appearance -> accessory.is_visible()), so this
+// dumps the ACTUAL runtime state of each genital slot on the freshly-built preview dummy to find
+// which link is silently returning null/FALSE. Gated behind GLOB.character_setup_debug.
+/datum/preferences/proc/character_setup_debug_genitals(mob/living/carbon/human/dummy/body)
+	if(!body)
+		return
+	character_setup_log("GENITAL", "dummy species=[body.dna?.species?.type] gender=[body.gender] underwear=[body.underwear] undershirt=[body.undershirt] preview_underwear=[character_setup_preview_underwear] preview_clothes=[character_setup_preview_clothes]")
+	for(var/slot in list(ORGAN_SLOT_PENIS, ORGAN_SLOT_TESTICLES, ORGAN_SLOT_BREASTS, ORGAN_SLOT_VAGINA))
+		var/obj/item/organ/organ = body.getorganslot(slot)
+		if(!organ)
+			character_setup_log("GENITAL", "[slot]: NO ORGAN on dummy")
+			continue
+		var/zone = organ.zone
+		var/checked = check_zone(zone)
+		var/in_zone_list = LAZYACCESS(body.organs_by_zone, checked)
+		var/organ_vis = organ.is_visible()
+		var/acc_type = organ.accessory_type
+		var/acc_vis = "n/a"
+		var/acc_state = "n/a"
+		var/acc_appearances = "n/a"
+		if(acc_type)
+			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(acc_type)
+			if(accessory)
+				acc_vis = "[accessory.is_visible(organ, null, body)]"
+				acc_state = "[accessory.get_icon_state(organ, null, body)]"
+				var/list/app = accessory.get_appearance(organ, null, organ.accessory_colors)
+				acc_appearances = app ? "[length(app)] appearances" : "NULL (not visible or no icon_state)"
+		character_setup_log("GENITAL", "[slot]: organ=[organ.type] zone=[zone]->[checked] in_zone_list=[in_zone_list ? "yes" : "NO"] organ.is_visible=[organ_vis] accessory_type=[acc_type] acc.is_visible=[acc_vis] acc.icon_state=[acc_state] get_appearance=[acc_appearances]")
 
 /datum/preferences/proc/character_setup_finish_preview_dummy(mob/living/carbon/human/dummy/body, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
 	if(!body)
