@@ -53,3 +53,13 @@
 		for(var/mutable_appearance/appearance as anything in appearance_list)
 			appearance.pixel_x += offsets[feature_key][1]
 			appearance.pixel_y += offsets[feature_key][2]
+
+// Moves a genital's front-facing overlays onto its slot in the anatomical stack (see the
+// GENITAL_LAYER_* defines). Only the render layer changes - relevant_layers still drives the
+// icon-state suffix lookup (_FRONT/_ADJ), so no icon rename is needed. BEHIND stays where it is
+// (it must render behind the body, not just behind the other genitals).
+/datum/sprite_accessory/proc/genital_apply_stack_layer(list/appearance_list, stack_layer)
+	for(var/mutable_appearance/appearance as anything in appearance_list)
+		if(appearance.layer == -BODY_BEHIND_LAYER)
+			continue
+		appearance.layer = -stack_layer

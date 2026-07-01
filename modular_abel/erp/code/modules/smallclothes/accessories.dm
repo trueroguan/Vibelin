@@ -111,6 +111,30 @@
 	if(istype(human))
 		smallclothes_adjust_appearance(appearance_list, bodypart, human)
 
+// Zone-based groin coverage across all three smallclothes slots. Genital is_visible() used to
+// check only H.underwear != "Nude" (the bottom slot), which broke both ways: a disabled bottom
+// with a groin-covering top (leotard/full-body suit) showed genitals through the suit, and there
+// was no way for a non-covering loadout to bare the groin. Coverage now follows the accessory's
+// own smallclothes_covers_groin flag per worn slot, so "slot toggled off" or "item doesn't cover
+// the groin" both count as bare.
+/proc/smallclothes_groin_covered(mob/living/carbon/human/human)
+	if(!istype(human))
+		return FALSE
+	var/datum/sprite_accessory/accessory
+	if(human.underwear && human.underwear != "Nude")
+		accessory = GLOB.underwear_list[human.underwear]
+		if(istype(accessory) && accessory.smallclothes_covers_groin)
+			return TRUE
+	if(human.undershirt && human.undershirt != "Nude")
+		accessory = GLOB.undershirt_list[human.undershirt]
+		if(istype(accessory) && accessory.smallclothes_covers_groin)
+			return TRUE
+	if(human.socks && human.socks != "Nude")
+		accessory = GLOB.socks_list[human.socks]
+		if(istype(accessory) && accessory.smallclothes_covers_groin)
+			return TRUE
+	return FALSE
+
 /proc/smallclothes_breast_size(mob/living/carbon/human/human, maximum = 5)
 	var/obj/item/organ/breasts = human.getorganslot("breasts")
 	var/breast_size = breasts?.vars["breast_size"]

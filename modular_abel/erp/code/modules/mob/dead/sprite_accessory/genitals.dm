@@ -36,6 +36,7 @@
 /datum/sprite_accessory/penis/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_PENIS)
 	apply_taur_genital_offset(appearance_list, owner)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_PENIS)
 
 /datum/sprite_accessory/penis/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/penis/pp = organ
@@ -51,7 +52,7 @@
 
 /datum/sprite_accessory/penis/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
-	if(istype(H) && H.underwear && H.underwear != "Nude")
+	if(istype(H) && smallclothes_groin_covered(H))
 		return FALSE
 	if(istype(H) && H.taur_groin_covered())
 		return FALSE
@@ -131,6 +132,7 @@
 /datum/sprite_accessory/testicles/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_TESTICLES)
 	apply_taur_genital_offset(appearance_list, owner)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_TESTICLES)
 
 /datum/sprite_accessory/testicles/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/testicles/testes = organ
@@ -138,7 +140,7 @@
 
 /datum/sprite_accessory/testicles/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
-	if(istype(H) && H.underwear && H.underwear != "Nude")
+	if(istype(H) && smallclothes_groin_covered(H))
 		return FALSE
 	var/obj/item/organ/penis/pp = owner.getorganslot(ORGAN_SLOT_PENIS)
 	if(pp && pp.sheath_type == SHEATH_TYPE_SLIT)
@@ -167,6 +169,7 @@
 
 /datum/sprite_accessory/breasts/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_BREASTS)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_BREASTS)
 
 /datum/sprite_accessory/breasts/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	return is_human_part_visible(owner, HIDEBOOB|HIDEJUMPSUIT)
@@ -194,10 +197,11 @@
 /datum/sprite_accessory/vagina/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_VAGINA)
 	apply_taur_genital_offset(appearance_list, owner)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_VAGINA)
 
 /datum/sprite_accessory/vagina/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
-	if(istype(H) && H.underwear && H.underwear != "Nude")
+	if(istype(H) && smallclothes_groin_covered(H))
 		return FALSE
 	if(istype(H) && H.taur_groin_covered())
 		return FALSE

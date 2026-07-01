@@ -19,6 +19,9 @@
 /datum/preferences/var/character_setup_preview_h = 32
 /datum/preferences/var/character_setup_preview_bx = 1
 /datum/preferences/var/character_setup_preview_by = 1
+// Per-tick ui_data cache for the expensive catalog builders (see the heavy_sig block in ui_data).
+/datum/preferences/var/list/character_setup_ui_heavy_cache
+/datum/preferences/var/character_setup_ui_heavy_sig
 
 GLOBAL_LIST_EMPTY(character_setup_preview_b64_cache)
 GLOBAL_LIST_EMPTY(character_setup_hover_base_cache)
@@ -237,6 +240,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
+	// Every mutating menu action funnels through here, so this is the one invalidation point the
+	// per-tick heavy-data cache in ui_data needs (it covers state the sig can't see, e.g. toggles).
+	character_setup_ui_heavy_sig = null
 	var/new_static_sig = "[pref_species?.type]-[cspref_gender()]"
 	if(new_static_sig != character_setup_static_sig)
 		character_setup_static_sig = new_static_sig
@@ -1277,24 +1283,48 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		patron_name = current_patron.display_name ? current_patron.display_name : current_patron.name
 	var/current_faith_type = current_patron ? current_patron.associated_faith : /datum/patron/divine/astrata::associated_faith
 
-	var/list/selectable_ages = character_setup_selectable_ages()
-	var/list/age_options = list()
-	var/age_index = 1
-	if(length(selectable_ages))
-		var/current_index = 1
-		for(var/possible_age in selectable_ages)
-			age_options += "[possible_age]"
-			if(possible_age == cspref_age())
-				age_index = current_index
-			current_index++
-	else
-		age_options += "[cspref_age() || AGE_ADULT]"
-	var/display_age = cspref_age()
-	if(length(selectable_ages) && !(display_age in selectable_ages))
-		display_age = selectable_ages[1]
-	var/list/age_tooltips = list()
-	for(var/age_option in age_options)
-		age_tooltips["[age_option]"] = character_setup_age_stat_tooltip(age_option)
+	// This menu runs with tgui autoupdate (the round countdown and OOC feed need per-tick data), so
+	// ui_data fires every SStgui tick for every open menu. The blocks below (faith/patron catalog
+	// with STRIP_HTML_FULL text cleaning, per-age stat tooltips, ancestry list, features list) only
+	// actually change on a player action - and every mutating action goes through update_menu_data(),
+	// which nulls this signature. Rebuild them only then; between actions ticks reuse the cache.
+	var/heavy_sig = "[pref_species?.type]|[cspref_gender()]|[current_patron?.type]|[cspref_age()]|[cspref_skin_tone()]|[erp_enabled]"
+	if(!character_setup_ui_heavy_cache || character_setup_ui_heavy_sig != heavy_sig)
+		var/list/heavy = list()
+
+		var/list/selectable_ages = character_setup_selectable_ages()
+		var/list/age_options = list()
+		var/age_index = 1
+		if(length(selectable_ages))
+			var/current_index = 1
+			for(var/possible_age in selectable_ages)
+				age_options += "[possible_age]"
+				if(possible_age == cspref_age())
+					age_index = current_index
+				current_index++
+		else
+			age_options += "[cspref_age() || AGE_ADULT]"
+		var/display_age = cspref_age()
+		if(length(selectable_ages) && !(display_age in selectable_ages))
+			display_age = selectable_ages[1]
+		var/list/age_tooltips = list()
+		for(var/age_option in age_options)
+			age_tooltips["[age_option]"] = character_setup_age_stat_tooltip(age_option)
+
+		heavy["age_options"] = age_options
+		heavy["age_index"] = age_index
+		heavy["display_age"] = display_age
+		heavy["age_tooltips"] = age_tooltips
+		heavy["faith_options"] = character_setup_faith_options()
+		heavy["ancestry_options"] = character_setup_ancestry_options()
+		heavy["features"] = character_setup_build_features_data()
+		character_setup_ui_heavy_cache = heavy
+		character_setup_ui_heavy_sig = heavy_sig
+	var/list/heavy_cache = character_setup_ui_heavy_cache
+	var/list/age_options = heavy_cache["age_options"]
+	var/age_index = heavy_cache["age_index"]
+	var/display_age = heavy_cache["display_age"]
+	var/list/age_tooltips = heavy_cache["age_tooltips"]
 
 	var/list/loadout_slots = list()
 	for(var/slot_number in 1 to 3)
@@ -1326,7 +1356,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["faith_name"] = selected_faith ? selected_faith.name : "None"
 	data["selected_patron_id"] = current_patron ? "[current_patron]" : ""
 	data["selected_faith_id"] = current_faith_type ? "[current_faith_type]" : ""
-	data["faith_options"] = character_setup_faith_options()
+	data["faith_options"] = heavy_cache["faith_options"]
 	data["high_job"] = high_job
 	data["age"] = display_age
 	data["age_index"] = age_index
@@ -1338,11 +1368,11 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["domhand"] = (cspref_domhand() == 1) ? "Left" : "Right"
 	data["ancestry_label"] = pref_species?.skin_tone_wording || "Ancestry"
 	data["ancestry_value"] = character_setup_current_ancestry_name()
-	data["ancestry_options"] = character_setup_ancestry_options()
+	data["ancestry_options"] = heavy_cache["ancestry_options"]
 
 	data["erp_enabled"] = !!erp_enabled
 	data["headshot"] = is_valid_headshot_link(null, cspref_headshot_link(), TRUE) ? cspref_headshot_link() : null
-	data["features"] = character_setup_build_features_data()
+	data["features"] = heavy_cache["features"]
 	data["preview_underwear"] = !!character_setup_preview_underwear
 	data["preview_clothes"] = !!character_setup_preview_clothes
 	data["preview_dir"] = character_setup_preview_dir
