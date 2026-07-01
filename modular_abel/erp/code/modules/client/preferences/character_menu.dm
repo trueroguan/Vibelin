@@ -23,7 +23,18 @@
 GLOBAL_LIST_EMPTY(character_setup_preview_b64_cache)
 GLOBAL_LIST_EMPTY(character_setup_hover_base_cache)
 GLOBAL_LIST_EMPTY(character_setup_chargen_ooc_messages)
-GLOBAL_LIST_INIT(character_setup_normal_preview_species, list("harpy", "medicator", "moth"))
+// Species routed to core's getFlatIcon() instead of character_setup_get_flat_icon() below. The
+// custom flattener's dynamic canvas-growth math (see its comment) doesn't reproduce native overlay
+// placement exactly once several pixel-offset layers stack up - harmless for humans (offsets are
+// 0,0) but for short races EVERY clothing/hair layer carries a nonzero offset_features_m/f entry,
+// so the preview visibly drifts from how the doll actually renders in-game even though gameplay
+// itself (native BYOND overlay compositing, unaffected by this proc) is correct. Core's getFlatIcon
+// clips content wider/taller than 32x32 (why taurs/harpies can't use it) - not a concern here since
+// short-race bodies are strictly smaller than 32x32, never larger.
+GLOBAL_LIST_INIT(character_setup_normal_preview_species, list(
+	"harpy", "medicator", "moth",
+	SPEC_ID_DWARF, SPEC_ID_DWARF_SUBTERRAN, SPEC_ID_KOBOLD, SPEC_ID_HALFLING,
+))
 // Where the human base (32x32) landed inside the last flattened doll canvas (1-based, bottom-left),
 // so a hover overlay can be composited onto a doll-sized canvas and scale/align identically.
 GLOBAL_VAR_INIT(character_setup_flat_blend_x, 1)
