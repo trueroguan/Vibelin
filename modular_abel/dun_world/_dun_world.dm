@@ -1,5 +1,6 @@
 #include "_defines.dm"
 #include "areas.dm"
+#include "bad_loc_diagnostic.dm"
 #include "compat.dm"
 #include "furniture.dm"
 #include "items.dm"

@@ -1052,7 +1052,8 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 
 /datum/preferences/proc/character_setup_faith_options()
 	. = list()
-	var/current_faith = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : /datum/patron/divine/astrata::associated_faith
+	var/datum/patron/current_patron = cspref_selected_patron()
+	var/current_faith = current_patron ? current_patron.associated_faith : /datum/patron/divine/astrata::associated_faith
 	for(var/faith_type in GLOB.faith_list)
 		var/datum/faith/faith = GLOB.faith_list[faith_type]
 		if(!faith)
@@ -1105,13 +1106,14 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 		return TRUE
 
 	cspref_set_selected_patron(patron_type)
-	to_chat(user, "<font color='purple'>Patron: [cspref_selected_patron()::name]</font>")
-	to_chat(user, "<font color='purple'>Domain: [cspref_selected_patron()::domain]</font>")
-	to_chat(user, "<font color='purple'>Background: [cspref_selected_patron()::desc]</font>")
-	to_chat(user, "<font color='purple'>Flawed aspects: [cspref_selected_patron()::flaws]</font>")
-	to_chat(user, "<font color='purple'>Likely Worshippers: [cspref_selected_patron()::worshippers]</font>")
-	to_chat(user, "<font color='red'>Considers these to be Sins: [cspref_selected_patron()::sins]</font>")
-	to_chat(user, "<font color='white'>Blessed with boon(s): [cspref_selected_patron()::boons]</font>")
+	var/datum/patron/selected_patron = cspref_selected_patron()
+	to_chat(user, "<font color='purple'>Patron: [selected_patron.name]</font>")
+	to_chat(user, "<font color='purple'>Domain: [selected_patron.domain]</font>")
+	to_chat(user, "<font color='purple'>Background: [selected_patron.desc]</font>")
+	to_chat(user, "<font color='purple'>Flawed aspects: [selected_patron.flaws]</font>")
+	to_chat(user, "<font color='purple'>Likely Worshippers: [selected_patron.worshippers]</font>")
+	to_chat(user, "<font color='red'>Considers these to be Sins: [selected_patron.sins]</font>")
+	to_chat(user, "<font color='white'>Blessed with boon(s): [selected_patron.boons]</font>")
 	save_character()
 	update_menu_data(user)
 	return TRUE
@@ -1174,8 +1176,9 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	var/list/data = list()
 
 	var/datum/faith/selected_faith
-	if(cspref_selected_patron())
-		selected_faith = GLOB.faith_list[cspref_selected_patron()::associated_faith]
+	var/datum/patron/current_patron = cspref_selected_patron()
+	if(current_patron)
+		selected_faith = GLOB.faith_list[current_patron.associated_faith]
 
 	var/high_job = "None"
 	for(var/job_type in job_preferences)
@@ -1198,9 +1201,9 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 			gender_short = "P"
 
 	var/patron_name = "None"
-	if(cspref_selected_patron())
-		patron_name = cspref_selected_patron().display_name ? cspref_selected_patron().display_name : cspref_selected_patron().name
-	var/current_faith_type = cspref_selected_patron() ? cspref_selected_patron()::associated_faith : /datum/patron/divine/astrata::associated_faith
+	if(current_patron)
+		patron_name = current_patron.display_name ? current_patron.display_name : current_patron.name
+	var/current_faith_type = current_patron ? current_patron.associated_faith : /datum/patron/divine/astrata::associated_faith
 
 	var/list/selectable_ages = character_setup_selectable_ages()
 	var/list/age_options = list()
@@ -1249,7 +1252,7 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 
 	data["patron_name"] = patron_name
 	data["faith_name"] = selected_faith ? selected_faith.name : "None"
-	data["selected_patron_id"] = cspref_selected_patron() ? "[cspref_selected_patron()]" : ""
+	data["selected_patron_id"] = current_patron ? "[current_patron]" : ""
 	data["selected_faith_id"] = current_faith_type ? "[current_faith_type]" : ""
 	data["faith_options"] = character_setup_faith_options()
 	data["high_job"] = high_job
@@ -1278,7 +1281,8 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	data["hover_base"] = character_setup_hover_base
 	data["hover_base_for"] = character_setup_hover_base_for
 
-	data["culture_name"] = cspref_culture() ? cspref_culture()::name : "None"
+	var/datum/culture/pref_culture = cspref_culture()
+	data["culture_name"] = pref_culture ? pref_culture::name : "None"
 	data["voice_type"] = cspref_voice_type() || "Default"
 	data["voice_color"] = cspref_voice_color() ? "#[cspref_voice_color()]" : "#a0a0a0"
 	data["selected_accent"] = cspref_selected_accent() || "None"
