@@ -77,6 +77,26 @@
 				for(var/mutable_appearance/appearance as anything in appearance_list)
 					appearance.pixel_x += offsets[OFFSET_SMALLCLOTHES][1]
 					appearance.pixel_y += offsets[OFFSET_SMALLCLOTHES][2]
+			// The style has no dedicated short-race art, so beyond nudging it into place it also
+			// needs to be shrunk to not overhang a narrower/shorter body - see smallclothes_scale_x/y.
+			// A mutable_appearance.transform matrix is a non-starter here: the chargen preview
+			// ("Looking Glass") builds its doll via character_setup_get_flat_icon(), a from-scratch
+			// icon(...)/Blend()/Crop() reimplementation that never reads .transform, so a matrix-based
+			// scale would render fine in actual gameplay but stay invisible in the preview. Resizing
+			// the icon itself works in both, since both read appearance.icon/icon_state directly.
+			if(species.smallclothes_scale_x != 1 || species.smallclothes_scale_y != 1)
+				var/sx = species.smallclothes_scale_x
+				var/sy = species.smallclothes_scale_y
+				for(var/mutable_appearance/appearance as anything in appearance_list)
+					var/icon/scaled = icon(appearance.icon, appearance.icon_state)
+					var/old_w = scaled.Width()
+					var/old_h = scaled.Height()
+					var/new_w = max(1, round(old_w * sx))
+					var/new_h = max(1, round(old_h * sy))
+					scaled.Scale(new_w, new_h)
+					appearance.icon = scaled
+					appearance.pixel_x += round((old_w - new_w) / 2)
+					appearance.pixel_y += round((old_h - new_h) / 2)
 
 /datum/sprite_accessory/underwear/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner

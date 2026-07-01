@@ -23,6 +23,13 @@
 		OFFSET_SMALLCLOTHES = list(0,0),\
 	)
 
+	/// Shrinks smallclothes styles that have no dedicated short-race art (see
+	/// smallclothes_adjust_appearance() in modular_abel/erp/code/modules/smallclothes/accessories.dm) -
+	/// a human-proportioned sprite can be nudged into roughly the right spot with offset_genitals
+	/// alone, but it still overhangs a shorter/narrower body unless it's also scaled down. 1 = no-op.
+	var/smallclothes_scale_x = 1
+	var/smallclothes_scale_y = 1
+
 // Reopens /datum/sprite_accessory (core, code/modules/mob/dead/sprite_accessory/_sprite_accessory.dm)
 // to add a genital-specific counterpart to generic_gender_feature_adjust() that reads the table above.
 /datum/sprite_accessory/proc/gender_genitals_adjust(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner, feature_key)

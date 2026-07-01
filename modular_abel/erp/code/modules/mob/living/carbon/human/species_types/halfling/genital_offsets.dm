@@ -16,3 +16,6 @@
 		OFFSET_VAGINA = list(0,-5),\
 		OFFSET_SMALLCLOTHES = list(0,-5),\
 	)
+
+	smallclothes_scale_x = 0.78
+	smallclothes_scale_y = 0.78

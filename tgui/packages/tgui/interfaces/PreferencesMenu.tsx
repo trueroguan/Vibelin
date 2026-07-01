@@ -1125,7 +1125,7 @@ export const PreferencesMenu = () => {
                             patron_id: patron.id,
                           })
                         }
-                        style={{ minHeight: '62px', padding: '6px' }}
+                        style={{ padding: '6px' }}
                       >
                         <Stack align="center">
                           <Stack.Item>
@@ -1146,8 +1146,6 @@ export const PreferencesMenu = () => {
                               style={{
                                 fontSize: '11px',
                                 lineHeight: '13px',
-                                maxHeight: '26px',
-                                overflow: 'hidden',
                                 whiteSpace: 'normal',
                               }}
                             >

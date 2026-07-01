@@ -496,11 +496,25 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	// species handle_link (datums/choiced/species.dm).
 	write_preference(/datum/preference/choiced/species, pref_species.id)
 	randomise_appearance_prefs(~(RANDOMIZE_SPECIES))
+	// The genital organ customizers (penis/testicles/breasts/vagina) are default_disabled on every
+	// species (see genitals_registration.dm), so wiping customizer_entries below and rebuilding fresh
+	// defaults silently turns genitals back off on every species switch, even if the player had
+	// explicitly enabled them. These customizer types are shared across species (registered globally,
+	// not species-specific subtypes), so carry the enabled flag across the wipe.
+	var/list/enabled_genital_customizers = list()
+	for(var/customizer_type in GLOB.character_setup_genital_customizers)
+		var/datum/customizer_entry/old_entry = get_customizer_entry_for_customizer_type(customizer_type)
+		if(old_entry && !old_entry.disabled)
+			enabled_genital_customizers += customizer_type
 	customizer_entries = list()
 	validate_customizer_entries()
 	reset_all_customizer_accessory_colors()
 	randomize_all_customizer_accessories()
 	cspref_set_accessory("Nothing")
+	for(var/customizer_type in enabled_genital_customizers)
+		var/datum/customizer_entry/new_entry = get_customizer_entry_for_customizer_type(customizer_type)
+		if(new_entry)
+			new_entry.disabled = FALSE
 
 	var/list/selectable_ages = character_setup_species_display_ages(pref_species)
 	if(saved_age && (saved_age in selectable_ages))
