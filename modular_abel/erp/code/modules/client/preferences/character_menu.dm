@@ -10,12 +10,15 @@
 /datum/preferences/var/character_setup_preview_background
 /datum/preferences/var/character_setup_static_sig
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view
+/datum/preferences/var/atom/movable/screen/map_view/character_setup_view_front
+/datum/preferences/var/atom/movable/screen/map_view/character_setup_view_side
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
 /datum/preferences/var/character_setup_hover_customizer
 /datum/preferences/var/character_setup_view_busy = FALSE
 /datum/preferences/var/character_setup_view_pending = FALSE
+/datum/preferences/var/character_setup_view_shown = FALSE
 /datum/preferences/var/list/character_setup_ui_heavy_cache
 /datum/preferences/var/character_setup_ui_heavy_sig
 
@@ -541,6 +544,13 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 /datum/preferences/ui_close(mob/user)
 	. = ..()
+	var/remaining = 0
+	for(var/datum/tgui/open_ui in open_uis)
+		if(open_ui.user == user)
+			remaining++
+	if(remaining > 1)
+		character_setup_log("VIEW", "ui_close keep view, other windows remain=[remaining - 1]")
+		return
 	character_setup_teardown_view(user)
 
 /mob/dead/new_player/proc/character_setup_chargen_set_ready(new_ready)
@@ -638,25 +648,41 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	return result
 
 /datum/preferences/proc/character_setup_ensure_view(mob/user, datum/tgui/ui)
-	var/created = FALSE
 	if(!character_setup_view)
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_[REF(src)]")
-		created = TRUE
-	if(!character_setup_body)
-		character_setup_body = new
-	character_setup_log("VIEW", "ensure_view created=[created] map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible]")
-	character_setup_update_view()
-	character_setup_view.display_to(user, ui?.window)
+		character_setup_view_front = new
+		character_setup_view_front.generate_view("character_setup_front_[REF(src)]")
+		character_setup_view_side = new
+		character_setup_view_side.generate_view("character_setup_side_[REF(src)]")
+		if(!character_setup_body)
+			character_setup_body = new
+		character_setup_log("VIEW", "ensure_view created map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible]")
+		character_setup_update_view()
+	if(character_setup_view_shown)
+		return
+	var/client/target_client = user?.client
+	if(!target_client || !ui?.window?.visible)
+		return
+	character_setup_view_shown = TRUE
+	character_setup_view.display_to_client(target_client)
+	character_setup_view_front.display_to_client(target_client)
+	character_setup_view_side.display_to_client(target_client)
+	character_setup_log("VIEW", "displayed maps=[character_setup_view.assigned_map],[character_setup_view_front.assigned_map],[character_setup_view_side.assigned_map] window=[ui.window.id]")
 
 /datum/preferences/proc/character_setup_teardown_view(mob/user)
 	character_setup_log("VIEW", "teardown map=[character_setup_view?.assigned_map] user=[user?.ckey]")
 	character_setup_hover_acc = null
 	character_setup_hover_color = null
 	character_setup_hover_customizer = null
+	character_setup_view_shown = FALSE
 	character_setup_view?.hide_from(user)
+	character_setup_view_front?.hide_from(user)
+	character_setup_view_side?.hide_from(user)
 	QDEL_NULL(character_setup_body)
 	QDEL_NULL(character_setup_view)
+	QDEL_NULL(character_setup_view_front)
+	QDEL_NULL(character_setup_view_side)
 
 /datum/preferences/proc/character_setup_update_view()
 	set waitfor = FALSE
@@ -722,11 +748,19 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
 	body.setDir(character_setup_preview_dir)
-	character_setup_view.appearance = body.appearance
-	character_setup_view.plane = GAME_PLANE
-	character_setup_view.layer = GAME_PLANE
-	character_setup_view.set_position(1, 1)
-	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] plane=[character_setup_view.plane] layer=[character_setup_view.layer] overlays=[length(character_setup_view.overlays)] icon=[body.icon] underwear=[body.underwear]")
+	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
+	character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
+	character_setup_apply_to_view(character_setup_view_side, body, EAST)
+	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] dir=[character_setup_view.dir] body_dir=[body.dir] plane=[character_setup_view.plane] layer=[character_setup_view.layer] overlays=[length(character_setup_view.overlays)] icon=[body.icon] underwear=[body.underwear]")
+
+/datum/preferences/proc/character_setup_apply_to_view(atom/movable/screen/map_view/view, mob/living/carbon/human/dummy/body, view_dir)
+	if(!view)
+		return
+	view.appearance = body.appearance
+	view.plane = GAME_PLANE
+	view.layer = GAME_PLANE
+	view.dir = view_dir
+	view.set_position(1, 1)
 
 /datum/preferences/proc/character_setup_background_options()
 	return list(
@@ -1010,6 +1044,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["preview_dir"] = character_setup_preview_dir
 	data["background"] = character_setup_preview_background ? character_setup_preview_background : "none"
 	data["preview_map"] = character_setup_view ? character_setup_view.assigned_map : null
+	data["preview_map_front"] = character_setup_view_front ? character_setup_view_front.assigned_map : null
+	data["preview_map_side"] = character_setup_view_side ? character_setup_view_side.assigned_map : null
 
 	var/datum/culture/pref_culture = cspref_culture()
 	data["culture_name"] = pref_culture ? pref_culture::name : "None"
@@ -1221,7 +1257,6 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		if("select_quirks")
 			open_quirk_menu(user)
 			return TRUE
-		// was never actually applied (and thus never saved).
 		if("randomiseappearanceprefs")
 			randomise_appearance_prefs()
 			customizer_entries = list()

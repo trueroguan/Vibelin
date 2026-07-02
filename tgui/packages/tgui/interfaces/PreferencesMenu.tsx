@@ -159,6 +159,8 @@ type PrefsData = {
   background_options: FeatureOption[];
   thumbs?: Record<string, string>;
   preview_map: string | null;
+  preview_map_front: string | null;
+  preview_map_side: string | null;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -563,7 +565,7 @@ export const PreferencesMenu = () => {
       setTimeout(() => window.dispatchEvent(new Event('resize')), delay),
     );
     return () => timers.forEach(clearTimeout);
-  }, [data.preview_map, menuScale, data.preferences_fullscreen]);
+  }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen]);
 
   const ageOptions = data.age_options ?? [];
   const erpEnabled = asBool(data.erp_enabled);
@@ -1015,10 +1017,12 @@ export const PreferencesMenu = () => {
         <Stack>
           <Stack.Item basis="265px">
             <Box
+              p={0.5}
               style={{
                 maxHeight: '420px',
                 overflowY: 'auto',
-                paddingRight: '3px',
+                border: '1px solid rgba(255,255,255,0.18)',
+                backgroundColor: 'rgba(0,0,0,0.22)',
               }}
             >
               {faithOptions.length ? (
@@ -1107,7 +1111,15 @@ export const PreferencesMenu = () => {
                 </Box>
 
                 <FieldBlock label="Patrons">
-                  <Box style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  <Box
+                    p={0.5}
+                    style={{
+                      maxHeight: '300px',
+                      overflowY: 'auto',
+                      border: '1px solid rgba(255,255,255,0.18)',
+                      backgroundColor: 'rgba(0,0,0,0.22)',
+                    }}
+                  >
                     {(inspectedFaith.patrons || []).map((patron) => (
                       <Button
                         key={patron.id}
@@ -1121,7 +1133,7 @@ export const PreferencesMenu = () => {
                             patron_id: patron.id,
                           })
                         }
-                        style={{ padding: '6px' }}
+                        style={{ padding: '6px', minHeight: '58px' }}
                       >
                         <Stack align="center">
                           <Stack.Item>
@@ -1143,6 +1155,10 @@ export const PreferencesMenu = () => {
                                 fontSize: '11px',
                                 lineHeight: '13px',
                                 whiteSpace: 'normal',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
                               }}
                             >
                               {display(patron.description, 'No description.')}
@@ -1158,6 +1174,11 @@ export const PreferencesMenu = () => {
                   <>
                     <InfoRow icon="star" label="Patron" value={selectedPatron.name} />
                     <InfoRow icon="sun" label="Domain" value={selectedPatron.domain} />
+                    <FieldBlock label="About">
+                      <Box style={{ whiteSpace: 'pre-line' }}>
+                        {display(selectedPatron.description, 'No description.')}
+                      </Box>
+                    </FieldBlock>
                     <FieldBlock label="Boons">
                       <Box>{display(selectedPatron.boons)}</Box>
                     </FieldBlock>
@@ -1776,6 +1797,9 @@ export const PreferencesMenu = () => {
           p={0.5}
           style={{
             height: oocExpanded ? '150px' : '76px',
+            minHeight: '56px',
+            maxHeight: '480px',
+            resize: 'vertical',
             overflowY: 'auto',
             border: '1px solid rgba(255,255,255,0.18)',
             backgroundColor: 'rgba(0,0,0,0.22)',
@@ -2059,6 +2083,66 @@ export const PreferencesMenu = () => {
                         {renderOocChatPanel()}
                       </Section>
                     </Stack.Item>
+                    {data.preview_map_front && data.preview_map_side ? (
+                      <Stack.Item>
+                        <Stack>
+                          <Stack.Item grow basis={0}>
+                            <Box
+                              style={{
+                                position: 'relative',
+                                height: '120px',
+                                ...(backdropColor
+                                  ? { backgroundColor: backdropColor }
+                                  : {}),
+                              }}
+                            >
+                              <ByondUi
+                                key={`${data.preview_map_front}-${menuScale}`}
+                                height="100%"
+                                params={{
+                                  id: data.preview_map_front,
+                                  type: 'map',
+                                }}
+                              />
+                            </Box>
+                            <Box
+                              color="label"
+                              textAlign="center"
+                              style={{ fontSize: '10px', lineHeight: '14px' }}
+                            >
+                              Front
+                            </Box>
+                          </Stack.Item>
+                          <Stack.Item grow basis={0}>
+                            <Box
+                              style={{
+                                position: 'relative',
+                                height: '120px',
+                                ...(backdropColor
+                                  ? { backgroundColor: backdropColor }
+                                  : {}),
+                              }}
+                            >
+                              <ByondUi
+                                key={`${data.preview_map_side}-${menuScale}`}
+                                height="100%"
+                                params={{
+                                  id: data.preview_map_side,
+                                  type: 'map',
+                                }}
+                              />
+                            </Box>
+                            <Box
+                              color="label"
+                              textAlign="center"
+                              style={{ fontSize: '10px', lineHeight: '14px' }}
+                            >
+                              Side
+                            </Box>
+                          </Stack.Item>
+                        </Stack>
+                      </Stack.Item>
+                    ) : null}
                   </Stack>
                 </Stack.Item>
 
