@@ -8,46 +8,20 @@
 /datum/preferences/var/character_setup_preview_clothes = TRUE
 /datum/preferences/var/character_setup_preview_dir = SOUTH
 /datum/preferences/var/character_setup_preview_background
-/datum/preferences/var/character_setup_preview_cache
-/datum/preferences/var/character_setup_preview_sig
 /datum/preferences/var/character_setup_static_sig
-/datum/preferences/var/character_setup_hover_cache
-/datum/preferences/var/character_setup_hover_for
-/datum/preferences/var/character_setup_hover_base
-/datum/preferences/var/character_setup_hover_base_for
-/datum/preferences/var/character_setup_preview_w = 32
-/datum/preferences/var/character_setup_preview_h = 32
-/datum/preferences/var/character_setup_preview_bx = 1
-/datum/preferences/var/character_setup_preview_by = 1
-// Per-tick ui_data cache for the expensive catalog builders (see the heavy_sig block in ui_data).
+/datum/preferences/var/atom/movable/screen/map_view/character_setup_view
+/datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
+/datum/preferences/var/character_setup_hover_acc
+/datum/preferences/var/character_setup_hover_color
+/datum/preferences/var/character_setup_hover_customizer
+/datum/preferences/var/character_setup_view_busy = FALSE
+/datum/preferences/var/character_setup_view_pending = FALSE
 /datum/preferences/var/list/character_setup_ui_heavy_cache
 /datum/preferences/var/character_setup_ui_heavy_sig
 
-GLOBAL_LIST_EMPTY(character_setup_preview_b64_cache)
-GLOBAL_LIST_EMPTY(character_setup_hover_base_cache)
 GLOBAL_LIST_EMPTY(character_setup_chargen_ooc_messages)
-// Species routed to core's getFlatIcon() instead of character_setup_get_flat_icon() below. The
-// custom flattener's dynamic canvas-growth math (see its comment) doesn't reproduce native overlay
-// placement exactly once several pixel-offset layers stack up - harmless for humans (offsets are
-// 0,0) but for short races EVERY clothing/hair layer carries a nonzero offset_features_m/f entry,
-// so the preview visibly drifts from how the doll actually renders in-game even though gameplay
-// itself (native BYOND overlay compositing, unaffected by this proc) is correct. Core's getFlatIcon
-// clips content wider/taller than 32x32 (why taurs/harpies can't use it) - not a concern here since
-// short-race bodies are strictly smaller than 32x32, never larger.
-GLOBAL_LIST_INIT(character_setup_normal_preview_species, list(
-	"harpy", "medicator", "moth",
-	SPEC_ID_DWARF, SPEC_ID_DWARF_SUBTERRAN, SPEC_ID_KOBOLD, SPEC_ID_HALFLING,
-))
-// Where the human base (32x32) landed inside the last flattened doll canvas (1-based, bottom-left),
-// so a hover overlay can be composited onto a doll-sized canvas and scale/align identically.
-GLOBAL_VAR_INIT(character_setup_flat_blend_x, 1)
-GLOBAL_VAR_INIT(character_setup_flat_blend_y, 1)
 
-// ===== CHARACTER SETUP DEBUG LOGGER (temporary — describes every TGUI interaction + per-op timing; toggle via GLOB) =====
-// TEMP re-enabled to capture the genital-preview diagnostic (character_setup_debug_genitals) and
-// the full per-action op log while we chase the "genitals don't render on the doll" bug. Writes to
-// data/logs/<round>/character_setup.log. Flip back to FALSE once that's root-caused.
-GLOBAL_VAR_INIT(character_setup_debug, TRUE)
+GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 
 /datum/preferences/var/list/character_setup_log_counts
 /datum/preferences/var/character_setup_log_action_name = ""
@@ -74,9 +48,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/cnt = character_setup_log_counts[op]
 	var/delta = world.timeofday - start_tod
 	character_setup_log("OP", "[op] x[cnt] took=[delta]ds[detail ? " {[detail]}" : ""][cnt > 1 ? "  *** MULTIPLICATIVE in [character_setup_log_action_name] ***" : ""]")
-// ===== END CHARACTER SETUP DEBUG LOGGER =====
 
-// ===== Datumized-preference accessors (upstream moved these off /datum/preferences into the /tg/ preference-datum system) =====
 /datum/preferences/proc/cspref_age()
 	return read_preference(/datum/preference/choiced/age)
 /datum/preferences/proc/cspref_set_age(value)
@@ -194,7 +166,6 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 /datum/preferences/proc/cspref_scaling_method()
 	return read_preference(/datum/preference/choiced/scaling_method)
 /datum/preferences/var/current_tab = 0
-// ===== END datumized-preference accessors =====
 
 /proc/character_setup_chargen_record_ooc(sender, message, lobby_only = FALSE)
 	if(!istext(sender) || !istext(message))
@@ -236,18 +207,15 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	validate_customizer_entries()
 	character_setup_static_sig = "[pref_species?.type]-[cspref_gender()]"
-	character_setup_build_preview(user, json_encode(character_setup_build_features_data()))
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
-	// Every mutating menu action funnels through here, so this is the one invalidation point the
-	// per-tick heavy-data cache in ui_data needs (it covers state the sig can't see, e.g. toggles).
 	character_setup_ui_heavy_sig = null
 	var/new_static_sig = "[pref_species?.type]-[cspref_gender()]"
 	if(new_static_sig != character_setup_static_sig)
 		character_setup_static_sig = new_static_sig
 		update_static_data(user)
-	character_setup_refresh_preview(user)
+	character_setup_update_view()
 
 /datum/preferences/proc/character_setup_sanitize_preferences_scale(value)
 	if(!isnum(value))
@@ -255,9 +223,6 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!isnum(value))
 		return 0.85
 	return clamp(round(value * 20) / 20, 0.8, 1.25)
-
-/datum/preferences/proc/character_setup_force_normal_preview_bounds()
-	return pref_species?.id in GLOB.character_setup_normal_preview_species
 
 /datum/preferences/load_preferences()
 	. = ..()
@@ -509,18 +474,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	reset_jobs(user)
 	reset_patron(user)
 	reset_culture(user)
-	// Commit the choice to the datumized species preference (the source of truth that
-	// apply_prefs_to/apply_to_human reads). Without this, pref_species (the menu's "Current")
-	// and the savefile diverge, so the preview dummy stays the default human/northern - which
-	// is why selected species had no tail / looked like a mis-painted human. Mirrors the core
-	// species handle_link (datums/choiced/species.dm).
 	write_preference(/datum/preference/choiced/species, pref_species.id)
 	randomise_appearance_prefs(~(RANDOMIZE_SPECIES))
-	// The genital organ customizers (penis/testicles/breasts/vagina) are default_disabled on every
-	// species (see genitals_registration.dm), so wiping customizer_entries below and rebuilding fresh
-	// defaults silently turns genitals back off on every species switch, even if the player had
-	// explicitly enabled them. These customizer types are shared across species (registered globally,
-	// not species-specific subtypes), so carry the enabled flag across the wipe.
 	var/list/enabled_genital_customizers = list()
 	for(var/customizer_type in GLOB.character_setup_genital_customizers)
 		var/datum/customizer_entry/old_entry = get_customizer_entry_for_customizer_type(customizer_type)
@@ -582,6 +537,11 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		ui = new(user, src, "PreferencesMenu", "Character Setup", window_width, window_height)
 		ui.set_autoupdate(TRUE)
 		ui.open()
+	character_setup_ensure_view(user, ui)
+
+/datum/preferences/ui_close(mob/user)
+	. = ..()
+	character_setup_teardown_view(user)
 
 /mob/dead/new_player/proc/character_setup_chargen_set_ready(new_ready)
 	ready = new_ready
@@ -677,40 +637,74 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			result = SSjob.GetJob(job_type)
 	return result
 
-/datum/preferences/proc/character_setup_refresh_preview(mob/user)
+/datum/preferences/proc/character_setup_ensure_view(mob/user, datum/tgui/ui)
+	if(!character_setup_view)
+		character_setup_view = new
+		character_setup_view.generate_view("character_setup_[REF(src)]")
+	if(!character_setup_body)
+		character_setup_body = new
+	character_setup_update_view()
+	character_setup_view.display_to(user, ui?.window)
+
+/datum/preferences/proc/character_setup_teardown_view(mob/user)
+	character_setup_hover_acc = null
+	character_setup_hover_color = null
+	character_setup_hover_customizer = null
+	character_setup_view?.hide_from(user)
+	QDEL_NULL(character_setup_body)
+	QDEL_NULL(character_setup_view)
+
+/datum/preferences/proc/character_setup_update_view()
 	set waitfor = FALSE
-	var/previous = character_setup_preview_sig
-	character_setup_build_preview(user, json_encode(character_setup_build_features_data()))
-	if(character_setup_preview_sig != previous)
-		SStgui.update_uis(src)
+	if(!character_setup_view || !character_setup_body || !pref_species)
+		return
+	if(character_setup_view_busy)
+		character_setup_view_pending = TRUE
+		return
+	character_setup_view_busy = TRUE
+	do
+		character_setup_view_pending = FALSE
+		character_setup_render_body()
+	while(character_setup_view_pending)
+	character_setup_view_busy = FALSE
 
-/datum/preferences/proc/character_setup_preview_extra_sig()
-	return ""
-
-/datum/preferences/proc/character_setup_setup_preview_dummy(datum/job/preview_job, datum/outfit/preview_outfit, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
+/datum/preferences/proc/character_setup_render_body()
+	var/mob/living/carbon/human/dummy/body = character_setup_body
+	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
+	var/datum/outfit/preview_outfit
+	if(preview_job)
+		preview_outfit = (cspref_gender() == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
 	character_setup_validate_smallclothes()
-	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(slotkey)
-	if(!body)
-		return null
+	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
+	character_setup_suppress_smallclothes_sync = TRUE
+	var/datum/customizer_entry/hover_entry
+	var/hover_old_acc
+	var/hover_old_colors
+	var/hover_old_disabled
+	var/hover_acc_path = character_setup_hover_acc ? text2path(character_setup_hover_acc) : null
+	var/hover_customizer_path = character_setup_hover_customizer ? text2path(character_setup_hover_customizer) : null
+	if(hover_acc_path && hover_customizer_path)
+		hover_entry = get_customizer_entry_for_customizer_type(hover_customizer_path)
+		if(hover_entry)
+			hover_old_acc = hover_entry.accessory_type
+			hover_old_colors = hover_entry.accessory_colors
+			hover_old_disabled = hover_entry.disabled
+			hover_entry.accessory_type = hover_acc_path
+			if(character_setup_hover_color)
+				hover_entry.accessory_colors = character_setup_hover_color
+			hover_entry.disabled = FALSE
+	body.wipe_state()
 	apply_prefs_to(body, TRUE)
-	// "Underwear Layer" off is supposed to bare the body so the genitals show. build_preview tries to
-	// do that with cspref_set_underwear("Nude"), but "Nude" is NOT a valid choice for the underwear
-	// preference (it's not in GLOB.underwear_list), so write_preference() silently rejects it and the
-	// dummy keeps wearing its saved underwear item - whose mere presence (H.underwear != "Nude") makes
-	// penis/testicles/vagina is_visible() return FALSE. Force the legacy coverage vars bare directly on
-	// the dummy (bypassing the pref validation) and rebuild the limbs so the genital overlays re-render.
+	if(hover_entry)
+		hover_entry.accessory_type = hover_old_acc
+		hover_entry.accessory_colors = hover_old_colors
+		hover_entry.disabled = hover_old_disabled
+	character_setup_suppress_smallclothes_sync = was_sync_suppressed
 	if(!character_setup_preview_underwear)
 		body.underwear = "Nude"
 		body.undershirt = "Nude"
 		body.socks = "Nude"
 		body.update_body_parts(TRUE)
-	if(GLOB.character_setup_debug)
-		var/obj/item/organ/tail/T = body.getorganslot(ORGAN_SLOT_TAIL)
-		if(!T)
-			character_setup_log("TAIL", "NO tail organ on dummy (species=[body.dna?.species?.type])")
-		else
-			character_setup_log("TAIL", "organ=[T.type] visible_organ=[T.visible_organ] is_visible=[T.is_visible()] accessory_type=[T.accessory_type] icon_state=[T.icon_state] owner=[T.owner ? "yes" : "NO"]")
-		character_setup_debug_genitals(body)
 	if(preview_job)
 		body.dna.species.pre_equip_species_outfit(preview_job, body, TRUE)
 	if(preview_outfit)
@@ -719,377 +713,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	body.update_inv_belt(hide_experimental = TRUE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
-	return body
-
-// TEMP diagnostic - remove once the "genitals never render on the doll (but DO in the thumbnail
-// cards)" bug is root-caused. The whole render chain reads correct on paper (organ created with
-// accessory_type -> organs_by_zone[CHEST] via check_zone(PRECISE_GROIN) -> chest limb get_organs
-// finds it -> organ.is_visible() -> accessory.get_appearance -> accessory.is_visible()), so this
-// dumps the ACTUAL runtime state of each genital slot on the freshly-built preview dummy to find
-// which link is silently returning null/FALSE. Gated behind GLOB.character_setup_debug.
-/datum/preferences/proc/character_setup_debug_genitals(mob/living/carbon/human/dummy/body)
-	if(!body)
-		return
-	character_setup_log("GENITAL", "dummy species=[body.dna?.species?.type] gender=[body.gender] underwear=[body.underwear] undershirt=[body.undershirt] preview_underwear=[character_setup_preview_underwear] preview_clothes=[character_setup_preview_clothes]")
-	for(var/slot in list(ORGAN_SLOT_PENIS, ORGAN_SLOT_TESTICLES, ORGAN_SLOT_BREASTS, ORGAN_SLOT_VAGINA))
-		var/obj/item/organ/organ = body.getorganslot(slot)
-		if(!organ)
-			character_setup_log("GENITAL", "[slot]: NO ORGAN on dummy")
-			continue
-		var/zone = organ.zone
-		var/checked = check_zone(zone)
-		var/in_zone_list = LAZYACCESS(body.organs_by_zone, checked)
-		var/organ_vis = organ.is_visible()
-		var/acc_type = organ.accessory_type
-		var/acc_vis = "n/a"
-		var/acc_state = "n/a"
-		var/acc_appearances = "n/a"
-		if(acc_type)
-			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(acc_type)
-			if(accessory)
-				acc_vis = "[accessory.is_visible(organ, null, body)]"
-				acc_state = "[accessory.get_icon_state(organ, null, body)]"
-				var/list/app = accessory.get_appearance(organ, null, organ.accessory_colors)
-				acc_appearances = app ? "[length(app)] appearances" : "NULL (not visible or no icon_state)"
-		character_setup_log("GENITAL", "[slot]: organ=[organ.type] zone=[zone]->[checked] in_zone_list=[in_zone_list ? "yes" : "NO"] organ.is_visible=[organ_vis] accessory_type=[acc_type] acc.is_visible=[acc_vis] acc.icon_state=[acc_state] get_appearance=[acc_appearances]")
-
-/datum/preferences/proc/character_setup_finish_preview_dummy(mob/living/carbon/human/dummy/body, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
-	if(!body)
-		return
-	body.update_inv_hands()
-	body.update_inv_belt()
-	body.update_inv_back()
-	body.update_inv_head()
-	unset_busy_human_dummy(slotkey)
-
-// Modular copy of /proc/getFlatIcon (code/__HELPERS/icons.dm) with the canvas-expansion bug fixed:
-// core uses && (only grows when all four edges change) and scrambles the bound assignments, so any
-// sprite wider/taller than 32x32 (taurs) gets clipped to 32x32. Used ONLY by the chargen preview.
-/proc/character_setup_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
-	#define CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
-		for (var/i in 1 to length(process)) { \
-			var/image/current = process[i]; \
-			if (!current) { \
-				continue; \
-			} \
-			if (current.plane != FLOAT_PLANE && current.plane != appearance.plane) { \
-				continue; \
-			} \
-			var/current_layer = current.layer; \
-			if (current_layer < 0) { \
-				if (current_layer <= -1000) { \
-					return flat; \
-				} \
-				current_layer = base_layer + appearance.layer + current_layer / 1000; \
-			} \
-			for (var/index_to_compare_to in 1 to length(layers)) { \
-				var/compare_to = layers[index_to_compare_to]; \
-				if (current_layer < layers[compare_to]) { \
-					layers.Insert(index_to_compare_to, current); \
-					break; \
-				} \
-			} \
-			layers[current] = current_layer; \
-		}
-
-	var/static/icon/flat_template = icon('icons/blanks/32x32.dmi', "nothing")
-	var/icon/flat = icon(flat_template)
-
-	if(!appearance || appearance.alpha <= 0)
-		return flat
-
-	if(start)
-		if(!defdir)
-			defdir = appearance.dir
-		if(!deficon)
-			deficon = appearance.icon
-		if(!defstate)
-			defstate = appearance.icon_state
-		if(!defblend)
-			defblend = appearance.blend_mode
-
-	var/curicon = appearance.icon || deficon
-	var/curstate = appearance.icon_state || defstate
-	var/curdir = (!appearance.dir || appearance.dir == SOUTH) ? defdir : appearance.dir
-
-	var/render_icon = curicon
-
-	if(render_icon)
-		if(!icon_exists(curicon, curstate))
-			if(icon_exists(curicon, ""))
-				curstate = ""
-			else
-				render_icon = FALSE
-
-	var/base_icon_dir
-
-	if(render_icon)
-		if (curdir != SOUTH)
-			if(!length(icon_states(icon(curicon, curstate, NORTH))))
-				base_icon_dir = SOUTH
-
-		var/list/icon_dimensions = get_icon_dimensions(curicon)
-		var/icon_width = icon_dimensions["width"]
-		var/icon_height = icon_dimensions["height"]
-		if(icon_width != 32 || icon_height != 32)
-			flat.Scale(icon_width, icon_height)
-
-	if(!base_icon_dir)
-		base_icon_dir = curdir
-
-	var/curblend = appearance.blend_mode || defblend
-
-	if(length(appearance.overlays) || length(appearance.underlays))
-		var/list/layers = list()
-		var/image/copy
-		if(render_icon)
-			copy = image(icon=curicon, icon_state=curstate, layer=appearance.layer, dir=base_icon_dir)
-			copy.color = appearance.color
-			copy.alpha = appearance.alpha
-			copy.blend_mode = curblend
-			layers[copy] = appearance.layer
-
-		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
-		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
-
-		var/icon/add
-
-		var/flatX1 = 1
-		var/flatX2 = flat.Width()
-		var/flatY1 = 1
-		var/flatY2 = flat.Height()
-
-		var/addX1 = 0
-		var/addX2 = 0
-		var/addY1 = 0
-		var/addY2 = 0
-
-		for(var/image/layer_image as anything in layers)
-			if(layer_image.alpha == 0)
-				continue
-
-			if(layer_image == copy)
-				curblend = BLEND_OVERLAY
-				add = icon(layer_image.icon, layer_image.icon_state, base_icon_dir)
-			else
-				add = character_setup_get_flat_icon(image(layer_image), curdir, curicon, curstate, curblend, FALSE, no_anim)
-			if(!add)
-				continue
-
-			addX1 = min(flatX1, layer_image.pixel_x + 1)
-			addX2 = max(flatX2, layer_image.pixel_x + add.Width())
-			addY1 = min(flatY1, layer_image.pixel_y + 1)
-			addY2 = max(flatY2, layer_image.pixel_y + add.Height())
-
-			if (
-				addX1 != flatX1 \
-				|| addX2 != flatX2 \
-				|| addY1 != flatY1 \
-				|| addY2 != flatY2 \
-			)
-				flat.Crop(
-					addX1 - flatX1 + 1,
-					addY1 - flatY1 + 1,
-					addX2 - flatX1 + 1,
-					addY2 - flatY1 + 1
-				)
-
-				flatX1 = addX1
-				flatX2 = addX2
-				flatY1 = addY1
-				flatY2 = addY2
-
-			flat.Blend(add, blendMode2iconMode(curblend), layer_image.pixel_x + 2 - flatX1, layer_image.pixel_y + 2 - flatY1)
-
-		if(appearance.color)
-			if(islist(appearance.color))
-				flat.MapColors(arglist(appearance.color))
-			else
-				flat.Blend(appearance.color, ICON_MULTIPLY)
-
-		if(appearance.alpha < 255)
-			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
-
-		if(start)
-			GLOB.character_setup_flat_blend_x = 2 - flatX1
-			GLOB.character_setup_flat_blend_y = 2 - flatY1
-
-		if(no_anim)
-			var/icon/cleaned = new /icon()
-			cleaned.Insert(flat, "", SOUTH, 1, 0)
-			return cleaned
-		else
-			return icon(flat, "", SOUTH)
-	else if (render_icon)
-		if(start)
-			GLOB.character_setup_flat_blend_x = 1
-			GLOB.character_setup_flat_blend_y = 1
-		var/icon/final_icon = icon(icon(curicon, curstate, base_icon_dir), "", SOUTH, no_anim ? TRUE : null)
-
-		if (appearance.alpha < 255)
-			final_icon.Blend(rgb(255,255,255, appearance.alpha), ICON_MULTIPLY)
-
-		if (appearance.color)
-			if (islist(appearance.color))
-				final_icon.MapColors(arglist(appearance.color))
-			else
-				final_icon.Blend(appearance.color, ICON_MULTIPLY)
-
-		return final_icon
-
-	#undef CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS
-
-/datum/preferences/proc/character_setup_flatten_dummy(mob/living/carbon/human/dummy/body, preview_dir)
-	var/_t = world.timeofday
-	body.setDir(preview_dir)
-	var/icon/character
-	if(character_setup_force_normal_preview_bounds())
-		GLOB.character_setup_flat_blend_x = 1
-		GLOB.character_setup_flat_blend_y = 1
-		character = getFlatIcon(body, defdir = preview_dir, no_anim = TRUE)
-	else
-		character = character_setup_get_flat_icon(body, defdir = preview_dir, no_anim = TRUE)
-	character_setup_log_op("getFlatIcon", _t, "dir=[preview_dir] size=[character ? "[character.Width()]x[character.Height()]" : "?"]")
-	return character
-
-/datum/preferences/proc/character_setup_render_preview_icon(datum/job/preview_job, datum/outfit/preview_outfit, preview_dir, slotkey = DUMMY_HUMAN_SLOT_PREFERENCES)
-	var/mob/living/carbon/human/dummy/body = character_setup_setup_preview_dummy(preview_job, preview_outfit, slotkey)
-	if(!body)
-		return null
-	var/icon/out_icon = character_setup_flatten_dummy(body, preview_dir)
-	if(slotkey == DUMMY_HUMAN_SLOT_PREFERENCES && out_icon)
-		character_setup_preview_w = out_icon.Width()
-		character_setup_preview_h = out_icon.Height()
-		character_setup_preview_bx = GLOB.character_setup_flat_blend_x
-		character_setup_preview_by = GLOB.character_setup_flat_blend_y
-	character_setup_finish_preview_dummy(body, slotkey)
-	return out_icon
-
-// Renders the doll WITHOUT the hovered customizer (temporarily disables its entry) so the candidate
-// overlay replaces the current one instead of stacking on top. Cached per (customizer, current sig).
-/datum/preferences/proc/character_setup_render_hover_base(customizer_type)
-	if(!pref_species)
-		return ""
-	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
-	if(!entry)
-		return ""
-	var/cache_key = "[customizer_type]|[character_setup_preview_sig]"
-	if(cache_key in GLOB.character_setup_hover_base_cache)
-		return GLOB.character_setup_hover_base_cache[cache_key]
-	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
-	var/datum/outfit/preview_outfit
-	if(preview_job)
-		preview_outfit = (cspref_gender() == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
-	var/saved_underwear = cspref_underwear()
-	var/saved_undershirt = cspref_undershirt()
-	var/saved_socks = cspref_socks()
-	if(!character_setup_preview_underwear)
-		cspref_set_underwear("Nude")
-		cspref_set_undershirt("Nude")
-		cspref_set_socks("Nude")
-	var/was_disabled = entry.disabled
-	entry.disabled = TRUE
-	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
-	character_setup_suppress_smallclothes_sync = TRUE
-	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir, "character_setup_hover_base")
-	character_setup_suppress_smallclothes_sync = was_sync_suppressed
-	entry.disabled = was_disabled
-	cspref_set_underwear(saved_underwear)
-	cspref_set_undershirt(saved_undershirt)
-	cspref_set_socks(saved_socks)
-	var/result = ""
-	if(flat)
-		var/b64 = icon2base64(flat)
-		if(b64)
-			result = "data:image/png;base64,[b64]"
-	GLOB.character_setup_hover_base_cache[cache_key] = result
-	return result
-
-/datum/preferences/proc/character_setup_request_hover_base(customizer_type, customizer_ref)
-	set waitfor = FALSE
-	var/b64 = character_setup_render_hover_base(customizer_type)
-	if(character_setup_hover_base_for == customizer_ref)
-		character_setup_hover_base = b64
-		SStgui.update_uis(src)
-
-/datum/preferences/proc/character_setup_build_preview(mob/user, features_json)
-	if(!pref_species)
-		return null
-	var/_t = world.timeofday
-
-	var/datum/job/preview_job = character_setup_preview_clothes ? character_setup_preview_job() : null
-	var/datum/outfit/preview_outfit
-	if(preview_job)
-		preview_outfit = (cspref_gender() == FEMALE && preview_job.outfit_female) ? preview_job.outfit_female : preview_job.outfit
-
-	var/sig = list2params(list(
-		"sp" = "[pref_species.type]",
-		"g" = cspref_gender(),
-		"u" = cspref_underwear(),
-		"uc" = "[cspref_underwear_color()]",
-		"ut" = cspref_undershirt(),
-		"utc" = "[undershirt_color]",
-		"ul" = cspref_socks(),
-		"ulc" = "[socks_color]",
-		"su" = character_setup_preview_underwear,
-		"sc" = character_setup_preview_clothes,
-		"d" = character_setup_preview_dir,
-		"j" = preview_job ? "[preview_job.type]" : "none",
-		"o" = preview_outfit ? "[preview_outfit]" : "none",
-		"sk" = cspref_skin_tone(),
-		"a" = cspref_age(),
-		"x" = character_setup_preview_extra_sig(),
-		"pb" = character_setup_force_normal_preview_bounds() ? "normal" : "expanded",
-		"f" = features_json,
-	))
-
-	var/cached = GLOB.character_setup_preview_b64_cache[sig]
-	if(cached)
-		character_setup_preview_cache = cached
-		character_setup_preview_sig = sig
-		character_setup_log_op("build_preview", _t, "CACHE_HIT")
-		return cached
-
-	var/saved_underwear = cspref_underwear()
-	var/saved_undershirt = cspref_undershirt()
-	var/saved_socks = cspref_socks()
-	var/list/saved_smallclothes_disabled
-	if(!character_setup_preview_underwear)
-		cspref_set_underwear("Nude")
-		cspref_set_undershirt("Nude")
-		cspref_set_socks("Nude")
-		// Underwear is a bodypart_feature customizer now, so nuking the legacy prefs above isn't
-		// enough - the customizer entry still covers the groin (which hides the genitals). Disable
-		// the smallclothes customizer entries too so "Underwear Layer" off really bares the body.
-		saved_smallclothes_disabled = list()
-		for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
-			var/datum/customizer_entry/sc_entry = get_customizer_entry_for_customizer_type(customizer_type)
-			if(sc_entry)
-				saved_smallclothes_disabled[customizer_type] = sc_entry.disabled
-				sc_entry.disabled = TRUE
-	var/was_sync_suppressed = character_setup_suppress_smallclothes_sync
-	character_setup_suppress_smallclothes_sync = TRUE
-	var/icon/flat = character_setup_render_preview_icon(preview_job, preview_outfit, character_setup_preview_dir)
-	character_setup_suppress_smallclothes_sync = was_sync_suppressed
-	cspref_set_underwear(saved_underwear)
-	cspref_set_undershirt(saved_undershirt)
-	cspref_set_socks(saved_socks)
-	for(var/customizer_type in saved_smallclothes_disabled)
-		var/datum/customizer_entry/sc_entry = get_customizer_entry_for_customizer_type(customizer_type)
-		if(sc_entry)
-			sc_entry.disabled = saved_smallclothes_disabled[customizer_type]
-	if(!flat)
-		return character_setup_preview_cache
-
-	var/b64 = icon2base64(flat)
-	if(!b64)
-		return character_setup_preview_cache
-
-	character_setup_preview_cache = "data:image/png;base64,[b64]"
-	character_setup_preview_sig = sig
-	GLOB.character_setup_preview_b64_cache[sig] = character_setup_preview_cache
-	character_setup_log_op("build_preview", _t, "RENDER")
-	return character_setup_preview_cache
+	body.setDir(character_setup_preview_dir)
+	character_setup_view.appearance = body.appearance
 
 /datum/preferences/proc/character_setup_background_options()
 	return list(
@@ -1283,11 +908,6 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		patron_name = current_patron.display_name ? current_patron.display_name : current_patron.name
 	var/current_faith_type = current_patron ? current_patron.associated_faith : /datum/patron/divine/astrata::associated_faith
 
-	// This menu runs with tgui autoupdate (the round countdown and OOC feed need per-tick data), so
-	// ui_data fires every SStgui tick for every open menu. The blocks below (faith/patron catalog
-	// with STRIP_HTML_FULL text cleaning, per-age stat tooltips, ancestry list, features list) only
-	// actually change on a player action - and every mutating action goes through update_menu_data(),
-	// which nulls this signature. Rebuild them only then; between actions ticks reuse the cache.
 	var/heavy_sig = "[pref_species?.type]|[cspref_gender()]|[current_patron?.type]|[cspref_age()]|[cspref_skin_tone()]|[erp_enabled]"
 	if(!character_setup_ui_heavy_cache || character_setup_ui_heavy_sig != heavy_sig)
 		var/list/heavy = list()
@@ -1377,11 +997,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	data["preview_clothes"] = !!character_setup_preview_clothes
 	data["preview_dir"] = character_setup_preview_dir
 	data["background"] = character_setup_preview_background ? character_setup_preview_background : "none"
-	data["preview_image"] = character_setup_preview_cache
-	data["hover_sprite"] = character_setup_hover_cache
-	data["hover_for"] = character_setup_hover_for
-	data["hover_base"] = character_setup_hover_base
-	data["hover_base_for"] = character_setup_hover_base_for
+	data["preview_map"] = character_setup_view ? character_setup_view.assigned_map : null
 
 	var/datum/culture/pref_culture = cspref_culture()
 	data["culture_name"] = pref_culture ? pref_culture::name : "None"
@@ -1537,16 +1153,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	return FALSE
 
-// Routes a legacy menu action name to the corresponding datumized preference's own handle_link.
 /datum/preferences/proc/character_setup_link_pref(mob/user, key)
 	var/datum/preference/pref = GLOB.preference_entries_by_key[key]
 	if(pref)
 		pref.handle_link(src, user)
 	return TRUE
 
-// Handles the menu's non-datum "system" actions (save/load/slot/randomise/sub-menus). The core
-// process_link now only dispatches real preference-datum keys and CRASHes on anything else, so
-// these must be handled here. Returns TRUE if it consumed the action.
 /datum/preferences/proc/character_setup_handle_system_action(mob/user, list/href_list)
 	switch(href_list["preference"])
 		if("save")
@@ -1597,9 +1209,6 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		if("select_quirks")
 			open_quirk_menu(user)
 			return TRUE
-		// NOTE: "job" and "antag" intentionally fall through to the core process_link (..())
-		// below, which owns their task switches (setJobLevel, be_special, ...). Handling them
-		// here swallowed the task and only ever reopened the browser, so a chosen job priority
 		// was never actually applied (and thus never saved).
 		if("randomiseappearanceprefs")
 			randomise_appearance_prefs()
@@ -1735,26 +1344,24 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 				SStgui.update_uis(src)
 			return TRUE
 		if("character_setup_hover")
-			var/acc_path = text2path(href_list["acc"])
-			var/datum/sprite_accessory/sa = acc_path ? SPRITE_ACCESSORY(acc_path) : GLOB.underwear_list[href_list["acc"]]
-			character_setup_hover_for = href_list["acc"]
-			var/icon/cand = sa ? sa.character_setup_dir_sprite(character_setup_preview_dir, href_list["color"]) : null
-			if(cand)
-				if(character_setup_force_normal_preview_bounds())
-					cand.Crop(1, 1, 32, 32)
-				else if(character_setup_preview_w > 32 || character_setup_preview_h > 32)
-					var/icon/canvas = icon('icons/blanks/32x32.dmi', "nothing")
-					canvas.Crop(1, 1, character_setup_preview_w, character_setup_preview_h)
-					canvas.Blend(cand, ICON_OVERLAY, character_setup_preview_bx, character_setup_preview_by)
-					cand = canvas
-			character_setup_hover_cache = cand ? "data:image/png;base64,[icon2base64(cand)]" : ""
-			var/cust_ref = href_list["customizer"]
-			character_setup_hover_base_for = cust_ref
-			character_setup_hover_base = ""
-			var/cust_type = cust_ref ? text2path(cust_ref) : null
-			if(cust_type)
-				character_setup_request_hover_base(cust_type, cust_ref)
-			SStgui.update_uis(src)
+			var/new_acc = href_list["acc"]
+			var/new_customizer = href_list["customizer"]
+			if(!new_acc || !new_customizer)
+				if(!character_setup_hover_acc)
+					return TRUE
+				character_setup_hover_acc = null
+				character_setup_hover_color = null
+				character_setup_hover_customizer = null
+				character_setup_update_view()
+				return TRUE
+			if(new_acc == character_setup_hover_acc && href_list["color"] == character_setup_hover_color && new_customizer == character_setup_hover_customizer)
+				return TRUE
+			if(!text2path(new_acc) || !text2path(new_customizer))
+				return TRUE
+			character_setup_hover_acc = new_acc
+			character_setup_hover_color = href_list["color"]
+			character_setup_hover_customizer = new_customizer
+			character_setup_update_view()
 			return TRUE
 	if(character_setup_handle_system_action(user, href_list))
 		return TRUE

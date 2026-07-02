@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
+  ByondUi,
   Dropdown,
   Icon,
   Input,
@@ -157,11 +158,7 @@ type PrefsData = {
   background: string;
   background_options: FeatureOption[];
   thumbs?: Record<string, string>;
-  preview_image: string | null;
-  hover_sprite: string | null;
-  hover_for: string | null;
-  hover_base: string | null;
-  hover_base_for: string | null;
+  preview_map: string | null;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -546,8 +543,6 @@ export const PreferencesMenu = () => {
   const [previewFaithId, setPreviewFaithId] = useState<string | null>(null);
   const [oocMessage, setOocMessage] = useState('');
   const [oocExpanded, setOocExpanded] = useState(true);
-  const [hoverValue, setHoverValue] = useState<string | null>(null);
-  const [hoverCustomizer, setHoverCustomizer] = useState<string | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -572,15 +567,6 @@ export const PreferencesMenu = () => {
       : data.background === 'dark'
         ? '#0a0a0a'
         : undefined;
-  const hoverOverlay =
-    hoverValue && data.hover_for === hoverValue ? data.hover_sprite : null;
-  const dollSrc =
-    hoverValue &&
-    hoverCustomizer &&
-    data.hover_base_for === hoverCustomizer &&
-    data.hover_base
-      ? data.hover_base
-      : data.preview_image;
 
   const doPref = (
     preference: string,
@@ -632,9 +618,12 @@ export const PreferencesMenu = () => {
       clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
     }
-    setHoverValue(value);
-    setHoverCustomizer(value ? customizer || null : null);
     if (!value) {
+      doPref('character_setup_hover', undefined, {
+        acc: '',
+        color: '',
+        customizer: '',
+      });
       return;
     }
     hoverTimer.current = setTimeout(() => {
@@ -2080,20 +2069,14 @@ export const PreferencesMenu = () => {
                               : {}),
                           }}
                         >
-                        {dollSrc ? (
-                          <img
-                            src={dollSrc}
-                            alt=""
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'contain',
-                              imageRendering: 'pixelated',
-                              filter: hoverValue ? 'grayscale(0.25)' : undefined,
-                              opacity: hoverValue ? 0.85 : 1,
+                        {data.preview_map ? (
+                          <ByondUi
+                            height="100%"
+                            params={{
+                              id: data.preview_map,
+                              type: 'map',
+                              'zoom-mode': 'distort',
+                              'background-color': backdropColor || '#0f0f0f',
                             }}
                           />
                         ) : (
@@ -2112,22 +2095,6 @@ export const PreferencesMenu = () => {
                             <Icon name="user" size={6} color="label" />
                           </Box>
                         )}
-                        {hoverOverlay ? (
-                          <img
-                            src={hoverOverlay}
-                            alt=""
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'contain',
-                              imageRendering: 'pixelated',
-                              pointerEvents: 'none',
-                            }}
-                          />
-                        ) : null}
                       </Box>
                     </Stack.Item>
                     <Stack.Item>

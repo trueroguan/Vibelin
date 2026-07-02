@@ -12,15 +12,6 @@
 		state = (icon_state in states) ? icon_state : null
 	return state
 
-/datum/sprite_accessory/proc/character_setup_dir_sprite(sprite_dir, sprite_color)
-	var/state = character_setup_thumb_state()
-	if(!state)
-		return null
-	var/icon/spr = icon(icon, state, sprite_dir)
-	if(spr && sprite_color)
-		spr.Blend(sprite_color, ICON_MULTIPLY)
-	return spr
-
 /datum/asset/spritesheet/character_setup_chargen
 	name = "character_setup_chargen"
 

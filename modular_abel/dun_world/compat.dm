@@ -438,7 +438,7 @@
 
 /obj/effect/landmark/start/lord/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		GLOB.latejoin_landmarks |= src
 
 /datum/job/lord/New()
@@ -448,17 +448,17 @@
 
 /obj/effect/landmark/start/outsider/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		jobs_to_spawn -= ROLE_WRETCH
 
 /datum/controller/subsystem/job/get_last_resort_spawn_points()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		var/obj/effect/landmark/start/outsider/fallback = locate(/obj/effect/landmark/start/outsider) in GLOB.latejoin_landmarks
 		if(fallback)
 			return fallback
 	return ..()
 
-// === Azure Peak dun_world secret-door props (ported) ===
+// === Twilight Axis dun_world secret-door props (ported) ===
 // These bookcase-disguised redstone structures are used by the dun_world map but were never
 // ported to Vanderlin. The missing types made `new` return null on mapload, so their
 // redstone_id map var leaked onto the underlying turf -> "Undefined variable

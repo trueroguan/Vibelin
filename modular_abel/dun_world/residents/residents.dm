@@ -105,7 +105,7 @@
 
 /datum/job/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name != "Azure Peak")
+	if(SSmapping.config?.map_name != "Twilight Axis")
 		return
 	if(!istype(spawned))
 		return

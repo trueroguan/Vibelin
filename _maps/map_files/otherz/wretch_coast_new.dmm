@@ -282,7 +282,7 @@
 /obj/structure/fluff/walldeco/chains{
 	icon_state = "chains8"
 	},
-/obj/structure/ritualcircle/baotha,
+/obj/structure/fluff/psycross/crafted/shrine,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "bd" = (
@@ -6092,7 +6092,7 @@
 /obj/structure/fluff/statue/femalestatue{
 	pixel_y = 0
 	},
-/obj/structure/ritualcircle/baotha,
+/obj/structure/fluff/psycross/crafted/shrine,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "yl" = (
@@ -7220,7 +7220,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/vampire_manor)
 "Cz" = (
-/obj/structure/ritualcircle/baotha,
+/obj/structure/fluff/psycross/crafted/shrine,
 /obj/machinery/light/fueled/wallfire/candle/blue/l/dun_world,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
@@ -12251,7 +12251,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "Xy" = (
-/obj/structure/ritualcircle/baotha,
+/obj/structure/fluff/psycross/crafted/shrine,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "Xz" = (
@@ -12857,7 +12857,7 @@
 /area/rogue/under/cave/inhumen)
 "ZJ" = (
 /obj/structure/fluff/walldeco/chains,
-/obj/structure/ritualcircle/baotha,
+/obj/structure/fluff/psycross/crafted/shrine,
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "ZK" = (

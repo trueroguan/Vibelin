@@ -17,7 +17,6 @@ GLOBAL_LIST_INIT(socks_list, init_socks_list())
 
 /datum/preferences/_load_appearence(savefile/save)
 	. = ..()
-	// undershirt/socks are datumized prefs now (loaded by their preference datums); only our own _color vars need manual load
 	save["undershirt_color"] >> undershirt_color
 	save["socks_color"] >> socks_color
 

@@ -63,11 +63,6 @@
 
 /datum/sprite_accessory/proc/smallclothes_adjust_appearance(list/appearance_list, obj/item/bodypart/bodypart, mob/living/carbon/human/human)
 	generic_gender_feature_adjust(appearance_list, null, bodypart, human, OFFSET_UNDIES)
-	// smallclothes_state() returns a dwarf-specific icon_state when one exists for this style;
-	// that art is already drawn to fit the short body, so it needs no extra nudge. Styles WITHOUT
-	// one (smallclothes_state == icon_state, i.e. fell back to the human-proportioned sprite) sit
-	// at the wrong height on a short body - same root cause as the genital sprite offset, so this
-	// reuses that per-species table.
 	if(smallclothes_state(human) == icon_state)
 		var/datum/species/species = human.dna?.species
 		if(species)
@@ -77,13 +72,6 @@
 				for(var/mutable_appearance/appearance as anything in appearance_list)
 					appearance.pixel_x += offsets[OFFSET_SMALLCLOTHES][1]
 					appearance.pixel_y += offsets[OFFSET_SMALLCLOTHES][2]
-			// The style has no dedicated short-race art, so beyond nudging it into place it also
-			// needs to be shrunk to not overhang a narrower/shorter body - see smallclothes_scale_x/y.
-			// A mutable_appearance.transform matrix is a non-starter here: the chargen preview
-			// ("Looking Glass") builds its doll via character_setup_get_flat_icon(), a from-scratch
-			// icon(...)/Blend()/Crop() reimplementation that never reads .transform, so a matrix-based
-			// scale would render fine in actual gameplay but stay invisible in the preview. Resizing
-			// the icon itself works in both, since both read appearance.icon/icon_state directly.
 			if(species.smallclothes_scale_x != 1 || species.smallclothes_scale_y != 1)
 				var/sx = species.smallclothes_scale_x
 				var/sy = species.smallclothes_scale_y
@@ -111,12 +99,6 @@
 	if(istype(human))
 		smallclothes_adjust_appearance(appearance_list, bodypart, human)
 
-// Zone-based groin coverage across all three smallclothes slots. Genital is_visible() used to
-// check only H.underwear != "Nude" (the bottom slot), which broke both ways: a disabled bottom
-// with a groin-covering top (leotard/full-body suit) showed genitals through the suit, and there
-// was no way for a non-covering loadout to bare the groin. Coverage now follows the accessory's
-// own smallclothes_covers_groin flag per worn slot, so "slot toggled off" or "item doesn't cover
-// the groin" both count as bare.
 /proc/smallclothes_groin_covered(mob/living/carbon/human/human)
 	if(!istype(human))
 		return FALSE

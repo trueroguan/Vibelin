@@ -1,15 +1,15 @@
 # modular_abel
 
-This module owns the Azure Peak map import pipeline and the ERP/character menu
+This module owns the Twilight Axis map import pipeline and the ERP/character menu
 content from PR #1. `modular_abel/_module.dm` is the single module entry point
 included from `vanderlin.dme`; it pulls in `erp/_erp.dm` (ERP system) and the
-Azure Peak support files.
+Twilight Axis support files.
 
 Layout:
 
 - `_module.dm` — single entry point: includes `erp/_erp.dm` (ERP system),
-  `dun_world/_dun_world.dm` (the Azure Peak map import), and `upstream_fixes.dm`.
-- `dun_world/` — everything for the Azure Peak import in one place: the support
+  `dun_world/_dun_world.dm` (the Twilight Axis map import), and `upstream_fixes.dm`.
+- `dun_world/` — everything for the Twilight Axis import in one place: the support
   `.dm` files (`areas`, `compat`, `furniture`, `items`, `jobs`, `mapgen`,
   `mobs`, `structures`, `map_adjustment`), plus
   `dun_world/config/` (`map.json` replacement table, `maps_fragment.txt`) and
@@ -53,9 +53,9 @@ DME injection.
 
 `_maps/dun_world.json` is the downstream map config for the generated map. It is
 now part of the upstream CI map matrix (no `exclude_from_ci`), so Integration
-Tests boot the Azure Peak map on every push.
+Tests boot the Twilight Axis map on every push.
 
-Azure Peak (`dun_world`) is hardcoded as the boot map by the modular
+Twilight Axis (`dun_world`) is hardcoded as the boot map by the modular
 `dun_world/force_load.dm` mapping override. It remains listed as a votable map
 in `config/maps.txt` alongside the stock maps.
 `modular_abel/dun_world/config/maps_fragment.txt` is also appended to
@@ -85,11 +85,11 @@ upstream TGS build target, injects the module into the disposable TGS
 checkout's `config/maps.txt`. The generated maps load at runtime from
 `_maps/dun_world.json`, not from the DME.
 
-The replacement table is populated with Azure Peak path -> Vanderlin path pairs.
+The replacement table is populated with Twilight Axis path -> Vanderlin path pairs.
 Some entries still intentionally fall back to broader parent types where no
 local analogue has been confirmed yet.
 
-Azure Peak content ports live in dedicated module files so the replacement
+Twilight Axis content ports live in dedicated module files so the replacement
 table can target faithful types instead of broad parents (sprites under
 `modular_abel/icons/dun_world/`):
 
@@ -106,7 +106,7 @@ table can target faithful types instead of broad parents (sprites under
   fireplace with our warmth mechanics).
 
 The modular `SSmapping/PreInit()` override in `dun_world/force_load.dm`
-force-loads Azure Peak from `_maps/dun_world.json`. Unit tests and random world
+force-loads Twilight Axis from `_maps/dun_world.json`. Unit tests and random world
 generation retain their own map selection paths. The override is also disabled
 for `LOWMEMORYMODE`, `NO_DUNGEON`, and `ABSOLUTE_MINIMUM_MODE` builds.
 
@@ -155,7 +155,7 @@ TODO:
   `/obj/effect/landmark/start/<job>` on the generated map fall through to the
   last-resort spawn (often a wretch landmark). Audit the job roster against the
   remapped landmark set and either add landmark remap rules or curate the job
-  roster for Azure Peak.
+  roster for Twilight Axis.
 - `/turf/closed/mineral/rogue/bedrock` resolves to Vanderlin's
   `/turf/closed/mineral/bedrock`; if the Azure rocky look matters, port the
   `rockyashbed` sprite to a dedicated dun_world subtype.

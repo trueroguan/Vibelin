@@ -206,7 +206,7 @@
 			Fail("Invalid icon_state: Icon object '[icon_file]' [REF(checked.icon)] used in '[checked]' [checked.type] is missing icon state [checked.icon_state].", __FILE__, __LINE__)
 
 /datum/unit_test/create_and_destroy/Run()
-	if(SSmapping?.config?.map_name == "Azure Peak")
+	if(SSmapping?.config?.map_name == "Twilight Axis")
 		return
 	return ..()
 #endif

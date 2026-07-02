@@ -11,9 +11,6 @@
 		offset_y = 0
 	if(!isnum(offset_x))
 		offset_x = 0
-	// The BODY_BEHIND_LAYER half of a genital is meant to peek out from behind a humanoid's legs.
-	// A taur has no humanoid lower body, so that half renders as a stray fragment on the beast back.
-	// Drop it, and nudge the remaining (front-facing) halves onto the taur body per-type offsets.
 	var/list/to_remove = list()
 	for(var/mutable_appearance/appearance as anything in appearance_list)
 		if(appearance.layer == -BODY_BEHIND_LAYER)

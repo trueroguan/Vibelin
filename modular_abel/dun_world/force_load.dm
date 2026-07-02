@@ -2,8 +2,6 @@
 /datum/controller/subsystem/mapping/PreInit()
 	. = ..()
 	config = load_map_config("dun_world", "_maps")
-	// World pre-sizing for this map lives in world_presize.dm's loadWorld() override, not here -
-	// this PreInit() is compiled out under UNIT_TESTS, but CI still loads dun_world via loadWorld().
 
 	var/map = config.map_file
 	if(islist(map))
@@ -21,5 +19,5 @@
 		log_world("Loaded '[map]' map adjustment.")
 		break
 
-	log_world("modular_abel: forced Azure Peak map.")
+	log_world("modular_abel: forced Twilight Axis map.")
 #endif

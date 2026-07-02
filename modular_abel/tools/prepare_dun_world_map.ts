@@ -62,7 +62,7 @@ export async function prepareDunWorldMap() {
   const config = readConfig();
   const replacements = config.replacements || {};
   await generateMap({
-    name: 'Azure Peak',
+    name: 'Twilight Axis',
     source: config.source,
     outputPath: config.output?.path || DUN_WORLD_GENERATED_MAP,
     replacements,
@@ -594,12 +594,6 @@ function emitPopEntries(entries: PopEntry[]): string[] {
   return lines;
 }
 
-// A map model member whose type path doesn't exist in the compile silently drops out of the
-// parsed member list at load (text2path -> null). For objects that means lost content plus the
-// preloader var-leak class of bug; for an AREA it shifts the model's TURF into the area slot and
-// reader.dm does `new /turf/...(null)` -> a "bad loc" runtime AND a missing turf on every tile
-// using that model (this is exactly how the Inquisition chapel/embassy region broke). So: missing
-// area/turf paths fail generation outright, missing movables are reported loudly.
 let declaredTypePathsCache: Set<string> | null = null;
 
 function declaredTypePaths(): Set<string> {
@@ -623,7 +617,6 @@ function declaredTypePaths(): Set<string> {
       } else if (entry.name.endsWith('.dm')) {
         const content = fs.readFileSync(fullPath, 'utf-8');
         for (const match of content.matchAll(/^(\/[A-Za-z0-9_/]+)/gm)) {
-          // DM auto-creates intermediate types, so every prefix is declared too.
           const parts = match[1].split('/');
           for (let i = 2; i <= parts.length; i++) {
             declared.add(parts.slice(0, i).join('/'));
@@ -635,9 +628,6 @@ function declaredTypePaths(): Set<string> {
   for (const root of roots) {
     walk(root);
   }
-  // Self-check: Vanderlin declares ~55k type-path prefixes. A tiny set means the scanner itself
-  // is broken (encoding, glob, cwd), and validation would then "find" thousands of false
-  // missing paths - fail the tool, not the map.
   if (declared.size < 10000) {
     throw new Error(
       `type scanner only found ${declared.size} declared type paths (expected ~55000) - the scanner is broken, not the map.`,
@@ -692,9 +682,6 @@ function escapeRegExp(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// Keep the entry point at the very bottom: top-level await here runs during module evaluation,
-// so it must come after every top-level `let`/`const` above has initialized (calling it mid-file
-// puts later bindings like declaredTypePathsCache in their temporal dead zone -> ReferenceError).
 if (import.meta.main) {
   try {
     await prepareDunWorldMap();

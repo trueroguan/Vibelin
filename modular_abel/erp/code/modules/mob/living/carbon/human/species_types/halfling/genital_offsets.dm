@@ -1,5 +1,3 @@
-// Reopens /datum/species/halfling (core) to tune offset_genitals_m/f - same magnitude as that
-// species' own offset_features_m/f body-drawn offsets (OFFSET_HEAD/BACK/NECK = (0,-5)).
 /datum/species/halfling
 	offset_genitals_m = list(
 		OFFSET_PENIS = list(0,-5),\
