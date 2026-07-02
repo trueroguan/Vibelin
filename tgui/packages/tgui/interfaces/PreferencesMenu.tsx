@@ -558,6 +558,13 @@ export const PreferencesMenu = () => {
     setPreviewFaithId(data.selected_faith_id || null);
   }, [data.open_sequence, data.selected_faith_id]);
 
+  useEffect(() => {
+    const timers = [200, 600, 1500].map((delay) =>
+      setTimeout(() => window.dispatchEvent(new Event('resize')), delay),
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [data.preview_map, menuScale, data.preferences_fullscreen]);
+
   const ageOptions = data.age_options ?? [];
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
@@ -2071,12 +2078,11 @@ export const PreferencesMenu = () => {
                         >
                         {data.preview_map ? (
                           <ByondUi
+                            key={`${data.preview_map}-${menuScale}`}
                             height="100%"
                             params={{
                               id: data.preview_map,
                               type: 'map',
-                              'zoom-mode': 'distort',
-                              'background-color': backdropColor || '#0f0f0f',
                             }}
                           />
                         ) : (

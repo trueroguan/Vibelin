@@ -21,7 +21,7 @@
 
 GLOBAL_LIST_EMPTY(character_setup_chargen_ooc_messages)
 
-GLOBAL_VAR_INIT(character_setup_debug, FALSE)
+GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 /datum/preferences/var/list/character_setup_log_counts
 /datum/preferences/var/character_setup_log_action_name = ""
@@ -638,15 +638,19 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	return result
 
 /datum/preferences/proc/character_setup_ensure_view(mob/user, datum/tgui/ui)
+	var/created = FALSE
 	if(!character_setup_view)
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_[REF(src)]")
+		created = TRUE
 	if(!character_setup_body)
 		character_setup_body = new
+	character_setup_log("VIEW", "ensure_view created=[created] map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible]")
 	character_setup_update_view()
 	character_setup_view.display_to(user, ui?.window)
 
 /datum/preferences/proc/character_setup_teardown_view(mob/user)
+	character_setup_log("VIEW", "teardown map=[character_setup_view?.assigned_map] user=[user?.ckey]")
 	character_setup_hover_acc = null
 	character_setup_hover_color = null
 	character_setup_hover_customizer = null
@@ -657,14 +661,18 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 /datum/preferences/proc/character_setup_update_view()
 	set waitfor = FALSE
 	if(!character_setup_view || !character_setup_body || !pref_species)
+		character_setup_log("VIEW", "update_view SKIP view=[!!character_setup_view] body=[!!character_setup_body] species=[!!pref_species]")
 		return
 	if(character_setup_view_busy)
 		character_setup_view_pending = TRUE
+		character_setup_log("VIEW", "update_view BUSY -> pending")
 		return
 	character_setup_view_busy = TRUE
 	do
 		character_setup_view_pending = FALSE
+		var/_t = world.timeofday
 		character_setup_render_body()
+		character_setup_log_op("render_body", _t, "dir=[character_setup_preview_dir] hover=[character_setup_hover_acc || "none"] species=[pref_species?.id]")
 	while(character_setup_view_pending)
 	character_setup_view_busy = FALSE
 
@@ -715,6 +723,10 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	body.update_inv_head(hide_nonstandard = TRUE)
 	body.setDir(character_setup_preview_dir)
 	character_setup_view.appearance = body.appearance
+	character_setup_view.plane = GAME_PLANE
+	character_setup_view.layer = GAME_PLANE
+	character_setup_view.set_position(1, 1)
+	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] plane=[character_setup_view.plane] layer=[character_setup_view.layer] overlays=[length(character_setup_view.overlays)] icon=[body.icon] underwear=[body.underwear]")
 
 /datum/preferences/proc/character_setup_background_options()
 	return list(
