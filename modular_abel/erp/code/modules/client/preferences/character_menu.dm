@@ -12,6 +12,7 @@
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view_front
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view_side
+/datum/preferences/var/character_setup_view_tile_top = 15
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -649,6 +650,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 /datum/preferences/proc/character_setup_ensure_view(mob/user, datum/tgui/ui)
 	if(!character_setup_view)
+		var/list/view_size = getviewsize(user?.client?.view)
+		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
@@ -657,7 +660,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		character_setup_view_side.generate_view("character_setup_side_[REF(src)]_map")
 		if(!character_setup_body)
 			character_setup_body = new
-		character_setup_log("VIEW", "ensure_view created map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible]")
+		character_setup_log("VIEW", "ensure_view created map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible] tile_top=[character_setup_view_tile_top]")
 		character_setup_update_view()
 	if(character_setup_view_shown)
 		return
@@ -669,7 +672,30 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	character_setup_view_front.display_to_client(target_client)
 	character_setup_view_side.display_to_client(target_client)
 	character_setup_log("VIEW", "displayed maps=[character_setup_view.assigned_map],[character_setup_view_front.assigned_map],[character_setup_view_side.assigned_map] window=[ui.window.id]")
+	character_setup_apply_zoom(user, 2)
 	character_setup_diag_controls(user, "post_display")
+
+/datum/preferences/proc/character_setup_apply_zoom(mob/user, delay = 2)
+	set waitfor = FALSE
+	sleep(delay)
+	if(!user?.client)
+		return
+	for(var/atom/movable/screen/map_view/view as anything in list(character_setup_view, character_setup_view_front, character_setup_view_side))
+		if(!view)
+			continue
+		var/size_raw = winget(user, view.assigned_map, "size")
+		var/list/size_parts = splittext(size_raw, "x")
+		if(length(size_parts) < 2)
+			character_setup_log("ZOOM", "id=[view.assigned_map] size_raw=[size_raw] SKIP")
+			continue
+		var/width = text2num(size_parts[1])
+		var/height = text2num(size_parts[2])
+		if(!width || !height)
+			character_setup_log("ZOOM", "id=[view.assigned_map] size_raw=[size_raw] SKIP")
+			continue
+		var/zoom = max(1, round(min(width / 32, height / 40)))
+		winset(user, view.assigned_map, "zoom=[zoom]")
+		character_setup_log("ZOOM", "id=[view.assigned_map] size=[width]x[height] zoom=[zoom]")
 
 /datum/preferences/proc/character_setup_diag_controls(mob/user, context)
 	set waitfor = FALSE
@@ -775,10 +801,11 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!view)
 		return
 	view.appearance = body.appearance
+	view.render_target = null
 	view.plane = GAME_PLANE
 	view.layer = GAME_PLANE
 	view.dir = view_dir
-	view.set_position(1, 1)
+	view.set_position(1, character_setup_view_tile_top, 0, -8)
 
 /datum/preferences/proc/character_setup_background_options()
 	return list(
@@ -798,6 +825,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!length(patrons))
 		return
 
+	var/datum/patron/current_patron = cspref_selected_patron()
+	var/current_patron_type = current_patron?.type
 	for(var/patron_type in patrons)
 		var/datum/patron/patron = GLOB.patron_list[patron_type]
 		if(!patron)
@@ -814,7 +843,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			"sins" = patron.sins || "",
 			"boons" = patron.boons || "",
 			"available" = available,
-			"selected" = cspref_selected_patron() == patron_type,
+			"selected" = current_patron_type == patron_type,
 		))
 
 /datum/preferences/proc/character_setup_faith_options()
@@ -874,6 +903,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	cspref_set_selected_patron(patron_type)
 	var/datum/patron/selected_patron = cspref_selected_patron()
+	if(selected_patron.associated_faith)
+		write_preference(/datum/preference/choiced/faith, selected_patron.associated_faith)
 	to_chat(user, "<font color='purple'>Patron: [selected_patron.name]</font>")
 	to_chat(user, "<font color='purple'>Domain: [selected_patron.domain]</font>")
 	to_chat(user, "<font color='purple'>Background: [selected_patron.desc]</font>")
@@ -908,6 +939,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		return TRUE
 
 	cspref_set_selected_patron(patron_type)
+	write_preference(/datum/preference/choiced/faith, faith_type)
 	to_chat(user, "<font color='purple'>Faith: [faith.name]</font>")
 	to_chat(user, "<font color='purple'>Background: [faith.desc]</font>")
 	save_character()
@@ -1038,7 +1070,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 
 	data["patron_name"] = patron_name
 	data["faith_name"] = selected_faith ? selected_faith.name : "None"
-	data["selected_patron_id"] = current_patron ? "[current_patron]" : ""
+	data["selected_patron_id"] = current_patron ? "[current_patron.type]" : ""
 	data["selected_faith_id"] = current_faith_type ? "[current_faith_type]" : ""
 	data["faith_options"] = heavy_cache["faith_options"]
 	data["high_job"] = high_job
@@ -1304,12 +1336,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		if("character_setup_preferences_fullscreen")
 			character_setup_preferences_fullscreen = !character_setup_preferences_fullscreen
 			SStgui.update_uis(src)
+			character_setup_apply_zoom(user, 2 SECONDS)
 			return TRUE
 		if("character_setup_preferences_scale")
 			character_setup_preferences_scale = character_setup_sanitize_preferences_scale(href_list["scale"])
 			save_preferences()
-			// No update_uis here: the frontend applies the new scale instantly via local state,
-			// so re-sending the whole UI (doll base64, features, ...) would just cause a visible jerk.
+			character_setup_apply_zoom(user, 2 SECONDS)
 			return TRUE
 		if("character_setup_customizer")
 			validate_customizer_entries()
@@ -1377,7 +1409,6 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 				idx = (idx >= length(dir_cycle)) ? 1 : (idx + 1)
 			character_setup_preview_dir = dir_cycle[idx]
 			update_menu_data(user)
-			character_setup_diag_controls(user, "rotate")
 			return TRUE
 		if("character_setup_preview_background")
 			var/bg_choice = href_list["bg"]

@@ -2102,7 +2102,6 @@ export const PreferencesMenu = () => {
                                 params={{
                                   id: data.preview_map_front,
                                   type: 'map',
-                                  zoom: 0,
                                   letterbox: 1,
                                   'zoom-mode': 'distort',
                                   'background-color': backdropColor || '#0d0d0d',
@@ -2133,7 +2132,6 @@ export const PreferencesMenu = () => {
                                 params={{
                                   id: data.preview_map_side,
                                   type: 'map',
-                                  zoom: 0,
                                   letterbox: 1,
                                   'zoom-mode': 'distort',
                                   'background-color': backdropColor || '#0d0d0d',
@@ -2175,7 +2173,6 @@ export const PreferencesMenu = () => {
                             params={{
                               id: data.preview_map,
                               type: 'map',
-                              zoom: 0,
                               letterbox: 1,
                               'zoom-mode': 'distort',
                               'background-color': backdropColor || '#0d0d0d',
