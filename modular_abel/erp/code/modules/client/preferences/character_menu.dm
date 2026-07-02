@@ -650,11 +650,11 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 /datum/preferences/proc/character_setup_ensure_view(mob/user, datum/tgui/ui)
 	if(!character_setup_view)
 		character_setup_view = new
-		character_setup_view.generate_view("character_setup_[REF(src)]")
+		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
-		character_setup_view_front.generate_view("character_setup_front_[REF(src)]")
+		character_setup_view_front.generate_view("character_setup_front_[REF(src)]_map")
 		character_setup_view_side = new
-		character_setup_view_side.generate_view("character_setup_side_[REF(src)]")
+		character_setup_view_side.generate_view("character_setup_side_[REF(src)]_map")
 		if(!character_setup_body)
 			character_setup_body = new
 		character_setup_log("VIEW", "ensure_view created map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible]")
@@ -669,6 +669,24 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	character_setup_view_front.display_to_client(target_client)
 	character_setup_view_side.display_to_client(target_client)
 	character_setup_log("VIEW", "displayed maps=[character_setup_view.assigned_map],[character_setup_view_front.assigned_map],[character_setup_view_side.assigned_map] window=[ui.window.id]")
+	character_setup_diag_controls(user, "post_display")
+
+/datum/preferences/proc/character_setup_diag_controls(mob/user, context)
+	set waitfor = FALSE
+	if(!GLOB.character_setup_debug || !user?.client)
+		return
+	sleep(1 SECONDS)
+	if(!user?.client)
+		return
+	for(var/atom/movable/screen/map_view/view as anything in list(character_setup_view, character_setup_view_front, character_setup_view_side))
+		if(!view)
+			continue
+		var/list/bound = user.client.screen_maps[view.assigned_map]
+		var/in_screen = (view in user.client.screen) ? "yes" : "NO"
+		var/ctrl = winget(user, view.assigned_map, "parent;type;pos;size;zoom;letterbox;zoom-mode;is-visible")
+		character_setup_log("CTRL", "[context] id=[view.assigned_map] screen_loc=[view.screen_loc] registered=[length(bound)] in_screen=[in_screen] winget=[ctrl ? ctrl : "MISSING"]")
+	var/client_view = winget(user, "mapwindow.map", "zoom;letterbox;zoom-mode;icon-size")
+	character_setup_log("CTRL", "[context] mainmap=[client_view] client_view=[user.client.view] window_scaling=[user.client.window_scaling]")
 
 /datum/preferences/proc/character_setup_teardown_view(mob/user)
 	character_setup_log("VIEW", "teardown map=[character_setup_view?.assigned_map] user=[user?.ckey]")
@@ -1359,6 +1377,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 				idx = (idx >= length(dir_cycle)) ? 1 : (idx + 1)
 			character_setup_preview_dir = dir_cycle[idx]
 			update_menu_data(user)
+			character_setup_diag_controls(user, "rotate")
 			return TRUE
 		if("character_setup_preview_background")
 			var/bg_choice = href_list["bg"]

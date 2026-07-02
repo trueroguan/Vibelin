@@ -2097,11 +2097,15 @@ export const PreferencesMenu = () => {
                               }}
                             >
                               <ByondUi
-                                key={`${data.preview_map_front}-${menuScale}`}
+                                key={`${data.preview_map_front}-${menuScale}-${data.background}`}
                                 height="100%"
                                 params={{
                                   id: data.preview_map_front,
                                   type: 'map',
+                                  zoom: 0,
+                                  letterbox: 1,
+                                  'zoom-mode': 'distort',
+                                  'background-color': backdropColor || '#0d0d0d',
                                 }}
                               />
                             </Box>
@@ -2124,11 +2128,15 @@ export const PreferencesMenu = () => {
                               }}
                             >
                               <ByondUi
-                                key={`${data.preview_map_side}-${menuScale}`}
+                                key={`${data.preview_map_side}-${menuScale}-${data.background}`}
                                 height="100%"
                                 params={{
                                   id: data.preview_map_side,
                                   type: 'map',
+                                  zoom: 0,
+                                  letterbox: 1,
+                                  'zoom-mode': 'distort',
+                                  'background-color': backdropColor || '#0d0d0d',
                                 }}
                               />
                             </Box>
@@ -2162,11 +2170,15 @@ export const PreferencesMenu = () => {
                         >
                         {data.preview_map ? (
                           <ByondUi
-                            key={`${data.preview_map}-${menuScale}`}
+                            key={`${data.preview_map}-${menuScale}-${data.background}`}
                             height="100%"
                             params={{
                               id: data.preview_map,
                               type: 'map',
+                              zoom: 0,
+                              letterbox: 1,
+                              'zoom-mode': 'distort',
+                              'background-color': backdropColor || '#0d0d0d',
                             }}
                           />
                         ) : (
