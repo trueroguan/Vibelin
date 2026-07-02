@@ -434,10 +434,21 @@ class ChatRenderer {
             outputProps[canon_name] = working_value;
           }
           const oldHtml = { __html: childNode.innerHTML };
+          const Element = TGUI_CHAT_COMPONENTS[targetName];
+          // Upstream tgstation guard: persisted chat history can carry data-component names this
+          // build doesn't know; rendering <undefined> throws React #130 for every replayed message.
+          if (!Element) {
+            logger.error(
+              `Error: unknown chat component "${targetName}" in message`,
+              message,
+            );
+            childNode.removeAttribute('data-component');
+            continue;
+          }
+
           while (childNode.firstChild) {
             childNode.removeChild(childNode.firstChild);
           }
-          const Element = TGUI_CHAT_COMPONENTS[targetName];
 
           const reactRoot = createRoot(childNode);
 

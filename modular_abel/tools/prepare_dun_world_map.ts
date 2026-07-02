@@ -78,10 +78,6 @@ export async function prepareDunWorldMap() {
   }
 }
 
-if (import.meta.main) {
-  await prepareDunWorldMap();
-}
-
 function readConfig(): DunWorldMapConfig {
   const configText = fs.readFileSync(CONFIG_PATH, 'utf-8');
   const config = JSON.parse(configText) as DunWorldMapConfig;
@@ -115,6 +111,8 @@ async function generateMap(options: {
   const { text, replacementCount, configuredReplacementCount } =
     applyPathReplacements(structurallyAdjustedText, options.replacements);
   const adjustedText = applyDmmVarAdjustments(text);
+
+  validateMapPaths(adjustedText, options.name);
 
   fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });
   const temporaryOutputPath = `${options.outputPath}.tmp`;
@@ -596,6 +594,90 @@ function emitPopEntries(entries: PopEntry[]): string[] {
   return lines;
 }
 
+// A map model member whose type path doesn't exist in the compile silently drops out of the
+// parsed member list at load (text2path -> null). For objects that means lost content plus the
+// preloader var-leak class of bug; for an AREA it shifts the model's TURF into the area slot and
+// reader.dm does `new /turf/...(null)` -> a "bad loc" runtime AND a missing turf on every tile
+// using that model (this is exactly how the Inquisition chapel/embassy region broke). So: missing
+// area/turf paths fail generation outright, missing movables are reported loudly.
+let declaredTypePathsCache: Set<string> | null = null;
+
+function declaredTypePaths(): Set<string> {
+  if (declaredTypePathsCache) {
+    return declaredTypePathsCache;
+  }
+  const declared = new Set<string>();
+  const roots = ['code', 'modular_abel'];
+  for (const root of roots) {
+    if (!fs.existsSync(root)) {
+      throw new Error(
+        `type scanner can't find ./${root} - run this script from the repository root, not from ${process.cwd()}.`,
+      );
+    }
+  }
+  const walk = (dir: string) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+      } else if (entry.name.endsWith('.dm')) {
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        for (const match of content.matchAll(/^(\/[A-Za-z0-9_/]+)/gm)) {
+          // DM auto-creates intermediate types, so every prefix is declared too.
+          const parts = match[1].split('/');
+          for (let i = 2; i <= parts.length; i++) {
+            declared.add(parts.slice(0, i).join('/'));
+          }
+        }
+      }
+    }
+  };
+  for (const root of roots) {
+    walk(root);
+  }
+  // Self-check: Vanderlin declares ~55k type-path prefixes. A tiny set means the scanner itself
+  // is broken (encoding, glob, cwd), and validation would then "find" thousands of false
+  // missing paths - fail the tool, not the map.
+  if (declared.size < 10000) {
+    throw new Error(
+      `type scanner only found ${declared.size} declared type paths (expected ~55000) - the scanner is broken, not the map.`,
+    );
+  }
+  declaredTypePathsCache = declared;
+  return declared;
+}
+
+function validateMapPaths(mapText: string, mapName: string) {
+  const declared = declaredTypePaths();
+  const missing = new Set<string>();
+  for (const line of mapText.split('\n')) {
+    if (line.startsWith('(')) {
+      break; // model section over, grid data begins
+    }
+    const match = line.match(/^(\/[A-Za-z0-9_/]+)[,{)]/);
+    if (match && !declared.has(match[1])) {
+      missing.add(match[1]);
+    }
+  }
+  if (missing.size === 0) {
+    return;
+  }
+  const fatal = [...missing].filter(
+    (p) => p.startsWith('/area/') || p.startsWith('/turf/'),
+  );
+  const dropped = [...missing].filter((p) => !fatal.includes(p));
+  if (dropped.length > 0) {
+    console.warn(
+      `modular_abel: WARNING - ${mapName} uses ${dropped.length} object path(s) missing from the compile (content will silently not spawn):\n  ${dropped.join('\n  ')}`,
+    );
+  }
+  if (fatal.length > 0) {
+    throw new Error(
+      `${mapName} uses area/turf path(s) missing from the compile - this corrupts every tile using them ("bad loc" runtimes + missing turfs). Port these types (see modular_abel/dun_world/areas.dm) or fix the replacement table:\n  ${fatal.join('\n  ')}`,
+    );
+  }
+}
+
 function countPatternOccurrences(text: string, pattern: RegExp): number {
   let count = 0;
 
@@ -608,4 +690,22 @@ function countPatternOccurrences(text: string, pattern: RegExp): number {
 
 function escapeRegExp(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Keep the entry point at the very bottom: top-level await here runs during module evaluation,
+// so it must come after every top-level `let`/`const` above has initialized (calling it mid-file
+// puts later bindings like declaredTypePathsCache in their temporal dead zone -> ReferenceError).
+if (import.meta.main) {
+  try {
+    await prepareDunWorldMap();
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    console.error('');
+    console.error('============================================================');
+    console.error(' MAP GENERATION FAILED - the generated .dmm was NOT updated');
+    console.error('============================================================');
+    console.error(reason);
+    console.error('============================================================');
+    process.exit(1);
+  }
 }

@@ -135,6 +135,17 @@
 /area/rogue/indoors/inq/basement
 	name = "Azure Peak - Indoors / Inquisition / Basement"
 
+// chapel/embassy were missed in the original port. A map model whose area path doesn't compile
+// loses that member at parse (text2path -> null), which makes the model's TURF the last member;
+// reader.dm's build_coordinate then treats it as the area and does `new /turf/...(null)` -> the
+// "bad loc" runtime on every chapel/embassy tile (441 on file-z3 + 145 on file-z4 = the exact 586
+// runtimes CI counted). The turf never gets placed either, so the building was loading half-empty.
+/area/rogue/indoors/inq/chapel
+	name = "Azure Peak - Indoors / Inquisition / Chapel"
+
+/area/rogue/indoors/inq/embassy
+	name = "Azure Peak - Indoors / Inquisition / Embassy"
+
 /area/rogue/indoors/inq/import
 	name = "Azure Peak - Indoors / Inquisition / Import"
 
