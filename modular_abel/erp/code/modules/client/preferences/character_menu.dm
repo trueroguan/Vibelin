@@ -15,7 +15,8 @@
 /datum/preferences/var/character_setup_view_tile_top = 15
 /datum/preferences/var/character_setup_view_tile_center = 8
 /datum/preferences/var/character_setup_view_scale = 12
-/datum/preferences/var/character_setup_view_head_offset = 2
+/datum/preferences/var/character_setup_view_feet_margin = 20
+/datum/preferences/var/character_setup_view_last_flat = ""
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -661,7 +662,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!ui || QDELETED(ui))
 		return
 	if(!character_setup_view)
-		var/list/view_size = getviewsize(user?.client?.view)
+		var/client/view_client = user?.client
+		var/list/view_size = view_client?.view ? getviewsize(view_client.view) : null
 		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
 		character_setup_view_tile_center = max(1, round((character_setup_view_tile_top + 1) / 2))
 		character_setup_view_scale = max(1, character_setup_view_tile_top - 2)
@@ -700,7 +702,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		return
 	var/client/C = user.client
 	var/window_id = character_setup_active_window_id(user)
-	character_setup_log("CTRL", "[context] === geometry dump === window_id=[window_id] view=[C.view] scaling=[C.window_scaling] view_scale=[character_setup_current_view_scale()] tile_center=[character_setup_view_tile_center] head_offset=[character_setup_view_head_offset]")
+	character_setup_log("CTRL", "[context] === geometry dump === window_id=[window_id] view=[C.view] scaling=[C.window_scaling] tile_center=[character_setup_view_tile_center] feet_margin=[character_setup_view_feet_margin] last_flat=[character_setup_view_last_flat]")
 	if(window_id)
 		character_setup_log("CTRL", "[context] WINDOW [window_id] winget=[winget(user, window_id, "size;pos;is-visible;is-maximized;inner-size")]")
 		character_setup_log("CTRL", "[context] WINDOW.map winget=[winget(user, "[window_id].map", "size;pos;is-visible")]")
@@ -799,23 +801,206 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
 	character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
 	character_setup_apply_to_view(character_setup_view_side, body, EAST)
-	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] dir=[character_setup_view.dir] body_dir=[body.dir] scale=[character_setup_current_view_scale()] head_offset=[character_setup_view_head_offset] overlays=[length(character_setup_view.overlays)] icon=[body.icon] underwear=[body.underwear]")
+	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] dir=[character_setup_view.dir] body_dir=[body.dir] flat=[character_setup_view_last_flat] feet_margin=[character_setup_view_feet_margin] icon=[character_setup_view.icon] underwear=[body.underwear]")
+
+/proc/character_setup_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
+	#define CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
+		for (var/i in 1 to length(process)) { \
+			var/image/current = process[i]; \
+			if (!current) { \
+				continue; \
+			} \
+			if (current.plane != FLOAT_PLANE && current.plane != appearance.plane) { \
+				continue; \
+			} \
+			var/current_layer = current.layer; \
+			if (current_layer < 0) { \
+				if (current_layer <= -1000) { \
+					return flat; \
+				} \
+				current_layer = base_layer + appearance.layer + current_layer / 1000; \
+			} \
+			for (var/index_to_compare_to in 1 to length(layers)) { \
+				var/compare_to = layers[index_to_compare_to]; \
+				if (current_layer < layers[compare_to]) { \
+					layers.Insert(index_to_compare_to, current); \
+					break; \
+				} \
+			} \
+			layers[current] = current_layer; \
+		}
+
+	var/static/icon/flat_template = icon('icons/blanks/32x32.dmi', "nothing")
+	var/icon/flat = icon(flat_template)
+
+	if(!appearance || appearance.alpha <= 0)
+		return flat
+
+	if(start)
+		if(!defdir)
+			defdir = appearance.dir
+		if(!deficon)
+			deficon = appearance.icon
+		if(!defstate)
+			defstate = appearance.icon_state
+		if(!defblend)
+			defblend = appearance.blend_mode
+
+	var/curicon = appearance.icon || deficon
+	var/curstate = appearance.icon_state || defstate
+	var/curdir = (!appearance.dir || appearance.dir == SOUTH) ? defdir : appearance.dir
+
+	var/render_icon = curicon
+
+	if(render_icon)
+		if(!icon_exists(curicon, curstate))
+			if(icon_exists(curicon, ""))
+				curstate = ""
+			else
+				render_icon = FALSE
+
+	var/base_icon_dir
+
+	if(render_icon)
+		if (curdir != SOUTH)
+			if(!length(icon_states(icon(curicon, curstate, NORTH))))
+				base_icon_dir = SOUTH
+
+		var/list/icon_dimensions = get_icon_dimensions(curicon)
+		var/icon_width = icon_dimensions["width"]
+		var/icon_height = icon_dimensions["height"]
+		if(icon_width != 32 || icon_height != 32)
+			flat.Scale(icon_width, icon_height)
+
+	if(!base_icon_dir)
+		base_icon_dir = curdir
+
+	var/curblend = appearance.blend_mode || defblend
+
+	if(length(appearance.overlays) || length(appearance.underlays))
+		var/list/layers = list()
+		var/image/copy
+		if(render_icon)
+			copy = image(icon=curicon, icon_state=curstate, layer=appearance.layer, dir=base_icon_dir)
+			copy.color = appearance.color
+			copy.alpha = appearance.alpha
+			copy.blend_mode = curblend
+			layers[copy] = appearance.layer
+
+		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
+		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
+
+		var/icon/add
+
+		var/flatX1 = 1
+		var/flatX2 = flat.Width()
+		var/flatY1 = 1
+		var/flatY2 = flat.Height()
+
+		var/addX1 = 0
+		var/addX2 = 0
+		var/addY1 = 0
+		var/addY2 = 0
+
+		for(var/image/layer_image as anything in layers)
+			if(layer_image.alpha == 0)
+				continue
+
+			if(layer_image == copy)
+				curblend = BLEND_OVERLAY
+				add = icon(layer_image.icon, layer_image.icon_state, base_icon_dir)
+			else
+				add = character_setup_get_flat_icon(image(layer_image), curdir, curicon, curstate, curblend, FALSE, no_anim)
+			if(!add)
+				continue
+
+			addX1 = min(flatX1, layer_image.pixel_x + 1)
+			addX2 = max(flatX2, layer_image.pixel_x + add.Width())
+			addY1 = min(flatY1, layer_image.pixel_y + 1)
+			addY2 = max(flatY2, layer_image.pixel_y + add.Height())
+
+			if (
+				addX1 != flatX1 \
+				|| addX2 != flatX2 \
+				|| addY1 != flatY1 \
+				|| addY2 != flatY2 \
+			)
+				flat.Crop(
+					addX1 - flatX1 + 1,
+					addY1 - flatY1 + 1,
+					addX2 - flatX1 + 1,
+					addY2 - flatY1 + 1
+				)
+
+				flatX1 = addX1
+				flatX2 = addX2
+				flatY1 = addY1
+				flatY2 = addY2
+
+			flat.Blend(add, blendMode2iconMode(curblend), layer_image.pixel_x + 2 - flatX1, layer_image.pixel_y + 2 - flatY1)
+
+		if(appearance.color)
+			if(islist(appearance.color))
+				flat.MapColors(arglist(appearance.color))
+			else
+				flat.Blend(appearance.color, ICON_MULTIPLY)
+
+		if(appearance.alpha < 255)
+			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
+
+
+		if(no_anim)
+			var/icon/cleaned = new /icon()
+			cleaned.Insert(flat, "", SOUTH, 1, 0)
+			return cleaned
+		else
+			return icon(flat, "", SOUTH)
+	else if (render_icon)
+		var/icon/final_icon = icon(icon(curicon, curstate, base_icon_dir), "", SOUTH, no_anim ? TRUE : null)
+
+		if (appearance.alpha < 255)
+			final_icon.Blend(rgb(255,255,255, appearance.alpha), ICON_MULTIPLY)
+
+		if (appearance.color)
+			if (islist(appearance.color))
+				final_icon.MapColors(arglist(appearance.color))
+			else
+				final_icon.Blend(appearance.color, ICON_MULTIPLY)
+
+		return final_icon
+
+	#undef CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS
+
 
 /datum/preferences/proc/character_setup_apply_to_view(atom/movable/screen/map_view/view, mob/living/carbon/human/dummy/body, view_dir)
 	if(!view)
 		return
-	view.appearance = body.appearance
-	view.render_target = null
-	view.appearance_flags = KEEP_TOGETHER | PIXEL_SCALE
+	var/icon/flat = character_setup_get_flat_icon(body, view_dir, no_anim = TRUE)
+	if(!isicon(flat))
+		return
+	view.overlays = null
+	view.underlays = null
+	view.transform = null
+	view.appearance = null
+	view.icon = flat
+	view.icon_state = ""
 	view.plane = GAME_PLANE
 	view.layer = GAME_PLANE
-	view.dir = view_dir
-	var/view_scale = character_setup_current_view_scale()
+	view.appearance_flags = PIXEL_SCALE
+	view.dir = SOUTH
+	var/iw = flat.Width()
+	var/ih = flat.Height()
+	var/map_px = character_setup_view_tile_top * 32
+	var/margin = character_setup_view_feet_margin
+	var/vscale = max(1, round(min((map_px - 2 * margin) / max(ih, 1), (map_px - 2 * margin) / max(iw, 1))))
 	var/matrix/scale_matrix = matrix()
-	scale_matrix.Scale(view_scale)
+	scale_matrix.Scale(vscale)
 	view.transform = scale_matrix
-	var/head_bias = character_setup_view_head_offset * view_scale
-	view.set_position(character_setup_view_tile_center, character_setup_view_tile_center, 0, -head_bias)
+	var/base = (character_setup_view_tile_center - 1) * 32
+	var/by = margin + (ih / 2) * (vscale - 1)
+	var/bx = round(map_px / 2 - iw / 2)
+	view.set_position(character_setup_view_tile_center, character_setup_view_tile_center, bx - base, by - base)
+	character_setup_view_last_flat = "[iw]x[ih] scale=[vscale]"
 
 /datum/preferences/proc/character_setup_current_view_scale()
 	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
