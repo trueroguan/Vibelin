@@ -13,6 +13,8 @@
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view_front
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view_side
 /datum/preferences/var/character_setup_view_tile_top = 15
+/datum/preferences/var/character_setup_view_tile_center = 8
+/datum/preferences/var/character_setup_view_scale = 12
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -26,6 +28,11 @@
 GLOBAL_LIST_EMPTY(character_setup_chargen_ooc_messages)
 
 GLOBAL_VAR_INIT(character_setup_debug, TRUE)
+
+/proc/character_setup_push_all_prefs()
+	for(var/client/lobby_client as anything in GLOB.clients)
+		if(lobby_client?.prefs)
+			SStgui.update_uis(lobby_client.prefs)
 
 /datum/preferences/var/list/character_setup_log_counts
 /datum/preferences/var/character_setup_log_action_name = ""
@@ -539,7 +546,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "PreferencesMenu", "Character Setup", window_width, window_height)
-		ui.set_autoupdate(TRUE)
+		ui.set_autoupdate(FALSE)
 		ui.open()
 	character_setup_ensure_view(user, ui)
 
@@ -569,6 +576,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			ready_button.update_appearance(UPDATE_ICON)
 			break
 		SEND_SIGNAL(lobby_hud, COMSIG_HUD_PLAYER_READY_TOGGLE)
+	character_setup_push_all_prefs()
 	return TRUE
 
 /mob/dead/new_player/proc/character_setup_chargen_join_round()
@@ -652,6 +660,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!character_setup_view)
 		var/list/view_size = getviewsize(user?.client?.view)
 		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
+		character_setup_view_tile_center = max(1, round((character_setup_view_tile_top + 1) / 2))
+		character_setup_view_scale = max(1, character_setup_view_tile_top - 2)
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
@@ -665,37 +675,17 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(character_setup_view_shown)
 		return
 	var/client/target_client = user?.client
-	if(!target_client || !ui?.window?.visible)
+	if(!target_client || QDELETED(ui) || !ui.window)
+		return
+	if(!ui.window.visible)
+		addtimer(CALLBACK(src, PROC_REF(character_setup_ensure_view), user, ui), 5, TIMER_UNIQUE)
 		return
 	character_setup_view_shown = TRUE
 	character_setup_view.display_to_client(target_client)
 	character_setup_view_front.display_to_client(target_client)
 	character_setup_view_side.display_to_client(target_client)
-	character_setup_log("VIEW", "displayed maps=[character_setup_view.assigned_map],[character_setup_view_front.assigned_map],[character_setup_view_side.assigned_map] window=[ui.window.id]")
-	character_setup_apply_zoom(user, 2)
+	character_setup_log("VIEW", "displayed maps=[character_setup_view.assigned_map],[character_setup_view_front.assigned_map],[character_setup_view_side.assigned_map] window=[ui.window.id] tile_center=[character_setup_view_tile_center] scale=[character_setup_view_scale]")
 	character_setup_diag_controls(user, "post_display")
-
-/datum/preferences/proc/character_setup_apply_zoom(mob/user, delay = 2)
-	set waitfor = FALSE
-	sleep(delay)
-	if(!user?.client)
-		return
-	for(var/atom/movable/screen/map_view/view as anything in list(character_setup_view, character_setup_view_front, character_setup_view_side))
-		if(!view)
-			continue
-		var/size_raw = winget(user, view.assigned_map, "size")
-		var/list/size_parts = splittext(size_raw, "x")
-		if(length(size_parts) < 2)
-			character_setup_log("ZOOM", "id=[view.assigned_map] size_raw=[size_raw] SKIP")
-			continue
-		var/width = text2num(size_parts[1])
-		var/height = text2num(size_parts[2])
-		if(!width || !height)
-			character_setup_log("ZOOM", "id=[view.assigned_map] size_raw=[size_raw] SKIP")
-			continue
-		var/zoom = max(1, round(min(width / 32, height / 40)))
-		winset(user, view.assigned_map, "zoom=[zoom]")
-		character_setup_log("ZOOM", "id=[view.assigned_map] size=[width]x[height] zoom=[zoom]")
 
 /datum/preferences/proc/character_setup_diag_controls(mob/user, context)
 	set waitfor = FALSE
@@ -805,7 +795,19 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	view.plane = GAME_PLANE
 	view.layer = GAME_PLANE
 	view.dir = view_dir
-	view.set_position(1, character_setup_view_tile_top, 0, -8)
+	var/view_scale = character_setup_current_view_scale()
+	var/matrix/scale_matrix = matrix()
+	scale_matrix.Scale(view_scale)
+	view.transform = scale_matrix
+	var/base_px = (character_setup_view_tile_top - view_scale) * 16
+	var/tile = 1 + round(base_px / 32)
+	var/px = base_px - (tile - 1) * 32
+	view.set_position(tile, tile, px, px)
+
+/datum/preferences/proc/character_setup_current_view_scale()
+	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
+		return max(1, round(character_setup_view_scale * 0.55))
+	return character_setup_view_scale
 
 /datum/preferences/proc/character_setup_background_options()
 	return list(
@@ -969,6 +971,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		user.client.lobbyooc(message)
 	else
 		user.client.ooc(message)
+	character_setup_push_all_prefs()
 	return TRUE
 
 /datum/preferences/ui_data(mob/user)
@@ -1336,12 +1339,10 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		if("character_setup_preferences_fullscreen")
 			character_setup_preferences_fullscreen = !character_setup_preferences_fullscreen
 			SStgui.update_uis(src)
-			character_setup_apply_zoom(user, 2 SECONDS)
 			return TRUE
 		if("character_setup_preferences_scale")
 			character_setup_preferences_scale = character_setup_sanitize_preferences_scale(href_list["scale"])
 			save_preferences()
-			character_setup_apply_zoom(user, 2 SECONDS)
 			return TRUE
 		if("character_setup_customizer")
 			validate_customizer_entries()

@@ -567,6 +567,23 @@ export const PreferencesMenu = () => {
     return () => timers.forEach(clearTimeout);
   }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen]);
 
+  const [localRoundSeconds, setLocalRoundSeconds] = useState<number>(-1);
+
+  useEffect(() => {
+    setLocalRoundSeconds(Number(data.round_start_seconds ?? -1));
+  }, [data.round_start_seconds]);
+
+  useEffect(() => {
+    if (localRoundSeconds <= 0) {
+      return;
+    }
+    const timer = setTimeout(
+      () => setLocalRoundSeconds(localRoundSeconds - 1),
+      1000,
+    );
+    return () => clearTimeout(timer);
+  }, [localRoundSeconds]);
+
   const ageOptions = data.age_options ?? [];
   const erpEnabled = asBool(data.erp_enabled);
   const loadouts = data.loadouts ?? [];
@@ -652,7 +669,7 @@ export const PreferencesMenu = () => {
     .filter(Boolean)
     .join('  /  ');
   const roundStatus = display(data.round_start_status, 'Unknown');
-  const roundSeconds = Number(data.round_start_seconds ?? -1);
+  const roundSeconds = localRoundSeconds;
   const roundCountdown =
     roundStatus === 'Round Started' || roundStatus === 'Setting Up'
       ? roundStatus
@@ -2090,7 +2107,8 @@ export const PreferencesMenu = () => {
                             <Box
                               style={{
                                 position: 'relative',
-                                height: '120px',
+                                width: '100%',
+                                aspectRatio: '1 / 1',
                                 ...(backdropColor
                                   ? { backgroundColor: backdropColor }
                                   : {}),
@@ -2120,7 +2138,8 @@ export const PreferencesMenu = () => {
                             <Box
                               style={{
                                 position: 'relative',
-                                height: '120px',
+                                width: '100%',
+                                aspectRatio: '1 / 1',
                                 ...(backdropColor
                                   ? { backgroundColor: backdropColor }
                                   : {}),
@@ -2159,8 +2178,10 @@ export const PreferencesMenu = () => {
                         <Box
                           style={{
                             position: 'relative',
-                            height: '100%',
                             width: '100%',
+                            aspectRatio: '1 / 1',
+                            maxHeight: '100%',
+                            margin: '0 auto',
                             ...(backdropColor
                               ? { backgroundColor: backdropColor }
                               : {}),
