@@ -978,6 +978,14 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/icon/flat = character_setup_get_flat_icon(body, view_dir, no_anim = TRUE)
 	if(!isicon(flat))
 		return
+	var/iw = flat.Width()
+	var/ih = flat.Height()
+	var/map_px = character_setup_view_tile_top * 32
+	var/margin = character_setup_view_feet_margin
+	var/vscale = max(1, round(min((map_px - 2 * margin) / max(ih, 1), (map_px - 2 * margin) / max(iw, 1))))
+	var/scaled_w = iw * vscale
+	var/scaled_h = ih * vscale
+	flat.Scale(scaled_w, scaled_h)
 	view.overlays = null
 	view.underlays = null
 	view.transform = null
@@ -988,19 +996,10 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	view.layer = GAME_PLANE
 	view.appearance_flags = PIXEL_SCALE
 	view.dir = SOUTH
-	var/iw = flat.Width()
-	var/ih = flat.Height()
-	var/map_px = character_setup_view_tile_top * 32
-	var/margin = character_setup_view_feet_margin
-	var/vscale = max(1, round(min((map_px - 2 * margin) / max(ih, 1), (map_px - 2 * margin) / max(iw, 1))))
-	var/matrix/scale_matrix = matrix()
-	scale_matrix.Scale(vscale)
-	view.transform = scale_matrix
-	var/base = (character_setup_view_tile_center - 1) * 32
-	var/by = margin + (ih / 2) * (vscale - 1)
-	var/bx = round(map_px / 2 - iw / 2)
-	view.set_position(character_setup_view_tile_center, character_setup_view_tile_center, bx - base, by - base)
-	character_setup_view_last_flat = "[iw]x[ih] scale=[vscale]"
+	var/bx = round((map_px - scaled_w) / 2)
+	var/by = margin
+	view.set_position(1, 1, bx, by)
+	character_setup_view_last_flat = "src=[iw]x[ih] scaled=[scaled_w]x[scaled_h] map=[map_px] anchor=[bx],[by] notransform"
 
 /datum/preferences/proc/character_setup_current_view_scale()
 	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
