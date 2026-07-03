@@ -657,11 +657,13 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	return result
 
 /datum/preferences/proc/character_setup_ensure_view(mob/user, datum/tgui/ui)
+	if(!ui || QDELETED(ui))
+		return
 	if(!character_setup_view)
 		var/list/view_size = getviewsize(user?.client?.view)
 		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
 		character_setup_view_tile_center = max(1, round((character_setup_view_tile_top + 1) / 2))
-		character_setup_view_scale = max(1, character_setup_view_tile_top - 2)
+		character_setup_view_scale = max(1, round(character_setup_view_tile_top * 0.72))
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
@@ -799,10 +801,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/matrix/scale_matrix = matrix()
 	scale_matrix.Scale(view_scale)
 	view.transform = scale_matrix
-	var/base_px = (character_setup_view_tile_top - view_scale) * 16
-	var/tile = 1 + round(base_px / 32)
-	var/px = base_px - (tile - 1) * 32
-	view.set_position(tile, tile, px, px)
+	view.set_position(character_setup_view_tile_center, character_setup_view_tile_center)
 
 /datum/preferences/proc/character_setup_current_view_scale()
 	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
