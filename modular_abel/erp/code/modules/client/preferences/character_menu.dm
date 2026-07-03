@@ -17,6 +17,7 @@
 /datum/preferences/var/character_setup_view_scale = 12
 /datum/preferences/var/character_setup_view_feet_margin = 20
 /datum/preferences/var/character_setup_view_last_flat = ""
+/datum/preferences/var/character_setup_render_main_only = FALSE
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -797,11 +798,13 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	body.update_inv_belt(hide_experimental = TRUE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
-	body.setDir(character_setup_preview_dir)
+	var/main_only = character_setup_render_main_only
+	character_setup_render_main_only = FALSE
 	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
-	character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
-	character_setup_apply_to_view(character_setup_view_side, body, EAST)
-	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] dir=[character_setup_view.dir] body_dir=[body.dir] flat=[character_setup_view_last_flat] feet_margin=[character_setup_view_feet_margin] icon=[character_setup_view.icon] underwear=[body.underwear]")
+	if(!main_only)
+		character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
+		character_setup_apply_to_view(character_setup_view_side, body, EAST)
+	character_setup_log("VIEW", "render done main_only=[main_only] dir=[character_setup_preview_dir] flat=[character_setup_view_last_flat] feet_margin=[character_setup_view_feet_margin] underwear=[body.underwear]")
 
 /proc/character_setup_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
 	#define CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
@@ -975,6 +978,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 /datum/preferences/proc/character_setup_apply_to_view(atom/movable/screen/map_view/view, mob/living/carbon/human/dummy/body, view_dir)
 	if(!view)
 		return
+	body.setDir(view_dir)
 	var/icon/flat = character_setup_get_flat_icon(body, view_dir, no_anim = TRUE)
 	if(!isicon(flat))
 		return
@@ -1611,7 +1615,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			else
 				idx = (idx >= length(dir_cycle)) ? 1 : (idx + 1)
 			character_setup_preview_dir = dir_cycle[idx]
-			update_menu_data(user)
+			if(character_setup_body && pref_species)
+				character_setup_apply_to_view(character_setup_view, character_setup_body, character_setup_preview_dir)
 			return TRUE
 		if("character_setup_preview_background")
 			var/bg_choice = href_list["bg"]
@@ -1652,6 +1657,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 				character_setup_hover_acc = null
 				character_setup_hover_color = null
 				character_setup_hover_customizer = null
+				character_setup_render_main_only = TRUE
 				character_setup_update_view()
 				return TRUE
 			if(new_acc == character_setup_hover_acc && href_list["color"] == character_setup_hover_color && new_customizer == character_setup_hover_customizer)
@@ -1661,6 +1667,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			character_setup_hover_acc = new_acc
 			character_setup_hover_color = href_list["color"]
 			character_setup_hover_customizer = new_customizer
+			character_setup_render_main_only = TRUE
 			character_setup_update_view()
 			return TRUE
 	if(character_setup_handle_system_action(user, href_list))
