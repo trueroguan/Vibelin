@@ -15,6 +15,7 @@
 /datum/preferences/var/character_setup_view_tile_top = 15
 /datum/preferences/var/character_setup_view_tile_center = 8
 /datum/preferences/var/character_setup_view_scale = 12
+/datum/preferences/var/character_setup_view_head_offset = 6
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -663,7 +664,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		var/list/view_size = getviewsize(user?.client?.view)
 		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
 		character_setup_view_tile_center = max(1, round((character_setup_view_tile_top + 1) / 2))
-		character_setup_view_scale = max(1, round(character_setup_view_tile_top * 0.72))
+		character_setup_view_scale = max(1, round(character_setup_view_tile_top * 0.66))
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
@@ -680,6 +681,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	if(!target_client || QDELETED(ui) || !ui.window)
 		return
 	if(!ui.window.visible)
+		character_setup_log("VIEW", "await window visible, retry queued")
 		addtimer(CALLBACK(src, PROC_REF(character_setup_ensure_view), user, ui), 5, TIMER_UNIQUE)
 		return
 	character_setup_view_shown = TRUE
@@ -787,7 +789,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
 	character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
 	character_setup_apply_to_view(character_setup_view_side, body, EAST)
-	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] dir=[character_setup_view.dir] body_dir=[body.dir] plane=[character_setup_view.plane] layer=[character_setup_view.layer] overlays=[length(character_setup_view.overlays)] icon=[body.icon] underwear=[body.underwear]")
+	character_setup_log("VIEW", "render done screen_loc=[character_setup_view.screen_loc] dir=[character_setup_view.dir] body_dir=[body.dir] scale=[character_setup_current_view_scale()] head_offset=[character_setup_view_head_offset] overlays=[length(character_setup_view.overlays)] icon=[body.icon] underwear=[body.underwear]")
 
 /datum/preferences/proc/character_setup_apply_to_view(atom/movable/screen/map_view/view, mob/living/carbon/human/dummy/body, view_dir)
 	if(!view)
@@ -801,7 +803,8 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	var/matrix/scale_matrix = matrix()
 	scale_matrix.Scale(view_scale)
 	view.transform = scale_matrix
-	view.set_position(character_setup_view_tile_center, character_setup_view_tile_center)
+	var/head_bias = character_setup_view_head_offset * view_scale
+	view.set_position(character_setup_view_tile_center, character_setup_view_tile_center, 0, -head_bias)
 
 /datum/preferences/proc/character_setup_current_view_scale()
 	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
@@ -1337,10 +1340,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			return character_setup_round_action(user)
 		if("character_setup_preferences_fullscreen")
 			character_setup_preferences_fullscreen = !character_setup_preferences_fullscreen
+			character_setup_log("WINDOW", "fullscreen=[character_setup_preferences_fullscreen]")
 			SStgui.update_uis(src)
 			return TRUE
 		if("character_setup_preferences_scale")
 			character_setup_preferences_scale = character_setup_sanitize_preferences_scale(href_list["scale"])
+			character_setup_log("WINDOW", "menu_scale=[character_setup_preferences_scale]")
 			save_preferences()
 			return TRUE
 		if("character_setup_customizer")

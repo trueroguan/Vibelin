@@ -2115,7 +2115,7 @@ export const PreferencesMenu = () => {
                               }}
                             >
                               <ByondUi
-                                key={`${data.preview_map_front}-${menuScale}-${data.background}`}
+                                key={`${data.preview_map_front}-${data.background}`}
                                 height="100%"
                                 params={{
                                   id: data.preview_map_front,
@@ -2146,7 +2146,7 @@ export const PreferencesMenu = () => {
                               }}
                             >
                               <ByondUi
-                                key={`${data.preview_map_side}-${menuScale}-${data.background}`}
+                                key={`${data.preview_map_side}-${data.background}`}
                                 height="100%"
                                 params={{
                                   id: data.preview_map_side,
@@ -2189,7 +2189,7 @@ export const PreferencesMenu = () => {
                         >
                         {data.preview_map ? (
                           <ByondUi
-                            key={`${data.preview_map}-${menuScale}-${data.background}`}
+                            key={`${data.preview_map}-${data.background}`}
                             height="100%"
                             params={{
                               id: data.preview_map,
