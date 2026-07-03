@@ -1031,8 +1031,8 @@ export const PreferencesMenu = () => {
 
     return (
       <Panel title="Choose Faith" icon="asterisk">
-        <Stack>
-          <Stack.Item basis="265px">
+        <Stack wrap>
+          <Stack.Item basis="220px" style={{ minWidth: 0 }}>
             <Box
               p={0.5}
               style={{
@@ -1084,7 +1084,7 @@ export const PreferencesMenu = () => {
             </Box>
           </Stack.Item>
 
-          <Stack.Item grow basis={0}>
+          <Stack.Item grow basis="260px" style={{ minWidth: 0 }}>
             {inspectedFaith ? (
               <Section
                 fill
@@ -2171,17 +2171,25 @@ export const PreferencesMenu = () => {
                   </Stack>
                 </Stack.Item>
 
-                <Stack.Item basis="320px">
+                <Stack.Item basis="440px">
                   <Section fill title="Looking Glass">
                     <Stack vertical fill>
                       <Stack.Item grow>
                         <Box
                           style={{
-                            position: 'relative',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
                             width: '100%',
+                          }}
+                        >
+                        <Box
+                          style={{
+                            position: 'relative',
+                            height: '100%',
                             aspectRatio: '1 / 1',
-                            maxHeight: '100%',
-                            margin: '0 auto',
+                            maxWidth: '100%',
                             ...(backdropColor
                               ? { backgroundColor: backdropColor }
                               : {}),
@@ -2215,6 +2223,7 @@ export const PreferencesMenu = () => {
                             <Icon name="user" size={6} color="label" />
                           </Box>
                         )}
+                        </Box>
                       </Box>
                     </Stack.Item>
                     <Stack.Item>

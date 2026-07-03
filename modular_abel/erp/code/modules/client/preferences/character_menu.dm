@@ -15,7 +15,7 @@
 /datum/preferences/var/character_setup_view_tile_top = 15
 /datum/preferences/var/character_setup_view_tile_center = 8
 /datum/preferences/var/character_setup_view_scale = 12
-/datum/preferences/var/character_setup_view_head_offset = 6
+/datum/preferences/var/character_setup_view_head_offset = 4
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -664,7 +664,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		var/list/view_size = getviewsize(user?.client?.view)
 		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
 		character_setup_view_tile_center = max(1, round((character_setup_view_tile_top + 1) / 2))
-		character_setup_view_scale = max(1, round(character_setup_view_tile_top * 0.66))
+		character_setup_view_scale = max(1, round(character_setup_view_tile_top * 0.7))
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
