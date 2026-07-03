@@ -546,6 +546,9 @@ export const PreferencesMenu = () => {
   const [oocMessage, setOocMessage] = useState('');
   const [oocExpanded, setOocExpanded] = useState(true);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dollBoxRef = useRef<HTMLDivElement>(null);
+  const frontBoxRef = useRef<HTMLDivElement>(null);
+  const sideBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setActiveSection(mapTab(data.initial_tab));
@@ -566,6 +569,29 @@ export const PreferencesMenu = () => {
     );
     return () => timers.forEach(clearTimeout);
   }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen]);
+
+  useEffect(() => {
+    const report = () => {
+      const m = dollBoxRef.current?.getBoundingClientRect();
+      const f = frontBoxRef.current?.getBoundingClientRect();
+      const s = sideBoxRef.current?.getBoundingClientRect();
+      act('pref', {
+        preference: 'character_setup_report_geometry',
+        main_w: Math.round(m?.width ?? 0),
+        main_h: Math.round(m?.height ?? 0),
+        front_w: Math.round(f?.width ?? 0),
+        front_h: Math.round(f?.height ?? 0),
+        side_w: Math.round(s?.width ?? 0),
+        side_h: Math.round(s?.height ?? 0),
+        win_w: Math.round(window.innerWidth),
+        win_h: Math.round(window.innerHeight),
+        dpr: window.devicePixelRatio,
+        menu_scale: menuScale,
+      });
+    };
+    const t = setTimeout(report, 900);
+    return () => clearTimeout(t);
+  }, [data.preview_map, menuScale, data.preferences_fullscreen]);
 
   const [localRoundSeconds, setLocalRoundSeconds] = useState<number>(-1);
 
@@ -2104,18 +2130,18 @@ export const PreferencesMenu = () => {
                       <Stack.Item>
                         <Stack>
                           <Stack.Item grow basis={0}>
-                            <Box
+                            <div
+                              ref={frontBoxRef}
                               style={{
                                 position: 'relative',
                                 width: '100%',
                                 aspectRatio: '1 / 1',
-                                ...(backdropColor
-                                  ? { backgroundColor: backdropColor }
-                                  : {}),
+                                backgroundColor: backdropColor || '#0d0d0d',
                               }}
                             >
                               <ByondUi
                                 key={`${data.preview_map_front}-${data.background}`}
+                                width="100%"
                                 height="100%"
                                 params={{
                                   id: data.preview_map_front,
@@ -2125,7 +2151,7 @@ export const PreferencesMenu = () => {
                                   'background-color': backdropColor || '#0d0d0d',
                                 }}
                               />
-                            </Box>
+                            </div>
                             <Box
                               color="label"
                               textAlign="center"
@@ -2135,18 +2161,18 @@ export const PreferencesMenu = () => {
                             </Box>
                           </Stack.Item>
                           <Stack.Item grow basis={0}>
-                            <Box
+                            <div
+                              ref={sideBoxRef}
                               style={{
                                 position: 'relative',
                                 width: '100%',
                                 aspectRatio: '1 / 1',
-                                ...(backdropColor
-                                  ? { backgroundColor: backdropColor }
-                                  : {}),
+                                backgroundColor: backdropColor || '#0d0d0d',
                               }}
                             >
                               <ByondUi
                                 key={`${data.preview_map_side}-${data.background}`}
+                                width="100%"
                                 height="100%"
                                 params={{
                                   id: data.preview_map_side,
@@ -2156,7 +2182,7 @@ export const PreferencesMenu = () => {
                                   'background-color': backdropColor || '#0d0d0d',
                                 }}
                               />
-                            </Box>
+                            </div>
                             <Box
                               color="label"
                               textAlign="center"
@@ -2171,7 +2197,7 @@ export const PreferencesMenu = () => {
                   </Stack>
                 </Stack.Item>
 
-                <Stack.Item basis="440px">
+                <Stack.Item basis="520px">
                   <Section fill title="Looking Glass">
                     <Stack vertical fill>
                       <Stack.Item grow>
@@ -2184,20 +2210,20 @@ export const PreferencesMenu = () => {
                             width: '100%',
                           }}
                         >
-                        <Box
+                        <div
+                          ref={dollBoxRef}
                           style={{
                             position: 'relative',
-                            height: '100%',
+                            width: '100%',
                             aspectRatio: '1 / 1',
-                            maxWidth: '100%',
-                            ...(backdropColor
-                              ? { backgroundColor: backdropColor }
-                              : {}),
+                            maxHeight: '100%',
+                            backgroundColor: backdropColor || '#0d0d0d',
                           }}
                         >
                         {data.preview_map ? (
                           <ByondUi
                             key={`${data.preview_map}-${data.background}`}
+                            width="100%"
                             height="100%"
                             params={{
                               id: data.preview_map,
@@ -2223,9 +2249,9 @@ export const PreferencesMenu = () => {
                             <Icon name="user" size={6} color="label" />
                           </Box>
                         )}
+                        </div>
                         </Box>
-                      </Box>
-                    </Stack.Item>
+                      </Stack.Item>
                     <Stack.Item>
                       <Stack mb={0.5}>
                         <Stack.Item grow>

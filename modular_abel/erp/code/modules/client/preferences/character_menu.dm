@@ -15,7 +15,7 @@
 /datum/preferences/var/character_setup_view_tile_top = 15
 /datum/preferences/var/character_setup_view_tile_center = 8
 /datum/preferences/var/character_setup_view_scale = 12
-/datum/preferences/var/character_setup_view_head_offset = 4
+/datum/preferences/var/character_setup_view_head_offset = 2
 /datum/preferences/var/mob/living/carbon/human/dummy/character_setup_body
 /datum/preferences/var/character_setup_hover_acc
 /datum/preferences/var/character_setup_hover_color
@@ -664,7 +664,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		var/list/view_size = getviewsize(user?.client?.view)
 		character_setup_view_tile_top = (islist(view_size) && length(view_size) >= 2) ? view_size[2] : 15
 		character_setup_view_tile_center = max(1, round((character_setup_view_tile_top + 1) / 2))
-		character_setup_view_scale = max(1, round(character_setup_view_tile_top * 0.7))
+		character_setup_view_scale = max(1, character_setup_view_tile_top - 2)
 		character_setup_view = new
 		character_setup_view.generate_view("character_setup_main_[REF(src)]_map")
 		character_setup_view_front = new
@@ -698,15 +698,25 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	sleep(1 SECONDS)
 	if(!user?.client)
 		return
+	var/client/C = user.client
+	var/window_id = character_setup_active_window_id(user)
+	character_setup_log("CTRL", "[context] === geometry dump === window_id=[window_id] view=[C.view] scaling=[C.window_scaling] view_scale=[character_setup_current_view_scale()] tile_center=[character_setup_view_tile_center] head_offset=[character_setup_view_head_offset]")
+	if(window_id)
+		character_setup_log("CTRL", "[context] WINDOW [window_id] winget=[winget(user, window_id, "size;pos;is-visible;is-maximized;inner-size")]")
+		character_setup_log("CTRL", "[context] WINDOW.map winget=[winget(user, "[window_id].map", "size;pos;is-visible")]")
 	for(var/atom/movable/screen/map_view/view as anything in list(character_setup_view, character_setup_view_front, character_setup_view_side))
 		if(!view)
 			continue
-		var/list/bound = user.client.screen_maps[view.assigned_map]
-		var/in_screen = (view in user.client.screen) ? "yes" : "NO"
+		var/list/bound = C.screen_maps[view.assigned_map]
+		var/in_screen = (view in C.screen) ? "yes" : "NO"
 		var/ctrl = winget(user, view.assigned_map, "parent;type;pos;size;zoom;letterbox;zoom-mode;is-visible")
-		character_setup_log("CTRL", "[context] id=[view.assigned_map] screen_loc=[view.screen_loc] registered=[length(bound)] in_screen=[in_screen] winget=[ctrl ? ctrl : "MISSING"]")
-	var/client_view = winget(user, "mapwindow.map", "zoom;letterbox;zoom-mode;icon-size")
-	character_setup_log("CTRL", "[context] mainmap=[client_view] client_view=[user.client.view] window_scaling=[user.client.window_scaling]")
+		character_setup_log("CTRL", "[context] MAP id=[view.assigned_map] screen_loc=[view.screen_loc] transform_scale=[character_setup_current_view_scale()] registered=[length(bound)] in_screen=[in_screen] winget=[ctrl ? ctrl : "MISSING"]")
+
+/datum/preferences/proc/character_setup_active_window_id(mob/user)
+	for(var/datum/tgui/open_ui in open_uis)
+		if(open_ui.user == user && open_ui.window)
+			return open_ui.window.id
+	return null
 
 /datum/preferences/proc/character_setup_teardown_view(mob/user)
 	character_setup_log("VIEW", "teardown map=[character_setup_view?.assigned_map] user=[user?.ckey]")
@@ -796,6 +806,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		return
 	view.appearance = body.appearance
 	view.render_target = null
+	view.appearance_flags = KEEP_TOGETHER | PIXEL_SCALE
 	view.plane = GAME_PLANE
 	view.layer = GAME_PLANE
 	view.dir = view_dir
@@ -1347,6 +1358,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			character_setup_preferences_scale = character_setup_sanitize_preferences_scale(href_list["scale"])
 			character_setup_log("WINDOW", "menu_scale=[character_setup_preferences_scale]")
 			save_preferences()
+			return TRUE
+		if("character_setup_report_geometry")
+			character_setup_log("GEOMETRY", "main=[href_list["main_w"]]x[href_list["main_h"]] front=[href_list["front_w"]]x[href_list["front_h"]] side=[href_list["side_w"]]x[href_list["side_h"]] window=[href_list["win_w"]]x[href_list["win_h"]] dpr=[href_list["dpr"]] menu_scale=[href_list["menu_scale"]]")
 			return TRUE
 		if("character_setup_customizer")
 			validate_customizer_entries()
