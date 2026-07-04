@@ -670,21 +670,16 @@ export const PreferencesMenu = () => {
       clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
     }
-    if (!value) {
-      doPref('character_setup_hover', undefined, {
-        acc: '',
-        color: '',
-        customizer: '',
-      });
-      return;
-    }
-    hoverTimer.current = setTimeout(() => {
-      doPref('character_setup_hover', undefined, {
-        acc: value,
-        color: color || '',
-        customizer: customizer || '',
-      });
-    }, 120);
+    hoverTimer.current = setTimeout(
+      () => {
+        doPref('character_setup_hover', undefined, {
+          acc: value || '',
+          color: value ? color || '' : '',
+          customizer: value ? customizer || '' : '',
+        });
+      },
+      value ? 180 : 260,
+    );
   };
 
   const headerMeta = [

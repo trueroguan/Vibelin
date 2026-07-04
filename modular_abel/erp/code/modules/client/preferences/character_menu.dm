@@ -1001,7 +1001,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	view.appearance_flags = PIXEL_SCALE
 	view.dir = SOUTH
 	var/bx = round((map_px - scaled_w) / 2)
-	var/by = margin
+	var/by = round((map_px - scaled_h) / 2)
 	view.set_position(1, 1, bx, by)
 	character_setup_view_last_flat = "src=[iw]x[ih] scaled=[scaled_w]x[scaled_h] map=[map_px] anchor=[bx],[by] notransform"
 
