@@ -12,6 +12,11 @@
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view_front
 /datum/preferences/var/atom/movable/screen/map_view/character_setup_view_side
+/datum/preferences/var/atom/movable/screen/background/character_setup_bg
+/datum/preferences/var/atom/movable/screen/background/character_setup_bg_front
+/datum/preferences/var/atom/movable/screen/background/character_setup_bg_side
+/datum/preferences/var/character_setup_view_extent_w = 1
+/datum/preferences/var/character_setup_view_extent_h = 1
 /datum/preferences/var/character_setup_view_tile_top = 15
 /datum/preferences/var/character_setup_view_tile_center = 8
 /datum/preferences/var/character_setup_view_scale = 12
@@ -674,6 +679,12 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 		character_setup_view_front.generate_view("character_setup_front_[REF(src)]_map")
 		character_setup_view_side = new
 		character_setup_view_side.generate_view("character_setup_side_[REF(src)]_map")
+		character_setup_bg = new
+		character_setup_bg.assigned_map = character_setup_view.assigned_map
+		character_setup_bg_front = new
+		character_setup_bg_front.assigned_map = character_setup_view_front.assigned_map
+		character_setup_bg_side = new
+		character_setup_bg_side.assigned_map = character_setup_view_side.assigned_map
 		if(!character_setup_body)
 			character_setup_body = new
 		character_setup_log("VIEW", "ensure_view created map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible] tile_top=[character_setup_view_tile_top]")
@@ -691,6 +702,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	character_setup_view.display_to_client(target_client)
 	character_setup_view_front.display_to_client(target_client)
 	character_setup_view_side.display_to_client(target_client)
+	target_client.register_map_obj(character_setup_bg)
+	target_client.register_map_obj(character_setup_bg_front)
+	target_client.register_map_obj(character_setup_bg_side)
 	character_setup_log("VIEW", "displayed maps=[character_setup_view.assigned_map],[character_setup_view_front.assigned_map],[character_setup_view_side.assigned_map] window=[ui.window.id] tile_center=[character_setup_view_tile_center] scale=[character_setup_view_scale]")
 	character_setup_diag_controls(user, "post_display")
 
@@ -712,7 +726,7 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			continue
 		var/list/bound = C.screen_maps[view.assigned_map]
 		var/in_screen = (view in C.screen) ? "yes" : "NO"
-		var/ctrl = winget(user, view.assigned_map, "parent;type;pos;size;zoom;letterbox;zoom-mode;is-visible")
+		var/ctrl = winget(user, view.assigned_map, "parent;type;pos;size;view-size;icon-size;zoom;letterbox;zoom-mode;is-visible")
 		character_setup_log("CTRL", "[context] MAP id=[view.assigned_map] screen_loc=[view.screen_loc] transform_scale=[character_setup_current_view_scale()] registered=[length(bound)] in_screen=[in_screen] winget=[ctrl ? ctrl : "MISSING"]")
 
 /datum/preferences/proc/character_setup_active_window_id(mob/user)
@@ -734,6 +748,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	QDEL_NULL(character_setup_view)
 	QDEL_NULL(character_setup_view_front)
 	QDEL_NULL(character_setup_view_side)
+	QDEL_NULL(character_setup_bg)
+	QDEL_NULL(character_setup_bg_front)
+	QDEL_NULL(character_setup_bg_side)
 
 /datum/preferences/proc/character_setup_update_view()
 	set waitfor = FALSE
@@ -800,6 +817,16 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
 	var/main_only = character_setup_render_main_only
 	character_setup_render_main_only = FALSE
+	var/icon/measure = character_setup_get_flat_icon(body, character_setup_preview_dir, no_anim = TRUE)
+	var/measure_w = isicon(measure) ? measure.Width() : 32
+	var/measure_h = isicon(measure) ? measure.Height() : 32
+	character_setup_view_extent_w = max(1, round(measure_w / 32))
+	character_setup_view_extent_h = max(1, round(measure_h / 32))
+	character_setup_bg?.fill_rect(1, 1, character_setup_view_extent_w, character_setup_view_extent_h)
+	character_setup_bg_front?.fill_rect(1, 1, character_setup_view_extent_w, character_setup_view_extent_h)
+	character_setup_bg_side?.fill_rect(1, 1, character_setup_view_extent_w, character_setup_view_extent_h)
+	if(GLOB.character_setup_debug)
+		character_setup_log("VIEW", "measure dir=[character_setup_preview_dir] flat_bbox=[measure_w]x[measure_h] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] species=[pref_species?.id] taur=[pref_species?.forced_taur ? 1 : 0]")
 	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
 	if(!main_only)
 		character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
@@ -978,32 +1005,21 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 /datum/preferences/proc/character_setup_apply_to_view(atom/movable/screen/map_view/view, mob/living/carbon/human/dummy/body, view_dir)
 	if(!view)
 		return
-	body.setDir(view_dir)
-	var/icon/flat = character_setup_get_flat_icon(body, view_dir, no_anim = TRUE)
-	if(!isicon(flat))
-		return
-	var/iw = flat.Width()
-	var/ih = flat.Height()
-	var/map_px = character_setup_view_tile_top * 32
-	var/margin = character_setup_view_feet_margin
-	var/vscale = max(1, round(min((map_px - 2 * margin) / max(ih, 1), (map_px - 2 * margin) / max(iw, 1))))
-	var/scaled_w = iw * vscale
-	var/scaled_h = ih * vscale
-	flat.Scale(scaled_w, scaled_h)
-	view.overlays = null
-	view.underlays = null
-	view.transform = null
-	view.appearance = null
-	view.icon = flat
-	view.icon_state = ""
+	view.appearance = body.appearance
+	view.setDir(view_dir)
 	view.plane = GAME_PLANE
 	view.layer = GAME_PLANE
-	view.appearance_flags = PIXEL_SCALE
-	view.dir = SOUTH
-	var/bx = round((map_px - scaled_w) / 2)
-	var/by = round((map_px - scaled_h) / 2)
-	view.set_position(1, 1, bx, by)
-	character_setup_view_last_flat = "src=[iw]x[ih] scaled=[scaled_w]x[scaled_h] map=[map_px] anchor=[bx],[by] notransform"
+	view.pixel_x = 0
+	view.pixel_y = 0
+	view.pixel_z = 0
+	view.pixel_w = 0
+	view.maptext = null
+	view.appearance_flags = KEEP_TOGETHER | PIXEL_SCALE
+	view.transform = null
+	view.set_position(1, 1, 0, 0)
+	if(GLOB.character_setup_debug)
+		character_setup_log("VIEW", "apply map=[view.assigned_map] dir=[view_dir] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] screen_loc=[view.screen_loc] base_icon=[body.icon] overlays=[length(view.overlays)] appearance_flags=[view.appearance_flags] view_dir=[view.dir]")
+	character_setup_view_last_flat = "appearance dir=[view_dir] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] overlays=[length(view.overlays)] view_dir=[view.dir]"
 
 /datum/preferences/proc/character_setup_current_view_scale()
 	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
@@ -1615,8 +1631,9 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 			else
 				idx = (idx >= length(dir_cycle)) ? 1 : (idx + 1)
 			character_setup_preview_dir = dir_cycle[idx]
-			if(character_setup_body && pref_species)
-				character_setup_apply_to_view(character_setup_view, character_setup_body, character_setup_preview_dir)
+			character_setup_view?.setDir(character_setup_preview_dir)
+			if(GLOB.character_setup_debug)
+				character_setup_log("VIEW", "rotate main dir=[character_setup_preview_dir] view=[character_setup_view?.assigned_map] view_dir=[character_setup_view?.dir]")
 			return TRUE
 		if("character_setup_preview_background")
 			var/bg_choice = href_list["bg"]
