@@ -91,19 +91,32 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 		sprite_accessories += accessory_type
 	return ..()
 
+/datum/customizer_choice/bodypart_feature/smallclothes/proc/smallclothes_coverage_allowed(datum/sprite_accessory/accessory)
+	return TRUE
+
+/datum/customizer_choice/bodypart_feature/smallclothes/bottom/smallclothes_coverage_allowed(datum/sprite_accessory/accessory)
+	return accessory.smallclothes_covers_groin && !accessory.smallclothes_covers_torso
+
+/datum/customizer_choice/bodypart_feature/smallclothes/top/smallclothes_coverage_allowed(datum/sprite_accessory/accessory)
+	return accessory.smallclothes_covers_torso
+
 /datum/customizer_choice/bodypart_feature/smallclothes/character_setup_accessory_types(datum/preferences/prefs)
 	var/datum/species/species = return_species(prefs)
 	var/species_id = species?.id_override || species?.id
 	var/pref_gender = prefs?.cspref_gender()
 	var/list/allowed = list()
+	var/list/loose = list()
 	for(var/accessory_type in sprite_accessories)
 		var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
 		if(accessory.gender != NEUTER && pref_gender && accessory.gender != pref_gender)
 			continue
-		if(species_id && !(species_id in accessory.specuse))
+		if(!accessory.smallclothes_any_species && species_id && !(species_id in accessory.specuse))
+			continue
+		loose += accessory_type
+		if(!smallclothes_coverage_allowed(accessory))
 			continue
 		allowed += accessory_type
-	return allowed
+	return length(allowed) ? allowed : loose
 
 /datum/customizer_choice/bodypart_feature/smallclothes/character_setup_section()
 	return "underwear"
@@ -214,5 +227,30 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 		for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
 			pref_species.customizers |= customizer_type
 	. = ..()
+	character_setup_heal_smallclothes_entries()
 	if(!character_setup_suppress_smallclothes_sync)
 		character_setup_sync_smallclothes_from_entries()
+
+/datum/preferences/proc/character_setup_heal_smallclothes_entries()
+	for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
+		var/datum/customizer/customizer = CUSTOMIZER(customizer_type)
+		if(!customizer)
+			continue
+		var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
+		if(!entry)
+			entry = customizer.make_default_customizer_entry(src)
+			if(entry)
+				customizer_entries += entry
+			continue
+		var/datum/customizer_choice/bodypart_feature/smallclothes/choice = CUSTOMIZER_CHOICE(entry.customizer_choice_type)
+		if(!istype(choice))
+			continue
+		var/list/allowed = choice.character_setup_accessory_types(src)
+		if(length(allowed) && !(entry.accessory_type in allowed))
+			choice.set_accessory_type(src, allowed[1], entry)
+	if(GLOB.character_setup_debug)
+		var/list/bits = list()
+		for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
+			var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
+			bits += "[customizer_type]=[entry ? "[entry.accessory_type] dis=[entry.disabled]" : "NO-ENTRY"]"
+		character_setup_log("SMALL", "entries [bits.Join(" | ")] species_cust=[length(pref_species?.customizers)]")

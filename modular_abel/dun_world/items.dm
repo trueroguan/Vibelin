@@ -214,3 +214,63 @@
 	sellprice = 150
 	max_integrity = 300
 	wdefense = 7
+
+/obj/item/clothing/neck/psycross/wooden_divine
+	name = "wooden amulet of Ten"
+	desc = "A talisman of the faithful, hewn from sticks and fibers."
+	icon = 'modular_abel/dun_world/icons/psycross_wood.dmi'
+	mob_overlay_icon = 'modular_abel/dun_world/icons/psycross_wood_onmob.dmi'
+	icon_state = "undivided_w"
+	sellprice = 0
+	salvage_result = /obj/item/grown/log/tree/stick
+	salvage_amount = 1
+
+/obj/item/clothing/neck/psycross/wooden_divine/astrata
+	name = "wooden amulet of Astrata"
+	desc = "Hope needs only the smallest ember to kindle."
+	icon_state = "astrata_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/noc
+	name = "wooden amulet of Noc"
+	desc = "They say that such a talisman was the first to be carved by mankind, once the first thought-of-beyond struck their minds."
+	icon_state = "noc_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/dendor
+	name = "wooden amulet of Dendor"
+	desc = "The primordial life force thrumbs through your hands."
+	icon_state = "dendor_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/abyssor
+	name = "wooden amulet of Abyssor"
+	desc = "Don't tell me you aren't fond o' me lobster.."
+	icon_state = "abyssor_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/necra
+	name = "wooden amulet of Necra"
+	desc = "From dust, we came; and to dust, we will return."
+	icon_state = "necra_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/ravox
+	name = "wooden amulet of Ravox"
+	desc = "There is no justice in murder."
+	icon_state = "ravox_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/xylix
+	name = "wooden amulet of Xylix"
+	desc = "I can do anything!"
+	icon_state = "xylix_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/eora
+	name = "wooden amulet of Eora"
+	desc = "Like the wind, you're going somewhere.. so let a smile be your companion.."
+	icon_state = "eora_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/pestra
+	name = "wooden amulet of Pestra"
+	desc = "Faithlessness is no different from a malaise; gift it the right care, and it will heal into something greater before long."
+	icon_state = "pestra_w"
+
+/obj/item/clothing/neck/psycross/wooden_divine/malum
+	name = "wooden amulet of Malum"
+	desc = "Losing is fun; not because of what you once had, but because of the chance to start again."
+	icon_state = "malum_w"

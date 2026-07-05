@@ -609,7 +609,7 @@ export const PreferencesMenu = () => {
       ? Math.max(
           1,
           Math.floor(
-            Math.min((boxW * 1.25) / previewBboxW, (boxH * 0.85) / previewBboxH),
+            Math.min((boxW * 0.95) / previewBboxW, (boxH * 0.85) / previewBboxH),
           ),
         )
       : 0;
@@ -1690,15 +1690,7 @@ export const PreferencesMenu = () => {
     };
 
     return (
-      <Panel
-        title="Appearance"
-        icon="palette"
-        buttons={
-          <Button icon="dice" onClick={() => doPref('randomiseappearanceprefs')}>
-            Randomise
-          </Button>
-        }
-      >
+      <Panel title="Appearance" icon="palette">
         <Box style={{ display: 'flex', flexWrap: 'wrap' }} mb={1}>
           {featureTabs.map((tab) => (
             <Button
@@ -2185,7 +2177,7 @@ export const PreferencesMenu = () => {
                             >
                               {previewMiniZoom > 0 ? (
                                 <ByondUi
-                                  key={`${data.preview_map_front}-${data.background}`}
+                                  key={data.preview_map_front}
                                   width="100%"
                                   height="100%"
                                   params={{
@@ -2219,7 +2211,7 @@ export const PreferencesMenu = () => {
                             >
                               {previewMiniZoom > 0 ? (
                                 <ByondUi
-                                  key={`${data.preview_map_side}-${data.background}`}
+                                  key={data.preview_map_side}
                                   width="100%"
                                   height="100%"
                                   params={{
@@ -2272,7 +2264,7 @@ export const PreferencesMenu = () => {
                         >
                         {data.preview_map && previewZoom > 0 ? (
                           <ByondUi
-                            key={`${data.preview_map}-${data.background}`}
+                            key={data.preview_map}
                             width="100%"
                             height="100%"
                             params={{

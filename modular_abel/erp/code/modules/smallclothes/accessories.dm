@@ -1,4 +1,5 @@
 /datum/sprite_accessory
+	var/smallclothes_any_species = FALSE
 	var/smallclothes_covers_torso = FALSE
 	var/smallclothes_covers_groin = FALSE
 	var/smallclothes_covers_legs = FALSE
@@ -153,6 +154,7 @@
 	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "bikini_f_0"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 	smallclothes_covers_torso = TRUE
 
 /datum/sprite_accessory/underwear/bikini/smallclothes_state(mob/living/carbon/human/human)
@@ -163,6 +165,7 @@
 	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "male_leotard"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 	smallclothes_covers_torso = TRUE
 
 /datum/sprite_accessory/underwear/leotard/smallclothes_state(mob/living/carbon/human/human)
@@ -176,6 +179,7 @@
 	icon_state = "male_athletic_leotard"
 	smallclothes_female_state = "female_athletic_leotard"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 	smallclothes_covers_torso = TRUE
 
 /datum/sprite_accessory/underwear/eoran_briefs
@@ -186,12 +190,14 @@
 	smallclothes_dwarf_state = "eoran_dwarf"
 	smallclothes_female_dwarf_state = "eoran_dwarf"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/small_loincloth
 	name = "Small Loincloth"
 	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "loinclothunder"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/briefs
 	name = "Briefs"
@@ -201,6 +207,7 @@
 	smallclothes_dwarf_state = "briefs_dwarf"
 	smallclothes_female_dwarf_state = "briefs_dwarf_f"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/panties
 	name = "Panties"
@@ -208,6 +215,7 @@
 	icon_state = "panties"
 	smallclothes_female_state = "panties_f"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/thong
 	name = "Thong"
@@ -217,6 +225,7 @@
 	smallclothes_dwarf_state = "thong_dwarf"
 	smallclothes_female_dwarf_state = "thong_dwarf_f"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/bikini_bottom
 	name = "Bikini Bottom"
@@ -224,6 +233,7 @@
 	icon_state = "bikini_bottom"
 	smallclothes_female_state = "bikini_bottom_f"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/braies
 	name = "Braies"
@@ -231,12 +241,14 @@
 	icon_state = "braies"
 	smallclothes_female_state = "braies_f"
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/undershirt
 	use_static = FALSE
 	color_key_name = "Torso Underwear"
 	default_colors = list("#ffffff")
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 	smallclothes_covers_torso = TRUE
 	smallclothes_taur_compatible = TRUE
 
@@ -393,6 +405,7 @@
 	color_key_name = "Legwear"
 	default_colors = list("#ffffff")
 	specuse = ALL_RACES_LIST
+	smallclothes_any_species = TRUE
 	smallclothes_covers_legs = TRUE
 
 /datum/sprite_accessory/socks/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)

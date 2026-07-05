@@ -19,6 +19,8 @@
 /datum/preferences/var/character_setup_view_extent_h = 1
 /datum/preferences/var/character_setup_view_bbox_w = 32
 /datum/preferences/var/character_setup_view_bbox_h = 33
+/datum/preferences/var/character_setup_view_zoom_w = 32
+/datum/preferences/var/character_setup_view_zoom_h = 36
 /datum/preferences/var/character_setup_view_off_x = 0
 /datum/preferences/var/character_setup_view_off_y = 0
 /datum/preferences/var/character_setup_view_bbox_sent = ""
@@ -773,6 +775,19 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		var/ctrl = winget(user, view.assigned_map, "parent;type;pos;size;view-size;icon-size;zoom;letterbox;zoom-mode;is-visible")
 		character_setup_log("CTRL", "[context] MAP id=[view.assigned_map] screen_loc=[view.screen_loc] transform_scale=[character_setup_current_view_scale()] registered=[length(bound)] in_screen=[in_screen] winget=[ctrl ? ctrl : "MISSING"]")
 
+/datum/preferences/proc/character_setup_apply_map_background(mob/user)
+	if(!user?.client)
+		return
+	var/bg_hex = "#0d0d0d"
+	switch(character_setup_preview_background)
+		if("white")
+			bg_hex = "#d8d8d8"
+		if("dark")
+			bg_hex = "#0a0a0a"
+	for(var/atom/movable/screen/map_view/view as anything in list(character_setup_view, character_setup_view_front, character_setup_view_side))
+		if(view)
+			winset(user, view.assigned_map, "background-color=[bg_hex]")
+
 /datum/preferences/proc/character_setup_apply_reported_zoom(mob/user, zoom_main, zoom_mini)
 	if(!user?.client)
 		return
@@ -783,6 +798,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 			winset(user, character_setup_view_front.assigned_map, "zoom=[zoom_mini]")
 		if(character_setup_view_side)
 			winset(user, character_setup_view_side.assigned_map, "zoom=[zoom_mini]")
+	character_setup_apply_map_background(user)
 	if(GLOB.character_setup_debug)
 		character_setup_log("ZOOM", "applied main=[zoom_main] mini=[zoom_mini]")
 
@@ -826,7 +842,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		character_setup_log_op("render_body", _t, "dir=[character_setup_preview_dir] hover=[character_setup_hover_acc || "none"] species=[pref_species?.id]")
 	while(character_setup_view_pending)
 	character_setup_view_busy = FALSE
-	var/bbox_sig = "[character_setup_view_bbox_w]x[character_setup_view_bbox_h]"
+	var/bbox_sig = "[character_setup_view_zoom_w]x[character_setup_view_zoom_h]"
 	if(bbox_sig != character_setup_view_bbox_sent)
 		character_setup_view_bbox_sent = bbox_sig
 		SStgui.update_uis(src)
@@ -880,16 +896,22 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/main_only = character_setup_render_main_only
 	character_setup_render_main_only = FALSE
 	character_setup_measure_body(character_setup_preview_dir)
+	if(!main_only)
+		var/list/perp_art = character_setup_measure_art(turn(character_setup_preview_dir, 90))
+		var/zoom_dim_w = max(character_setup_view_bbox_w, perp_art ? perp_art[1] : 0)
+		var/zoom_dim_h = max(character_setup_view_bbox_h, perp_art ? perp_art[2] : 0)
+		character_setup_view_zoom_w = CEILING(zoom_dim_w, 4)
+		character_setup_view_zoom_h = CEILING(zoom_dim_h, 4)
 	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
 	if(!main_only)
 		character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
 		character_setup_apply_to_view(character_setup_view_side, body, EAST)
 	character_setup_log("VIEW", "render done main_only=[main_only] dir=[character_setup_preview_dir] flat=[character_setup_view_last_flat] feet_margin=[character_setup_view_feet_margin] underwear=[body.underwear]")
 
-/datum/preferences/proc/character_setup_measure_body(dir)
+/datum/preferences/proc/character_setup_measure_art(dir)
 	var/mob/living/carbon/human/dummy/body = character_setup_body
 	if(!body)
-		return
+		return null
 	var/icon/measure = character_setup_get_flat_icon(body, dir, no_anim = TRUE)
 	var/measure_w = isicon(measure) ? measure.Width() : 32
 	var/measure_h = isicon(measure) ? measure.Height() : 32
@@ -901,17 +923,23 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		art_y = art[2] - 1
 		measure_w = art[3] - art[1] + 1
 		measure_h = art[4] - art[2] + 1
-	character_setup_view_bbox_w = measure_w
-	character_setup_view_bbox_h = measure_h
-	character_setup_view_off_x = GLOB.character_setup_flat_origin_x + art_x
-	character_setup_view_off_y = GLOB.character_setup_flat_origin_y + art_y
-	character_setup_view_extent_w = max(1, CEILING(measure_w / 32, 1))
-	character_setup_view_extent_h = max(1, CEILING(measure_h / 32, 1))
+	return list(measure_w, measure_h, GLOB.character_setup_flat_origin_x + art_x, GLOB.character_setup_flat_origin_y + art_y)
+
+/datum/preferences/proc/character_setup_measure_body(dir)
+	var/list/art = character_setup_measure_art(dir)
+	if(!art)
+		return
+	character_setup_view_bbox_w = art[1]
+	character_setup_view_bbox_h = art[2]
+	character_setup_view_off_x = art[3]
+	character_setup_view_off_y = art[4]
+	character_setup_view_extent_w = max(1, CEILING(character_setup_view_bbox_w / 32, 1))
+	character_setup_view_extent_h = max(1, CEILING(character_setup_view_bbox_h / 32, 1))
 	character_setup_bg?.fill_rect(1, 1, character_setup_view_canvas_w, character_setup_view_canvas_h)
 	character_setup_bg_front?.fill_rect(1, 1, character_setup_view_canvas_w, character_setup_view_canvas_h)
 	character_setup_bg_side?.fill_rect(1, 1, character_setup_view_canvas_w, character_setup_view_canvas_h)
 	if(GLOB.character_setup_debug)
-		character_setup_log("VIEW", "measure dir=[dir] art=[measure_w]x[measure_h] origin=[character_setup_view_off_x],[character_setup_view_off_y] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] species=[pref_species?.id] taur=[pref_species?.forced_taur ? 1 : 0]")
+		character_setup_log("VIEW", "measure dir=[dir] art=[character_setup_view_bbox_w]x[character_setup_view_bbox_h] origin=[character_setup_view_off_x],[character_setup_view_off_y] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] zoom_dims=[character_setup_view_zoom_w]x[character_setup_view_zoom_h] species=[pref_species?.id] taur=[pref_species?.forced_taur ? 1 : 0]")
 		var/mob/living/carbon/human/dummy/diag_body = character_setup_body
 		if(diag_body)
 			var/list/slot_bits = list()
@@ -1410,8 +1438,8 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	data["preview_map"] = character_setup_view ? character_setup_view.assigned_map : null
 	data["preview_map_front"] = character_setup_view_front ? character_setup_view_front.assigned_map : null
 	data["preview_map_side"] = character_setup_view_side ? character_setup_view_side.assigned_map : null
-	data["preview_bbox_w"] = character_setup_view_bbox_w
-	data["preview_bbox_h"] = character_setup_view_bbox_h
+	data["preview_bbox_w"] = character_setup_view_zoom_w
+	data["preview_bbox_h"] = character_setup_view_zoom_h
 
 	var/datum/culture/pref_culture = cspref_culture()
 	data["culture_name"] = pref_culture ? pref_culture::name : "None"
@@ -1740,6 +1768,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 				character_setup_preview_background = null
 			else
 				character_setup_preview_background = bg_choice
+			character_setup_apply_map_background(user)
 			save_character()
 			update_menu_data(user)
 			return TRUE
