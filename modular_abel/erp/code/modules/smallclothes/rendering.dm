@@ -8,6 +8,8 @@
 		return
 	var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
 	var/list/appearances = accessory.get_appearance(null, bodypart, accessory_colors)
+	if(GLOB.character_setup_debug && istype(human, /mob/living/carbon/human/dummy))
+		character_setup_glog("SMALL", "overlay slot=[feature_slot] acc=[accessory_type] state=[accessory.get_icon_state(null, bodypart, human)] icon=[accessory.get_icon(null, bodypart, human)] colors=[accessory_colors] visible=[accessory.is_visible(null, bodypart, human)] appearances=[length(appearances)]")
 	if(!appearances)
 		return
 	var/extra_state
@@ -24,7 +26,6 @@
 		appearances += extra_appearances
 	return appearances
 
-// Suppress the legacy underwear overlay. Smallclothes are bodypart features now.
 /datum/species/handle_body(mob/living/carbon/human/human)
 	if(!human.uses_smallclothes_features && !human.get_bodypart_feature_of_slot("smallclothes_bottom"))
 		return ..()

@@ -73,7 +73,9 @@
 
 /datum/sprite_accessory/proc/smallclothes_adjust_appearance(list/appearance_list, obj/item/bodypart/bodypart, mob/living/carbon/human/human)
 	generic_gender_feature_adjust(appearance_list, null, bodypart, human, OFFSET_UNDIES)
-	if(smallclothes_state(human) == icon_state)
+	var/used_state = smallclothes_state(human)
+	var/dwarf_specific = (smallclothes_dwarf_state && used_state == smallclothes_dwarf_state) || (smallclothes_female_dwarf_state && used_state == smallclothes_female_dwarf_state)
+	if(!dwarf_specific)
 		var/datum/species/species = human.dna?.species
 		if(species)
 			var/use_female = (human.gender == FEMALE) && species.sexes && !species.swap_female_clothes
@@ -234,6 +236,7 @@
 	use_static = FALSE
 	color_key_name = "Torso Underwear"
 	default_colors = list("#ffffff")
+	specuse = ALL_RACES_LIST
 	smallclothes_covers_torso = TRUE
 	smallclothes_taur_compatible = TRUE
 
@@ -389,6 +392,7 @@
 	use_static = FALSE
 	color_key_name = "Legwear"
 	default_colors = list("#ffffff")
+	specuse = ALL_RACES_LIST
 	smallclothes_covers_legs = TRUE
 
 /datum/sprite_accessory/socks/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)

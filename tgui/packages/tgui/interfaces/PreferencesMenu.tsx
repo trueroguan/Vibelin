@@ -572,19 +572,25 @@ export const PreferencesMenu = () => {
     return () => timers.forEach(clearTimeout);
   }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen]);
 
-  const [previewBoxPx, setPreviewBoxPx] = useState({ main: 0, mini: 0 });
+  const [previewBoxPx, setPreviewBoxPx] = useState({
+    main: 0,
+    mainH: 0,
+    mini: 0,
+  });
 
   useEffect(() => {
     const measure = () => {
       const dpr = window.devicePixelRatio || 1;
-      const main = Math.floor(
-        (dollBoxRef.current?.getBoundingClientRect().width ?? 0) * dpr,
-      );
+      const mainRect = dollBoxRef.current?.getBoundingClientRect();
+      const main = Math.floor((mainRect?.width ?? 0) * dpr);
+      const mainH = Math.floor((mainRect?.height ?? 0) * dpr);
       const mini = Math.floor(
         (frontBoxRef.current?.getBoundingClientRect().width ?? 0) * dpr,
       );
       setPreviewBoxPx((prev) =>
-        prev.main === main && prev.mini === mini ? prev : { main, mini },
+        prev.main === main && prev.mainH === mainH && prev.mini === mini
+          ? prev
+          : { main, mainH, mini },
       );
     };
     measure();
@@ -596,22 +602,19 @@ export const PreferencesMenu = () => {
     };
   }, [data.preview_map, menuScale, data.preferences_fullscreen]);
 
-  const previewBboxW = Math.max(32, Number(data.preview_bbox_w) || 0);
-  const previewBboxH = Math.max(32, Number(data.preview_bbox_h) || 0);
-  const previewZoomFor = (boxPx: number) =>
-    boxPx
+  const previewBboxW = Math.max(16, Number(data.preview_bbox_w) || 0);
+  const previewBboxH = Math.max(16, Number(data.preview_bbox_h) || 0);
+  const previewZoomFor = (boxW: number, boxH: number) =>
+    boxW && boxH
       ? Math.max(
           1,
           Math.floor(
-            Math.min(
-              (boxPx * 1.25) / previewBboxW,
-              (boxPx * 0.85) / previewBboxH,
-            ),
+            Math.min((boxW * 1.25) / previewBboxW, (boxH * 0.85) / previewBboxH),
           ),
         )
       : 0;
-  const previewZoom = previewZoomFor(previewBoxPx.main);
-  const previewMiniZoom = previewZoomFor(previewBoxPx.mini);
+  const previewZoom = previewZoomFor(previewBoxPx.main, previewBoxPx.mainH);
+  const previewMiniZoom = previewZoomFor(previewBoxPx.mini, previewBoxPx.mini);
 
   useEffect(() => {
     const report = () => {
@@ -2261,8 +2264,8 @@ export const PreferencesMenu = () => {
                           ref={dollBoxRef}
                           style={{
                             position: 'relative',
-                            width: '100%',
-                            aspectRatio: '1 / 1',
+                            width: '82%',
+                            aspectRatio: '0.82 / 1',
                             maxHeight: '100%',
                             backgroundColor: backdropColor || '#0d0d0d',
                           }}

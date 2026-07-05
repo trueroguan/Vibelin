@@ -91,6 +91,20 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 		sprite_accessories += accessory_type
 	return ..()
 
+/datum/customizer_choice/bodypart_feature/smallclothes/character_setup_accessory_types(datum/preferences/prefs)
+	var/datum/species/species = return_species(prefs)
+	var/species_id = species?.id_override || species?.id
+	var/pref_gender = prefs?.cspref_gender()
+	var/list/allowed = list()
+	for(var/accessory_type in sprite_accessories)
+		var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
+		if(accessory.gender != NEUTER && pref_gender && accessory.gender != pref_gender)
+			continue
+		if(species_id && !(species_id in accessory.specuse))
+			continue
+		allowed += accessory_type
+	return allowed
+
 /datum/customizer_choice/bodypart_feature/smallclothes/character_setup_section()
 	return "underwear"
 
@@ -118,6 +132,13 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 		var/accessory_type = text2path(href_list["acc_type"])
 		if(!(accessory_type in character_setup_accessory_types(prefs)))
 			return
+		var/saved_colors = entry?.accessory_colors
+		. = ..()
+		if(saved_colors && entry && entry.accessory_colors != saved_colors)
+			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(entry.accessory_type)
+			if(accessory && length(color_string_to_list(saved_colors)) == max(1, accessory.color_keys))
+				entry.accessory_colors = saved_colors
+		return .
 	return ..()
 
 /datum/customizer_choice/bodypart_feature/smallclothes/bottom
@@ -131,15 +152,16 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	accessory_root = /datum/sprite_accessory/undershirt
 
 /datum/customizer_choice/bodypart_feature/smallclothes/top/character_setup_accessory_types(datum/preferences/prefs)
+	var/list/allowed = ..()
 	var/datum/species/species = return_species(prefs)
 	if(!species?.forced_taur)
-		return ..()
-	var/list/allowed = list()
-	for(var/accessory_type in sprite_accessories)
+		return allowed
+	var/list/taur_allowed = list()
+	for(var/accessory_type in allowed)
 		var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
 		if(accessory.smallclothes_taur_compatible)
-			allowed += accessory_type
-	return allowed
+			taur_allowed += accessory_type
+	return taur_allowed
 
 /datum/customizer_choice/bodypart_feature/smallclothes/legs
 	name = "Legwear"

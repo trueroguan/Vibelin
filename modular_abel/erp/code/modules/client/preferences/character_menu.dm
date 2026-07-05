@@ -52,6 +52,35 @@ GLOBAL_VAR_INIT(character_setup_debug, TRUE)
 GLOBAL_VAR_INIT(character_setup_flat_origin_x, 0)
 GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 
+/proc/character_setup_glog(category, msg)
+	if(!GLOB.character_setup_debug)
+		return
+	WRITE_LOG("[GLOB.log_directory]/character_setup.log", "[world.timeofday]ds render \[[category]\] [msg]")
+
+/proc/character_setup_art_bounds(icon/scanned)
+	if(!isicon(scanned))
+		return null
+	var/width = scanned.Width()
+	var/height = scanned.Height()
+	var/x1 = 0
+	var/x2 = 0
+	var/y1 = 0
+	var/y2 = 0
+	for(var/y in 1 to height)
+		for(var/x in 1 to width)
+			if(!scanned.GetPixel(x, y))
+				continue
+			if(!x1 || x < x1)
+				x1 = x
+			if(x > x2)
+				x2 = x
+			if(!y1)
+				y1 = y
+			y2 = y
+	if(!x1)
+		return null
+	return list(x1, y1, x2, y2)
+
 /proc/character_setup_push_all_prefs()
 	for(var/client/lobby_client as anything in GLOB.clients)
 		if(lobby_client?.prefs)
@@ -864,19 +893,32 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/icon/measure = character_setup_get_flat_icon(body, dir, no_anim = TRUE)
 	var/measure_w = isicon(measure) ? measure.Width() : 32
 	var/measure_h = isicon(measure) ? measure.Height() : 32
+	var/art_x = 0
+	var/art_y = 0
+	var/list/art = character_setup_art_bounds(measure)
+	if(art)
+		art_x = art[1] - 1
+		art_y = art[2] - 1
+		measure_w = art[3] - art[1] + 1
+		measure_h = art[4] - art[2] + 1
 	character_setup_view_bbox_w = measure_w
 	character_setup_view_bbox_h = measure_h
-	character_setup_view_off_x = GLOB.character_setup_flat_origin_x
-	character_setup_view_off_y = GLOB.character_setup_flat_origin_y
+	character_setup_view_off_x = GLOB.character_setup_flat_origin_x + art_x
+	character_setup_view_off_y = GLOB.character_setup_flat_origin_y + art_y
 	character_setup_view_extent_w = max(1, CEILING(measure_w / 32, 1))
 	character_setup_view_extent_h = max(1, CEILING(measure_h / 32, 1))
-	var/rect_x2 = character_setup_view_doll_x + character_setup_view_extent_w - 1
-	var/rect_y2 = character_setup_view_doll_y + character_setup_view_extent_h - 1
-	character_setup_bg?.fill_rect(character_setup_view_doll_x, character_setup_view_doll_y, rect_x2, rect_y2)
-	character_setup_bg_front?.fill_rect(character_setup_view_doll_x, character_setup_view_doll_y, rect_x2, rect_y2)
-	character_setup_bg_side?.fill_rect(character_setup_view_doll_x, character_setup_view_doll_y, rect_x2, rect_y2)
+	character_setup_bg?.fill_rect(1, 1, character_setup_view_canvas_w, character_setup_view_canvas_h)
+	character_setup_bg_front?.fill_rect(1, 1, character_setup_view_canvas_w, character_setup_view_canvas_h)
+	character_setup_bg_side?.fill_rect(1, 1, character_setup_view_canvas_w, character_setup_view_canvas_h)
 	if(GLOB.character_setup_debug)
-		character_setup_log("VIEW", "measure dir=[dir] flat_bbox=[measure_w]x[measure_h] origin=[character_setup_view_off_x],[character_setup_view_off_y] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] species=[pref_species?.id] taur=[pref_species?.forced_taur ? 1 : 0]")
+		character_setup_log("VIEW", "measure dir=[dir] art=[measure_w]x[measure_h] origin=[character_setup_view_off_x],[character_setup_view_off_y] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] species=[pref_species?.id] taur=[pref_species?.forced_taur ? 1 : 0]")
+		var/mob/living/carbon/human/dummy/diag_body = character_setup_body
+		if(diag_body)
+			var/list/slot_bits = list()
+			for(var/slot in list("smallclothes_bottom", "smallclothes_top", "smallclothes_legs"))
+				var/datum/bodypart_feature/smallclothes/feature = diag_body.get_bodypart_feature_of_slot(slot)
+				slot_bits += "[slot]=[feature ? "[feature.accessory_type] colors=[feature.accessory_colors]" : "NONE"]"
+			character_setup_log("SMALL", "[slot_bits.Join(" | ")] mob_underwear=[diag_body.underwear] mob_undershirt=[diag_body.undershirt] mob_socks=[diag_body.socks] suppressed=[diag_body.smallclothes_render_suppressed]")
 
 /proc/character_setup_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
 	#define CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
