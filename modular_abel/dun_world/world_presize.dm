@@ -1,0 +1,5 @@
+/datum/controller/subsystem/mapping/loadWorld()
+	if(config?.map_path == "map_files/dun_world")
+		world.increase_max_x(255)
+		world.increase_max_y(450)
+	return ..()

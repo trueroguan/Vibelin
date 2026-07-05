@@ -78,6 +78,35 @@
 	total_positions = 0
 	spawn_positions = 0
 
+/datum/antagonist/wretch/dun_world
+
+/datum/antagonist/wretch/dun_world/remove_job()
+	return
+
+/datum/antagonist/wretch/dun_world/move_to_spawnpoint()
+	var/spawn_point = get_spawn_turf_for_job(ROLE_WRETCH)
+	if(spawn_point)
+		owner.current?.forceMove(spawn_point)
+	else
+		SSjob.SendToBackupPoint(owner.current)
+
+/datum/job/wretch
+	title = ROLE_WRETCH
+	f_title = null
+	department_flag = OUTSIDERS
+	job_flags = (JOB_EQUIP_RANK | JOB_NEW_PLAYER_JOINABLE | JOB_SHOW_IN_CREDITS)
+	display_order = JDO_WRETCH
+	faction = FACTION_NEUTRAL
+	total_positions = 0
+	spawn_positions = 0
+	antag_job = TRUE
+	antag_role = /datum/antagonist/wretch/dun_world
+	is_foreigner = TRUE
+	can_have_apprentices = FALSE
+	can_random = FALSE
+	same_job_respawn_delay = 30 MINUTES
+	tutorial = "You fell to the wrong side of civilization, and now carry the bounty and fear that follow a wretch."
+
 /datum/job/dungeoneer/dun_world_warden
 	title = "Warden"
 	f_title = null

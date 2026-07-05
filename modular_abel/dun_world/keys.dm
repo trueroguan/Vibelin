@@ -26,7 +26,7 @@
 
 /datum/job/matron/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("bathhouse"))
 
 /datum/job/merchant/dun_world_guildmaster/after_spawn(mob/living/carbon/human/spawned, client/player_client)
@@ -63,60 +63,60 @@
 
 /datum/job/lord/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list(ACCESS_LORD))
 		dun_world_grant_authority(spawned)
 
 /datum/job/consort/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("manor", "walls"))
 
 /datum/job/prince/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("manor", "walls"))
 
 /datum/job/steward/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("steward", "manor", "vault", "walls"))
 
 /datum/job/hand/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("hand", "manor", "steward", "walls", "garrison"))
 		dun_world_grant_authority(spawned)
 
 /datum/job/captain/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("at_arms", "garrison", "dungeon", "walls", "manor"))
 		dun_world_grant_authority(spawned)
 
 /datum/job/town_elder/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_authority(spawned)
 
 /datum/job/guardsman/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("garrison", "walls", "at_arms"))
 
 /datum/job/squire/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("at_arms", "manor", "walls"))
 
 /datum/job/priest/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("church", "priest", "graveyard"))
 
 /datum/job/monk/after_spawn(mob/living/carbon/human/spawned, client/player_client, clear_job_stats = TRUE)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		dun_world_grant_keys(spawned, list("church", "priest"))
 
 /obj/structure/door/proc/dun_world_bumper_has_key(mob/living/user)
@@ -129,7 +129,7 @@
 	return FALSE
 
 /obj/structure/door/Bumped(atom/movable/AM)
-	if(isliving(AM) && locked() && SSmapping.config?.map_name == "Azure Peak" && dun_world_bumper_has_key(AM))
+	if(isliving(AM) && locked() && SSmapping.config?.map_name == "Twilight Axis" && dun_world_bumper_has_key(AM))
 		var/datum/lock/key/KL = lock
 		KL.locked = FALSE
 		. = ..()

@@ -1,0 +1,10 @@
+#define OFFSET_PENIS "penis"
+#define OFFSET_BREASTS "breasts"
+#define OFFSET_TESTICLES "testicles"
+#define OFFSET_VAGINA "vagina"
+#define OFFSET_SMALLCLOTHES "smallclothes"
+
+#define GENITAL_LAYER_BREASTS   (BODY_ADJ_LAYER - 0.4)
+#define GENITAL_LAYER_PENIS     (BODY_ADJ_LAYER - 0.3)
+#define GENITAL_LAYER_TESTICLES (BODY_ADJ_LAYER - 0.2)
+#define GENITAL_LAYER_VAGINA    (BODY_ADJ_LAYER - 0.1)

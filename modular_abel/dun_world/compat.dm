@@ -438,7 +438,7 @@
 
 /obj/effect/landmark/start/lord/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		GLOB.latejoin_landmarks |= src
 
 /datum/job/lord/New()
@@ -448,12 +448,58 @@
 
 /obj/effect/landmark/start/outsider/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		jobs_to_spawn -= ROLE_WRETCH
 
 /datum/controller/subsystem/job/get_last_resort_spawn_points()
-	if(SSmapping.config?.map_name == "Azure Peak")
+	if(SSmapping.config?.map_name == "Twilight Axis")
 		var/obj/effect/landmark/start/outsider/fallback = locate(/obj/effect/landmark/start/outsider) in GLOB.latejoin_landmarks
 		if(fallback)
 			return fallback
 	return ..()
+
+// === Twilight Axis dun_world secret-door props (ported) ===
+// These bookcase-disguised redstone structures are used by the dun_world map but were never
+// ported to Vanderlin. The missing types made `new` return null on mapload, so their
+// redstone_id map var leaked onto the underlying turf -> "Undefined variable
+// /turf/.../redstone_id" runtimes in preloader_load. Defining them stops the leak.
+/obj/structure/lever/bookcase
+	name = "Bookcase"
+	desc = "Refuge for few, an irrelevance to most."
+	icon_state = "booklever0"
+
+/obj/structure/lever/bookcase/onkick(mob/user)
+	return
+
+/obj/structure/lever/bookcase/attack_hand(mob/user)
+	if(!isliving(user))
+		return
+	var/mob/living/L = user
+	L.changeNext_move(CLICK_CD_MELEE)
+	var/used_time = pulltime - (GET_MOB_ATTRIBUTE_VALUE(L, STAT_STRENGTH) * 1 SECONDS)
+	user.visible_message(span_warning("[user] pulls the book out of place."))
+	user.log_message("pulled the lever with redstone id \"[redstone_id]\"", LOG_GAME)
+	if(do_after(user, used_time))
+		for(var/obj/structure/structure in redstone_attached)
+			INVOKE_ASYNC(structure, PROC_REF(redstone_triggered), user)
+		trigger_wire_network(user)
+		toggled = !toggled
+		icon_state = "booklever[toggled]"
+		playsound(src, 'sound/foley/lever.ogg', 100, extrarange = 3)
+
+/obj/structure/bars/passage/shutter/bookcase
+	name = "Empty Bookcase"
+	desc = "Refuge for few, an irrelevance to most."
+	icon_state = "decoybookcase0"
+
+/obj/structure/bars/passage/shutter/bookcase/redstone_triggered(mob/user)
+	if(obj_broken)
+		return
+	if(density)
+		icon_state = "decoybookcase1"
+		density = FALSE
+		opacity = FALSE
+	else
+		icon_state = "decoybookcase0"
+		density = TRUE
+		opacity = TRUE

@@ -1,5 +1,5 @@
 {
-	"map_name": "Azure Peak",
+	"map_name": "Twilight Axis",
 	"map_path": "map_files/dun_world",
 	"map_file": [
 		"dun_world_new.dmm"
@@ -8,7 +8,7 @@
 	"monarch_title": "Duke",
 	"monarch_title_f": "Duchess",
 	"traits": [
-		{"Name": "Azure Peak", "Up": true},
+		{"Name": "Twilight Axis", "Up": true},
 		{"Up": true, "Down": true},
 		{"Up": true, "Down": true},
 		{"Down": true}

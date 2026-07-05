@@ -7,9 +7,10 @@
 		return
 	var/offset_y = taur_part.vars["genital_offset_y"]
 	var/offset_x = taur_part.vars["genital_offset_x"]
-	// The BODY_BEHIND_LAYER half of a genital is meant to peek out from behind a humanoid's legs.
-	// A taur has no humanoid lower body, so that half renders as a stray fragment on the beast back.
-	// Drop it, and nudge the remaining (front-facing) halves onto the taur body per-type offsets.
+	if(!isnum(offset_y))
+		offset_y = 0
+	if(!isnum(offset_x))
+		offset_x = 0
 	var/list/to_remove = list()
 	for(var/mutable_appearance/appearance as anything in appearance_list)
 		if(appearance.layer == -BODY_BEHIND_LAYER)
@@ -30,8 +31,9 @@
 	var/erp_has_knot = FALSE
 
 /datum/sprite_accessory/penis/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_PENIS)
 	apply_taur_genital_offset(appearance_list, owner)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_PENIS)
 
 /datum/sprite_accessory/penis/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/penis/pp = organ
@@ -47,7 +49,7 @@
 
 /datum/sprite_accessory/penis/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
-	if(istype(H) && H.underwear && H.underwear != "Nude")
+	if(istype(H) && smallclothes_groin_covered(H))
 		return FALSE
 	if(istype(H) && H.taur_groin_covered())
 		return FALSE
@@ -125,8 +127,9 @@
 	relevant_layers = list(BODY_BEHIND_LAYER, BODY_ADJ_LAYER)
 
 /datum/sprite_accessory/testicles/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_TESTICLES)
 	apply_taur_genital_offset(appearance_list, owner)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_TESTICLES)
 
 /datum/sprite_accessory/testicles/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/testicles/testes = organ
@@ -134,7 +137,7 @@
 
 /datum/sprite_accessory/testicles/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
-	if(istype(H) && H.underwear && H.underwear != "Nude")
+	if(istype(H) && smallclothes_groin_covered(H))
 		return FALSE
 	var/obj/item/organ/penis/pp = owner.getorganslot(ORGAN_SLOT_PENIS)
 	if(pp && pp.sheath_type == SHEATH_TYPE_SLIT)
@@ -162,7 +165,8 @@
 	return "[icon_state]_[badonkers.breast_size]"
 
 /datum/sprite_accessory/breasts/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_BREASTS)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_BREASTS)
 
 /datum/sprite_accessory/breasts/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	return is_human_part_visible(owner, HIDEBOOB|HIDEJUMPSUIT)
@@ -188,12 +192,13 @@
 	relevant_layers = list(BODY_FRONT_LAYER)
 
 /datum/sprite_accessory/vagina/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_BELT)
+	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_VAGINA)
 	apply_taur_genital_offset(appearance_list, owner)
+	genital_apply_stack_layer(appearance_list, GENITAL_LAYER_VAGINA)
 
 /datum/sprite_accessory/vagina/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/H = owner
-	if(istype(H) && H.underwear && H.underwear != "Nude")
+	if(istype(H) && smallclothes_groin_covered(H))
 		return FALSE
 	if(istype(H) && H.taur_groin_covered())
 		return FALSE
