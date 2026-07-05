@@ -61,6 +61,16 @@
 		return TRUE
 	return FALSE
 
+/datum/sprite_accessory/proc/smallclothes_feature_visible(mob/living/carbon/human/human, feature_slot, legacy_name)
+	if(human.smallclothes_render_suppressed)
+		return FALSE
+	if(!smallclothes_is_visible(human))
+		return FALSE
+	var/datum/bodypart_feature/smallclothes/feature = human.get_bodypart_feature_of_slot(feature_slot)
+	if(feature)
+		return feature.accessory_type == type
+	return legacy_name == name
+
 /datum/sprite_accessory/proc/smallclothes_adjust_appearance(list/appearance_list, obj/item/bodypart/bodypart, mob/living/carbon/human/human)
 	generic_gender_feature_adjust(appearance_list, null, bodypart, human, OFFSET_UNDIES)
 	if(smallclothes_state(human) == icon_state)
@@ -92,7 +102,7 @@
 
 /datum/sprite_accessory/underwear/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner
-	return istype(human) && human.underwear == name && smallclothes_is_visible(human)
+	return istype(human) && smallclothes_feature_visible(human, "smallclothes_bottom", human.underwear)
 
 /datum/sprite_accessory/underwear/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner
@@ -233,7 +243,7 @@
 
 /datum/sprite_accessory/undershirt/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner
-	return istype(human) && human.undershirt == name && smallclothes_is_visible(human)
+	return istype(human) && smallclothes_feature_visible(human, "smallclothes_top", human.undershirt)
 
 /datum/sprite_accessory/undershirt/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner
@@ -387,7 +397,7 @@
 
 /datum/sprite_accessory/socks/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner
-	return istype(human) && human.socks == name && smallclothes_is_visible(human)
+	return istype(human) && smallclothes_feature_visible(human, "smallclothes_legs", human.socks)
 
 /datum/sprite_accessory/socks/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/mob/living/carbon/human/human = owner

@@ -14,6 +14,7 @@ GLOBAL_LIST_INIT(socks_list, init_socks_list())
 /mob/living/carbon/human/var/undershirt_color
 /mob/living/carbon/human/var/socks_color
 /mob/living/carbon/human/var/uses_smallclothes_features = FALSE
+/mob/living/carbon/human/var/smallclothes_render_suppressed = FALSE
 
 /datum/preferences/_load_appearence(savefile/save)
 	. = ..()

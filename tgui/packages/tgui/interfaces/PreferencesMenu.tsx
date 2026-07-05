@@ -161,6 +161,8 @@ type PrefsData = {
   preview_map: string | null;
   preview_map_front: string | null;
   preview_map_side: string | null;
+  preview_bbox_w: number;
+  preview_bbox_h: number;
   culture_name: string;
   voice_type: string;
   voice_color: string;
@@ -570,6 +572,47 @@ export const PreferencesMenu = () => {
     return () => timers.forEach(clearTimeout);
   }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen]);
 
+  const [previewBoxPx, setPreviewBoxPx] = useState({ main: 0, mini: 0 });
+
+  useEffect(() => {
+    const measure = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const main = Math.floor(
+        (dollBoxRef.current?.getBoundingClientRect().width ?? 0) * dpr,
+      );
+      const mini = Math.floor(
+        (frontBoxRef.current?.getBoundingClientRect().width ?? 0) * dpr,
+      );
+      setPreviewBoxPx((prev) =>
+        prev.main === main && prev.mini === mini ? prev : { main, mini },
+      );
+    };
+    measure();
+    const timers = [250, 700, 1600].map((delay) => setTimeout(measure, delay));
+    window.addEventListener('resize', measure);
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener('resize', measure);
+    };
+  }, [data.preview_map, menuScale, data.preferences_fullscreen]);
+
+  const previewBboxW = Math.max(32, Number(data.preview_bbox_w) || 0);
+  const previewBboxH = Math.max(32, Number(data.preview_bbox_h) || 0);
+  const previewZoomFor = (boxPx: number) =>
+    boxPx
+      ? Math.max(
+          1,
+          Math.floor(
+            Math.min(
+              (boxPx * 1.25) / previewBboxW,
+              (boxPx * 0.85) / previewBboxH,
+            ),
+          ),
+        )
+      : 0;
+  const previewZoom = previewZoomFor(previewBoxPx.main);
+  const previewMiniZoom = previewZoomFor(previewBoxPx.mini);
+
   useEffect(() => {
     const report = () => {
       const m = dollBoxRef.current?.getBoundingClientRect();
@@ -587,11 +630,14 @@ export const PreferencesMenu = () => {
         win_h: Math.round(window.innerHeight),
         dpr: window.devicePixelRatio,
         menu_scale: menuScale,
+        zoom_main: previewZoom,
+        zoom_mini: previewMiniZoom,
+        bbox: `${data.preview_bbox_w}x${data.preview_bbox_h}`,
       });
     };
-    const t = setTimeout(report, 900);
+    const t = setTimeout(report, 250);
     return () => clearTimeout(t);
-  }, [data.preview_map, menuScale, data.preferences_fullscreen]);
+  }, [data.preview_map, menuScale, data.preferences_fullscreen, previewZoom, previewMiniZoom]);
 
   const [localRoundSeconds, setLocalRoundSeconds] = useState<number>(-1);
 
@@ -2134,16 +2180,21 @@ export const PreferencesMenu = () => {
                                 backgroundColor: backdropColor || '#0d0d0d',
                               }}
                             >
-                              <ByondUi
-                                key={`${data.preview_map_front}-${data.background}`}
-                                width="100%"
-                                height="100%"
-                                params={{
-                                  id: data.preview_map_front,
-                                  type: 'map',
-                                  'background-color': backdropColor || '#0d0d0d',
-                                }}
-                              />
+                              {previewMiniZoom > 0 ? (
+                                <ByondUi
+                                  key={`${data.preview_map_front}-${data.background}`}
+                                  width="100%"
+                                  height="100%"
+                                  params={{
+                                    id: data.preview_map_front,
+                                    type: 'map',
+                                    zoom: previewMiniZoom,
+                                    'zoom-mode': 'distort',
+                                    'background-color':
+                                      backdropColor || '#0d0d0d',
+                                  }}
+                                />
+                              ) : null}
                             </div>
                             <Box
                               color="label"
@@ -2163,16 +2214,21 @@ export const PreferencesMenu = () => {
                                 backgroundColor: backdropColor || '#0d0d0d',
                               }}
                             >
-                              <ByondUi
-                                key={`${data.preview_map_side}-${data.background}`}
-                                width="100%"
-                                height="100%"
-                                params={{
-                                  id: data.preview_map_side,
-                                  type: 'map',
-                                  'background-color': backdropColor || '#0d0d0d',
-                                }}
-                              />
+                              {previewMiniZoom > 0 ? (
+                                <ByondUi
+                                  key={`${data.preview_map_side}-${data.background}`}
+                                  width="100%"
+                                  height="100%"
+                                  params={{
+                                    id: data.preview_map_side,
+                                    type: 'map',
+                                    zoom: previewMiniZoom,
+                                    'zoom-mode': 'distort',
+                                    'background-color':
+                                      backdropColor || '#0d0d0d',
+                                  }}
+                                />
+                              ) : null}
                             </div>
                             <Box
                               color="label"
@@ -2211,7 +2267,7 @@ export const PreferencesMenu = () => {
                             backgroundColor: backdropColor || '#0d0d0d',
                           }}
                         >
-                        {data.preview_map ? (
+                        {data.preview_map && previewZoom > 0 ? (
                           <ByondUi
                             key={`${data.preview_map}-${data.background}`}
                             width="100%"
@@ -2219,6 +2275,8 @@ export const PreferencesMenu = () => {
                             params={{
                               id: data.preview_map,
                               type: 'map',
+                              zoom: previewZoom,
+                              'zoom-mode': 'distort',
                               'background-color': backdropColor || '#0d0d0d',
                             }}
                           />

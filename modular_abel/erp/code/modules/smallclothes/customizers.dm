@@ -146,7 +146,24 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	feature_type = /datum/bodypart_feature/smallclothes/legs
 	accessory_root = /datum/sprite_accessory/socks
 
+/proc/character_setup_fix_socks_pref()
+	var/static/socks_pref_fixed = FALSE
+	if(socks_pref_fixed)
+		return
+	var/datum/preference/choiced/socks/pref = GLOB.preference_entries[/datum/preference/choiced/socks]
+	if(!pref || !length(GLOB.socks_list))
+		return
+	var/list/choices = list()
+	for(var/socks_name in GLOB.socks_list)
+		choices += socks_name
+	if(!("Nude" in choices))
+		choices += "Nude"
+	pref.cached_values = choices
+	pref.dynamic = TRUE
+	socks_pref_fixed = TRUE
+
 /datum/preferences/proc/character_setup_sync_smallclothes_from_entries()
+	character_setup_fix_socks_pref()
 	for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
 		var/datum/customizer/bodypart_feature/smallclothes/customizer = CUSTOMIZER(customizer_type)
 		var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)
