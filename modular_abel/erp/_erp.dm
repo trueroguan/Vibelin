@@ -17,6 +17,7 @@
 #include "code\modules\mob\living\carbon\human\erp_consent.dm"
 #include "code\modules\mob\living\carbon\human\erp_clothing.dm"
 #include "code\modules\mob\living\carbon\human\erp_examine.dm"
+#include "code\modules\client\topic_census.dm"
 #include "code\modules\client\preferences\preferences_erp.dm"
 #include "code\modules\smallclothes\accessories.dm"
 #include "code\modules\smallclothes\customizers.dm"

@@ -199,6 +199,7 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 
 /datum/preferences/proc/character_setup_sync_smallclothes_from_entries()
 	character_setup_fix_socks_pref()
+	character_setup_log("SMALL", "sync_smallclothes_from_entries species=[pref_species?.id] gender=[cspref_gender()]")
 	for(var/customizer_type in GLOB.character_setup_smallclothes_customizers)
 		var/datum/customizer/bodypart_feature/smallclothes/customizer = CUSTOMIZER(customizer_type)
 		var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_type)

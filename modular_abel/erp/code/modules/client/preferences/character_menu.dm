@@ -272,15 +272,20 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 
 	validate_customizer_entries()
 	character_setup_static_sig = "[pref_species?.type]-[cspref_gender()]"
+	character_setup_log("LIFECYCLE", "build_and_show_menu user=[user.ckey] species=[pref_species?.id] gender=[cspref_gender()] static_sig=[character_setup_static_sig]")
 	ui_interact(user)
 
 /datum/preferences/update_menu_data(mob/user, list/fields_to_update)
+	var/_t = world.timeofday
 	character_setup_ui_heavy_sig = null
 	var/new_static_sig = "[pref_species?.type]-[cspref_gender()]"
+	var/static_refreshed = FALSE
 	if(new_static_sig != character_setup_static_sig)
 		character_setup_static_sig = new_static_sig
 		update_static_data(user)
+		static_refreshed = TRUE
 	character_setup_update_view()
+	character_setup_log_op("update_menu_data", _t, "fields=[fields_to_update ? jointext(fields_to_update, ",") : "all"] static_refresh=[static_refreshed]")
 
 /datum/preferences/proc/character_setup_sanitize_preferences_scale(value)
 	if(!isnum(value))
@@ -327,6 +332,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	return GLOB.always_state
 
 /datum/preferences/ui_assets(mob/user)
+	character_setup_log("ASSETS", "ui_assets served chargen spritesheet user=[user?.ckey]")
 	return list(get_asset_datum(/datum/asset/spritesheet/character_setup_chargen))
 
 /datum/preferences/proc/character_setup_handle_color_task(mob/user, list/href_list)
@@ -349,6 +355,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/new_color = input(user, "Choose color", "Color", he.vars[field]) as color|null
 	if(new_color)
 		he.vars[field] = sanitize_hexcolor(new_color)
+	character_setup_log("COLOR", "color_task field=[field] customizer=[customizer_type] new=[new_color || "cancel"]")
 	return TRUE
 
 /datum/preferences/ui_static_data(mob/user)
@@ -502,6 +509,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		))
 
 /datum/preferences/proc/character_setup_apply_species(mob/user, species_id)
+	var/_t = world.timeofday
 	if(!user || !species_id)
 		return FALSE
 	if(!(species_id in GLOB.roundstart_species))
@@ -565,9 +573,11 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		cspref_set_real_name(saved_name)
 
 	update_menu_data(user)
+	character_setup_log_op("apply_species", _t, "species=[species_id] age=[cspref_age()] gender=[cspref_gender()]")
 	return TRUE
 
 /datum/preferences/proc/character_setup_thumbnail_catalog()
+	var/_t = world.timeofday
 	. = list()
 	if(!pref_species)
 		return
@@ -586,6 +596,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 				var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
 				if(accessory)
 					.[key] = sanitize_css_class_name("[accessory_type]")
+	character_setup_log_op("thumbnail_catalog", _t, "entries=[length(.)] species=[pref_species?.id]")
 
 /datum/preferences/reset_jobs(mob/user, silent = FALSE)
 	job_preferences = list()
@@ -598,14 +609,18 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/window_width = character_setup_preferences_fullscreen ? 7680 : 1180
 	var/window_height = character_setup_preferences_fullscreen ? 4320 : 760
 	ui = SStgui.try_update_ui(user, src, ui)
+	var/created = FALSE
 	if(!ui)
+		created = TRUE
 		ui = new(user, src, "PreferencesMenu", "Character Setup", window_width, window_height)
 		ui.set_autoupdate(FALSE)
 		ui.open()
+	character_setup_log("LIFECYCLE", "ui_interact user=[user?.ckey] created=[created] fullscreen=[character_setup_preferences_fullscreen] win=[window_width]x[window_height]")
 	character_setup_ensure_view(user, ui)
 
 /datum/preferences/ui_close(mob/user)
 	. = ..()
+	character_setup_log("LIFECYCLE", "ui_close user=[user?.ckey]")
 	var/remaining = 0
 	for(var/datum/tgui/open_ui in open_uis)
 		if(open_ui.user == user)
@@ -663,6 +678,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	return TRUE
 
 /datum/preferences/proc/character_setup_round_action(mob/user)
+	character_setup_log("ROUND", "round_action user=[user?.ckey] state=[SSticker?.current_state]")
 	var/mob/dead/new_player/new_player
 	if(istype(user, /mob/dead/new_player))
 		new_player = user
@@ -787,6 +803,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	for(var/atom/movable/screen/map_view/view as anything in list(character_setup_view, character_setup_view_front, character_setup_view_side))
 		if(view)
 			winset(user, view.assigned_map, "background-color=[bg_hex]")
+	character_setup_log("BACKDROP", "apply_map_background bg=[character_setup_preview_background || "none"] hex=[bg_hex]")
 
 /datum/preferences/proc/character_setup_apply_reported_zoom(mob/user, zoom_main, zoom_mini)
 	if(!user?.client)
@@ -1254,6 +1271,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	to_chat(user, "<font color='red'>Considers these to be Sins: [selected_patron.sins]</font>")
 	to_chat(user, "<font color='white'>Blessed with boon(s): [selected_patron.boons]</font>")
 	save_character()
+	character_setup_log("MUTATE", "apply_patron [patron_id] -> [selected_patron.name] faith=[selected_patron.associated_faith]")
 	update_menu_data(user)
 	return TRUE
 
@@ -1284,6 +1302,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	to_chat(user, "<font color='purple'>Faith: [faith.name]</font>")
 	to_chat(user, "<font color='purple'>Background: [faith.desc]</font>")
 	save_character()
+	character_setup_log("MUTATE", "apply_faith [faith_id] patron=[patron_type]")
 	update_menu_data(user)
 	return TRUE
 
@@ -1296,6 +1315,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/new_skin_tone = skins[ancestry_name]
 	if(cspref_skin_tone() != new_skin_tone)
 		cspref_set_skin_tone(new_skin_tone)
+		character_setup_log("MUTATE", "apply_ancestry [ancestry_name] tone=[new_skin_tone]")
 		save_character()
 		update_menu_data(user)
 	return TRUE
@@ -1310,10 +1330,12 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		user.client.lobbyooc(message)
 	else
 		user.client.ooc(message)
+	character_setup_log("OOC", "send_ooc user=[user?.ckey] len=[length(message)]")
 	character_setup_push_all_prefs()
 	return TRUE
 
 /datum/preferences/ui_data(mob/user)
+	var/_t = world.timeofday
 	var/list/data = list()
 
 	var/datum/faith/selected_faith
@@ -1347,7 +1369,8 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/current_faith_type = current_patron ? current_patron.associated_faith : /datum/patron/divine/astrata::associated_faith
 
 	var/heavy_sig = "[pref_species?.type]|[cspref_gender()]|[current_patron?.type]|[cspref_age()]|[cspref_skin_tone()]|[erp_enabled]"
-	if(!character_setup_ui_heavy_cache || character_setup_ui_heavy_sig != heavy_sig)
+	var/heavy_rebuilt = (!character_setup_ui_heavy_cache || character_setup_ui_heavy_sig != heavy_sig)
+	if(heavy_rebuilt)
 		var/list/heavy = list()
 
 		var/list/selectable_ages = character_setup_selectable_ages()
@@ -1543,6 +1566,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		"scaling_method" = "[cspref_scaling_method()]",
 	)
 
+	character_setup_log_op("ui_data", _t, "keys=[length(data)] heavy_rebuilt=[heavy_rebuilt] species=[pref_species?.id] dir=[character_setup_preview_dir]")
 	return data
 
 /datum/preferences/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -1554,6 +1578,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	if(!user)
 		return FALSE
 
+	character_setup_log("ACT", "ui_act action=[action] pref=[islist(params) ? params["preference"] : "?"]")
 	switch(action)
 		if("pref")
 			if(!islist(params) || !params["preference"])
@@ -1602,6 +1627,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	return TRUE
 
 /datum/preferences/proc/character_setup_handle_system_action(mob/user, list/href_list)
+	character_setup_log("DISPATCH", "system/core fallthrough pref=[href_list["preference"]]")
 	switch(href_list["preference"])
 		if("save")
 			to_chat(user, span_info("Preferences Saved."))
