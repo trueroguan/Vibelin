@@ -2178,6 +2178,7 @@ export const PreferencesMenu = () => {
                               {previewMiniZoom > 0 ? (
                                 <ByondUi
                                   key={data.preview_map_front}
+                                  phonehome={false}
                                   width="100%"
                                   height="100%"
                                   params={{
@@ -2212,6 +2213,7 @@ export const PreferencesMenu = () => {
                               {previewMiniZoom > 0 ? (
                                 <ByondUi
                                   key={data.preview_map_side}
+                                  phonehome={false}
                                   width="100%"
                                   height="100%"
                                   params={{
@@ -2265,6 +2267,7 @@ export const PreferencesMenu = () => {
                         {data.preview_map && previewZoom > 0 ? (
                           <ByondUi
                             key={data.preview_map}
+                            phonehome={false}
                             width="100%"
                             height="100%"
                             params={{
