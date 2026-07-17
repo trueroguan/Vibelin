@@ -960,7 +960,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		var/mob/living/carbon/human/dummy/diag_body = character_setup_body
 		if(diag_body)
 			var/list/slot_bits = list()
-			for(var/slot in list("smallclothes_bottom", "smallclothes_top", "smallclothes_legs", "smallclothes_garter"))
+			for(var/slot in list("smallclothes_bottom", "smallclothes_top", "smallclothes_legs"))
 				var/datum/bodypart_feature/smallclothes/feature = diag_body.get_bodypart_feature_of_slot(slot)
 				slot_bits += "[slot]=[feature ? "[feature.accessory_type] colors=[feature.accessory_colors]" : "NONE"]"
 			character_setup_log("SMALL", "[slot_bits.Join(" | ")] mob_underwear=[diag_body.underwear] mob_undershirt=[diag_body.undershirt] mob_socks=[diag_body.socks] suppressed=[diag_body.smallclothes_render_suppressed]")

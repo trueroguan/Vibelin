@@ -492,32 +492,3 @@
 	smallclothes_female_state = "stockings_mesh_cl_f"
 	smallclothes_dwarf_state = "stockings_mesh_cl_dwarf"
 	smallclothes_female_dwarf_state = "stockings_mesh_cl_f_dwarf"
-
-/datum/sprite_accessory/garter
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_garters.dmi'
-	use_static = FALSE
-	color_key_name = "Garter"
-	default_colors = list("#ffffff")
-	specuse = ALL_RACES_LIST
-	smallclothes_any_species = TRUE
-	smallclothes_covers_groin = TRUE
-
-/datum/sprite_accessory/garter/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	var/mob/living/carbon/human/human = owner
-	return istype(human) ? smallclothes_state(human) : icon_state
-
-/datum/sprite_accessory/garter/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	var/mob/living/carbon/human/human = owner
-	return istype(human) && smallclothes_feature_visible(human, "smallclothes_garter", null)
-
-/datum/sprite_accessory/garter/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	var/mob/living/carbon/human/human = owner
-	if(istype(human))
-		smallclothes_adjust_appearance(appearance_list, bodypart, human)
-
-/datum/sprite_accessory/garter/garters
-	name = "Garters"
-	icon_state = "garters"
-	smallclothes_female_state = "garters_f"
-	smallclothes_dwarf_state = "garters_dwarf"
-	smallclothes_female_dwarf_state = "garters_f_dwarf"

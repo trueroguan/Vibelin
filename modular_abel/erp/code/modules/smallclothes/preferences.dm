@@ -10,12 +10,9 @@ GLOBAL_LIST_INIT(socks_list, init_socks_list())
 
 /datum/preferences/var/undershirt_color
 /datum/preferences/var/socks_color
-/datum/preferences/var/character_setup_garter_name
-/datum/preferences/var/character_setup_garter_color
 
 /mob/living/carbon/human/var/undershirt_color
 /mob/living/carbon/human/var/socks_color
-/mob/living/carbon/human/var/character_setup_garter_color
 /mob/living/carbon/human/var/uses_smallclothes_features = FALSE
 /mob/living/carbon/human/var/smallclothes_render_suppressed = FALSE
 
@@ -23,8 +20,6 @@ GLOBAL_LIST_INIT(socks_list, init_socks_list())
 	. = ..()
 	save["undershirt_color"] >> undershirt_color
 	save["socks_color"] >> socks_color
-	save["character_setup_garter_name"] >> character_setup_garter_name
-	save["character_setup_garter_color"] >> character_setup_garter_color
 
 /datum/preferences/save_character()
 	if(!character_setup_suppress_smallclothes_sync)
@@ -38,8 +33,6 @@ GLOBAL_LIST_INIT(socks_list, init_socks_list())
 	save.cd = "/character[default_slot]"
 	WRITE_FILE(save["undershirt_color"], undershirt_color)
 	WRITE_FILE(save["socks_color"], socks_color)
-	WRITE_FILE(save["character_setup_garter_name"], character_setup_garter_name)
-	WRITE_FILE(save["character_setup_garter_color"], character_setup_garter_color)
 
 /datum/preferences/apply_prefs_to(mob/living/carbon/human/character, icon_updates = TRUE)
 	if(!character_setup_suppress_smallclothes_sync)
@@ -51,4 +44,3 @@ GLOBAL_LIST_INIT(socks_list, init_socks_list())
 		return
 	character.undershirt_color = undershirt_color
 	character.socks_color = socks_color
-	character.character_setup_garter_color = character_setup_garter_color
