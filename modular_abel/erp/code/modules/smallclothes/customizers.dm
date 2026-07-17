@@ -2,6 +2,7 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	/datum/customizer/bodypart_feature/smallclothes/bottom,
 	/datum/customizer/bodypart_feature/smallclothes/top,
 	/datum/customizer/bodypart_feature/smallclothes/legs,
+	/datum/customizer/bodypart_feature/smallclothes/garter,
 ))
 
 /datum/preferences/var/character_setup_suppress_smallclothes_sync = FALSE
@@ -20,6 +21,10 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 /datum/bodypart_feature/smallclothes/legs
 	name = "Legwear"
 	feature_slot = "smallclothes_legs"
+
+/datum/bodypart_feature/smallclothes/garter
+	name = "Garter"
+	feature_slot = "smallclothes_garter"
 
 /datum/customizer/bodypart_feature/smallclothes
 	abstract_type = /datum/customizer/bodypart_feature/smallclothes
@@ -40,6 +45,9 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 		if("legs")
 			legacy_name = prefs.cspref_socks()
 			legacy_color = prefs.socks_color
+		if("garter")
+			legacy_name = prefs.character_setup_garter_name
+			legacy_color = prefs.character_setup_garter_color
 		else
 			legacy_name = prefs.cspref_underwear()
 			legacy_color = prefs.cspref_underwear_color()
@@ -70,6 +78,15 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	customizer_choices = list(/datum/customizer_choice/bodypart_feature/smallclothes/legs)
 
 /datum/customizer/bodypart_feature/smallclothes/legs/is_allowed(datum/preferences/prefs)
+	var/datum/species/species = return_species(prefs)
+	return !species?.forced_taur
+
+/datum/customizer/bodypart_feature/smallclothes/garter
+	name = "Garter"
+	smallclothes_slot = "garter"
+	customizer_choices = list(/datum/customizer_choice/bodypart_feature/smallclothes/garter)
+
+/datum/customizer/bodypart_feature/smallclothes/garter/is_allowed(datum/preferences/prefs)
 	var/datum/species/species = return_species(prefs)
 	return !species?.forced_taur
 
@@ -181,6 +198,11 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 	feature_type = /datum/bodypart_feature/smallclothes/legs
 	accessory_root = /datum/sprite_accessory/socks
 
+/datum/customizer_choice/bodypart_feature/smallclothes/garter
+	name = "Garter"
+	feature_type = /datum/bodypart_feature/smallclothes/garter
+	accessory_root = /datum/sprite_accessory/garter
+
 /proc/character_setup_fix_socks_pref()
 	var/static/socks_pref_fixed = FALSE
 	if(socks_pref_fixed)
@@ -218,6 +240,10 @@ GLOBAL_LIST_INIT(character_setup_smallclothes_customizers, list(
 				cspref_set_socks(selected_name)
 				if(selected_color)
 					socks_color = selected_color
+			if("garter")
+				character_setup_garter_name = selected_name
+				if(selected_color)
+					character_setup_garter_color = selected_color
 			else
 				cspref_set_underwear(selected_name)
 				if(selected_color)
