@@ -151,7 +151,7 @@
 
 /datum/sprite_accessory/underwear/bikini
 	name = "Bikini"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "bikini_f_0"
 	specuse = ALL_RACES_LIST
 	smallclothes_any_species = TRUE
@@ -162,7 +162,7 @@
 
 /datum/sprite_accessory/underwear/leotard
 	name = "Leotard"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "male_leotard"
 	specuse = ALL_RACES_LIST
 	smallclothes_any_species = TRUE
@@ -175,7 +175,7 @@
 
 /datum/sprite_accessory/underwear/athletic_leotard
 	name = "Athletic Leotard"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "male_athletic_leotard"
 	smallclothes_female_state = "female_athletic_leotard"
 	specuse = ALL_RACES_LIST
@@ -184,7 +184,7 @@
 
 /datum/sprite_accessory/underwear/eoran_briefs
 	name = "Eoran Briefs"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "eoran_reg"
 	smallclothes_female_state = "eoran_elf"
 	smallclothes_dwarf_state = "eoran_dwarf"
@@ -194,14 +194,14 @@
 
 /datum/sprite_accessory/underwear/small_loincloth
 	name = "Small Loincloth"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "loinclothunder"
 	specuse = ALL_RACES_LIST
 	smallclothes_any_species = TRUE
 
 /datum/sprite_accessory/underwear/briefs
 	name = "Briefs"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "briefs"
 	smallclothes_female_state = "briefs_f"
 	smallclothes_dwarf_state = "briefs_dwarf"
@@ -211,7 +211,7 @@
 
 /datum/sprite_accessory/underwear/panties
 	name = "Panties"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "panties"
 	smallclothes_female_state = "panties_f"
 	specuse = ALL_RACES_LIST
@@ -219,7 +219,7 @@
 
 /datum/sprite_accessory/underwear/thong
 	name = "Thong"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "thong"
 	smallclothes_female_state = "thong_f"
 	smallclothes_dwarf_state = "thong_dwarf"
@@ -229,7 +229,7 @@
 
 /datum/sprite_accessory/underwear/bikini_bottom
 	name = "Bikini Bottom"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "bikini_bottom"
 	smallclothes_female_state = "bikini_bottom_f"
 	specuse = ALL_RACES_LIST
@@ -237,7 +237,7 @@
 
 /datum/sprite_accessory/underwear/braies
 	name = "Braies"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_bottoms.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_bottoms.dmi'
 	icon_state = "braies"
 	smallclothes_female_state = "braies_f"
 	specuse = ALL_RACES_LIST
@@ -267,7 +267,7 @@
 
 /datum/sprite_accessory/undershirt/bra
 	name = "Bra"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "bra"
 	smallclothes_female_state = "bra_f"
 	smallclothes_dwarf_state = "bra_dwarf"
@@ -275,7 +275,7 @@
 
 /datum/sprite_accessory/undershirt/bikini_top
 	name = "Bikini Top"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "bikini_top"
 
 /datum/sprite_accessory/undershirt/bikini_top/smallclothes_state(mob/living/carbon/human/human)
@@ -288,7 +288,7 @@
 
 /datum/sprite_accessory/undershirt/leotard
 	name = "Leotard Top"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "leotard"
 	smallclothes_taur_compatible = FALSE
 	smallclothes_covers_groin = TRUE
@@ -300,7 +300,7 @@
 
 /datum/sprite_accessory/undershirt/athletic_leotard
 	name = "Athletic Leotard Top"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "athletic_leotard"
 	smallclothes_female_state = "athletic_leotard_f"
 	smallclothes_taur_compatible = FALSE
@@ -308,7 +308,7 @@
 
 /datum/sprite_accessory/undershirt/sheer_half
 	name = "Sheer Half-Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "solid-half"
 	smallclothes_female_state = "solid-half_f"
 	smallclothes_dwarf_state = "solid-half_dwarf"
@@ -318,7 +318,7 @@
 
 /datum/sprite_accessory/undershirt/silk
 	name = "Silk Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "silk"
 	smallclothes_female_state = "silk_f"
 	smallclothes_dwarf_state = "silk_dwarf"
@@ -328,7 +328,7 @@
 
 /datum/sprite_accessory/undershirt/silk_half
 	name = "Silk Half-Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "silk-half"
 	smallclothes_female_state = "silk-half_f"
 	smallclothes_dwarf_state = "silk-half_dwarf"
@@ -338,7 +338,7 @@
 
 /datum/sprite_accessory/undershirt/mesh
 	name = "Mesh Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "mesh"
 	smallclothes_female_state = "mesh_f"
 	smallclothes_dwarf_state = "mesh_dwarf"
@@ -348,7 +348,7 @@
 
 /datum/sprite_accessory/undershirt/mesh_half
 	name = "Mesh Half-Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "mesh-half"
 	smallclothes_female_state = "mesh-half_f"
 	smallclothes_dwarf_state = "mesh-half_dwarf"
@@ -358,7 +358,7 @@
 
 /datum/sprite_accessory/undershirt/net
 	name = "Net Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "net"
 	smallclothes_female_state = "net_f"
 	smallclothes_dwarf_state = "net_dwarf"
@@ -368,7 +368,7 @@
 
 /datum/sprite_accessory/undershirt/net_half
 	name = "Net Half-Body"
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_tops.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_tops.dmi'
 	icon_state = "net-half"
 	smallclothes_female_state = "net-half_f"
 	smallclothes_dwarf_state = "net-half_dwarf"
@@ -377,7 +377,7 @@
 	smallclothes_female_dwarf_extra_state = "net-half_f_dwarf_boob"
 
 /datum/sprite_accessory/socks
-	icon = 'modular_abel/erp/icons/character_setup/smallclothes_legwear.dmi'
+	icon = 'modular_abel/character_setup/icons/character_setup/smallclothes_legwear.dmi'
 	use_static = FALSE
 	color_key_name = "Legwear"
 	default_colors = list("#ffffff")

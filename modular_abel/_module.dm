@@ -1,4 +1,5 @@
 #include "erp/_erp.dm"
+#include "character_setup/_character_setup.dm"
 #include "dun_world/_dun_world.dm"
 #include "races/_races.dm"
 #include "job_starting_coins.dm"
