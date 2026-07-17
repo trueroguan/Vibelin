@@ -109,7 +109,7 @@
 	var/list/out = list()
 
 	for(var/field in ERP_ACTION_PREF_FIELDS)
-		if(!hasvar(A, field))
+		if(!(field in A.vars))
 			continue
 
 		var/v = A.vars[field]
@@ -129,7 +129,7 @@
 		return FALSE
 
 	for(var/field in ERP_ACTION_PREF_FIELDS)
-		if(!(field in data) || !hasvar(A, field))
+		if(!(field in data) || !(field in A.vars))
 			continue
 
 		var/v = data[field]
