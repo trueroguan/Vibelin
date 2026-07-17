@@ -657,7 +657,7 @@
 		"/obj/item/natural/whetstone": "/obj/item/natural/rock",
 		"/obj/item/natural/worms/grubs": "/obj/item/natural/worms",
 		"/obj/item/needle/aalloy": "/obj/item/needle",
-		"/obj/item/needle/bronze": "/obj/item/needle",
+		"/obj/item/needle/bronze": "/obj/item/needle/bronze",
 		"/obj/item/paper/natural": "/obj/item/paper",
 		"/obj/item/polishing_cream": "/obj/item/natural/cloth",
 		"/obj/item/quiver/arrows": "/obj/item/ammo_holder/quiver/arrows",
