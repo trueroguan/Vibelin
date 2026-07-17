@@ -1,7 +1,7 @@
 /obj/item/weapon/greataxe/bronze
 	name = "bronze greataxe"
 	desc = "A massive staff with a bronze axhead mantled onto the wood. It splits and carves from afar with lethal force; be it lumber or limbs."
-	icon = 'modular_abel/gear/icons/weapons/axes64_port.dmi'
+	icon = 'modular_abel/gear/icons/weapons_64.dmi'
 	icon_state = "bronzegreataxe"
 	max_blade_int = 250
 	max_integrity = INTEGRITY_STRONG + 75
@@ -11,7 +11,7 @@
 /obj/item/weapon/sword/scimitar/lakkarikhopesh/bronze
 	name = "kopis"
 	desc = "A curved bronze sword with a forward-weighted, single-edged blade, built to chop rather than slice. An antiquated design, but no less lethal for it."
-	icon = 'modular_abel/gear/icons/weapons/swords32_port.dmi'
+	icon = 'modular_abel/gear/icons/weapons_32.dmi'
 	icon_state = "kopis"
 	max_blade_int = 250
 	max_integrity = INTEGRITY_STRONG + 75
@@ -21,7 +21,7 @@
 /obj/item/weapon/sword/long/broadsword/bronze
 	name = "spatha"
 	desc = "A long, straight bronze blade favored by antiquated cavalry. Predates the longsword by centuries, but its reach and balance still hold up."
-	icon = 'modular_abel/gear/icons/weapons/swords64_port.dmi'
+	icon = 'modular_abel/gear/icons/weapons_64.dmi'
 	icon_state = "spatha"
 	max_blade_int = 250
 	max_integrity = INTEGRITY_STRONG + 75
@@ -38,7 +38,7 @@
 /obj/item/weapon/flail/bronze
 	name = "bronze flail"
 	desc = "A sturdy handle affixed to a cruel spiked ball of bronze, with a harrowing metal chain."
-	icon = 'modular_abel/gear/icons/weapons/blunt32_port.dmi'
+	icon = 'modular_abel/gear/icons/weapons_32.dmi'
 	icon_state = "bronzeflail"
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
@@ -47,7 +47,7 @@
 /obj/item/weapon/katar/bronze
 	name = "bronze katar"
 	desc = "A blade of bronze that sits above the user's fist. An older design than the steel katar, favored where steel is scarce."
-	icon = 'modular_abel/gear/icons/weapons/unarmed32_port.dmi'
+	icon = 'modular_abel/gear/icons/weapons_32.dmi'
 	icon_state = "bronzekatar"
 	max_blade_int = 250
 	max_integrity = INTEGRITY_STRONG + 75
@@ -58,3 +58,13 @@
 	name = "arbelos"
 	desc = "A cruel, scissor-bladed bronze katar favored by pit-fighters. Built to trap and tear rather than simply pierce."
 	icon_state = "bronzescissor"
+
+/obj/item/weapon/katar/silver
+	name = "silver katar"
+	desc = "An exotic weapon that was born from frugality and scarcity. Blessed by neither priest nor smith, but no less capable of drawing blood from what shouldn't bleed."
+	icon = 'modular_abel/gear/icons/weapons_32.dmi'
+	icon_state = "silverkatar"
+	max_blade_int = 160
+	max_integrity = INTEGRITY_STRONG * 0.8
+	smeltresult = /obj/item/ingot/silver
+	melting_material = /datum/material/silver
