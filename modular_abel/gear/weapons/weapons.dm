@@ -3,7 +3,7 @@
 	desc = "A massive staff with a bronze axhead mantled onto the wood. It splits and carves from afar with lethal force; be it lumber or limbs."
 	icon = 'modular_abel/gear/icons/weapons_64.dmi'
 	icon_state = "bronzegreataxe"
-	max_blade_int = 250
+	max_blade_int = INTEGRITY_STANDARD + 50
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -13,7 +13,7 @@
 	desc = "A curved bronze sword with a forward-weighted, single-edged blade, built to chop rather than slice. An antiquated design, but no less lethal for it."
 	icon = 'modular_abel/gear/icons/weapons_32.dmi'
 	icon_state = "kopis"
-	max_blade_int = 250
+	max_blade_int = INTEGRITY_STANDARD + 50
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -23,7 +23,7 @@
 	desc = "A long, straight bronze blade favored by antiquated cavalry. Predates the longsword by centuries, but its reach and balance still hold up."
 	icon = 'modular_abel/gear/icons/weapons_64.dmi'
 	icon_state = "spatha"
-	max_blade_int = 250
+	max_blade_int = INTEGRITY_STANDARD + 50
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -49,7 +49,7 @@
 	desc = "A blade of bronze that sits above the user's fist. An older design than the steel katar, favored where steel is scarce."
 	icon = 'modular_abel/gear/icons/weapons_32.dmi'
 	icon_state = "bronzekatar"
-	max_blade_int = 250
+	max_blade_int = INTEGRITY_STANDARD + 50
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -64,7 +64,7 @@
 	desc = "An exotic weapon that was born from frugality and scarcity. Blessed by neither priest nor smith, but no less capable of drawing blood from what shouldn't bleed."
 	icon = 'modular_abel/gear/icons/weapons_32.dmi'
 	icon_state = "silverkatar"
-	max_blade_int = 160
+	max_blade_int = INTEGRITY_POOR + 10
 	max_integrity = INTEGRITY_STRONG * 0.8
 	smeltresult = /obj/item/ingot/silver
 	melting_material = /datum/material/silver

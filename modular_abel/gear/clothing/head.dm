@@ -87,3 +87,22 @@
 	item_state = "dprince"
 	block2add = FOV_BEHIND
 	flags_inv = HIDEHAIR
+
+/obj/item/clothing/head/desert_sorceress
+	name = "desert sorceress hood"
+	desc = "A thin desert hood worn by sorceresses to shield against sun and sand while leaving the face and eyes unobstructed."
+	icon = 'modular_abel/gear/icons/rmh/desert_sorceress.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/desert_sorceress.dmi'
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR
+	icon_state = "hood"
+	item_state = "hood"
+
+/obj/item/clothing/head/tombraider
+	name = "tomb raider's hat"
+	desc = "The perfect protection both from heat and things falling on your head."
+	icon = 'modular_abel/gear/icons/rmh/explorer.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/explorer.dmi'
+	icon_state = "hat"
+	item_state = "hat"
+	armor = ARMOR_LEATHER
+	salvage_result = /obj/item/natural/hide/cured

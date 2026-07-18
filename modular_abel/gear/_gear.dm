@@ -12,6 +12,7 @@
 #include "clothing/gloves.dm"
 #include "clothing/wrists.dm"
 #include "clothing/feet.dm"
+#include "clothing/face.dm"
 #include "clothing/head.dm"
 #include "clothing/belt.dm"
 #include "clothing/pants.dm"
@@ -21,3 +22,5 @@
 #include "items/donor_kits.dm"
 #include "items/donor_recipes.dm"
 #include "items/donor_loadout.dm"
+#include "items/rmh_recipes.dm"
+#include "items/rmh_loadout.dm"

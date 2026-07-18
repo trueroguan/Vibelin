@@ -3,6 +3,8 @@
 #include "dun_world/_dun_world.dm"
 #include "races/_races.dm"
 #include "gear/_gear.dm"
+#include "loadout_panel/_loadout_panel.dm"
+#include "automapper/_automapper.dm"
 #include "job_starting_coins.dm"
 #include "cyrillic_say_fix.dm"
 #include "upstream_fixes.dm"

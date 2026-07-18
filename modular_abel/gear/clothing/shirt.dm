@@ -294,3 +294,182 @@
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 	armor = ARMOR_PADDED
+
+/obj/item/clothing/shirt/dress/skyrim_dress
+	name = "light blue dress"
+	desc = "A simple light blue dress, tailored to flatter the figure."
+	body_parts_covered = CHEST|GROIN
+	icon = 'modular_abel/gear/icons/rmh/skyrim_dress.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/skyrim_dress.dmi'
+	icon_state = "dress"
+	item_state = "dress"
+	nodismemsleeves = TRUE
+	sleevetype = null
+	sleeved = null
+
+/obj/item/clothing/shirt/dress/hw_dress
+	name = "salad green dress"
+	desc = "A simple light green dress, tailored to flatter the figure."
+	body_parts_covered = CHEST|GROIN
+	icon = 'modular_abel/gear/icons/rmh/skyrim_dress.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/skyrim_dress.dmi'
+	icon_state = "hdress"
+	item_state = "hdress"
+	nodismemsleeves = TRUE
+	sleevetype = null
+	sleeved = null
+
+/obj/item/clothing/shirt/dress/toga
+	name = "toga"
+	desc = "A pristine white toga of flowing linen."
+	body_parts_covered = CHEST|GROIN
+	icon = 'modular_abel/gear/icons/rmh/toga.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/toga.dmi'
+	icon_state = "toga"
+	item_state = "toga"
+	nodismemsleeves = TRUE
+	sleevetype = null
+	sleeved = null
+	var/base_icon = "toga"
+	var/changed_icon = "toga"
+	var/alt_wear = FALSE
+
+/obj/item/clothing/shirt/dress/toga/attack_hand_secondary(mob/user, list/modifiers)
+	. = ..()
+	switch(alt_wear)
+		if(FALSE)
+			name = "revealing toga"
+			body_parts_covered = null
+			icon_state = "[changed_icon]_alt"
+			to_chat(user, span_warning("Now wearing more revealing!"))
+			alt_wear = TRUE
+		if(TRUE)
+			name = "toga"
+			body_parts_covered = CHEST|GROIN|VITALS
+			icon_state = "[changed_icon]"
+			to_chat(user, span_warning("Now wearing normally!"))
+			alt_wear = FALSE
+	update_icon()
+	if(ismob(loc))
+		var/mob/L = loc
+		L.update_inv_armor()
+		L.update_inv_shirt()
+
+/obj/item/clothing/shirt/dress/toga/equipped(mob/user, slot)
+	. = ..()
+	if(user.gender == FEMALE)
+		icon_state = "[base_icon]fem"
+		changed_icon = "[base_icon]fem"
+	else
+		icon_state = "[base_icon]"
+		changed_icon = "[base_icon]"
+
+/obj/item/clothing/shirt/dress/courtesan
+	name = "courtesan dress"
+	desc = "A radiant yellow silk dress, fitted at the waist and flowing below. Light and elegant."
+	body_parts_covered = CHEST|GROIN|ARMS|VITALS
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	icon = 'modular_abel/gear/icons/rmh/courtesan.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/courtesan.dmi'
+	sleeved = 'modular_abel/gear/icons/rmh/sleeves/courtesan_sleeves.dmi'
+	icon_state = "dress"
+	flags_inv = HIDEBOOB
+
+/obj/item/clothing/shirt/desert_sorceress
+	name = "desert sorceress top"
+	desc = "A revealing silk-and-linen top worn by desert sorceresses, designed to keep the body cool while allowing unrestricted movement and spellcasting."
+	icon = 'modular_abel/gear/icons/rmh/desert_sorceress.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/desert_sorceress.dmi'
+	icon_state = "top"
+	item_state = "top"
+	nodismemsleeves = TRUE
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	sleevetype = null
+	sleeved = null
+
+/obj/item/clothing/shirt/dress/gen/nightgown
+	name = "nightgown"
+	desc = "An elegant and enticing nightgown, made for comfort and allure."
+	body_parts_covered = null
+	flags_inv = HIDEBOOB
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	icon = 'modular_abel/gear/icons/rmh/nightie.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/nightie.dmi'
+	sleeved = null
+	sleevetype = null
+	icon_state = "dress"
+	item_state = "dress"
+
+/obj/item/clothing/shirt/robe/selune
+	name = "moon robe"
+	desc = "A moon-silver robe."
+	icon_state = "selune"
+	icon = 'modular_abel/gear/icons/rmh/selune.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/selune.dmi'
+	sleeved = 'modular_abel/gear/icons/rmh/sleeves/selune_sleeves.dmi'
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+
+/obj/item/clothing/shirt/robe/skyrim_mage
+	name = "mage robes"
+	desc = "Simple but finely woven robes favored by the mages. The cloth is light, warm, and practical."
+	icon_state = "mage"
+	icon = 'modular_abel/gear/icons/rmh/skyrim_mage.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/skyrim_mage.dmi'
+	sleeved = 'modular_abel/gear/icons/rmh/sleeves/skyrim_mage_sleeves.dmi'
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+
+/obj/item/clothing/shirt/dress/skyrim_tavern
+	name = "waitress dress"
+	desc = "A simple green dress with a corset, its skirt has slits for easy movement."
+	body_parts_covered = CHEST|GROIN|VITALS
+	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
+	icon = 'modular_abel/gear/icons/rmh/skyrim_tavern.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/skyrim_tavern.dmi'
+	icon_state = "tavern"
+	item_state = "tavern"
+	nodismemsleeves = TRUE
+	sleevetype = null
+	sleeved = null
+
+/obj/item/clothing/shirt/leo_robe
+	name = "leopard robe"
+	desc = "An exquisite silky robe with a leopard pattern."
+	body_parts_covered = CHEST|GROIN|VITALS
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
+	icon = 'modular_abel/gear/icons/rmh/tig.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/tig.dmi'
+	sleeved = 'modular_abel/gear/icons/rmh/sleeves/tig_sleeves.dmi'
+	sleevetype = "armor"
+	icon_state = "tig"
+	item_state = "tig"
+	nodismemsleeves = TRUE
+	adjustable = CAN_CADJUST
+	toggle_icon_state = TRUE
+
+/obj/item/clothing/shirt/leo_robe/AdjustClothes(mob/user)
+	if(loc == user)
+		if(adjustable == CAN_CADJUST)
+			adjustable = CADJUSTED
+			if(toggle_icon_state)
+				icon_state = "tig_open"
+			flags_inv = HIDEBOOB
+			if(ishuman(user))
+				var/mob/living/carbon/H = user
+				H.update_inv_armor()
+		else if(adjustable == CADJUSTED)
+			ResetAdjust(user)
+		if(ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_armor()
+
+/obj/item/clothing/shirt/leo_robe/leopard
+	color = "#d88a32ff"
+
+/obj/item/clothing/shirt/undershirt/blouse
+	name = "blouse"
+	desc = "A finely tailored blouse made from soft, lightweight fabric, with delicate buttons and subtly decorated cuffs."
+	icon_state = "blouse"
+	icon = 'modular_abel/gear/icons/rmh/formal.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/formal.dmi'
+	sleeved = 'modular_abel/gear/icons/rmh/sleeves/formal_sleeves.dmi'
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
