@@ -146,7 +146,7 @@
 /datum/repeatable_crafting_recipe/leather/standalone/druid_armor
 	name = "druid armor"
 	output = /obj/item/clothing/armor/leather/druid
-	requirements = list(/obj/item/grown/log = 1,
+	requirements = list(/obj/item/grown/log/tree/small = 1,
 				/obj/item/natural/hide/cured = 2)
 	craftdiff = 2
 	category = "Armor"

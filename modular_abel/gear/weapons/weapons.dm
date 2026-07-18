@@ -68,3 +68,25 @@
 	max_integrity = INTEGRITY_STRONG * 0.8
 	smeltresult = /obj/item/ingot/silver
 	melting_material = /datum/material/silver
+
+/obj/item/weapon/shield/heater/zybantine
+	name = "brass shield"
+	desc = "A sturdy shield of far-desert make."
+	icon = 'modular_abel/gear/icons/weapons_32.dmi'
+	icon_state = "zybshield"
+	max_integrity = INTEGRITY_STANDARD + 50
+	blade_dulling = DULLING_BASH
+	sellprice = 30
+	smeltresult = /obj/item/ingot/bronze
+
+/obj/item/weapon/polearm/woodstaff/serpent
+	name = "\improper Staff of the Serpent"
+	desc = "A mysterious golden staff shaped like a snake. You could swear its staring at you."
+	icon = 'modular_abel/gear/icons/weapons_64.dmi'
+	icon_state = "snakestaff"
+
+/obj/item/weapon/sword/long/kriegmesser/zybantine
+	name = "heavy scimitar"
+	desc = "A large desert sword with a single-edged blade, a crossguard and a knife-like hilt."
+	icon = 'modular_abel/gear/icons/weapons_64.dmi'
+	icon_state = "Kmesser"
