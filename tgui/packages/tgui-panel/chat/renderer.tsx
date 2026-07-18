@@ -434,10 +434,35 @@ class ChatRenderer {
             outputProps[canon_name] = working_value;
           }
           const oldHtml = { __html: childNode.innerHTML };
+          const Element = TGUI_CHAT_COMPONENTS[targetName];
+          // TEST: match upstream /tg/ — skip (instead of crashing on) chat
+          // fragments whose data-component is not registered in this bundle,
+          // and dump the raw discarded fragment so it is all "на ладони".
+          if (!Element) {
+            logger.error(
+              `Error: unknown chat component "${targetName}" — skipping fragment`,
+              {
+                targetName,
+                fragment: childNode.outerHTML,
+                props: outputProps,
+                messageType: message?.type,
+                messageText:
+                  typeof message?.text === 'string'
+                    ? message.text.slice(0, 300)
+                    : undefined,
+                messageHtml:
+                  typeof message?.html === 'string'
+                    ? message.html.slice(0, 300)
+                    : undefined,
+              },
+            );
+            childNode.removeAttribute('data-component');
+            continue;
+          }
+
           while (childNode.firstChild) {
             childNode.removeChild(childNode.firstChild);
           }
-          const Element = TGUI_CHAT_COMPONENTS[targetName];
 
           const reactRoot = createRoot(childNode);
 

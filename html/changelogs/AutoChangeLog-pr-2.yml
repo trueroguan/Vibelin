@@ -1,0 +1,6 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - map: "Added the Dun World map and the Wretch Coast z-level to map rotation"
+  - code_imp: "Added the modular_abel build/import pipeline for downstream maps"
+  - server: "TGS instances should point .tgs.yml at modular_abel/tgs_scripts precompile scripts to enable the map"

@@ -1,0 +1,6 @@
+author: "PatapoIIIa"
+delete-after: True
+changes:
+  - rscadd: "Added ERP panel"
+  - rscadd: "Added ERP things"
+  - qol: "Change New Entry Menu"

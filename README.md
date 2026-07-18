@@ -1,11 +1,10 @@
-# VANDERLIN
-
-[![BYOND Build](https://github.com/Monkestation/Vanderlin/actions/workflows/ci_suite.yml/badge.svg)](https://github.com/Monkestation/Vanderlin/actions/workflows/ci_suite.yml)
-
+# VIBELIN
+[![BYOND Build](https://github.com/trueroguan/Vibelin/actions/workflows/ci_suite.yml/badge.svg)](https://github.com/trueroguan/Vibelin/actions/workflows/ci_suite.yml)
+<img src="https://media.klipy.com/path/to/reaction-meme-168.gif" width="300" alt="Reaction Meme">
 | Website                   | Link                                           |
 |---------------------------|------------------------------------------------|
-| Discord | [https://discord.monkestation.com](https://discord.monkestation.com) |
-| Code    | [https://github.com/Monkestation/Vanderlin](https://github.com/Monkestation/Vanderlin)    |
+| Discord | [https://discord.gg/MVAcYJemaX](https://discord.gg/MVAcYJemaX ) |
+| Code    | [https://github.com/trueroguan/Vibelin](https://github.com/trueroguan/Vibelin)    |
 | Wiki    | N/A |
 
 ## LICENSE
