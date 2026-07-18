@@ -17,3 +17,7 @@
 #include "clothing/pants.dm"
 #include "items/items.dm"
 #include "items/recipes.dm"
+#include "items/enchantingkit.dm"
+#include "items/donor_kits.dm"
+#include "items/donor_recipes.dm"
+#include "items/donor_loadout.dm"

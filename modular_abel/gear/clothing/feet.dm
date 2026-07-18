@@ -24,3 +24,44 @@
 	armor_class = AC_LIGHT
 	max_integrity = INTEGRITY_STRONG
 	smeltresult = /obj/item/ingot/steel_slag
+
+/obj/item/clothing/shoes/heels
+	name = "high-heeled shoes"
+	desc = "Elegant shoes that're lightly elevated in the rear, providing a distinctive 'click' with each step."
+	icon = 'modular_abel/gear/icons/feet.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/feet.dmi'
+	icon_state = "heels"
+	item_state = "heels"
+	detail_tag = "_detail"
+	color = "#FFFFFF"
+	detail_color = "#FFFFFF"
+
+/obj/item/clothing/shoes/heels/attack_hand_secondary(mob/user, list/modifiers)
+	. = ..()
+	var/choice = tgui_input_list(user, "Choose a color.", "Uniform colors", GLOB.noble_dyes)
+	if(!choice)
+		return
+	detail_color = GLOB.noble_dyes[choice]
+	update_appearance(UPDATE_ICON)
+
+/obj/item/clothing/shoes/heels/update_overlays()
+	. = ..()
+	if(!get_detail_tag())
+		return
+	var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+	pic.appearance_flags = RESET_COLOR
+	if(get_detail_color())
+		pic.color = get_detail_color()
+	. += pic
+
+/obj/item/clothing/shoes/heels/donator_gold
+	name = "high-heeled golden shoes"
+	desc = "Gold-laced shoes that're lightly elevated in the rear, providing a distinctive 'click' with each step."
+	icon_state = "goldheels"
+	item_state = "goldheels"
+
+/obj/item/clothing/shoes/heels/donator_silver
+	name = "high-heeled silver shoes"
+	desc = "Silver-laced shoes that're lightly elevated in the rear, providing a distinctive 'click' with each step."
+	icon_state = "silverheels"
+	item_state = "silverheels"

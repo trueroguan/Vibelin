@@ -89,3 +89,131 @@
 	body_parts_covered = CHEST|GROIN|VITALS|LEGS|ARMS
 	max_integrity = INTEGRITY_STRONG
 	armor_class = AC_MEDIUM
+
+/obj/item/clothing/armor/chainmail/hauberk/donator
+	name = "maillekini"
+	desc = "A curious - and particularly revealing - variant of a common maille-aketon. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "chainkinis"
+	item_state = "chainkinis"
+
+/obj/item/clothing/armor/chainmail/hauberk/iron/donator
+	name = "iron maillekini"
+	desc = "A curious - and particularly revealing - variant of an iron maille-aketon. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "chainkinii"
+	item_state = "chainkinii"
+
+/obj/item/clothing/armor/chainmail/hauberk/bronze/donator
+	name = "bronze maillekini"
+	desc = "A curious - and particularly revealing - variant of a bronze maille-aketon. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "chainkinib"
+	item_state = "chainkinib"
+
+/obj/item/clothing/armor/chainmail/donator
+	name = "cropped haubergeon"
+	desc = "A curious - and particularly revealing - variant of a common maille-garment. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "cropmailles"
+	item_state = "cropmailles"
+
+/obj/item/clothing/armor/chainmail/iron/donator
+	name = "cropped iron haubergeon"
+	desc = "A curious - and particularly revealing - variant of an iron maille-garment. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "cropmaillei"
+	item_state = "cropmaillei"
+
+/obj/item/clothing/armor/chainmail/bronze/donator
+	name = "cropped bronze haubergeon"
+	desc = "A curious - and particularly revealing - variant of a bronze maille-garment. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "cropmailleb"
+	item_state = "cropmailleb"
+
+/obj/item/clothing/armor/chainmail/donator_elven
+	name = "elven haubergeon"
+	desc = "An ancestral design, passed down from the oldest of the land's native elven inhabitants. The greenish tint present along the leatherbound steel maille is the byproduct of its links being fashioned through magicks, not a forge's heat."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "elven_chain"
+	item_state = "elven_chain"
+
+/obj/item/clothing/armor/chainmail/iron/donator_elven
+	name = "elven iron haubergeon"
+	desc = "An ancestral design, passed down from the oldest of the land's native elven inhabitants. The greenish tint present along the leatherbound iron maille is the byproduct of its links being fashioned through magicks, not a forge's heat."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "elven_chain"
+	item_state = "elven_chain"
+
+/obj/item/clothing/armor/leather/donator
+	name = "leather heartplate"
+	desc = "A curious - and particularly revealing - variant of a leather vest. It's said that the intentionally provocative design excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "heartplatel"
+	item_state = "heartplatel"
+
+/obj/item/clothing/armor/leather/donator_cuirass
+	name = "heroic leather cuirass"
+	desc = "A flexible vest, stitched together from lengths of cured leather. It hugs the wearer's form, gifting them a mimicked form of a sculpted physique - or maybe that's just a byproduct of it being so damn tight."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "leathercuirass"
+	item_state = "leathercuirass"
+
+/obj/item/clothing/armor/leather/studded/psyaltrist/donator_cuirass
+	name = "heroic leather cuirass"
+	desc = "A flexible vest, stitched together from lengths of cured leather. It hugs the wearer's form, gifting them a mimicked form of a sculpted physique - or maybe that's just a byproduct of it being so damn tight."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "leathercuirass"
+	item_state = "leathercuirass"
+
+/obj/item/clothing/armor/plate/iron/donator_gothic
+	name = "gothic iron half-plate"
+	desc = "A magnificent iron cuirass, fitted with tassets and assembled by a mastersmith. The intricate fluting and interlocked plates are clear signs of foreign heritage; expensive, but second-to-none when it comes to what truly matters in life."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "ighalfplate"
+	item_state = "ighalfplate"
+
+/obj/item/clothing/armor/plate/full/iron/donator_gothic
+	name = "gothic iron plate armor"
+	desc = "A magnificent set of iron plate armor, assembled by a mastersmith. The intricate fluting and interlocked plates are clear signs of foreign heritage; expensive, but second-to-none when it comes to what truly matters in life."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "igplate"
+	item_state = "igplate"
+
+/obj/item/clothing/armor/plate/donator_gothic
+	name = "gothic half-plate"
+	desc = "A magnificent steel cuirass, fitted with tassets and assembled by a mastersmith. The intricate fluting and interlocked plates are clear signs of foreign heritage; expensive, but second-to-none when it comes to what truly matters in life."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "ghalfplate"
+	item_state = "ghalfplate"
+
+/obj/item/clothing/armor/plate/full/donator_gothic
+	name = "gothic plate armor"
+	desc = "A magnificent set of steel plate armor, assembled by a mastersmith. The intricate fluting and interlocked plates are clear signs of foreign heritage; expensive, but second-to-none when it comes to what truly matters in life."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "gplate"
+	item_state = "gplate"
+
+/obj/item/clothing/armor/plate/full/donator_triheartfelt
+	name = "regal plate armor"
+	desc = "A complete set of finely-styled plate armor, decorated with a furred coif and a silk robe dyed a deep blue. Most intimately associated with foreign diplomats and champions, these suits are traditionally restricted to the battlefields of garish noble courtrooms and balls."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	icon_state = "triheartfelt"
+	item_state = "triheartfelt"

@@ -85,3 +85,13 @@
 	hoodtype = null
 	toggle_icon_state = FALSE
 	allowed_sex = list(MALE, FEMALE)
+
+/obj/item/clothing/cloak/donator
+	name = "cloak of gilded maille"
+	desc = "A cloak of golden chainmail links, draped over the shoulders of only the most favored."
+	icon = 'modular_abel/gear/icons/cloak.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/cloak.dmi'
+	icon_state = "chainking"
+	item_state = "chainking"
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	inhand_mod = TRUE
