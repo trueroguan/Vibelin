@@ -16,3 +16,4 @@
 #include "clothing/belt.dm"
 #include "clothing/pants.dm"
 #include "items/items.dm"
+#include "items/recipes.dm"
