@@ -25,6 +25,30 @@ def load_spec(spec_path):
     return groups
 
 
+def expand_entries(entries, source_state_names):
+    import re
+    resolved = []
+    for entry in entries:
+        if entry == '*':
+            for name in source_state_names:
+                resolved.append((name, name))
+        elif '->' in entry:
+            base, newbase = [p.strip() for p in entry.split('->', 1)]
+            pattern = re.compile(r'^(l_|r_)?' + re.escape(base) + r'(_.+)?$')
+            matched = False
+            for name in source_state_names:
+                m = pattern.match(name)
+                if m:
+                    matched = True
+                    new_name = (m.group(1) or '') + newbase + (m.group(2) or '')
+                    resolved.append((name, new_name))
+            if not matched:
+                raise SystemExit(f'rename base not found in source: {base}')
+        else:
+            resolved.append((entry, entry))
+    return resolved
+
+
 def merge(dest_path, groups):
     width = height = None
     out_states = []
@@ -47,23 +71,27 @@ def merge(dest_path, groups):
         img = Image.open(src_path).convert('RGBA')
         columns = img.width // w
 
-        missing = [n for n in state_names if n not in by_name]
+        resolved = expand_entries(state_names, list(by_name))
+        missing = [n for n, _ in resolved if n not in by_name]
         if missing:
             raise SystemExit(f'states not found in {src_path}: {missing}')
 
-        for name in state_names:
+        for name, out_name in resolved:
             start_idx, cells, st = by_name[name]
             for c in range(cells):
                 cell_idx = start_idx + c
                 row, col = divmod(cell_idx, columns)
                 box = (col * w, row * h, col * w + w, row * h + h)
                 out_cells.append(img.crop(box))
-            out_states.append({'name': name, 'dirs': st['dirs'], 'frames': st['frames'], 'delay': st['delay']})
+            out_states.append({'name': out_name, 'dirs': st['dirs'], 'frames': st['frames'], 'delay': st['delay']})
 
     total = len(out_cells)
-    out_img = Image.new('RGBA', (width * total, height), (0, 0, 0, 0))
+    out_cols = min(total, 32)
+    out_rows = (total + out_cols - 1) // out_cols
+    out_img = Image.new('RGBA', (width * out_cols, height * out_rows), (0, 0, 0, 0))
     for i, cell in enumerate(out_cells):
-        out_img.paste(cell, (i * width, 0))
+        row, col = divmod(i, out_cols)
+        out_img.paste(cell, (col * width, row * height))
 
     buf = io.BytesIO()
     out_img.save(buf, format='PNG')
@@ -99,6 +127,10 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print('usage: python dmi_merge.py <dest.dmi> <spec.txt>')
         print('spec.txt format: a source .dmi path on its own line, followed by')
-        print('indented state names one per line, repeated per source.')
+        print('indented entries one per line, repeated per source. Entry forms:')
+        print('  state            exact state, kept as-is')
+        print('  *                every state in the source, kept as-is')
+        print('  base -> newbase  every state matching (l_|r_)?base(_suffix)?')
+        print('                   with the base segment substituted')
         sys.exit(1)
     merge(sys.argv[1], load_spec(sys.argv[2]))

@@ -69,8 +69,8 @@
 /obj/item/clothing/shoes/sandals/toga
 	name = "fancy sandals"
 	desc = "Delicate sandals of gleaming leather, their slender straps rising in graceful spirals to embrace the ankle."
-	icon = 'modular_abel/gear/icons/rmh/toga_sandals.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/toga_sandals.dmi'
+	icon = 'modular_abel/gear/icons/feet.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/feet.dmi'
 	icon_state = "toga_sandals"
 	item_state = "toga_sandals"
 	salvage_result = /obj/item/natural/hide/cured

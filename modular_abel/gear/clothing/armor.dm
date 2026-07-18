@@ -223,31 +223,31 @@
 	desc = "A dashing outfit for an experienced tomb raider."
 	armor = ARMOR_LEATHER
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
-	icon_state = "vest"
-	item_state = "vest"
-	icon = 'modular_abel/gear/icons/rmh/explorer.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/explorer.dmi'
-	sleeved = 'modular_abel/gear/icons/rmh/sleeves/explorer_sleeves.dmi'
+	icon_state = "tombraidervest"
+	item_state = "tombraidervest"
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	sleeved = 'modular_abel/gear/icons/onmob/armor_sleeves.dmi'
 
 /obj/item/clothing/armor/gambeson/sophisticated_jacket
 	name = "sophisticated jacket"
 	desc = "A finely tailored jacket of sophisticated design, favored by those who value refinement, status, and impeccable presentation."
-	icon_state = "jacket"
-	item_state = "jacket"
-	icon = 'modular_abel/gear/icons/rmh/sophisticated.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/sophisticated.dmi'
-	sleeved = 'modular_abel/gear/icons/rmh/sleeves/sophisticated_sleeves.dmi'
+	icon_state = "sophisticatedjacket"
+	item_state = "sophisticatedjacket"
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	sleeved = 'modular_abel/gear/icons/onmob/armor_sleeves.dmi'
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
 	dropshrink = null
 
 /obj/item/clothing/armor/gambeson/sophisticated_coat
 	name = "sophisticated coat"
 	desc = "A sophisticated coat of fine tailoring and subtle elegance, worn to project refinement, confidence, and social standing."
-	icon_state = "coat"
-	item_state = "coat"
-	icon = 'modular_abel/gear/icons/rmh/sophisticated.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/sophisticated.dmi'
-	sleeved = 'modular_abel/gear/icons/rmh/sleeves/sophisticated_sleeves.dmi'
+	icon_state = "sophisticatedcoat"
+	item_state = "sophisticatedcoat"
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	sleeved = 'modular_abel/gear/icons/onmob/armor_sleeves.dmi'
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
 	dropshrink = null
 
@@ -256,9 +256,9 @@
 	desc = "A thick, well-crafted winter coat designed to retain heat and protect against harsh cold while remaining comfortable for daily wear."
 	icon_state = "wintercoat"
 	item_state = "wintercoat"
-	icon = 'modular_abel/gear/icons/rmh/wintercoat.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/wintercoat.dmi'
-	sleeved = 'modular_abel/gear/icons/rmh/sleeves/wintercoat_sleeves.dmi'
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	sleeved = 'modular_abel/gear/icons/onmob/armor_sleeves.dmi'
 	salvage_result = /obj/item/natural/fur
 	min_cold_protection_temperature = -40
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
@@ -266,9 +266,9 @@
 /obj/item/clothing/armor/leather/druid
 	name = "druid armor"
 	desc = "A carefully layered armor of cured leather, living oak bark, and woven leaves. Flexible yet resilient, it carries the quiet strength of the forest."
-	icon = 'modular_abel/gear/icons/rmh/druid.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/druid.dmi'
-	sleeved = 'modular_abel/gear/icons/rmh/sleeves/druid_sleeves.dmi'
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
+	sleeved = 'modular_abel/gear/icons/onmob/armor_sleeves.dmi'
 	icon_state = "druid"
 	item_state = "druid"
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
@@ -276,7 +276,7 @@
 
 /obj/item/clothing/armor/plate/decorated/corset/colored
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
-	icon = 'modular_abel/gear/icons/rmh/corset.dmi'
-	mob_overlay_icon = 'modular_abel/gear/icons/rmh/onmob/corset.dmi'
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
 	icon_state = "corset"
 	item_state = "corset"
