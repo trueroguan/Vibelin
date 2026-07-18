@@ -5,3 +5,29 @@
 	icon_state = "bronzeneedle"
 	stringamt = 30
 	maxstring = 30
+
+/obj/item/inqarticles/litany
+	name = "litany"
+	desc = "A writ of religious anointment, printed on holy parchment. It bears a psalm dating back to the first crusades, recited to bless the faithful upon the eve of battle. Traditionally, these litanies are burned after recitement, and their ashes are smeared across a chosen weapon to consecrate them."
+	icon = 'modular_abel/gear/icons/items.dmi'
+	icon_state = "litany"
+	item_state = "litany"
+	possible_item_intents = list(/datum/intent/bless)
+
+/obj/item/inqarticles/litany/afterattack(atom/movable/A, mob/user, proximity)
+	. = ..()
+	if(!isitem(A) || user.used_intent.type != /datum/intent/bless)
+		return
+	var/datum/component/psyblessed/CP = A.GetComponent(/datum/component/psyblessed)
+	if(!CP)
+		return
+	if(CP.is_blessed)
+		to_chat(user, span_info("It has already been blessed."))
+		return
+	playsound(user, 'sound/magic/censercharging.ogg', 100)
+	user.visible_message(span_info("[user] holds \the [src] over \the [A].."))
+	if(do_after(user, 50, target = A))
+		CP.try_bless()
+		user.visible_message(span_blue("[user] finishes their rite, anointing \the [A] with \the [src]!"))
+		new /obj/effect/temp_visual/censer_dust(get_turf(A))
+		qdel(src)
