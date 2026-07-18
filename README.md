@@ -3,7 +3,7 @@
 <img src="https://media.klipy.com/path/to/reaction-meme-168.gif" width="300" alt="Reaction Meme">
 | Website                   | Link                                           |
 |---------------------------|------------------------------------------------|
-| Discord | [https://discord.gg/MVAcYJemaX](https://discord.gg/MVAcYJemaX ) |
+| Discord | [https://discord.gg/9DfkYJcFyF](https://discord.gg/9DfkYJcFyF) |
 | Code    | [https://github.com/trueroguan/Vibelin](https://github.com/trueroguan/Vibelin)    |
 | Wiki    | N/A |
 
