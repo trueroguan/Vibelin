@@ -1674,6 +1674,9 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		if("loadout_item")
 			open_loadout_shop(user)
 			return TRUE
+		if("donor_loadout")
+			open_donor_loadout(user)
+			return TRUE
 		if("select_quirks")
 			open_quirk_menu(user)
 			return TRUE

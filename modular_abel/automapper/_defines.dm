@@ -1,0 +1,2 @@
+#define INIT_ORDER_AUTOMAPPER 88
+#define AUTOMAPPER_MAP_BUILTIN "builtin"

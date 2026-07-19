@@ -313,9 +313,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "bi" = (
-/obj/structure/fake_machine/mail{
-	mailtag = "Forgotten Chapel"
-	},
+/obj/structure/fake_machine/mail,
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/under/cave/inhumen)

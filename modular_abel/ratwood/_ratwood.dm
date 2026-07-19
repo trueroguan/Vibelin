@@ -1,0 +1,8 @@
+#include "_defines.dm"
+#include "deserttown/floors.dm"
+#include "deserttown/walls.dm"
+#include "deserttown/areas.dm"
+#include "deserttown/ambush.dm"
+#include "deserttown/structures.dm"
+#include "deserttown/mobs.dm"
+#include "deserttown/mapgen.dm"
