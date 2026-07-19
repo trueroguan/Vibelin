@@ -397,3 +397,4 @@
 
 /obj/structure/flora/grass/desertgrass/update_icon()
 	icon_state = "desertgrass[rand(1, 5)]"
+	. = ..()
