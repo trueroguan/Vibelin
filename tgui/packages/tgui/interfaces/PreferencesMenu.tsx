@@ -1765,6 +1765,7 @@ export const PreferencesMenu = () => {
       <Panel title="Triumphs" icon="trophy">
         <InfoRow icon="coins" label="Balance" value={data.triumphs} />
         <ActionButton icon="shopping-bag" label="Triumph Shop" onClick={() => doPref('triumph_buy_menu')} />
+        <ActionButton icon="shirt" label="Лодаут" onClick={() => doPref('donor_loadout')} />
       </Panel>
     </>
   );

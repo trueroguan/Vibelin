@@ -1,0 +1,13 @@
+# Automapper configuration
+# [templates.example] - unique template name.
+# directory - direct path to the template map files.
+# map_files - map file names incl. extension; multiple entries = random pick.
+# required_map - map file name that must be loading for this template to apply,
+#   or "builtin" for the compiled-in main map.
+# coordinates - [X, Y, Z] placement; Z is relative to the required map's own z-stack (1 for single-z).
+
+# [templates.example_hut]
+# map_files = ["example_hut.dmm"]
+# directory = "_maps/templates/example/"
+# required_map = "dun_world_new.dmm"
+# coordinates = [100, 100, 1]
