@@ -33,7 +33,7 @@ const CONFIG_PATH = 'modular_abel/dun_world/config/map.json';
 const DOWNLOAD_TIMEOUT_MS = 120000;
 
 const REMOVED_VAR_PATTERNS = [
-  /^(?:broadcaster_tag|gid|keycontrol|location_tag|scom_tag|specific_location)\s*=\s*".*"$/,
+  /^(?:broadcaster_tag|gid|keycontrol|location_tag|mailtag|scom_tag|specific_location)\s*=\s*".*"$/,
   /^(?:lockdifficulty|lock_strength|mammonsiphoned|obj_integrity|order)\s*=\s*-?\d+(?:\.\d+)?$/,
   /^(?:keylock|masterkey|smooth)\s*=\s*[01]$/,
 ];
