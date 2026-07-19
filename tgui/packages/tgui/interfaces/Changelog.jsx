@@ -194,11 +194,11 @@ export class Changelog extends Component {
         </p>
         <p>
           {'The codebase can be found '}
-          <a href="https://github.com/monkestation/vanderlin">here</a>.
+          <a href="https://github.com/trueroguan/Vibelin">here</a>.
         </p>
         <p>
           {'You can also join our discord '}
-          <a href="https://discord.gg/monkestation">here</a>.
+          <a href="https://discord.gg/9DfkYJcFyF">here</a>.
         </p>
         {dateDropdown}
       </Section>
