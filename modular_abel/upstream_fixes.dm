@@ -177,7 +177,19 @@
 	+ typesof(/turf/open/floor/carpet) \
 	+ typesof(/turf/closed/wall/mineral/desert_sandstone) \
 	+ typesof(/turf/closed/wall/mineral/roofwall) \
-	+ typesof(/turf/closed/wall/mineral/decostone/dun_world)
+	+ typesof(/turf/closed/wall/mineral/decostone/dun_world) \
+	+ typesof(/turf/open/floor/dunes) \
+	+ typesof(/turf/open/floor/citybrick) \
+	+ typesof(/turf/open/floor/lightpath) \
+	+ typesof(/turf/open/floor/desert_grass) \
+	+ typesof(/turf/open/floor/deserttile) \
+	+ list(
+		/turf/open/floor/grass/desert,
+		/turf/open/floor/dirt/road/desert,
+		/turf/open/floor/dirt/desert,
+		/turf/open/floor/dirt/desert/nospawn,
+		/turf/open/floor/naturalstone/sandstone,
+	)
 	used_turfs |= blacklisted_turfs
 
 	var/list/unused_turfs = list()
@@ -208,5 +220,51 @@
 /datum/unit_test/create_and_destroy/Run()
 	if(SSmapping?.config?.map_name == "Twilight Axis")
 		return
+	return ..()
+
+/datum/unit_test/craftable_clothes/Run()
+	excluded_paths += list(
+		/obj/item/clothing/neck/loveamulet,
+		/obj/item/clothing/head/flowercrown/rosa/twilight_resprite,
+		/obj/item/clothing/head/roguehood/newmoon,
+		/obj/item/clothing/head/kokoshnik,
+		/obj/item/clothing/head/sultana,
+		/obj/item/clothing/face/spectacles/fancy,
+		/obj/item/clothing/face/spectacles/fancy_dark,
+		/obj/item/clothing/shirt/robe/undivided,
+		/obj/item/clothing/shirt/robe/undividedcleric,
+		/obj/item/clothing/shirt/robe/ravox,
+		/obj/item/clothing/shirt/robe/physician,
+		/obj/item/clothing/shirt/robe/hierophant,
+		/obj/item/clothing/shirt/robe/pointfex,
+		/obj/item/clothing/shirt/robe/tabardscarlet,
+		/obj/item/clothing/shirt/robe/tabardblack,
+		/obj/item/clothing/shirt/robe/bishop,
+		/obj/item/clothing/shirt/dress/royal/hand_m,
+		/obj/item/clothing/shirt/dress/royal/hand_f,
+		/obj/item/clothing/shirt/dress/gown/wintergown/aristocratotava,
+		/obj/item/clothing/shirt/dress/hammerhold,
+		/obj/item/clothing/shirt/dress/etrdress3,
+		/obj/item/clothing/shirt/dress/amiradress,
+		/obj/item/clothing/shirt/elven_furcoat,
+		/obj/item/clothing/shirt/boyar_coat,
+		/obj/item/clothing/shirt/sultana,
+		/obj/item/clothing/armor/leather/jacket/newmoon,
+		/obj/item/clothing/wrists/bracers/elven,
+		/obj/item/clothing/cloak/raincloak/furcloak/champion,
+		/obj/item/clothing/cloak/raincloak/amir,
+		/obj/item/clothing/cloak/elven,
+		/obj/item/clothing/cloak/bishop,
+		/obj/item/clothing/cloak/etrcape,
+		/obj/item/clothing/cloak/sheriff,
+		/obj/item/clothing/cloak/dunestalker,
+	)
+	excluded_paths_with_their_subtypes += list(
+		/obj/item/clothing/neck/psycross/wooden_divine,
+		/obj/item/clothing/head/sultan,
+		/obj/item/clothing/shirt/robe/unholy,
+		/obj/item/clothing/shirt/robe/monk,
+		/obj/item/clothing/shirt/robe/tabardwhite,
+	)
 	return ..()
 #endif

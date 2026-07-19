@@ -8,7 +8,7 @@
 	landsound = 'sound/foley/jumpland/dirtland.ogg'
 	smoothing_flags = SMOOTH_EDGE
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_SAND
-	smoothing_list = SMOOTH_GROUP_FLOOR_GRASS + SMOOTH_GROUP_FLOOR_DIRT + SMOOTH_GROUP_FLOOR_DIRT_ROAD + SMOOTH_GROUP_FLOOR_STONE + SMOOTH_GROUP_FLOOR_SNOW
+	smoothing_list = SMOOTH_GROUP_FLOOR_DIRT + SMOOTH_GROUP_FLOOR_DIRT_ROAD + SMOOTH_GROUP_FLOOR_GRASS + SMOOTH_GROUP_FLOOR_SNOW + SMOOTH_GROUP_FLOOR_STONE
 
 /turf/open/floor/dunes/Initialize()
 	. = ..()
@@ -128,7 +128,7 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	smoothing_flags = SMOOTH_EDGE
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_STONE
-	smoothing_list = SMOOTH_GROUP_FLOOR_SAND + SMOOTH_GROUP_FLOOR_DIRT
+	smoothing_list = SMOOTH_GROUP_FLOOR_DIRT + SMOOTH_GROUP_FLOOR_SAND
 
 /turf/open/floor/lightpath/Initialize()
 	. = ..()
@@ -145,7 +145,7 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	smoothing_flags = SMOOTH_EDGE
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_STONE
-	smoothing_list = SMOOTH_GROUP_FLOOR_SAND + SMOOTH_GROUP_FLOOR_DIRT
+	smoothing_list = SMOOTH_GROUP_FLOOR_DIRT + SMOOTH_GROUP_FLOOR_SAND
 
 /turf/open/floor/darkpath/Initialize()
 	. = ..()
@@ -185,7 +185,7 @@
 	slowdown = 0
 	smoothing_flags = SMOOTH_EDGE
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_GRASS
-	smoothing_list = SMOOTH_GROUP_FLOOR_SAND + SMOOTH_GROUP_FLOOR_DIRT + SMOOTH_GROUP_FLOOR_DIRT_ROAD + SMOOTH_GROUP_FLOOR_STONE + SMOOTH_GROUP_FLOOR_SNOW
+	smoothing_list = SMOOTH_GROUP_FLOOR_DIRT + SMOOTH_GROUP_FLOOR_DIRT_ROAD + SMOOTH_GROUP_FLOOR_SNOW + SMOOTH_GROUP_FLOOR_STONE + SMOOTH_GROUP_FLOOR_SAND
 	neighborlay = "desertgrassedge"
 	spread_chance = 15
 	burn_power = 6

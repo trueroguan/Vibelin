@@ -22,8 +22,7 @@
 	name = "champion's cloak"
 	desc = "A cloak of the ruling lord's most loyal champion."
 	color = "#3a75c4"
-	detail_tag = "_detail"
-	uses_lord_coloring = LORD_SECONDARY | LORD_DETAIL_AND_COLOR
+	uses_lord_coloring = LORD_SECONDARY
 
 /obj/item/clothing/cloak/bishop
 	name = "bishop cape"

@@ -70,6 +70,8 @@
 /obj/item/clothing/armor/medium/scale/iron
 	name = "iron lamellar"
 	desc = "A coat of small iron plates, segmented together in a manner not unlike chainmail. This curious combination provides the best of both worlds; protection on par with more rigid sets of plate armor, but without all the weight."
+	icon = 'modular_abel/gear/icons/armor.dmi'
+	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
 	icon_state = "ilamellar"
 	armor = ARMOR_MAILLE_IRON
 	max_integrity = INTEGRITY_STANDARD + 50
