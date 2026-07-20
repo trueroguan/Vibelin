@@ -5,6 +5,10 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   assign-users:
     runs-on: ubuntu-latest
@@ -20,9 +24,9 @@ jobs:
         id: CodeOwnersParser
         uses: tgstation/CodeOwnersParser@v1
 
-      #Request reviews
+      #Request reviews. GitHub rejects a review request aimed at the PR author, so skip our own PRs.
       - name: Request reviews
-        if: steps.CodeOwnersParser.outputs.owners != ''
+        if: steps.CodeOwnersParser.outputs.owners != '' && github.event.pull_request.user.login != github.repository_owner
         uses: tgstation/RequestReviewFromUser@v1
         with:
           separator: " "

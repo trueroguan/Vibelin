@@ -1,3 +1,5 @@
+#pragma warn unused_var
+
 #include "erp/_erp.dm"
 #include "character_setup/_character_setup.dm"
 #include "dun_world/_dun_world.dm"

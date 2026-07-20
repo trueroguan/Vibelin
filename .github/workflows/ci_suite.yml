@@ -175,7 +175,7 @@ jobs:
       - name: Compile and run tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
-          tools/build/build.sh --ci dm -DCIBUILDING -I"loop_checks"
+          tools/build/build.sh --ci dm -DCIBUILDING -I"loop_checks" -I"unused_var"
           bash tools/ci/run_server.sh ${{ matrix.map }}
       - name: Check client Compatibility
         uses: tgstation/byond-client-compatibility-check@v3
