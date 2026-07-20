@@ -1,0 +1,9 @@
+author: "trueroguan"
+delete-after: True
+changes:
+  - rscadd: "Added the Murkling slime race."
+  - rscadd: "Added Seneschal, Councillor, Clerk, Suitor and Bathhouse Attendant to the Dun World map."
+  - bugfix: "Modular races (furry species, etc.) now spawn wearing their full job outfit instead of naked."
+  - rscdel: "Removed the Steam Knight and the catch-all Minor Noble from the Dun World map."
+  - map: "Ore veins, dresses, cloaks and other map objects now spawn as their proper types instead of generic fallbacks."
+  - code_imp: "Added unit tests covering every job outfit against every playable species."
