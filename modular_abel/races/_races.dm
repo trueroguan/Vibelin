@@ -2,6 +2,7 @@
 #include "registration.dm"
 #include "alpha_notice.dm"
 #include "outfit_compatibility.dm"
+#include "murkling.dm"
 #include "sun_elf.dm"
 #include "taur/_taur.dm"
 #include "furry/_furry.dm"

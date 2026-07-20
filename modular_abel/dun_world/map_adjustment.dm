@@ -1,5 +1,9 @@
 /datum/map_adjustment/dun_world
 	map_file_name = "dun_world_new.dmm"
+	// Vanderlin's steam technology has no place in the Twilight Axis setting.
+	advclass_blacklist = list(
+		/datum/job/advclass/royalknight/steam,
+	)
 	slot_adjust = list(
 		/datum/job/merchant/dun_world_guildmaster = 1,
 		/datum/job/artificer/dun_world_guildsman = 4,

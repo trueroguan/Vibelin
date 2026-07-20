@@ -10,6 +10,7 @@ GLOBAL_LIST_INIT(modular_race_followers, list(
 	SPEC_ID_MOTH = SPEC_ID_RAKSHARI,
 	SPEC_ID_TAUR_KIN = SPEC_ID_RAKSHARI,
 	SPEC_ID_AURA = SPEC_ID_RAKSHARI,
+	SPEC_ID_OOZE = SPEC_ID_HUMEN,
 ))
 
 GLOBAL_LIST_INIT(modular_outsider_categories, list(

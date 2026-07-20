@@ -222,7 +222,7 @@
 /turf/open/floor/rooftop/green,
 /area/rogue/outdoors/mountains)
 "aS" = (
-/obj/structure/fermentation_keg,
+/obj/structure/fermentation_keg/beer,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/banditcamp)
 "aT" = (
@@ -426,7 +426,7 @@
 /turf/open/floor/carpet/lord/left,
 /area/rogue/indoors/vampire_manor)
 "bC" = (
-/obj/structure/chair/wood,
+/obj/structure/chair/wood/alt/fancy,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "bD" = (
@@ -676,7 +676,7 @@
 /turf/open/floor/grass/yel,
 /area/rogue/outdoors/woods/vampire_lair)
 "cB" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 1
 	},
 /turf/open/floor/ruinedwood/spiral,
@@ -1042,9 +1042,9 @@
 /obj/item/clothing/head,
 /obj/item/clothing/head,
 /obj/item/clothing/head,
-/obj/item/clothing,
-/obj/item/clothing,
-/obj/item/clothing,
+/obj/item/clothing/shirt/undershirt/formal,
+/obj/item/clothing/shirt/undershirt/formal,
+/obj/item/clothing/shirt/undershirt/formal,
 /obj/item/clothing/pants/tights,
 /obj/item/clothing/pants/tights,
 /obj/item/clothing/pants/tights,
@@ -1213,7 +1213,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "eU" = (
-/obj/item/bin,
+/obj/item/bin/water/gross,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "eV" = (
@@ -1479,7 +1479,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
 "fT" = (
-/obj/structure/fermentation_keg,
+/obj/structure/fermentation_keg/beer,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/banditcamp)
 "fU" = (
@@ -1537,7 +1537,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "ge" = (
-/obj/item/bin,
+/obj/item/bin/water/gross,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "gf" = (
@@ -1829,7 +1829,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "ht" = (
-/obj/structure/flora/tree,
+/obj/structure/flora/tree/stump,
 /turf/open/floor/snow,
 /area/rogue/outdoors/banditcamp)
 "hu" = (
@@ -2101,7 +2101,7 @@
 /turf/open/openspace,
 /area/rogue/indoors/vampire_manor)
 "iK" = (
-/obj/structure/flora/tree,
+/obj/structure/flora/tree/stump,
 /obj/item/weapon,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
@@ -2205,7 +2205,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "je" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 8
 	},
 /turf/open/floor/carpet/royalblack,
@@ -2375,7 +2375,7 @@
 /turf/open/floor/tile,
 /area/rogue/indoors/vampire_manor)
 "jM" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
@@ -2503,7 +2503,7 @@
 /turf/open/floor/blocks,
 /area/rogue/indoors/vampire_manor)
 "kh" = (
-/obj/structure/chair/wood,
+/obj/structure/chair/wood/alt/fancy,
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "ki" = (
@@ -2573,11 +2573,11 @@
 /area/rogue/indoors/vampire_manor)
 "ku" = (
 /obj/structure/rack,
-/obj/item/clothing/cloak/raincloak,
-/obj/item/clothing/cloak/raincloak,
-/obj/item/clothing/cloak/raincloak,
-/obj/item/clothing/cloak/raincloak,
-/obj/item/clothing/cloak/raincloak,
+/obj/item/clothing/cloak/raincloak/colored/blue,
+/obj/item/clothing/cloak/raincloak/colored/brown,
+/obj/item/clothing/cloak/raincloak/colored/green,
+/obj/item/clothing/cloak/raincloak/colored/red,
+/obj/item/clothing/cloak/raincloak/colored/mortus,
 /obj/item/clothing,
 /obj/item/clothing,
 /obj/item/clothing,
@@ -3073,7 +3073,7 @@
 /area/rogue/indoors/vampire_manor)
 "me" = (
 /obj/machinery/light/fueled/wallfire/dun_world_fireplace,
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 8
 	},
 /turf/open/floor/ruinedwood/spiral,
@@ -3325,7 +3325,7 @@
 "no" = (
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
 /obj/structure/mannequin/male,
-/obj/item/clothing,
+/obj/item/clothing/shirt/dress/velvetdress,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "np" = (
@@ -3478,7 +3478,7 @@
 /turf/open/floor/snow/patchy,
 /area/rogue/indoors/banditcamp)
 "oa" = (
-/obj/structure/flora/tree,
+/obj/structure/flora/tree/stump,
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "oe" = (
@@ -3592,8 +3592,8 @@
 /obj/item/storage/bag,
 /obj/item/storage/bag,
 /obj/item/storage/bag,
-/obj/item/storage/backpack,
-/obj/item/storage/backpack,
+/obj/item/storage/backpack/backpack,
+/obj/item/storage/backpack/backpack,
 /obj/item/storage/belt/pouch,
 /obj/item/storage/belt/pouch,
 /obj/item/storage/belt/pouch,
@@ -3751,14 +3751,14 @@
 /area/rogue/outdoors/woods/vampire_lair)
 "pi" = (
 /obj/structure/closet/crate/chest/crate,
-/obj/item/clothing,
-/obj/item/clothing,
-/obj/item/clothing,
-/obj/item/clothing,
-/obj/item/clothing,
-/obj/item/clothing/head,
-/obj/item/clothing/head,
-/obj/item/clothing/head,
+/obj/item/clothing/shirt/dress/maidfancy,
+/obj/item/clothing/shirt/dress/maidfancy,
+/obj/item/clothing/shirt/dress/maidfancy,
+/obj/item/clothing/shirt/dress/maid,
+/obj/item/clothing/shirt/dress/maid,
+/obj/item/clothing/head/maidband,
+/obj/item/clothing/head/maidband,
+/obj/item/clothing/head/maidband,
 /obj/item/clothing/head,
 /obj/item/clothing/head,
 /obj/item/clothing/head,
@@ -3766,7 +3766,7 @@
 /obj/item/storage/belt/leather,
 /obj/item/storage/belt/leather,
 /obj/item/storage/belt/leather,
-/obj/item/clothing,
+/obj/item/clothing/shirt/dress/maid,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "pj" = (
@@ -3856,7 +3856,7 @@
 /obj/structure/closet/crate/crafted_closet,
 /obj/item/weapon,
 /obj/item/weapon,
-/obj/item/clothing/head,
+/obj/item/clothing/head/cookhat/chef,
 /obj/item/kitchen/spoon/iron,
 /obj/item/kitchen/spoon/iron,
 /obj/item/kitchen/spoon/iron,
@@ -3940,8 +3940,8 @@
 /obj/structure/closet/crate/chest/old_crate,
 /obj/item/reagent_containers/food/snacks/hardtack,
 /obj/item/reagent_containers/food/snacks/hardtack,
-/obj/item/reagent_containers/food/snacks,
-/obj/item/reagent_containers/food/snacks,
+/obj/item/reagent_containers/food/snacks/friedrat,
+/obj/item/reagent_containers/food/snacks/friedrat,
 /obj/item/reagent_containers/food/snacks/meat/steak,
 /obj/item/reagent_containers/food/snacks/meat/steak,
 /obj/item/reagent_containers/food/snacks/butter,
@@ -3976,7 +3976,7 @@
 /obj/structure/bearpelt{
 	pixel_x = -16
 	},
-/obj/structure/chair/wood,
+/obj/structure/chair/wood/alt/fancy,
 /obj/effect/landmark/start/bandit,
 /turf/open/floor/twig,
 /area/rogue/indoors/banditcamp)
@@ -4003,7 +4003,7 @@
 /area/rogue/indoors/banditcamp)
 "pU" = (
 /obj/structure/table/wood/fancy/black,
-/obj/item,
+/obj/item/statue/bronze/totem,
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "pV" = (
@@ -4084,7 +4084,7 @@
 /turf/open/floor/tile/masonic/inverted,
 /area/rogue/indoors/vampire_manor)
 "qj" = (
-/obj/item/bin,
+/obj/item/bin/water/gross,
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "qk" = (
@@ -4143,7 +4143,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "qw" = (
-/mob/living/simple_animal/pet/cat{
+/mob/living/simple_animal/pet/cat/black{
 	name = "fangs"
 	},
 /obj/structure/fluff/railing/border{
@@ -4401,7 +4401,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "rA" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 1
 	},
 /turf/open/floor/churchbrick,
@@ -4608,8 +4608,8 @@
 /obj/item/clothing/shirt/dress/gown/fallgown,
 /obj/item/clothing/shirt/dress/gown,
 /obj/item/clothing/shirt/dress/royal,
-/obj/item/clothing,
-/obj/item/clothing,
+/obj/item/clothing/shirt/dress/nobledress,
+/obj/item/clothing/shirt/dress/velvetdress,
 /obj/item/storage/belt/leather,
 /obj/item/storage/belt/leather/plaquegold,
 /obj/item/clothing/wrists/royalsleeves,
@@ -4719,7 +4719,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "sx" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 4
 	},
 /turf/open/floor/tile/masonic/inverted,
@@ -4753,12 +4753,12 @@
 /obj/item/reagent_containers/food/snacks/bread,
 /obj/item/reagent_containers/food/snacks/bread,
 /obj/item/reagent_containers/food/snacks/bread,
-/obj/item/reagent_containers/food/snacks,
-/obj/item/reagent_containers/food/snacks,
-/obj/item/reagent_containers/food/snacks,
-/obj/item/reagent_containers/food/snacks,
-/obj/item/reagent_containers/food/snacks,
-/obj/item/reagent_containers/food/snacks,
+/obj/item/reagent_containers/food/snacks/friedrat,
+/obj/item/reagent_containers/food/snacks/friedrat,
+/obj/item/reagent_containers/food/snacks/friedrat,
+/obj/item/reagent_containers/food/snacks/friedrat,
+/obj/item/reagent_containers/food/snacks/friedrat,
+/obj/item/reagent_containers/food/snacks/friedrat,
 /obj/item/reagent_containers/food/snacks/hardtack,
 /obj/item/reagent_containers/food/snacks/hardtack,
 /obj/item/reagent_containers/food/snacks/hardtack,
@@ -4832,7 +4832,7 @@
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/vampire_manor)
 "sU" = (
-/obj/structure/flora/tree,
+/obj/structure/flora/tree/stump,
 /turf/open/floor/grass/cold,
 /area/rogue/outdoors/banditcamp)
 "sW" = (
@@ -4939,7 +4939,7 @@
 /turf/open/floor/churchbrick,
 /area/rogue/indoors/vampire_manor)
 "to" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 4;
 	pixel_x = 2;
 	pixel_y = 2
@@ -5321,7 +5321,7 @@
 /turf/open/floor/twig,
 /area/rogue/indoors/cave)
 "uT" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 8
 	},
 /turf/open/floor/tile/masonic/inverted,
@@ -5655,7 +5655,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "wr" = (
-/obj/item/bin,
+/obj/item/bin/water,
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "ws" = (
@@ -5788,7 +5788,7 @@
 /obj/structure/fluff/walldeco/painting{
 	pixel_y = 32
 	},
-/obj/structure,
+/obj/structure/fluff/globe,
 /obj/structure/fluff/railing/border{
 	dir = 8;
 	dir = 10
@@ -6132,7 +6132,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "yz" = (
-/obj/item/bin,
+/obj/item/bin/water/gross,
 /turf/open/floor/cobble/mossy/dun_world,
 /area/rogue/indoors/vampire_manor)
 "yA" = (
@@ -6410,7 +6410,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "zG" = (
-/obj/item/bin,
+/obj/item/bin/water/gross,
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "zJ" = (
@@ -6572,7 +6572,7 @@
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/vampire_lair)
 "Ap" = (
-/obj/structure/flora/tree,
+/obj/structure/flora/tree/stump,
 /obj/effect/decal/cleanable/blood,
 /obj/item/skull{
 	pixel_x = -1
@@ -6699,7 +6699,7 @@
 /obj/structure/closet/crate/crafted_closet,
 /obj/item/weapon,
 /obj/item/weapon,
-/obj/item/clothing/head,
+/obj/item/clothing/head/cookhat/chef,
 /obj/item/kitchen/spoon/iron,
 /obj/item/kitchen/spoon/iron,
 /obj/item/kitchen/spoon/iron,
@@ -7120,7 +7120,7 @@
 /turf/open/floor/cobble/dun_world,
 /area/rogue/outdoors/woods/wretch_lair)
 "Cg" = (
-/obj/item/bin,
+/obj/item/bin/water,
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
 /obj/effect/decal/cleanable/dirt/cobweb/cobweb2,
 /turf/open/floor/ruinedwood/spiral,
@@ -7303,7 +7303,7 @@
 	},
 /area/rogue/indoors/vampire_manor)
 "CW" = (
-/obj/structure/chair/wood,
+/obj/structure/chair/wood/alt/fancy,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "CX" = (
@@ -8671,7 +8671,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
 "Jb" = (
-/obj/item/bin,
+/obj/item/bin/water,
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
 /turf/open/floor/ruinedwood/spiral,
 /area/rogue/indoors/vampire_manor)
@@ -8784,7 +8784,7 @@
 /turf/open/floor/ruinedwood/turned,
 /area/rogue/under/cave/inhumen)
 "Jy" = (
-/obj/structure/fermentation_keg,
+/obj/structure/fermentation_keg/random/beer,
 /obj/machinery/light/fueled/wallfire/candle/l/dun_world,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/under/cave/inhumen)
@@ -8851,32 +8851,32 @@
 /area/rogue/outdoors/woods/vampire_lair)
 "JJ" = (
 /obj/structure/closet/crate/crafted_closet,
-/obj/item/clothing/gloves,
+/obj/item/clothing/gloves/leather/otavan,
 /obj/item/clothing/gloves,
 /obj/item/clothing/gloves/leather/black,
 /obj/item/clothing/gloves/angle,
 /obj/item/clothing/pants/skirt,
 /obj/item/clothing/cloak/matron,
 /obj/item/clothing/cloak/tabard/blkknight,
-/obj/item/clothing/ring,
-/obj/item/clothing/head,
+/obj/item/clothing/ring/band/aalloy,
+/obj/item/clothing/head/roguehood/colored/black,
 /obj/item/clothing/armor/leather,
 /obj/item/clothing/armor/gambeson/heavy,
-/obj/item/clothing/shoes,
+/obj/item/clothing/shoes/shalal,
 /obj/item/clothing/shoes,
 /obj/item/clothing/cloak/cape/crusader,
 /obj/item/clothing/cloak/cape/blkknight,
 /obj/item/clothing/armor,
-/obj/item/clothing/head,
+/obj/item/clothing/head/hatblu,
 /obj/item/clothing/head/fancyhat,
-/obj/item/clothing/shoes,
+/obj/item/clothing/shoes/rare/grenzelhoft,
 /obj/item/clothing/head,
 /obj/item/clothing/shoes/boots,
 /obj/item/clothing/shoes/boots/leather,
 /obj/item/clothing/shoes/boots,
-/obj/item/clothing/head,
-/obj/item/clothing/head,
-/obj/item/clothing/gloves,
+/obj/item/clothing/head/bardhat,
+/obj/item/clothing/head/hatfur,
+/obj/item/clothing/gloves/eastgloves1,
 /obj/item/clothing/head,
 /obj/item/clothing,
 /obj/item/clothing/gloves/angle,
@@ -8991,48 +8991,48 @@
 /area/rogue/outdoors/banditcamp)
 "Kf" = (
 /obj/structure/rack/shelf/biggest,
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_y = -8
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = 1;
 	pixel_y = -1
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_y = 6
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = 6;
 	pixel_y = -5
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = 5
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = 6;
 	pixel_y = 8
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = -5;
 	pixel_y = -8
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = -6;
 	pixel_y = -2
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = -5;
 	pixel_y = 6
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = -11;
 	pixel_y = -6
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = -11;
 	pixel_y = -1
 	},
-/obj/item/reagent_containers/glass/bottle{
+/obj/item/reagent_containers/glass/bottle/alchemical{
 	pixel_x = -11;
 	pixel_y = 5
 	},
@@ -9471,7 +9471,7 @@
 /turf/open/floor/dirt,
 /area/rogue/outdoors/banditcamp)
 "LG" = (
-/obj/structure/fermentation_keg,
+/obj/structure/fermentation_keg/random/beer,
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "LH" = (
@@ -9484,7 +9484,7 @@
 /turf/open/floor/naturalstone,
 /area/rogue/under/cave/inhumen)
 "LL" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 8
 	},
 /turf/open/floor/carpet/red,
@@ -9632,7 +9632,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/banditcamp)
 "Ml" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 1
 	},
 /turf/open/floor/tile/masonic/inverted,
@@ -9932,7 +9932,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/vampire_manor)
 "NB" = (
-/obj/item/bin,
+/obj/item/bin/water/gross,
 /turf/open/floor/tile,
 /area/rogue/under/cave/inhumen)
 "NC" = (
@@ -10486,7 +10486,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/indoors/banditcamp)
 "PU" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 4
 	},
 /turf/open/floor/carpet/red,
@@ -10622,7 +10622,7 @@
 /area/rogue/under/cave/inhumen)
 "QG" = (
 /obj/structure/table/wood/plain,
-/obj/item/natural/bundle/cloth,
+/obj/item/natural/bundle/cloth/roll,
 /turf/open/floor/herringbone,
 /area/rogue/indoors/vampire_manor)
 "QH" = (
@@ -10772,7 +10772,7 @@
 /turf/open/floor/twig,
 /area/rogue/under/cave/inhumen)
 "Rr" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 4;
 	pixel_x = 2;
 	pixel_y = 2
@@ -11013,8 +11013,8 @@
 /area/rogue/outdoors/banditcamp)
 "Sx" = (
 /obj/structure/closet/crate/chest/crate,
-/obj/item,
-/obj/item,
+/obj/item/ore/tin,
+/obj/item/ore/tin,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/vampire_manor)
 "Sy" = (
@@ -11528,7 +11528,7 @@
 	dir = 4;
 	pixel_x = -10
 	},
-/obj/structure/fermentation_keg,
+/obj/structure/fermentation_keg/beer,
 /turf/open/floor/ruinedwood,
 /area/rogue/indoors/banditcamp)
 "UH" = (
@@ -11756,7 +11756,7 @@
 	},
 /area/rogue/indoors/vampire_manor)
 "VD" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 1
 	},
 /turf/open/floor/carpet/red,
@@ -11968,7 +11968,7 @@
 /area/rogue/under/cave/inhumen)
 "Wy" = (
 /obj/machinery/light/fueled/torchholder/c,
-/obj/item/bin,
+/obj/item/bin/water,
 /turf/open/floor/cobble/dun_world,
 /area/rogue/indoors/banditcamp)
 "Wz" = (
@@ -12325,7 +12325,7 @@
 /turf/open/floor/snow/patchy,
 /area/rogue/outdoors/banditcamp)
 "XO" = (
-/obj/structure/chair/wood{
+/obj/structure/chair/wood/alt/fancy{
 	dir = 8
 	},
 /obj/machinery/light/fueled/wallfire/candle/r/dun_world,
@@ -12413,7 +12413,7 @@
 /area/rogue/outdoors/mountains)
 "XW" = (
 /obj/structure/table/wood/plain,
-/obj/item/clothing/head{
+/obj/item/clothing/head/cookhat/chef{
 	pixel_x = 2;
 	pixel_y = 9
 	},
@@ -12577,7 +12577,7 @@
 /turf/open/floor/dirt/road,
 /area/rogue/outdoors/woods/wretch_lair)
 "YB" = (
-/obj/structure/flora/tree,
+/obj/structure/flora/tree/stump,
 /turf/open/floor/grass,
 /area/rogue/outdoors/woods/wretch_lair)
 "YD" = (

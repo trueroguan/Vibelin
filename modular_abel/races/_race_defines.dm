@@ -9,3 +9,4 @@
 #define SPEC_ID_MOTH "moth"
 #define SPEC_ID_TAUR_KIN "taur_kin"
 #define SPEC_ID_AURA "aura"
+#define SPEC_ID_OOZE "ooze"

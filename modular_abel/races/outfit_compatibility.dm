@@ -60,6 +60,9 @@
 /datum/species/taur_kin
 	clothing_race_proxy = SPEC_ID_RAKSHARI
 
+/datum/species/ooze
+	clothing_race_proxy = SPEC_ID_HUMEN
+
 /datum/species/harpy/New()
 	. = ..()
 	organs = organs.Copy()
