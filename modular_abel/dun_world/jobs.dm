@@ -107,6 +107,54 @@
 	same_job_respawn_delay = 30 MINUTES
 	tutorial = "You fell to the wrong side of civilization, and now carry the bounty and fear that follow a wretch."
 
+// Azure's court splits work that Vanderlin hands to a single Minor Noble, so the map's four court
+// landmarks all collapsed onto one role. These restore the split; the kit and the stats stay
+// Vanderlin's, inherited from whichever local role does the same job.
+/datum/job/steward/dun_world_seneschal
+	title = "Seneschal"
+	f_title = null
+	department_flag = NOBLEMEN
+	tutorial = "You run the household of the keep, master of its stores, its staff and its schedule. \
+	The Duke rules these lands; you rule the walls he rules them from."
+	total_positions = 0
+	spawn_positions = 0
+
+/datum/job/minor_noble/dun_world_councillor
+	title = "Councillor"
+	f_title = null
+	department_flag = NOBLEMEN
+	tutorial = "You hold a seat at the Duke's council, and your word carries weight in matters of law \
+	and coin. Whether he heeds it is another matter entirely."
+	total_positions = 0
+	spawn_positions = 0
+
+/datum/job/archivist/dun_world_clerk
+	title = "Clerk"
+	f_title = null
+	department_flag = NOBLEMEN
+	tutorial = "You keep the ledgers, the writs and the seals of the court. Every debt, every decree \
+	and every quiet arrangement passes beneath your pen."
+	total_positions = 0
+	spawn_positions = 0
+
+/datum/job/minor_noble/dun_world_suitor
+	title = "Suitor"
+	f_title = null
+	department_flag = NOBLEMEN
+	tutorial = "You came to these lands to win a hand and a title with it. Charm, blood or coin - \
+	whichever you have most of - is your instrument."
+	total_positions = 0
+	spawn_positions = 0
+
+/datum/job/servant/dun_world_bathhouse_attendant
+	title = "Bathhouse Attendant"
+	f_title = null
+	department_flag = PEASANTS
+	tutorial = "You draw the water, work the linens and hold your tongue about whatever is said in \
+	the steam."
+	total_positions = 0
+	spawn_positions = 0
+
 /datum/job/dungeoneer/dun_world_warden
 	title = "Warden"
 	f_title = null
@@ -158,6 +206,28 @@
 /obj/effect/landmark/start/warden
 	name = "Warden"
 	jobs_to_spawn = list("Warden")
+
+// The source map already places these under Azure's own names, so they are defined at those paths
+// and need no entry in the map generator's replacement table.
+/obj/effect/landmark/start/seneschal
+	name = "Seneschal"
+	jobs_to_spawn = list("Seneschal")
+
+/obj/effect/landmark/start/councillor
+	name = "Councillor"
+	jobs_to_spawn = list("Councillor")
+
+/obj/effect/landmark/start/clerk
+	name = "Clerk"
+	jobs_to_spawn = list("Clerk")
+
+/obj/effect/landmark/start/suitor
+	name = "Suitor"
+	jobs_to_spawn = list("Suitor")
+
+/obj/effect/landmark/start/bathworker
+	name = "Bathhouse Attendant"
+	jobs_to_spawn = list("Bathhouse Attendant")
 
 /obj/effect/landmark/start/wretch
 	name = ROLE_WRETCH
