@@ -273,9 +273,9 @@
 	if(!species)
 		return FALSE
 
-	var/used_species_id = species.id_override ? species.id_override : species.id
-
-	if(!(used_species_id in allowed_race))
+	// Proxy-aware so modular races, which no core race define lists, can wear what their parent race
+	// wears. See modular_abel/races/outfit_compatibility.dm.
+	if(!species.is_allowed_clothing_race(allowed_race))
 		return FALSE
 
 	return TRUE

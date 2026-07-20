@@ -458,6 +458,11 @@
 			return fallback
 	return ..()
 
+// Druid Grove ambience: the map places these as static scenery, not as spell motes.
+/obj/effect/wisp/prestidigitation/willowwisp
+	name = "Will-o'-the-wisp"
+	desc = "A small, fiery ball of light made up of mystical energy."
+
 // === Twilight Axis dun_world secret-door props (ported) ===
 // These bookcase-disguised redstone structures are used by the dun_world map but were never
 // ported to Vanderlin. The missing types made `new` return null on mapload, so their
