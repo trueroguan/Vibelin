@@ -3,19 +3,12 @@
 # This list is alphabetized by User -> Filename and separated into sections for Maintainers/Contributors KEEP IT THAT WAY
 # In the event that people are to be informed of changes
 # to the same file or dir, add them to the end of under Multiple Owners
+#
+# Only list users who are collaborators on this repository. Requesting a review
+# from anyone else fails the Codeowner Reviews workflow.
 
 # MAINTAINERS
 
-# aberrantQuesrist
+# trueroguan
 
-/icons/ @aberrantQuesrist
-/_maps/map_files/daftmarsh.dmm @aberrantQuesrist
-/_maps/map_files/vanderlin.dmm @aberrantQuesrist
-
-# Draggeru
-
-/_maps/* @MissyNym
-
-# Lore
-
-/strings/rt/Lore_Primer.txt @aberrantQuesrist @tired-wired
+* @trueroguan

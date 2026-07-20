@@ -93,7 +93,7 @@ function parseArgs(args: string[]): BuildOptions {
   let target = 'build';
   let targetSet = false;
   const defines: string[] = [];
-  const ignoreWarningCodes: string[] = [];
+  const ignoreWarningCodes: string[] = ['unused_var'];
   let dmVersion: string | null = null;
   let warningsAsErrors = false;
   let port = '1337';

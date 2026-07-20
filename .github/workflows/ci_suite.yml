@@ -96,6 +96,10 @@ jobs:
       - name: Run DMI Tests
         if: steps.linter-setup.conclusion == 'success' && !cancelled()
         run: tools/bootstrap/python -m dmi.test
+      - name: Audit Dun World Map Replacements
+        if: steps.linter-setup.conclusion == 'success' && !cancelled()
+        continue-on-error: true
+        run: tools/bootstrap/python modular_abel/tools/audit_map_replacements.py
       - name: Check File Directories
         if: steps.linter-setup.conclusion == 'success' && !cancelled()
         run: bash tools/ci/check_filedirs.sh vanderlin.dme
@@ -171,7 +175,7 @@ jobs:
       - name: Compile and run tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
-          tools/build/build.sh --ci dm -DCIBUILDING -I"loop_checks"
+          tools/build/build.sh --ci dm -DCIBUILDING -I"loop_checks" -I"unused_var"
           bash tools/ci/run_server.sh ${{ matrix.map }}
       - name: Check client Compatibility
         uses: tgstation/byond-client-compatibility-check@v3

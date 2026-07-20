@@ -1,3 +1,5 @@
+#pragma warn unused_var
+
 #include "erp/_erp.dm"
 #include "character_setup/_character_setup.dm"
 #include "dun_world/_dun_world.dm"
@@ -7,5 +9,6 @@
 #include "automapper/_automapper.dm"
 #include "ratwood/_ratwood.dm"
 #include "job_starting_coins.dm"
+#include "map_advclass_blacklist.dm"
 #include "cyrillic_say_fix.dm"
 #include "upstream_fixes.dm"
