@@ -8,6 +8,36 @@
 		return TRUE
 	return FALSE
 
+/obj/item/clothing/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning, bypass_equip_delay_self)
+	if(!M)
+		return FALSE
+
+	if(!M.can_equip(src, slot, disable_warning, bypass_equip_delay_self))
+		return FALSE
+
+	if(!(slot_flags & slot))
+		return FALSE
+
+	if(!(M.gender in allowed_sex))
+		return FALSE
+
+	if(!ishuman(M))
+		return FALSE
+
+	var/mob/living/carbon/human/H = M
+
+	if(!(H.age in allowed_ages))
+		return FALSE
+
+	var/datum/species/species = H.dna?.species
+	if(!species)
+		return FALSE
+
+	if(!species.is_allowed_clothing_race(allowed_race))
+		return FALSE
+
+	return TRUE
+
 /datum/species/harpy
 	clothing_race_proxy = SPEC_ID_RAKSHARI
 

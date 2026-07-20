@@ -273,7 +273,9 @@
 	if(!species)
 		return FALSE
 
-	if(!species.is_allowed_clothing_race(allowed_race))
+	var/used_species_id = species.id_override ? species.id_override : species.id
+
+	if(!(used_species_id in allowed_race))
 		return FALSE
 
 	return TRUE
