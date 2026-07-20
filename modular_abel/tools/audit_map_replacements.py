@@ -1,17 +1,3 @@
-"""Report dun_world map replacements that still fall back to a generic parent.
-
-The replacement table in modular_abel/dun_world/config/map.json maps Azure type paths onto
-Vanderlin ones. Where no equivalent existed at the time, the entry was pointed at an ancestor
-instead - the object still spawns, but as a plain parent, so an iron vein becomes bare rock and a
-noble dress becomes a nondescript piece of clothing. Every content merge can turn some of those
-fallbacks into real ports, so re-run this afterwards and repoint whatever it finds.
-
-Run from the repository root:
-    python modular_abel/tools/audit_map_replacements.py
-
-Candidates are suggestions, not answers - a shared trailing segment is a hint, and every proposal
-needs a look at the actual type before it goes into map.json.
-"""
 import json
 import os
 import re
@@ -24,7 +10,6 @@ GENERATED_MAP = os.path.join('_maps', 'map_files', 'dun_world', 'dun_world_new.d
 
 
 def declared_type_paths():
-    """Every type path in the compile, including the ancestors DM creates implicitly."""
     declared = set()
     for root_dir in ROOTS:
         for root, _dirs, files in os.walk(root_dir):
@@ -45,7 +30,6 @@ def declared_type_paths():
 
 
 def map_usage():
-    """How many prototypes in the generated map use each path, to rank findings by blast radius."""
     usage = defaultdict(int)
     if not os.path.exists(GENERATED_MAP):
         return usage
@@ -77,7 +61,7 @@ def main():
     findings = []
     for source, target in replacements.items():
         if not source.startswith(target + '/'):
-            continue  # a real port, not a fallback
+            continue
         source_tail = [p for p in source[len(target):].split('/') if p]
         candidates = []
         for candidate in by_prefix.get(target, []):
@@ -88,7 +72,7 @@ def main():
                 continue
             candidates.append((len(set(candidate_tail) & set(source_tail)), candidate))
         if source in declared:
-            candidates.append((99, source))  # the Azure path itself now exists
+            candidates.append((99, source))
         if not candidates:
             continue
         candidates.sort(key=lambda c: (-c[0], len(c[1])))
@@ -99,7 +83,8 @@ def main():
         print('no fallback replacement has a better target in the current type tree')
         return
 
-    print(f'{len(findings)} fallback replacement(s) may now have a real target:\n')
+    print(f'{len(findings)} fallback replacement(s) may now have a real target.')
+    print('Candidates are suggestions - check the type before editing map.json.\n')
     for used, source, target, candidates in findings:
         print(f'{source}')
         print(f'    falls back to {target}  ({used} prototype(s) on the generated map)')

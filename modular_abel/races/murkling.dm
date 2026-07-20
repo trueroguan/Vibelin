@@ -8,7 +8,6 @@
 		STAT_STRENGTH = -1,
 	)
 
-/// Murkling blood is the ooze itself, so it is neither red nor lux-bearing.
 /datum/blood_type/human/ooze
 	name = "Murk"
 	color = "#79F299"
@@ -44,7 +43,6 @@
 
 	statsheet_male = /datum/attribute_holder/sheet/job/species/ooze
 
-	// Murklings hold a humen shape, so they use the humen body and wear what humen wear.
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mt.dmi'
 	limbs_icon_f = 'icons/roguetown/mob/bodies/f/fm.dmi'
 
@@ -104,7 +102,6 @@
 		"Pitch" = "3a3a42",
 	)
 
-////// ORGAN SPRITES, provided by VelSlime
 /obj/item/organ/brain/ooze
 	name = "ooze neural core"
 	icon = 'modular_abel/races/icons/obj/velslime.dmi'
@@ -114,7 +111,7 @@
 /obj/item/organ/lungs/ooze
 	name = "ooze breathing sac"
 	icon = 'modular_abel/races/icons/obj/velslime.dmi'
-	icon_state = "liver" // velslime.dmi has no lungs sprite; the liver one reads as a sac well enough.
+	icon_state = "liver"
 	organ_flags = ORGAN_ORGANIC
 
 /obj/item/organ/heart/ooze

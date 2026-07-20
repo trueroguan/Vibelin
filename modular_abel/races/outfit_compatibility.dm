@@ -1,16 +1,3 @@
-/// Every garment defaults to `allowed_race = ALL_RACES_LIST`, a core compile-time define that
-/// cannot see the modular races. Left alone, that rejects every piece of clothing a modular race
-/// tries to wear - at roundstart the job outfit silently equips nothing but the weapons, which is
-/// how a Venardine ends up spawning naked holding a sword and shield.
-///
-/// The garment a modular race can wear is the one cut for the race it descends from, so each of
-/// them names that race here. The check is additive (see is_allowed_clothing_race): a species keeps
-/// everything its own id already allowed and merely gains its proxy's wardrobe, so no race loses
-/// access to anything it could wear before.
-///
-/// Deliberately separate from `id_override`, which decides who may play what: registration.dm owns
-/// job gating and grants modular races their own class access, and routing that through a proxy
-/// would silently narrow it (e.g. Warrior allows RACES_PLAYER_NONEXOTIC, which has no rakshari).
 /datum/species/var/clothing_race_proxy
 
 /datum/species/proc/is_allowed_clothing_race(list/allowed_race)

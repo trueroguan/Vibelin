@@ -458,7 +458,6 @@
 			return fallback
 	return ..()
 
-// Druid Grove ambience: the map places these as static scenery, not as spell motes.
 /obj/effect/wisp/prestidigitation/willowwisp
 	name = "Will-o'-the-wisp"
 	desc = "A small, fiery ball of light made up of mystical energy."

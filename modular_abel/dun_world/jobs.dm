@@ -107,9 +107,6 @@
 	same_job_respawn_delay = 30 MINUTES
 	tutorial = "You fell to the wrong side of civilization, and now carry the bounty and fear that follow a wretch."
 
-// Azure's court splits work that Vanderlin hands to a single Minor Noble, so the map's four court
-// landmarks all collapsed onto one role. These restore the split; the kit and the stats stay
-// Vanderlin's, inherited from whichever local role does the same job.
 /datum/job/steward/dun_world_seneschal
 	title = "Seneschal"
 	f_title = null
@@ -207,8 +204,6 @@
 	name = "Warden"
 	jobs_to_spawn = list("Warden")
 
-// The source map already places these under Azure's own names, so they are defined at those paths
-// and need no entry in the map generator's replacement table.
 /obj/effect/landmark/start/seneschal
 	name = "Seneschal"
 	jobs_to_spawn = list("Seneschal")

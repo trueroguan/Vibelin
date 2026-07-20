@@ -2,6 +2,7 @@
 #include "registration.dm"
 #include "alpha_notice.dm"
 #include "outfit_compatibility.dm"
+#include "species_outfit_equip_test.dm"
 #include "murkling.dm"
 #include "sun_elf.dm"
 #include "taur/_taur.dm"
