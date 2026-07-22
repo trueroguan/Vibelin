@@ -230,6 +230,8 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	return read_preference(/datum/preference/numeric/pixel_size)
 /datum/preferences/proc/cspref_scaling_method()
 	return read_preference(/datum/preference/choiced/scaling_method)
+/datum/preferences/proc/cspref_language()
+	return read_preference(/datum/preference/choiced/language)
 /datum/preferences/var/current_tab = 0
 
 /proc/character_setup_chargen_record_ooc(sender, message, lobby_only = FALSE)
@@ -1338,6 +1340,8 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/_t = world.timeofday
 	var/list/data = list()
 
+	data["lang"] = ui_lang_code(user?.client)
+
 	var/datum/faith/selected_faith
 	var/datum/patron/current_patron = cspref_selected_patron()
 	if(current_patron)
@@ -1564,6 +1568,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		"allow_midround_antag" = !!(cspref_toggles() & MIDROUND_ANTAG),
 		"pixel_size" = "[cspref_pixel_size()]",
 		"scaling_method" = "[cspref_scaling_method()]",
+		"language" = "[cspref_language()]",
 	)
 
 	character_setup_log_op("ui_data", _t, "keys=[length(data)] heavy_rebuilt=[heavy_rebuilt] species=[pref_species?.id] dir=[character_setup_preview_dir]")

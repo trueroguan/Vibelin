@@ -3,6 +3,9 @@ import { useBackend } from 'tgui/backend';
 import { Window } from 'tgui/layouts';
 import { Box, Button, Input, Modal, Section, Stack } from 'tgui-core/components';
 
+import type { Lang, Translator } from '../i18n';
+import { useErpTranslator } from './EroticRolePlayPanel.strings';
+
 export type PartnerEntry = {
   ref: string;
   name: string;
@@ -145,6 +148,7 @@ type EditorSelectedPayload = {
 };
 
 export type SexSessionData = {
+  lang?: Lang;
   actor_name: string;
   partners?: PartnerEntry[];
   current_partner_ref?: string | null;
@@ -175,6 +179,7 @@ const BaseTuningPanel: React.FC<{
   onSetSpeed: (v: number) => void;
   onSetForce: (v: number) => void;
 }> = ({ baseSpeed, baseForce, onSetSpeed, onSetForce }) => {
+  const tr = useErpTranslator();
   const clamp14 = (v: any) => {
     const n = Number(v);
     if (!Number.isFinite(n)) return 2;
@@ -187,7 +192,7 @@ const BaseTuningPanel: React.FC<{
   const foIdx = fo - 1;
 
   return (
-    <Section title="Базовые настройки новых действий" style={{ paddingTop: 6, paddingBottom: 6 }}>
+    <Section title={tr.t('base_tuning.title')} style={{ paddingTop: 6, paddingBottom: 6 }}>
       <Stack align="center" justify="space-between">
         <Stack.Item grow>
           <Stack align="center">
@@ -196,7 +201,7 @@ const BaseTuningPanel: React.FC<{
                 color="label"
                 style={{ fontSize: 10, textTransform: 'uppercase', whiteSpace: 'nowrap' }}
               >
-                Скорость
+                {tr.t('label.speed')}
               </Box>
             </Stack.Item>
 
@@ -226,7 +231,7 @@ const BaseTuningPanel: React.FC<{
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {speedNames[spIdx]}
+                    {tr.t(`speed.${spIdx}`)}
                   </Box>
                 </Stack.Item>
 
@@ -273,7 +278,7 @@ const BaseTuningPanel: React.FC<{
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {forceNames[foIdx]}
+                    {tr.t(`force.${foIdx}`)}
                   </Box>
                 </Stack.Item>
 
@@ -295,7 +300,7 @@ const BaseTuningPanel: React.FC<{
                 color="label"
                 style={{ fontSize: 10, textTransform: 'uppercase', whiteSpace: 'nowrap' }}
               >
-                Сила
+                {tr.t('label.force')}
               </Box>
             </Stack.Item>
           </Stack>
@@ -463,6 +468,7 @@ const PartnerNameTop: React.FC<{
 };
 
 const ControlRow: React.FC<{ act: (verb: string, args?: any) => void }> = ({ act }) => {
+  const tr = useErpTranslator();
   return (
     <Box style={{ padding: 0, marginTop: 2 }}>
       <Stack justify="center" wrap>
@@ -472,7 +478,7 @@ const ControlRow: React.FC<{ act: (verb: string, args?: any) => void }> = ({ act
             onClick={() => act('change_direction')}
             style={{ padding: '2px 8px' }}
           >
-            ПЕРЕВЕРНУТЬСЯ
+            {tr.t('control.flip')}
           </Button>
         </Stack.Item>
         <Stack.Item style={{ margin: 1 }}>
@@ -482,7 +488,7 @@ const ControlRow: React.FC<{ act: (verb: string, args?: any) => void }> = ({ act
             onClick={() => act('full_stop')}
             style={{ padding: '2px 8px' }}
           >
-            ОСТАНОВИТЬСЯ
+            {tr.t('control.stop')}
           </Button>
         </Stack.Item>
       </Stack>
@@ -491,11 +497,12 @@ const ControlRow: React.FC<{ act: (verb: string, args?: any) => void }> = ({ act
 };
 
 const TabsRow: React.FC<{ active: string; onSet: (tab: string) => void }> = ({ active, onSet }) => {
+  const tr = useErpTranslator();
   const tabs = [
-    { id: 'actions', name: 'ДЕЙСТВИЯ' },
-    { id: 'status', name: 'СТАТУС' },
-    { id: 'erp', name: 'ЭРП' },
-    { id: 'editor', name: 'РЕДАКТОР' },
+    { id: 'actions', name: tr.t('tab.actions') },
+    { id: 'status', name: tr.t('tab.status') },
+    { id: 'erp', name: tr.t('tab.erp') },
+    { id: 'editor', name: tr.t('tab.editor') },
   ];
   return (
     <Box style={{ padding: 0, marginTop: 2 }}>
@@ -537,7 +544,8 @@ const NodeButton: React.FC<{
   selected?: boolean;
   onClick: () => void;
 }> = ({ entry, selected, onClick }) => {
-  const name = entry.name || entry.type;
+  const tr = useErpTranslator();
+  const name = tr.tc(entry.type, entry.name || entry.type);
   const free = Number.isFinite(entry.free as any) ? Number(entry.free) : undefined;
   const total = Number.isFinite(entry.total as any) ? Number(entry.total) : undefined;
   const count = Number.isFinite(entry.count as any) ? Number(entry.count) : undefined;
@@ -612,6 +620,7 @@ const ActionsListOldLike: React.FC<{
   actions: UiActionEntry[];
   onClickAction: (id: string) => void;
 }> = ({ actorSelected, partnerSelected, actions, onClickAction }) => {
+  const tr = useErpTranslator();
   const [singleColumn, setSingleColumn] = useState(false);
   useEffect(() => {
     const handleResize = () => {
@@ -650,15 +659,15 @@ const ActionsListOldLike: React.FC<{
           color: isAvailable ? 'var(--color-text)' : 'var(--color-label)',
         }}
       >
-        {a.name}
+        {tr.tc(a.id, a.name)}
       </Button>
     );
   };
   return (
-    <Section title="Действия" fill scrollable>
+    <Section title={tr.t('actions.title')} fill scrollable>
       {!actions.length ? (
         <Box color="label" textAlign="center" style={{ padding: 6 }}>
-          Нет доступных действий.
+          {tr.t('actions.empty')}
         </Box>
       ) : singleColumn ? (
         <Stack vertical>
@@ -688,8 +697,6 @@ const ActionsListOldLike: React.FC<{
   );
 };
 
-const speedNames = ['Медленно', 'Средне', 'Быстро', 'Неистово'];
-const forceNames = ['Нежно', 'Уверенно', 'Сильно', 'Жестко'];
 const speedColors = ['#a798a2ff', '#e67ec0ff', '#f05ee1', '#f54689ff'];
 const forceColors = ['#a798a2ff', '#e67ec0ff', '#f05ee1', '#f54689ff'];
 
@@ -700,6 +707,7 @@ const ActiveLinksPanel: React.FC<{
   onToggleFinish: (linkId: string, nextToClimax: boolean) => void;
   onStop: (linkId: string) => void;
 }> = ({ links, onSetSpeed, onSetForce, onToggleFinish, onStop }) => {
+  const tr = useErpTranslator();
   if (!links.length) return null;
 
   const clamp14 = (v: any) => {
@@ -709,7 +717,7 @@ const ActiveLinksPanel: React.FC<{
   };
 
   return (
-    <Section title="Активные связки">
+    <Section title={tr.t('links.title')}>
       <Stack vertical>
         {links.map((l) => {
           const sp = clamp14(l.speed);
@@ -759,7 +767,7 @@ const ActiveLinksPanel: React.FC<{
                           fontSize: 11,
                         }}
                       >
-                        {speedNames[spIdx]}
+                        {tr.t(`speed.${spIdx}`)}
                       </Box>
                     </Stack.Item>
                     <Stack.Item>
@@ -783,10 +791,10 @@ const ActiveLinksPanel: React.FC<{
                       color="transparent"
                       selected
                       onClick={() => onStop(l.id)}
-                      tooltip="Остановить связку"
+                      tooltip={tr.t('links.stop_tooltip')}
                       style={{ padding: '1px 10px', lineHeight: 1.1 }}
                     >
-                      {l.name || 'ДЕЙСТВИЕ'}
+                      {l.name || tr.t('links.default_action')}
                     </Button>
                   </Box>
                 </Stack.Item>
@@ -815,7 +823,7 @@ const ActiveLinksPanel: React.FC<{
                           fontSize: 11,
                         }}
                       >
-                        {forceNames[foIdx]}
+                        {tr.t(`force.${foIdx}`)}
                       </Box>
                     </Stack.Item>
                     <Stack.Item>
@@ -844,9 +852,9 @@ const ActiveLinksPanel: React.FC<{
                     <Box textAlign="center">
                       <Pill
                         onClick={() => onToggleFinish(l.id, !doUntilClimax)}
-                        tooltip="Переключить режим завершения"
+                        tooltip={tr.t('links.toggle_finish_tooltip')}
                       >
-                        {doUntilClimax ? 'ДО КЛИМАКСА' : 'ПОКА НЕ ОСТАНОВЛЮСЬ'}
+                        {doUntilClimax ? tr.t('links.until_climax') : tr.t('links.until_stop')}
                       </Pill>
                     </Box>
                   </Stack.Item>
@@ -889,22 +897,23 @@ const PenisTuningPanel: React.FC<{
   onToggleKnot: () => void;
   onSetClimaxMode: (mode: string) => void;
 }> = ({ enabled, showKnotToggle, doKnotAction, canKnot, climaxMode, climaxModes, onToggleKnot, onSetClimaxMode }) => {
+  const tr = useErpTranslator();
   if (!enabled) return null;
   const modes = climaxModes && climaxModes.length
     ? climaxModes
     : [{ id: 'outside', name: 'НАРУЖУ' }, { id: 'inside', name: 'ВНУТРЬ' }];
   return (
-    <Section title="Настройки члена" style={{ paddingTop: 6, paddingBottom: 6 }}>
+    <Section title={tr.t('penis.title')} style={{ paddingTop: 6, paddingBottom: 6 }}>
       <Stack justify="space-between" align="center" wrap>
         {showKnotToggle ? (
           <Stack.Item>
             <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25}>
-              Узел
+              {tr.t('penis.knot')}
             </Box>
             <Stack>
               <Stack.Item>
                 <Pill disabled={!canKnot} selected={!!doKnotAction} onClick={canKnot ? onToggleKnot : undefined}>
-                  {doKnotAction ? 'ДО УЗЛА' : 'БЕЗ УЗЛА'}
+                  {doKnotAction ? tr.t('penis.knot_on') : tr.t('penis.knot_off')}
                 </Pill>
               </Stack.Item>
             </Stack>
@@ -914,13 +923,13 @@ const PenisTuningPanel: React.FC<{
         )}
         <Stack.Item>
           <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25} textAlign="right">
-            Куда кончить
+            {tr.t('penis.where_climax')}
           </Box>
           <Stack justify="end" wrap>
             {modes.map((m) => (
               <Stack.Item key={m.id} style={{ margin: 1 }}>
                 <Pill selected={String(climaxMode || '') === String(m.id)} onClick={() => onSetClimaxMode(m.id)}>
-                  {m.name}
+                  {tr.tc(m.id, m.name)}
                 </Pill>
               </Stack.Item>
             ))}
@@ -935,11 +944,12 @@ const ActionsBottomSearch: React.FC<{
   searchText: string;
   onSearchChange: (value: string) => void;
 }> = ({ searchText, onSearchChange }) => {
+  const tr = useErpTranslator();
   return (
-    <Section title="Фильтр" style={{ paddingTop: 6, paddingBottom: 6 }}>
+    <Section title={tr.t('filter.title')} style={{ paddingTop: 6, paddingBottom: 6 }}>
       <Input
         fluid
-        placeholder="Поиск взаимодействия..."
+        placeholder={tr.t('filter.placeholder')}
         value={searchText}
         onChange={(value) => onSearchChange(value)}
       />
@@ -951,6 +961,7 @@ const ActionsTab: React.FC<{
   payload?: ActionsTabPayload;
   act: (verb: string, args?: any) => void;
 }> = ({ payload, act }) => {
+  const tr = useErpTranslator();
   const actorNodes = payload?.actor_nodes ?? [];
   const partnerNodes = payload?.partner_nodes ?? [];
   const selectedActorNode = payload?.selected_actor_node ?? null;
@@ -995,7 +1006,7 @@ const ActionsTab: React.FC<{
         <Stack fill align="stretch">
           <Stack.Item basis="18%" style={{ paddingRight: 4 }}>
             <NodeList
-              title="Я"
+              title={tr.t('nodes.me')}
               nodes={actorNodes}
               selectedId={selectedActorNode}
               onSelect={(id) =>
@@ -1023,7 +1034,7 @@ const ActionsTab: React.FC<{
           </Stack.Item>
           <Stack.Item basis="18%" style={{ paddingLeft: 4 }}>
             <NodeList
-              title="Партнёр"
+              title={tr.t('nodes.partner')}
               nodes={partnerNodes}
               selectedId={selectedPartnerNode}
               onSelect={(id) =>
@@ -1065,11 +1076,11 @@ const ActionsTab: React.FC<{
   );
 };
 
-const prefText = (v?: number | null) => {
+const prefText = (tr: Translator, v?: number | null) => {
   if (v === undefined || v === null) return '—';
-  if (v <= -1) return 'Не нравится';
-  if (v >= 1) return 'Нравится';
-  return 'Нейтрально';
+  if (v <= -1) return tr.t('pref.dislike');
+  if (v >= 1) return tr.t('pref.like');
+  return tr.t('pref.neutral');
 };
 
 const nextPref = (v: number) => {
@@ -1083,8 +1094,9 @@ const KinkMiniCard: React.FC<{
   myValue: number;
   onCycle: () => void;
 }> = ({ kink, myValue, onCycle }) => {
+  const tr = useErpTranslator();
   const partnerKnown = kink.partner_pref_known && kink.partner_pref !== null && kink.partner_pref !== undefined;
-  const partnerText = partnerKnown ? prefText(kink.partner_pref) : '—';
+  const partnerText = partnerKnown ? prefText(tr, kink.partner_pref) : '—';
 
   const myTone = myValue <= -1 ? 'bad' : myValue >= 1 ? 'good' : 'label';
   const partnerTone = !partnerKnown
@@ -1121,14 +1133,14 @@ const KinkMiniCard: React.FC<{
               borderRadius: 6,
               background: 'rgba(255,255,255,0.03)',
             }}
-            tooltip={kink.description ? kink.description : undefined}
+            tooltip={kink.description ? tr.tc(`${kink.type}:desc`, kink.description) : undefined}
           >
             <Box>
               <Box as="span" bold>
-                {kink.name}
+                {tr.tc(kink.type, kink.name)}
               </Box>{' '}
               <Box as="span" color={myTone} style={{ fontSize: 11 }}>
-                ({prefText(myValue)})
+                ({prefText(tr, myValue)})
               </Box>
             </Box>
           </Button>
@@ -1156,7 +1168,7 @@ const KinkMiniCard: React.FC<{
       </Stack>
       {!!kink.description && (
         <Box mt={0.5} color="label" style={{ fontSize: 11, lineHeight: 1.25 }}>
-          {kink.description}
+          {tr.tc(`${kink.type}:desc`, kink.description)}
         </Box>
       )}
     </Box>
@@ -1182,7 +1194,8 @@ const StatusOrganCard: React.FC<{
   onToggleOverflow: (organId: string) => void;
   onSetErectMode?: (organId: string, mode: 'auto' | 'none' | 'partial' | 'hard') => void;
 }> = ({ entry, onEditSensitivity, onToggleOverflow, onSetErectMode }) => {
-  const name = entry.name || entry.type || 'Орган';
+  const tr = useErpTranslator();
+  const name = tr.tc(entry.type, entry.name || entry.type || tr.t('organ.fallback_name'));
   const sens = Number(entry.sensitivity ?? 0);
   const pain = Number(entry.pain ?? 0);
   const toggles = entry.toggles || {};
@@ -1213,7 +1226,7 @@ const StatusOrganCard: React.FC<{
         {entry.busy ? (
           <Stack.Item shrink>
             <Box color="bad" style={{ fontSize: 10 }}>
-              ● активен
+              ● {tr.t('organ.active')}
             </Box>
           </Stack.Item>
         ) : null}
@@ -1227,7 +1240,7 @@ const StatusOrganCard: React.FC<{
             onClick={() => onEditSensitivity(entry.id, sens)}
             style={{ padding: '2px 6px' }}
           >
-            Чувств.:{' '}
+            {tr.t('organ.sensitivity')}{' '}
             <Box as="span" color="good" bold>
               {fmt1(sens)}
             </Box>
@@ -1236,7 +1249,7 @@ const StatusOrganCard: React.FC<{
         <Stack.Item>
           <Box style={{ fontSize: 11 }}>
             <Box as="span" color="bad">
-              Боль:{' '}
+              {tr.t('organ.pain')}{' '}
             </Box>
             <Box as="span" color="bad" bold>
               {fmt1(pain)}
@@ -1246,7 +1259,7 @@ const StatusOrganCard: React.FC<{
         {hasOverflow ? (
           <Stack.Item>
             <Pill selected={overflow} onClick={() => onToggleOverflow(entry.id)}>
-              ПЕРЕПОЛН.
+              {tr.t('organ.overflow')}
             </Pill>
           </Stack.Item>
         ) : null}
@@ -1254,27 +1267,27 @@ const StatusOrganCard: React.FC<{
       {hasErect && onSetErectMode && (
         <Box mt={0.5}>
           <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25}>
-            Возбуждение
+            {tr.t('organ.arousal')}
           </Box>
           <Stack wrap>
             <Stack.Item>
               <Pill selected={erectMode === 'auto'} onClick={() => onSetErectMode(entry.id, 'auto')}>
-                АВТО
+                {tr.t('erect.auto')}
               </Pill>
             </Stack.Item>
             <Stack.Item>
               <Pill selected={erectMode === 'none'} onClick={() => onSetErectMode(entry.id, 'none')}>
-                МЯГКИЙ
+                {tr.t('erect.none')}
               </Pill>
             </Stack.Item>
             <Stack.Item>
               <Pill selected={erectMode === 'partial'} onClick={() => onSetErectMode(entry.id, 'partial')}>
-                ВОЗБУЖДЕН
+                {tr.t('erect.partial')}
               </Pill>
             </Stack.Item>
             <Stack.Item>
               <Pill selected={erectMode === 'hard'} onClick={() => onSetErectMode(entry.id, 'hard')}>
-                КРЕПКИЙ
+                {tr.t('erect.hard')}
               </Pill>
             </Stack.Item>
           </Stack>
@@ -1283,7 +1296,7 @@ const StatusOrganCard: React.FC<{
       {fillTotal > 0 && (
         <Box mt={0.5} style={{ fontSize: 11 }}>
           <Box as="span" color="label">
-            Наполненность:{' '}
+            {tr.t('organ.fill')}{' '}
           </Box>
           <Box as="span" bold>
             {Math.round(fillTotal)}
@@ -1295,7 +1308,7 @@ const StatusOrganCard: React.FC<{
           {passive.length > 0 && (
             <Box>
               <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }}>
-                Воздействия на орган
+                {tr.t('organ.passive_links')}
               </Box>
               {passive.map((l) => (
                 <Box key={l.id} mt={0.25}>
@@ -1313,7 +1326,7 @@ const StatusOrganCard: React.FC<{
           {active.length > 0 && (
             <Box mt={0.5}>
               <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }}>
-                Орган воздействует
+                {tr.t('organ.active_links')}
               </Box>
               {active.map((l) => (
                 <Box key={l.id} mt={0.25}>
@@ -1337,6 +1350,7 @@ const StatusOrganCard: React.FC<{
 const ArousalPanel: React.FC<{
   data?: ArousalPayload | null;
 }> = ({ data }) => {
+  const tr = useErpTranslator();
   if (!data) return null;
   const charge = Math.round(Number(data.charge ?? 0));
   const chargeMax = Math.round(Number(data.charge_max ?? 0));
@@ -1348,16 +1362,16 @@ const ArousalPanel: React.FC<{
     <Stack vertical>
       <Stack.Item>
         <Box style={{ fontSize: 11 }}>
-          Заряд: <Box as="span" bold>{charge}</Box>/{chargeMax} ({charge_for_climax} для оргазма)
+          {tr.t('arousal.charge')} <Box as="span" bold>{charge}</Box>/{chargeMax} ({charge_for_climax} {tr.t('arousal.for_orgasm')})
         </Box>
         <Box style={{ fontSize: 11 }}>
-          Самочувствие:{' '}
+          {tr.t('arousal.wellbeing')}{' '}
           <Box as="span" bold>
-            {spTierText || 'нормально'}
+            {spTierText || tr.t('arousal.normal')}
           </Box>
           {overloadActive && (
             <Box color="bad" bold style={{ fontSize: 11 }}>
-              СВЕРХ-СТИМУЛЯЦИЯ
+              {tr.t('arousal.overstim')}
             </Box>
           )}
         </Box>
@@ -1372,17 +1386,18 @@ const StatusTab: React.FC<{
   onToggleOverflow: (organId: string) => void;
   onSetErectMode?: (organId: string, mode: 'auto' | 'none' | 'partial' | 'hard') => void;
 }> = ({ entries, onEditSensitivity, onToggleOverflow, onSetErectMode }) => {
+  const tr = useErpTranslator();
   if (!entries.length) {
     return (
-      <Section title="Статус">
+      <Section title={tr.t('status.title')}>
         <Box color="label" textAlign="center">
-          Пусто (entries не пришли)
+          {tr.t('status.empty')}
         </Box>
       </Section>
     );
   }
   return (
-    <Section title="Статус">
+    <Section title={tr.t('status.title')}>
       {entries.map((e) => (
         <StatusOrganCard
           key={e.id}
@@ -1451,6 +1466,7 @@ const ListEditor: React.FC<{
   maxLen?: number;
   onChange: (next: string[]) => void;
 }> = ({ value, placeholder, maxLen, onChange }) => {
+  const tr = useErpTranslator();
   const [draft, setDraft] = useState('');
   const add = () => {
     const s = draft.trim();
@@ -1476,7 +1492,7 @@ const ListEditor: React.FC<{
       </Stack>
       <Stack mt={0.5} align="center">
         <Stack.Item grow>
-          <Input fluid value={draft} placeholder={placeholder || 'добавить...'} onChange={(v) => setDraft(v)} onEnter={add} />
+          <Input fluid value={draft} placeholder={placeholder || tr.t('list.add_placeholder')} onChange={(v) => setDraft(v)} onEnter={add} />
         </Stack.Item>
         <Stack.Item shrink>
           <Button compact onClick={add}>
@@ -1497,6 +1513,7 @@ const FieldControl: React.FC<{
   f: EditorField;
   onChange: (id: string, value: any) => void;
 }> = ({ f, onChange }) => {
+  const tr = useErpTranslator();
   const t = (f.type || 'text') as EditorFieldType;
   if (t === 'bool') {
     const v = !!f.value;
@@ -1514,7 +1531,7 @@ const FieldControl: React.FC<{
         </Stack.Item>
         <Stack.Item shrink>
           <Pill selected={v} onClick={() => onChange(f.id, !v)}>
-            {v ? 'ВКЛ' : 'ВЫКЛ'}
+            {v ? tr.t('bool.on') : tr.t('bool.off')}
           </Pill>
         </Stack.Item>
       </Stack>
@@ -1633,6 +1650,7 @@ const EditorTab: React.FC<{
   onUpdate: (params: any) => void;
   onDelete: (id: string) => void;
 }> = ({ templates, customActions, selected, act, onCreate, onUpdate, onDelete }) => {
+  const tr = useErpTranslator();
   const [isDirty, setIsDirty] = useState(false);
   const [rawMode, setRawMode] = useState(false);
   const [rawText, setRawText] = useState('');
@@ -1682,9 +1700,9 @@ const EditorTab: React.FC<{
       : [
           {
             id: 'name',
-            label: 'Название',
+            label: tr.t('editor.name'),
             type: 'text',
-            section: 'ОСНОВНОЕ',
+            section: tr.t('editor.basic'),
             value: nameFromSource,
           } as EditorField,
           ...nf,
@@ -1776,12 +1794,12 @@ const EditorTab: React.FC<{
   };
 
   return (
-    <Section title="Редактор действий" fill>
+    <Section title={tr.t('editor.title')} fill>
       <Stack fill>
         <Stack.Item basis="32%">
-          <Section title="Шаблоны">
+          <Section title={tr.t('editor.templates')}>
             {!templates.length ? (
-              <Box color="label">Нет доступных шаблонов.</Box>
+              <Box color="label">{tr.t('editor.no_templates')}</Box>
             ) : (
               <Stack vertical>
                 {templates.map((t) => {
@@ -1797,7 +1815,7 @@ const EditorTab: React.FC<{
                           act('editor_select_action', { mode: 'template', key: t.type });
                         }}
                       >
-                        {t.name}
+                        {tr.tc(t.type, t.name)}
                       </Button>
                     </Stack.Item>
                   );
@@ -1806,9 +1824,9 @@ const EditorTab: React.FC<{
             )}
           </Section>
 
-          <Section title={`Мои кастомные (${customActions.length})`}>
+          <Section title={`${tr.t('editor.my_custom')} (${customActions.length})`}>
             {!customActions.length ? (
-              <Box color="label">Пока пусто.</Box>
+              <Box color="label">{tr.t('editor.empty_custom')}</Box>
             ) : (
               <Stack vertical>
                 {customActions.map((c) => {
@@ -1835,17 +1853,17 @@ const EditorTab: React.FC<{
         </Stack.Item>
 
         <Stack.Item grow basis="68%">
-          <Section title="Параметры" fill scrollable>
+          <Section title={tr.t('section.params')} fill scrollable>
             {!source ? (
-              <Box color="label">Выбери слева шаблон или своё действие.</Box>
+              <Box color="label">{tr.t('editor.pick_hint')}</Box>
             ) : (
               <>
                 <Box mb={1}>
                   <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25}>
-                    Основное
+                    {tr.t('editor.basic')}
                   </Box>
                   <Box mb={0.25} bold style={{ fontSize: 11 }}>
-                    Название
+                    {tr.t('editor.name')}
                   </Box>
                   <Input fluid value={nameValue} onChange={(v) => setFieldValue('name', v)} />
                 </Box>
@@ -1854,7 +1872,7 @@ const EditorTab: React.FC<{
                   <Stack justify="space-between" align="center">
                     <Stack.Item>
                       <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }}>
-                        Поля
+                        {tr.t('editor.fields')}
                       </Box>
                     </Stack.Item>
                     <Stack.Item>
@@ -1886,7 +1904,7 @@ const EditorTab: React.FC<{
                       </Box>
                     ) : (
                       <Box mt={0.5} color="label">
-                        Поля не пришли (или backend ещё не отдал выбранное действие полностью).
+                        {tr.t('editor.no_fields')}
                       </Box>
                     )
                   ) : (
@@ -1900,7 +1918,7 @@ const EditorTab: React.FC<{
                         }}
                       />
                       <Box mt={0.25} color="label" style={{ fontSize: 10 }}>
-                        В RAW можно править payload полей. Если JSON сломан — уйдёт обычный вариант.
+                        {tr.t('editor.raw_hint')}
                       </Box>
                     </Box>
                   )}
@@ -1908,10 +1926,10 @@ const EditorTab: React.FC<{
 
                 <Box mt={1} textAlign="right">
                   <Button disabled={!canCreate} onClick={commitCreate}>
-                    СОЗДАТЬ КАСТОМ
+                    {tr.t('editor.create')}
                   </Button>{' '}
                   <Button disabled={!canSave} onClick={commitSave}>
-                    СОХРАНИТЬ
+                    {tr.t('editor.save')}
                   </Button>{' '}
                   <Button
                     disabled={!canDelete || !selectedKey}
@@ -1922,13 +1940,13 @@ const EditorTab: React.FC<{
                       onDelete(selectedKey);
                     }}
                   >
-                    УДАЛИТЬ
+                    {tr.t('editor.delete')}
                   </Button>
                 </Box>
 
                 {isDirty && (
                   <Box mt={0.5} color="label" style={{ fontSize: 10 }}>
-                    Локальные правки не будут перезатираться обновлениями UI до сохранения или смены выбора.
+                    {tr.t('editor.dirty_hint')}
                   </Box>
                 )}
               </>
@@ -1943,6 +1961,7 @@ const EditorTab: React.FC<{
 type EditContext = { kind: 'arousal' } | { kind: 'organ_sens'; organId: string };
 export const EroticRolePlayPanel: React.FC = () => {
   const { act, data } = useBackend<SexSessionData>();
+  const tr = useErpTranslator();
   const partners = data.partners ?? [];
   const showPartner = typeof data.partner_arousal === 'number' && !data.partner_arousal_hidden;
   const actorArousal = clamp01(data.actor_arousal ?? 0);
@@ -2018,7 +2037,7 @@ export const EroticRolePlayPanel: React.FC = () => {
       });
   }, [kinkEntries, q, cat]);
   return (
-    <Window title="Утолить Желания" width={520} height={740} theme="grim">
+    <Window title={tr.t('window.title')} width={520} height={740} theme="grim">
       <Window.Content scrollable>
         <Stack vertical fill>
           <Stack.Item>
@@ -2032,22 +2051,22 @@ export const EroticRolePlayPanel: React.FC = () => {
             <Stack justify="center" wrap>
               <Stack.Item style={{ margin: 0 }}>
                 <Pill selected={isArousing} onClick={() => act('freeze_arousal')}>
-                  ВОЗБУЖДАТЬСЯ
+                  {tr.t('control.arouse')}
                 </Pill>
               </Stack.Item>
               <Stack.Item style={{ margin: 0 }}>
                 <Pill selected={isYielding} onClick={() => act('yield')}>
-                  ПОДДАВАТЬСЯ
+                  {tr.t('control.yield')}
                 </Pill>
               </Stack.Item>
               <Stack.Item style={{ margin: 0 }}>
                 <Pill selected={isMoaning} onClick={() => act('set_moaning')}>
-                  СТОНАТЬ
+                  {tr.t('control.moan')}
                 </Pill>
               </Stack.Item>
               <Stack.Item style={{ margin: 0 }}>
                 <Pill selected={isHidden} onClick={() => act('toggle_hidden')}>
-                  СКРЫТНО
+                  {tr.t('control.hidden')}
                 </Pill>
               </Stack.Item>
             </Stack>
@@ -2056,14 +2075,14 @@ export const EroticRolePlayPanel: React.FC = () => {
             {showPartner ? (
               <Stack>
                 <Stack.Item basis="50%" style={{ paddingRight: 2 }}>
-                  <BarRow label="Я" valuePercent={actorArousal} clickable onClick={openArousalEditor} />
+                  <BarRow label={tr.t('bar.me')} valuePercent={actorArousal} clickable onClick={openArousalEditor} />
                 </Stack.Item>
                 <Stack.Item basis="50%" style={{ paddingLeft: 2 }}>
-                  <BarRow label="Партнёр" valuePercent={partnerArousal} />
+                  <BarRow label={tr.t('bar.partner')} valuePercent={partnerArousal} />
                 </Stack.Item>
               </Stack>
             ) : (
-              <BarRow label="Я" valuePercent={actorArousal} clickable onClick={openArousalEditor} />
+              <BarRow label={tr.t('bar.me')} valuePercent={actorArousal} clickable onClick={openArousalEditor} />
             )}
           </Box>
           <Stack.Item>
@@ -2084,10 +2103,10 @@ export const EroticRolePlayPanel: React.FC = () => {
             ) : activeTab === 'erp' ? (
               <Stack vertical>
                 <Stack.Item>
-                  <Section title="Фетиши">
+                  <Section title={tr.t('kinks.title')}>
                     <Stack vertical>
                       <Stack.Item>
-                        <Input fluid placeholder="Поиск по кинкам..." value={q} onChange={(v) => setQ(v)} />
+                        <Input fluid placeholder={tr.t('kinks.search_placeholder')} value={q} onChange={(v) => setQ(v)} />
                       </Stack.Item>
                       {categories.length > 1 && (
                         <Stack.Item mt={0.5}>
@@ -2095,7 +2114,7 @@ export const EroticRolePlayPanel: React.FC = () => {
                             {categories.map((c) => (
                               <Stack.Item key={c} style={{ margin: 1 }}>
                                 <Pill selected={cat === c} onClick={() => setCat(c)}>
-                                  {c}
+                                  {c === 'ALL' ? tr.t('kinks.cat_all') : tr.tc(c, c)}
                                 </Pill>
                               </Stack.Item>
                             ))}
@@ -2106,14 +2125,14 @@ export const EroticRolePlayPanel: React.FC = () => {
                   </Section>
                 </Stack.Item>
                 <Stack.Item grow>
-                  <Section title={`Настройки (${filteredKinks.length}/${kinkEntries.length})`}>
+                  <Section title={`${tr.t('kinks.settings')} (${filteredKinks.length}/${kinkEntries.length})`}>
                     {!kinkEntries.length ? (
                       <Box color="label" textAlign="center">
-                        Пусто (entries не пришли)
+                        {tr.t('status.empty')}
                       </Box>
                     ) : !filteredKinks.length ? (
                       <Box color="label" textAlign="center">
-                        Ничего не найдено по фильтрам.
+                        {tr.t('kinks.no_results')}
                       </Box>
                     ) : (
                       filteredKinks.map((k) => {
@@ -2163,7 +2182,7 @@ export const EroticRolePlayPanel: React.FC = () => {
               />
             ) : (
               <Box color="label" style={{ padding: 6 }}>
-                Контент вкладки позже.
+                {tr.t('tab.placeholder')}
               </Box>
             )}
           </Stack.Item>
@@ -2171,10 +2190,10 @@ export const EroticRolePlayPanel: React.FC = () => {
       </Window.Content>
       {editContext && (
         <Modal>
-          <Section title={editContext.kind === 'arousal' ? 'Установить возбуждение (0–100)' : 'Чувствительность (например 0–2)'}>
+          <Section title={editContext.kind === 'arousal' ? tr.t('modal.set_arousal') : tr.t('modal.set_sensitivity')}>
             <Input autoFocus value={editValue} onChange={(v) => setEditValue(v)} />
             <Box mt={1} textAlign="right">
-              <Button onClick={() => setEditContext(null)}>Отмена</Button>{' '}
+              <Button onClick={() => setEditContext(null)}>{tr.t('btn.cancel')}</Button>{' '}
               <Button onClick={confirmEdit}>OK</Button>
             </Box>
           </Section>

@@ -200,7 +200,7 @@ export const LoadoutPanel = () => {
                     good: [-Infinity, 0.25],
                   }}
                   value={slotRatio}
-                  width="300px"
+                  width="100%"
                 />
               </Stack.Item>
 
@@ -261,16 +261,16 @@ export const LoadoutPanel = () => {
                           gap: '6px',
                         }}
                       >
-                        <Box
+                        <div
                           style={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                           }}
-                          tooltip={item.name}
+                          title={item.name}
                         >
                           {item.name}
-                        </Box>
+                        </div>
                         <Button
                           color="danger"
                           onClick={() => act('remove', { item: item.path })}
@@ -289,17 +289,17 @@ export const LoadoutPanel = () => {
             </Stack>
           </Stack.Item>
 
-          <Stack.Item width="100%">
+          <Stack.Item grow style={{ minWidth: 0 }}>
             <Stack vertical fill>
               <Stack.Item>
-                <Tabs>
+                <Tabs style={{ flexWrap: 'wrap' }}>
                   {categoriesArray.map((cat, i) => (
                     <Tabs.Tab
                       key={cat.name}
                       selected={i === tabIndex}
                       onClick={() => setTabIndex(i)}
                       style={{
-                        flex: 1,
+                        whiteSpace: 'nowrap',
                         backgroundColor: i === tabIndex ? '#444' : '#222',
                         color: 'white',
                       }}
@@ -334,9 +334,11 @@ export const LoadoutPanel = () => {
                 </Button>
               </Stack.Item>
               <Stack.Item
+                grow
                 style={{
                   overflowY: 'auto',
                   overflowX: 'hidden',
+                  minHeight: 0,
                 }}
               >
                 <div

@@ -1,5 +1,6 @@
 #pragma warn unused_var
 
+#include "localization/_localization.dm"
 #include "erp/_erp.dm"
 #include "character_setup/_character_setup.dm"
 #include "dun_world/_dun_world.dm"
@@ -11,4 +12,5 @@
 #include "job_starting_coins.dm"
 #include "map_advclass_blacklist.dm"
 #include "cyrillic_say_fix.dm"
+#include "ear_flick.dm"
 #include "upstream_fixes.dm"
