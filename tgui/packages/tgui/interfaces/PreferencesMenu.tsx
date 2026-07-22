@@ -13,7 +13,9 @@ import {
   Tooltip,
 } from 'tgui-core/components';
 import { useBackend } from '../backend';
+import type { Lang } from '../i18n';
 import { Window } from '../layouts';
+import { usePrefsTp } from './PreferencesMenu.strings';
 
 type Booleanish = boolean | number;
 
@@ -115,6 +117,7 @@ type FeatureEntry = {
 };
 
 type PrefsData = {
+  lang?: Lang;
   real_name: string;
   initial_tab: string;
   tgui_theme: string;
@@ -201,6 +204,7 @@ type PrefsData = {
     allow_midround_antag: Booleanish;
     pixel_size: string;
     scaling_method: string;
+    language: string;
   };
 };
 
@@ -285,6 +289,7 @@ type PanelProps = {
 
 const Panel = (props: PanelProps) => {
   const { title, icon, buttons, children } = props;
+  const tp = usePrefsTp();
   return (
     <Section
       mb={1}
@@ -295,7 +300,7 @@ const Panel = (props: PanelProps) => {
               <Icon name={icon} />
             </Stack.Item>
           ) : null}
-          <Stack.Item>{title}</Stack.Item>
+          <Stack.Item>{tp(title)}</Stack.Item>
         </Stack>
       }
       buttons={buttons}
@@ -319,13 +324,14 @@ type PrefRowProps = {
 const PrefRow = (props: PrefRowProps) => {
   const { icon, label, value, onClick, disabled, selected, swatch, tooltip } =
     props;
+  const tp = usePrefsTp();
   return (
     <Button
       fluid
       mb={0.5}
       disabled={disabled}
       selected={selected}
-      tooltip={tooltip || label}
+      tooltip={tp(tooltip || label)}
       onClick={onClick}
     >
       <Stack align="center">
@@ -333,7 +339,7 @@ const PrefRow = (props: PrefRowProps) => {
           <Icon name={icon} />
         </Stack.Item>
         <Stack.Item grow>
-          <Box textAlign="left">{label}</Box>
+          <Box textAlign="left">{tp(label)}</Box>
         </Stack.Item>
         {swatch ? (
           <Stack.Item>
@@ -346,7 +352,7 @@ const PrefRow = (props: PrefRowProps) => {
           </Stack.Item>
         ) : null}
         <Stack.Item>
-          <Box bold>{display(value)}</Box>
+          <Box bold>{display(tp(value))}</Box>
         </Stack.Item>
       </Stack>
     </Button>
@@ -360,6 +366,7 @@ const InfoRow = (props: {
   valueColor?: string;
 }) => {
   const { icon, label, value, valueColor } = props;
+  const tp = usePrefsTp();
   return (
     <Box mb={0.5} p={0.5}>
       <Stack align="center">
@@ -367,11 +374,11 @@ const InfoRow = (props: {
           <Icon name={icon} />
         </Stack.Item>
         <Stack.Item grow>
-          <Box textAlign="left">{label}</Box>
+          <Box textAlign="left">{tp(label)}</Box>
         </Stack.Item>
         <Stack.Item>
           <Box bold color={valueColor}>
-            {display(value)}
+            {display(tp(value))}
           </Box>
         </Stack.Item>
       </Stack>
@@ -388,6 +395,7 @@ const ActionButton = (props: {
   selected?: boolean;
 }) => {
   const { icon, label, onClick, color, disabled, selected } = props;
+  const tp = usePrefsTp();
   return (
     <Button
       fluid
@@ -397,10 +405,10 @@ const ActionButton = (props: {
       color={color || undefined}
       disabled={disabled}
       selected={selected}
-      tooltip={label}
+      tooltip={tp(label)}
       onClick={onClick}
     >
-      {label}
+      {tp(label)}
     </Button>
   );
 };
@@ -501,21 +509,25 @@ const FieldBlock = (props: {
   label: string;
   children: React.ReactNode;
   labelSize?: string;
-}) => (
-  <Box mb={1}>
-    <Box
-      color="label"
-      mb={0.5}
-      style={{ fontSize: props.labelSize || '12px', lineHeight: '1.2' }}
-    >
-      {props.label}
+}) => {
+  const tp = usePrefsTp();
+  return (
+    <Box mb={1}>
+      <Box
+        color="label"
+        mb={0.5}
+        style={{ fontSize: props.labelSize || '12px', lineHeight: '1.2' }}
+      >
+        {tp(props.label)}
+      </Box>
+      {props.children}
     </Box>
-    {props.children}
-  </Box>
-);
+  );
+};
 
 export const PreferencesMenu = () => {
   const { act, data } = useBackend<PrefsData>();
+  const tp = usePrefsTp();
 
   const mapTab = (tab: string) => (tab === 'game' ? 'settings' : 'identity');
   const [menuScale, setMenuScaleState] = useState(
@@ -832,7 +844,7 @@ export const PreferencesMenu = () => {
         selected={speciesFilter === props.id}
         onClick={() => setSpeciesFilter(props.id)}
       >
-        {props.label}
+        {tp(props.label)}
       </Button>
     );
 
@@ -842,7 +854,7 @@ export const PreferencesMenu = () => {
           <Stack.Item basis="265px">
             <Input
               fluid
-              placeholder="Search species..."
+              placeholder={tp('Search species...')}
               value={speciesSearch}
               onChange={(value: string) => setSpeciesSearch(value)}
             />
@@ -941,7 +953,7 @@ export const PreferencesMenu = () => {
                     <Stack.Item>{inspectedSpecies.name}</Stack.Item>
                     {inspectedSpecies.id === data.species_id ? (
                       <Stack.Item>
-                        <Box color="good">Current</Box>
+                        <Box color="good">{tp('Current')}</Box>
                       </Stack.Item>
                     ) : null}
                   </Stack>
@@ -973,24 +985,26 @@ export const PreferencesMenu = () => {
                       }
                       color={canApply ? 'green' : undefined}
                       disabled={!canApply}
-                      tooltip={
+                      tooltip={tp(
                         canApply
                           ? 'Apply species'
                           : inspectedSpecies.id === data.species_id
                             ? 'Current species'
-                            : inspectedSpecies.lock_reason || 'Unavailable'
-                      }
+                            : inspectedSpecies.lock_reason || 'Unavailable',
+                      )}
                       onClick={() =>
                         doPref('character_setup_select_species', undefined, {
                           species_id: inspectedSpecies.id,
                         })
                       }
                     >
-                      {inspectedSpecies.id === data.species_id
-                        ? 'Current Species'
-                        : asBool(inspectedSpecies.available)
-                          ? 'Apply Species'
-                          : 'Locked'}
+                      {tp(
+                        inspectedSpecies.id === data.species_id
+                          ? 'Current Species'
+                          : asBool(inspectedSpecies.available)
+                            ? 'Apply Species'
+                            : 'Locked',
+                      )}
                     </Button>
                   </Stack.Item>
                 </Stack>
@@ -1163,7 +1177,7 @@ export const PreferencesMenu = () => {
                     <Stack.Item>{inspectedFaith.name}</Stack.Item>
                     {asBool(inspectedFaith.selected) ? (
                       <Stack.Item>
-                        <Box color="good">Current</Box>
+                        <Box color="good">{tp('Current')}</Box>
                       </Stack.Item>
                     ) : null}
                   </Stack>
@@ -1174,7 +1188,7 @@ export const PreferencesMenu = () => {
                     <Button
                       icon="check"
                       color="green"
-                      tooltip="Choose this faith's godhead"
+                      tooltip={tp("Choose this faith's godhead")}
                       onClick={() =>
                         doPref('character_setup_select_faith', undefined, {
                           faith_id: inspectedFaith.id,
@@ -1418,7 +1432,7 @@ export const PreferencesMenu = () => {
       ))}
       <Button
         icon="undo"
-        tooltip="Reset colors"
+        tooltip={tp('Reset colors')}
         onClick={() => customizerAct(feature.key, 'reset_colors')}
       />
     </Box>
@@ -1502,7 +1516,7 @@ export const PreferencesMenu = () => {
           <Box mb={1}>
             <Stack align="center" mb={0.5}>
               <Stack.Item>
-                <Box color="label">Style</Box>
+                <Box color="label">{tp('Style')}</Box>
               </Stack.Item>
               {extraControls ? <Stack.Item grow>{extraControls}</Stack.Item> : null}
             </Stack>
@@ -1527,7 +1541,7 @@ export const PreferencesMenu = () => {
           <Box mb={1}>
             <Stack align="center" mb={0.5}>
               <Stack.Item>
-                <Box color="label">Style</Box>
+                <Box color="label">{tp('Style')}</Box>
               </Stack.Item>
               {extraControls ? <Stack.Item grow>{extraControls}</Stack.Item> : null}
             </Stack>
@@ -1782,7 +1796,7 @@ export const PreferencesMenu = () => {
         ) : (
           <Box py={3} color="label">
             <Icon name="user" size={4} />
-            <Box mt={1}>No headshot set</Box>
+            <Box mt={1}>{tp('No headshot set')}</Box>
           </Box>
         )}
       </Box>
@@ -1904,7 +1918,7 @@ export const PreferencesMenu = () => {
             ))
           ) : (
             <Box color="label" textAlign="center" mt={1}>
-              No OOC messages.
+              {tp('No OOC messages.')}
             </Box>
           )}
         </Box>
@@ -1912,7 +1926,7 @@ export const PreferencesMenu = () => {
           fluid
           height="42px"
           maxLength={1024}
-          placeholder="Message OOC..."
+          placeholder={tp('Message OOC...')}
           value={oocMessage}
           onChange={(value: string) => setOocMessage(value)}
         />
@@ -1925,7 +1939,7 @@ export const PreferencesMenu = () => {
           disabled={!oocMessage.trim()}
           onClick={sendOocMessage}
         >
-          Send OOC
+          {tp('Send OOC')}
         </Button>
       </Box>
     );
@@ -1938,6 +1952,7 @@ export const PreferencesMenu = () => {
     return (
       <>
         <Panel title="Interface" icon="desktop">
+          <PrefRow icon="language" label="Язык / Language" value={game.language} onClick={() => toggle('language')} />
           <PrefRow icon="keyboard" label="Hotkeys" value={asBool(game.hotkeys) ? 'ON' : 'OFF'} selected={asBool(game.hotkeys)} onClick={() => toggle('hotkeys')} />
           <PrefRow icon="mouse-pointer" label="Action Buttons" value={asBool(game.buttons_locked) ? 'Locked' : 'Unlocked'} selected={asBool(game.buttons_locked)} onClick={() => toggle('action_buttons')} />
           <PrefRow icon="window-restore" label="Fancy tgui" value={asBool(game.tgui_fancy) ? 'ON' : 'OFF'} selected={asBool(game.tgui_fancy)} onClick={() => toggle('tgui_fancy')} />
@@ -2016,7 +2031,7 @@ export const PreferencesMenu = () => {
       selected={activeSection === section.id}
       onClick={() => setActiveSection(section.id)}
     >
-      {section.label}
+      {tp(section.label)}
     </Tabs.Tab>
   );
 
@@ -2026,28 +2041,28 @@ export const PreferencesMenu = () => {
     value?: unknown;
     onClick: () => void;
   }) => (
-    <Button color="transparent" onClick={props.onClick} tooltip={props.label}>
+    <Button color="transparent" onClick={props.onClick} tooltip={tp(props.label)}>
       <Stack align="center">
         <Stack.Item>
           <Icon name={props.icon} />
         </Stack.Item>
         <Stack.Item>
           <Box color="label" fontSize="10px">
-            {props.label}
+            {tp(props.label)}
           </Box>
-          <Box bold>{display(props.value)}</Box>
+          <Box bold>{display(tp(props.value))}</Box>
         </Stack.Item>
       </Stack>
     </Button>
   );
 
   const RoundStartReport = () => (
-    <Section title="Round Start" mb={1}>
+    <Section title={tp('Round Start')} mb={1}>
       <Box bold fontSize="22px" color={roundStatusColor}>
         {roundCountdown}
       </Box>
       <Box color="label" mb={0.5}>
-        {roundStatus}
+        {tp(roundStatus)}
       </Box>
       <Button
         fluid
@@ -2065,7 +2080,7 @@ export const PreferencesMenu = () => {
           <Icon name="user-check" />
         </Stack.Item>
         <Stack.Item grow>
-          <Box color="label">Ready</Box>
+          <Box color="label">{tp('Ready')}</Box>
         </Stack.Item>
         <Stack.Item>
           <Box bold>
@@ -2083,7 +2098,7 @@ export const PreferencesMenu = () => {
         <Button
           compact
           icon="search-minus"
-          tooltip="Smaller elements"
+          tooltip={tp('Smaller elements')}
           disabled={menuScale <= 0.8}
           onClick={() => setMenuScale(menuScale - 0.05)}
         />
@@ -2091,7 +2106,7 @@ export const PreferencesMenu = () => {
       <Stack.Item>
         <Button
           compact
-          tooltip="Reset element scale"
+          tooltip={tp('Reset element scale')}
           onClick={() => setMenuScale(0.85)}
         >
           {Math.round(menuScale * 100)}%
@@ -2101,7 +2116,7 @@ export const PreferencesMenu = () => {
         <Button
           compact
           icon="search-plus"
-          tooltip="Larger elements"
+          tooltip={tp('Larger elements')}
           disabled={menuScale >= 1.25}
           onClick={() => setMenuScale(menuScale + 0.05)}
         />
@@ -2119,7 +2134,7 @@ export const PreferencesMenu = () => {
 
   return (
     <Window
-      title="Character Setup"
+      title={tp('Character Setup')}
       width={windowWidth}
       height={windowHeight}
       theme={data.tgui_theme || 'grim'}
@@ -2133,13 +2148,13 @@ export const PreferencesMenu = () => {
                 <Stack align="center">
                   <Stack.Item grow>
                     <Box bold fontSize="18px">
-                      {display(data.real_name, 'Unnamed')}
+                      {display(data.real_name, tp('Unnamed'))}
                     </Box>
                     <Box color="label">{headerMeta}</Box>
                   </Stack.Item>
                   <Stack.Item>
                     <Button icon="exchange-alt" onClick={() => doPref('changeslot')}>
-                      Change Character
+                      {tp('Change Character')}
                     </Button>
                   </Stack.Item>
                 </Stack>
@@ -2198,7 +2213,7 @@ export const PreferencesMenu = () => {
                               textAlign="center"
                               style={{ fontSize: '10px', lineHeight: '14px' }}
                             >
-                              Front
+                              {tp('Front')}
                             </Box>
                           </Stack.Item>
                           <Stack.Item grow basis={0}>
@@ -2233,7 +2248,7 @@ export const PreferencesMenu = () => {
                               textAlign="center"
                               style={{ fontSize: '10px', lineHeight: '14px' }}
                             >
-                              Side
+                              {tp('Side')}
                             </Box>
                           </Stack.Item>
                         </Stack>
@@ -2243,7 +2258,7 @@ export const PreferencesMenu = () => {
                 </Stack.Item>
 
                 <Stack.Item basis="520px">
-                  <Section fill title="Looking Glass">
+                  <Section fill title={tp('Looking Glass')}>
                     <Stack vertical fill>
                       <Stack.Item grow>
                         <Box
@@ -2305,13 +2320,13 @@ export const PreferencesMenu = () => {
                             fluid
                             textAlign="center"
                             icon="arrow-left"
-                            tooltip="Rotate left"
+                            tooltip={tp('Rotate left')}
                             onClick={() => doPref('character_setup_preview_rotate', undefined, { rotate: 'left' })}
                           />
                         </Stack.Item>
                         <Stack.Item>
                           <Box color="label" style={{ lineHeight: '24px' }}>
-                            Rotate
+                            {tp('Rotate')}
                           </Box>
                         </Stack.Item>
                         <Stack.Item grow>
@@ -2319,7 +2334,7 @@ export const PreferencesMenu = () => {
                             fluid
                             textAlign="center"
                             icon="arrow-right"
-                            tooltip="Rotate right"
+                            tooltip={tp('Rotate right')}
                             onClick={() => doPref('character_setup_preview_rotate', undefined, { rotate: 'right' })}
                           />
                         </Stack.Item>
@@ -2331,7 +2346,7 @@ export const PreferencesMenu = () => {
                         selected={asBool(data.preview_underwear)}
                         onClick={() => doPref('character_setup_preview_layer', undefined, { layer: 'underwear' })}
                       >
-                        Underwear Layer
+                        {tp('Underwear Layer')}
                       </Button>
                       <Button
                         fluid
@@ -2340,14 +2355,14 @@ export const PreferencesMenu = () => {
                         selected={asBool(data.preview_clothes)}
                         onClick={() => doPref('character_setup_preview_layer', undefined, { layer: 'clothes' })}
                       >
-                        Work Clothes Layer
+                        {tp('Work Clothes Layer')}
                       </Button>
                       <Button
                         fluid
                         icon="dice"
                         onClick={() => doPref('randomiseappearanceprefs')}
                       >
-                        Randomise Appearance
+                        {tp('Randomise Appearance')}
                       </Button>
                     </Stack.Item>
                   </Stack>
@@ -2374,23 +2389,23 @@ export const PreferencesMenu = () => {
                   </Stack>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button icon="dice" tooltip="Randomise Appearance" onClick={() => doPref('randomiseappearanceprefs')}>
-                    Randomise
+                  <Button icon="dice" tooltip={tp('Randomise Appearance')} onClick={() => doPref('randomiseappearanceprefs')}>
+                    {tp('Randomise')}
                   </Button>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button icon="undo" tooltip="Undo from save" onClick={() => doPref('load')}>
-                    Undo
+                  <Button icon="undo" tooltip={tp('Undo from save')} onClick={() => doPref('load')}>
+                    {tp('Undo')}
                   </Button>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button icon="save" color="blue" tooltip="Save" onClick={() => doPref('save')}>
-                    Save
+                  <Button icon="save" color="blue" tooltip={tp('Save')} onClick={() => doPref('save')}>
+                    {tp('Save')}
                   </Button>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button icon="check" color="green" tooltip="Done" onClick={() => doPref('finished')}>
-                    Done
+                  <Button icon="check" color="green" tooltip={tp('Done')} onClick={() => doPref('finished')}>
+                    {tp('Done')}
                   </Button>
                 </Stack.Item>
               </Stack>

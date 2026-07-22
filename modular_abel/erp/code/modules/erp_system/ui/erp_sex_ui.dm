@@ -35,6 +35,7 @@
 		if("erp")     tabs["erp"]     = kinks_tab.build()
 
 	return list(
+		"lang" = ui_lang_code(current_actor?.client),
 		"actor_name" = "[actor]",
 		"active_tab" = active_tab,
 		"hidden_mode" = controller.hidden_mode,
