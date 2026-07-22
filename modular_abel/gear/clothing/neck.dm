@@ -4,7 +4,7 @@
 	icon = 'modular_abel/gear/icons/neck.dmi'
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/neck.dmi'
 	icon_state = "bchaincoif"
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze

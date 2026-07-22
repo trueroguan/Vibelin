@@ -15,7 +15,7 @@
 	icon_state = "iron_horseshoes"
 	item_state = "iron_horseshoes"
 	body_parts_covered = FEET
-	armor = ARMOR_PLATE_BAD
+	armor_type = /datum/armor/boots/plate/bad
 	max_integrity = ARMOR_INT_LEG_IRON_PLATE
 	armor_class = AC_MEDIUM
 	anvilrepair = /datum/attribute/skill/craft/armor_repair
@@ -44,7 +44,7 @@
 	desc = "Well-forged steel horseshoes on thick leather straps. Heavier than iron, but they protect a taur's hooves far better."
 	icon_state = "steel_horseshoes"
 	item_state = "steel_horseshoes"
-	armor = ARMOR_PLATE_GOOD
+	armor_type = /datum/armor/boots/plate/good
 	max_integrity = ARMOR_INT_LEG_STEEL_PLATE
 	armor_class = AC_HEAVY
 	smeltresult = /obj/item/ingot/steel
@@ -57,7 +57,7 @@
 	icon_state = "iron_horseshoes"
 	item_state = "iron_horseshoes"
 	color = "#8a5a2b"
-	armor = list("blunt" = 20, "slash" = 20, "stab" = 20, "piercing" = 10, "fire" = 0, "acid" = 0)
+	armor_type = /datum/armor/boots/leather
 	max_integrity = INTEGRITY_STANDARD
 	armor_class = AC_LIGHT
 	anvilrepair = null

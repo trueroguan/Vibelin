@@ -600,13 +600,6 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 					.[key] = sanitize_css_class_name("[accessory_type]")
 	character_setup_log_op("thumbnail_catalog", _t, "entries=[length(.)] species=[pref_species?.id]")
 
-/datum/preferences/reset_jobs(mob/user, silent = FALSE)
-	job_preferences = list()
-	if(!silent)
-		to_chat(user, "<font color='red'>Classes reset.</font>")
-	if(winget(user, "mob_occupation", "is-visible") == "true")
-		set_choices(user)
-
 /datum/preferences/ui_interact(mob/user, datum/tgui/ui)
 	var/window_width = character_setup_preferences_fullscreen ? 7680 : 1180
 	var/window_height = character_setup_preferences_fullscreen ? 4320 : 760

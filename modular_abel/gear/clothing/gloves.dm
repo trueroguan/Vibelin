@@ -4,7 +4,7 @@
 	icon = 'modular_abel/gear/icons/gloves.dmi'
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/gloves.dmi'
 	icon_state = "bcgloves"
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze

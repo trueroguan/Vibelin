@@ -5,7 +5,7 @@
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
 	icon_state = "bhaubergeon"
 	item_state = "bhaubergeon"
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -17,7 +17,7 @@
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
 	icon_state = "bhauberk"
 	item_state = "bhauberk"
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = INTEGRITY_STRONG + 75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -30,7 +30,7 @@
 	icon_state = "haubyrnie"
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_SHIRT
 	armor_class = AC_LIGHT
-	armor = ARMOR_MAILLE
+	armor_type = /datum/armor/maille
 	body_parts_covered = COVERAGE_TORSO
 	max_integrity = ARMOR_INT_CHEST_LIGHT_STEEL
 	material_category = ARMOR_MAT_CHAINMAIL
@@ -41,7 +41,7 @@
 	desc = "A sleeveless maille shirt, fashioned from dozens of interlinked iron rings. For the discerning peasant."
 	icon_state = "ihaubyrnie"
 	item_state = "ihaubyrnie"
-	armor = ARMOR_MAILLE_IRON
+	armor_type = /datum/armor/maille/iron
 	max_integrity = ARMOR_INT_CHEST_LIGHT_STEEL * 0.6
 	smeltresult = /obj/item/ingot/iron
 	melting_material = /datum/material/iron
@@ -51,7 +51,7 @@
 	desc = "A sleeveless maille shirt, fashioned from dozens of interlinked bronze rings. For the discerning traveler - ideally, from an antique land."
 	icon_state = "bhaubyrnie"
 	item_state = "bhaubyrnie"
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = ARMOR_INT_CHEST_LIGHT_STEEL * 0.75
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -62,7 +62,7 @@
 	icon = 'modular_abel/gear/icons/armor.dmi'
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
 	icon_state = "blamellar"
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = INTEGRITY_STRONG - 25
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -73,7 +73,7 @@
 	icon = 'modular_abel/gear/icons/armor.dmi'
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/armor.dmi'
 	icon_state = "ilamellar"
-	armor = ARMOR_MAILLE_IRON
+	armor_type = /datum/armor/maille/iron
 	max_integrity = INTEGRITY_STANDARD + 50
 	smeltresult = /obj/item/ingot/iron
 	melting_material = /datum/material/iron
@@ -86,7 +86,7 @@
 	icon_state = "newmoon_jacket"
 	item_state = "newmoon_jacket"
 	blocksound = SOFTHIT
-	armor = ARMOR_MINIMAL
+	armor_type = /datum/armor/minimal
 	nodismemsleeves = TRUE
 	body_parts_covered = CHEST|GROIN|VITALS|LEGS|ARMS
 	max_integrity = INTEGRITY_STRONG
@@ -223,7 +223,7 @@
 /obj/item/clothing/armor/gambeson/tombraider
 	name = "tomb raider's vest"
 	desc = "A dashing outfit for an experienced tomb raider."
-	armor = ARMOR_LEATHER
+	armor_type = /datum/armor/leather
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
 	icon_state = "tombraidervest"
 	item_state = "tombraidervest"

@@ -3,7 +3,7 @@
 	desc = "A hood woven from dense material. Sturdy enough to resist tearing, and warmed by its lining. The secret of the fabric's make remains a mystery even to those who wear it."
 	color = "#78a3c9"
 	slot_flags = ITEM_SLOT_HEAD
-	armor = ARMOR_MINIMAL
+	armor_type = /datum/armor/minimal
 	body_parts_covered = HEAD|HAIR|EARS|NOSE|NECK
 	max_integrity = ARMOR_INT_CHEST_LIGHT_BASE + 30
 	armor_class = AC_MEDIUM
@@ -104,5 +104,5 @@
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/head_32.dmi'
 	icon_state = "tombraiderhat"
 	item_state = "tombraiderhat"
-	armor = ARMOR_LEATHER
+	armor_type = /datum/armor/leather
 	salvage_result = /obj/item/natural/hide/cured

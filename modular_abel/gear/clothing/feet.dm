@@ -6,7 +6,7 @@
 	icon_state = "bsoldierboots"
 	item_state = "bsoldierboots"
 	armor_class = AC_LIGHT
-	armor = ARMOR_MAILLE_BRONZE
+	armor_type = /datum/armor/maille/bronze
 	max_integrity = INTEGRITY_STANDARD + 50
 	smeltresult = /obj/item/ingot/bronze
 	melting_material = /datum/material/bronze
@@ -20,7 +20,7 @@
 	mob_overlay_icon = 'modular_abel/gear/icons/onmob/feet.dmi'
 	icon_state = "shalfplateboots"
 	item_state = "shalfplateboots"
-	armor = ARMOR_MAILLE
+	armor_type = /datum/armor/boots/maille
 	armor_class = AC_LIGHT
 	max_integrity = INTEGRITY_STRONG
 	smeltresult = /obj/item/ingot/steel_slag

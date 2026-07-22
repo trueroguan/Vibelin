@@ -1,4 +1,4 @@
-#include "_defines.dm"
+#include "armor_bronze.dm"
 #include "balance/weapon_balance.dm"
 #include "balance/weapon_balance_special.dm"
 #include "balance/armor_balance.dm"
