@@ -1133,7 +1133,7 @@ const KinkMiniCard: React.FC<{
               borderRadius: 6,
               background: 'rgba(255,255,255,0.03)',
             }}
-            tooltip={kink.description ? kink.description : undefined}
+            tooltip={kink.description ? tr.tc(`${kink.type}:desc`, kink.description) : undefined}
           >
             <Box>
               <Box as="span" bold>
@@ -1168,7 +1168,7 @@ const KinkMiniCard: React.FC<{
       </Stack>
       {!!kink.description && (
         <Box mt={0.5} color="label" style={{ fontSize: 11, lineHeight: 1.25 }}>
-          {kink.description}
+          {tr.tc(`${kink.type}:desc`, kink.description)}
         </Box>
       )}
     </Box>

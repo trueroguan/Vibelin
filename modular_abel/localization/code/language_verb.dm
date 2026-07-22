@@ -1,6 +1,6 @@
 /client/verb/toggle_ui_language()
 	set name = "Язык / Language"
-	set category = "OOC"
+	set category = "Preferences.Options"
 	set desc = "Переключить язык интерфейса (RU/EN) / Switch interface language"
 	if(!prefs)
 		return

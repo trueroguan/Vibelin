@@ -1,10 +1,6 @@
 import type { ChromeDict, ContentDict } from '../i18n';
 import { useTranslator } from '../i18n';
 
-/**
- * Interface chrome — buttons, tabs, labels, section titles. Authored in both
- * languages because there is no server-provided source to fall back to.
- */
 export const ERP_CHROME: ChromeDict = {
   'window.title': { ru: 'Утолить Желания', en: 'Sate Desires' },
 
@@ -151,15 +147,7 @@ export const ERP_CHROME: ChromeDict = {
   'btn.cancel': { ru: 'Отмена', en: 'Cancel' },
 };
 
-/**
- * Content names authored in DM (organ categories, climax modes, action names).
- * Only the English override is stored here, keyed by the stable id the server
- * sends (organ type token, climax-mode id, or action typepath). The Russian
- * value is the name the server already sends, so it is never duplicated.
- * Missing keys fall back to the server name, so an incomplete map never breaks.
- */
 export const ERP_CONTENT: ContentDict = {
-  // organ categories (SEX_ORGAN_* tokens)
   hands: 'Hands',
   legs: 'Legs',
   tail: 'Tail',
@@ -170,12 +158,111 @@ export const ERP_CONTENT: ContentDict = {
   penis: 'Penis',
   body: 'Body',
 
-  // climax modes
   outside: 'Outside',
   inside: 'Inside',
 
-  // action names (keyed by typepath — seed set; the rest fall back to Russian)
+  '/datum/erp_action/other/anus/butt': 'Work with butt',
+  '/datum/erp_action/other/anus/face': 'Sit on face',
+  '/datum/erp_action/other/anus/force_face': 'Force sit on face',
+  '/datum/erp_action/other/anus/rubbing': 'Rub with butt',
+  '/datum/erp_action/other/anus/sex': 'Ride with anus',
+  '/datum/erp_action/other/anus/tail': 'Use tail with butt',
+  '/datum/erp_action/other/body/grinding': 'Nuzzle with face',
+  '/datum/erp_action/other/body/rubbing': 'Rub body',
+  '/datum/erp_action/other/breasts/breast_feed': 'Force breastfeed',
+  '/datum/erp_action/other/breasts/teasing': 'Rub with breasts',
+  '/datum/erp_action/other/breasts/titjob': 'Titjob',
+  '/datum/erp_action/other/hands/breasts_play': 'Grope breasts',
+  '/datum/erp_action/other/hands/finger_anal': 'Finger anus',
+  '/datum/erp_action/other/hands/finger_oral': 'Fingers in mouth',
+  '/datum/erp_action/other/hands/finger_vaginal': 'Finger vagina',
+  '/datum/erp_action/other/hands/force_armpits': 'Press to armpits',
+  '/datum/erp_action/other/hands/force_crotch': 'Press to crotch',
+  '/datum/erp_action/other/hands/masturbation': 'Stroke penis by hand',
+  '/datum/erp_action/other/hands/milking_breasts': 'Milk breasts',
+  '/datum/erp_action/other/hands/milking_penis': 'Milk penis',
+  '/datum/erp_action/other/hands/rubbing': 'Grope body',
+  '/datum/erp_action/other/hands/toy_anal': 'Sex toy (anal)',
+  '/datum/erp_action/other/hands/toy_oral': 'Sex toy (oral)',
+  '/datum/erp_action/other/hands/toy_vaginal': 'Sex toy (vaginal)',
+  '/datum/erp_action/other/hands/spanking': 'Spank buttocks',
+  '/datum/erp_action/other/hands/tease_tail': 'Stroke tail',
+  '/datum/erp_action/other/hands/tease_testicles': 'Stroke testicles by hand',
+  '/datum/erp_action/other/hands/tease_vagina': 'Stroke clit by hand',
+  '/datum/erp_action/other/hands/touching': 'Caress',
+  '/datum/erp_action/other/legs/footfetish': 'Force to lick feet',
+  '/datum/erp_action/other/legs/footjob': 'Footjob',
+  '/datum/erp_action/other/legs/legsjob': 'Thighjob',
+  '/datum/erp_action/other/legs/teasing': 'Rub with leg',
+  '/datum/erp_action/other/mouth/blowjob': 'Blowjob',
+  '/datum/erp_action/other/mouth/breast_feed': 'Lick breasts',
+  '/datum/erp_action/other/mouth/cunnilingus': 'Cunnilingus',
+  '/datum/erp_action/other/mouth/finger_lick': 'Lick fingers',
+  '/datum/erp_action/other/mouth/foot_lick': 'Lick feet',
   '/datum/erp_action/other/mouth/kiss': 'Kiss',
+  '/datum/erp_action/other/mouth/rimming': 'Rimming',
+  '/datum/erp_action/other/penis/anal_sex': 'Anal sex',
+  '/datum/erp_action/other/penis/butt_job': 'Buttjob',
+  '/datum/erp_action/other/penis/force_blowjob': 'Force blowjob',
+  '/datum/erp_action/other/penis/masturbation': 'Masturbate at partner',
+  '/datum/erp_action/other/penis/oral_sex': 'Oral sex',
+  '/datum/erp_action/other/penis/rubbing': 'Rub with penis',
+  '/datum/erp_action/other/penis/sword_fight': 'Sword fight',
+  '/datum/erp_action/other/penis/tea_bag': 'Tea bag',
+  '/datum/erp_action/other/penis/tit_job': 'Titjob',
+  '/datum/erp_action/other/penis/vaginal_sex': 'Vaginal sex',
+  '/datum/erp_action/other/tail/anal': 'Fuck ass with tail',
+  '/datum/erp_action/other/tail/oral': 'Fuck mouth with tail',
+  '/datum/erp_action/other/tail/penis': 'Masturbate with tail',
+  '/datum/erp_action/other/tail/rubbing': 'Rub with tail',
+  '/datum/erp_action/other/tail/spanking': 'Spank with tail',
+  '/datum/erp_action/other/tail/squeeze_breasts': 'Squeeze breasts with tail',
+  '/datum/erp_action/other/tail/vaginal': 'Fuck vagina with tail',
+  '/datum/erp_action/other/vagina/face': 'Sit with vagina',
+  '/datum/erp_action/other/vagina/force_face': 'Force to lick',
+  '/datum/erp_action/other/vagina/masturbation': 'Masturbate at partner',
+  '/datum/erp_action/other/vagina/rubbing': 'Rub with vagina',
+  '/datum/erp_action/other/vagina/scissors': 'Scissoring',
+  '/datum/erp_action/other/vagina/sex': 'Ride with vagina',
+  '/datum/erp_action/other/vagina/tail': 'Use tail',
+  '/datum/erp_action/self/hands/milking_breasts': 'Milk own breasts',
+  '/datum/erp_action/self/hands/breasts_play': 'Grope own breasts',
+  '/datum/erp_action/self/hands/fingering_anal': 'Fingering (anal)',
+  '/datum/erp_action/self/hands/fingering_oral': 'Fingering (oral)',
+  '/datum/erp_action/self/hands/fingering_vaginal': 'Fingering (vaginal)',
+  '/datum/erp_action/self/hands/masturbate_penis': 'Masturbate penis',
+  '/datum/erp_action/self/hands/penis_milking': 'Milk own penis',
+  '/datum/erp_action/self/hands/toy_anal': 'Sex toy (anal)',
+  '/datum/erp_action/self/hands/toy_oral': 'Sex toy (oral)',
+  '/datum/erp_action/self/hands/toy_vaginal': 'Sex toy (vaginal)',
+  '/datum/erp_action/self/hands/tail_pet': 'Pet own tail',
+  '/datum/erp_action/self/hands/teasing_clitoris': 'Tease clit',
+  '/datum/erp_action/self/tail/anal_tail': 'Anal play with tail',
+  '/datum/erp_action/self/tail/squeeze_breasts': 'Squeeze own breasts with tail',
+  '/datum/erp_action/self/tail/suck_tail': 'Suck own tail',
+  '/datum/erp_action/self/tail/penis_tail': 'Masturbate penis with tail',
+  '/datum/erp_action/self/tail/vag_tail': 'Vaginal play with tail',
+
+  '/datum/kink/bondage': 'Bondage',
+  '/datum/kink/domination': 'Domination',
+  '/datum/kink/submissive': 'Submission',
+  '/datum/kink/gentle': 'Gentleness',
+  '/datum/kink/rough': 'Roughness',
+  '/datum/kink/public': 'Public',
+
+  '/datum/kink/bondage:desc':
+    "Aroused by restricting a partner's or your own freedom.",
+  '/datum/kink/domination:desc': 'Aroused by control and the leading role.',
+  '/datum/kink/submissive:desc': 'Aroused by the submissive role.',
+  '/datum/kink/gentle:desc': 'Aroused by gentle sex.',
+  '/datum/kink/rough:desc': 'Aroused by rough and hard sex.',
+  '/datum/kink/public:desc':
+    'Aroused by sex while seen by those not in the current session.',
+
+  Доминирование: 'Domination',
+  Общее: 'General',
+  Подчинение: 'Submission',
+  Фетиши: 'Fetishes',
 };
 
 export function useErpTranslator() {
