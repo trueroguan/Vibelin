@@ -582,7 +582,7 @@ export const PreferencesMenu = () => {
       setTimeout(() => window.dispatchEvent(new Event('resize')), delay),
     );
     return () => timers.forEach(clearTimeout);
-  }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen]);
+  }, [data.preview_map, data.preview_map_front, data.preview_map_side, menuScale, data.preferences_fullscreen, data.tgui_theme]);
 
   const [previewBoxPx, setPreviewBoxPx] = useState({
     main: 0,
@@ -605,14 +605,41 @@ export const PreferencesMenu = () => {
           : { main, mainH, mini },
       );
     };
+    let nudgeTimer: ReturnType<typeof setTimeout> | null = null;
+    const nudge = () => {
+      if (nudgeTimer) {
+        clearTimeout(nudgeTimer);
+      }
+      nudgeTimer = setTimeout(() => {
+        measure();
+        window.dispatchEvent(new Event('resize'));
+      }, 50);
+    };
     measure();
     const timers = [250, 700, 1600].map((delay) => setTimeout(measure, delay));
     window.addEventListener('resize', measure);
+    let observer: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(nudge);
+      for (const el of [
+        dollBoxRef.current,
+        frontBoxRef.current,
+        sideBoxRef.current,
+      ]) {
+        if (el) {
+          observer.observe(el);
+        }
+      }
+    }
     return () => {
       timers.forEach(clearTimeout);
+      if (nudgeTimer) {
+        clearTimeout(nudgeTimer);
+      }
       window.removeEventListener('resize', measure);
+      observer?.disconnect();
     };
-  }, [data.preview_map, menuScale, data.preferences_fullscreen]);
+  }, [data.preview_map, menuScale, data.preferences_fullscreen, data.tgui_theme]);
 
   const previewBboxW = Math.max(16, Number(data.preview_bbox_w) || 0);
   const previewBboxH = Math.max(16, Number(data.preview_bbox_h) || 0);
@@ -652,7 +679,7 @@ export const PreferencesMenu = () => {
     };
     const t = setTimeout(report, 250);
     return () => clearTimeout(t);
-  }, [data.preview_map, menuScale, data.preferences_fullscreen, previewZoom, previewMiniZoom]);
+  }, [data.preview_map, menuScale, data.preferences_fullscreen, previewZoom, previewMiniZoom, data.tgui_theme]);
 
   const [localRoundSeconds, setLocalRoundSeconds] = useState<number>(-1);
 

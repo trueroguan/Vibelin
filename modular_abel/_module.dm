@@ -12,4 +12,5 @@
 #include "job_starting_coins.dm"
 #include "map_advclass_blacklist.dm"
 #include "cyrillic_say_fix.dm"
+#include "ear_flick.dm"
 #include "upstream_fixes.dm"
