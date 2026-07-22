@@ -1,0 +1,8 @@
+author: "trueroguan"
+delete-after: True
+changes:
+  - rscadd: "Added RU/EN language switch for TGUI interfaces (ERP panel, character preferences menu)"
+  - rscadd: "Elf-eared races now flick their ears when kissed on the ear"
+  - bugfix: "Fixed loadout panel layout overflowing off-screen"
+  - bugfix: "Fixed preferences menu preview square misplacement after changing interface theme"
+  - qol: "Added quick language toggle under Preferences.Options"
