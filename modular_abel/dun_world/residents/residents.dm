@@ -31,6 +31,8 @@
 
 /obj/structure/door/town
 	homestead = TRUE
+	bump_closed = TRUE
+	close_delay = 1 SECONDS
 
 /obj/structure/door/town/blacksmith
 	required_job_title = JOB_BLACKSMITH
