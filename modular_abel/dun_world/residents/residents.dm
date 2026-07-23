@@ -10,6 +10,7 @@
 	REMOVE_TRAIT(owner, TRAIT_FOREIGNER, TRAIT_GENERIC)
 
 /datum/quirk/boon/resident/on_spawn()
+	. = ..()
 	if(owner)
 		to_chat(owner, span_notice("I feel at home here."))
 	clear_foreigner_status()
@@ -18,6 +19,7 @@
 	clear_foreigner_status()
 
 /datum/quirk/boon/resident/on_remove()
+	. = ..()
 	if(owner)
 		to_chat(owner, span_danger("I no longer feel like a local resident."))
 
